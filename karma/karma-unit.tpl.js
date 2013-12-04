@@ -59,7 +59,7 @@ module.exports = function ( karma ) {
       <% if (travis) { %>
       'Firefox', 'PhantomJS'
       <% } else { %>
-      'Safari'
+      'PhantomJS'
       <% } %>
     ]
   });
