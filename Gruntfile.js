@@ -684,7 +684,8 @@ module.exports = function ( grunt ) {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
-            scripts: jsFiles
+            scripts: jsFiles,
+            travis: process.env.TRAVIS
           }
         });
       }
