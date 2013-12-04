@@ -10,4 +10,11 @@ describe('prx.stories', function () {
       expect(scope.story).toBe(sigil);
     }));
   });
+
+  describe ('Story', function () {
+    it ('has a get method', inject(function (Story, $timeout) {
+      expect(Story.get()).toBeDefined();
+      $timeout.flush();
+    }));
+  });
 });

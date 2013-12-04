@@ -8,4 +8,4 @@ before_script:
   - npm install --quiet -g grunt-cli karma bower
   - bower install
 
-script: grunt
+script: grunt ci

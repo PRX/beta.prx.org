@@ -21,7 +21,7 @@ module.exports = function ( karma ) {
     plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-coverage' ],
     preprocessors: {
       '**/*.coffee': 'coffee',
-       '**/*.js': ['coverage']
+       'src/**/*.js': ['coverage']
     },
 
     /**
@@ -59,7 +59,7 @@ module.exports = function ( karma ) {
       <% if (travis) { %>
       'Firefox', 'PhantomJS'
       <% } else { %>
-      'PhantomJS'
+      'Chrome'
       <% } %>
     ]
   });

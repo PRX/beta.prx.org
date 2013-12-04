@@ -11,6 +11,7 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-istanbul-coverage');
   grunt.loadNpmTasks('grunt-conventional-changelog');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-coffeelint');
@@ -149,6 +150,18 @@ module.exports = function ( grunt ) {
             expand: true
           }
         ]
+      }
+    },
+
+    coverage: {
+      options: {
+        thresholds: {
+          'statements': 90,
+          'branches': 90,
+          'lines': 90,
+          'functions': 90
+        },
+        dir: 'coverage'
       }
     },
 
@@ -607,6 +620,11 @@ module.exports = function ( grunt ) {
    * The default task is to build and compile.
    */
   grunt.registerTask( 'default', [ 'build', 'compile' ] );
+
+  grunt.registerTask( 'ci', ['clean', 'jshint', 'jade', 'html2js', 'stylus:build',
+    'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
+    'copy:build_appjs', 'copy:build_vendorjs', 'index:build', 'karmaconfig',
+    'karma:continuous', 'coverage']);
 
   /**
    * The `build` task gets your app ready to run for development and testing.

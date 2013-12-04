@@ -34,6 +34,7 @@
     "grunt-contrib-jade": "~0.7.0",
     "karma-coverage": "~0.1.1",
     "karma-safari-launcher": "~0.1.1",
-    "grunt-contrib-stylus": "~0.11.0"
+    "grunt-contrib-stylus": "~0.11.0",
+    "grunt-istanbul-coverage": "0.0.2"
   }
 }
