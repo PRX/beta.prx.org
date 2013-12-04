@@ -658,13 +658,14 @@ module.exports = function ( grunt ) {
     var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
       return file.replace( dirRE, '' );
     });
-
+    var compile = this.target == 'compile';
     grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
             scripts: jsFiles,
             styles: cssFiles,
+            compile: compile,
             version: grunt.config( 'pkg.version' )
           }
         });

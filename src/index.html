@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="prx">
 <head>
-
+<title ng-bind="page.title">PRX.org</title>
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <% scripts.forEach(function(file) { %><script src="<%= file %>"></script><% }); %>
 </head>
 <body>
 <h1>PRX.org</h1>
+<div ui-view></div>
+<% if (!compile) { %><script src="http://localhost:35729/livereload.js"></script>
+<% } %></body>
 </html>
