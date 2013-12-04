@@ -12,9 +12,9 @@ describe('prx.stories', function () {
   });
 
   describe ('Story', function () {
-    it ('has a get method', inject(function (Story, $timeout) {
-      expect(Story.get()).toBeDefined();
-      $timeout.flush();
+    it ('has a get method', inject(function (Story, $httpBackend) {
+      $httpBackend.when('/stories/123').respond({title: 'foo'});
+      expect(Story.get(123)).toBeDefined();
     }));
   });
 });

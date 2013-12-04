@@ -1,4 +1,4 @@
-angular.module('prx.stories', ['ui.state'])
+angular.module('prx.stories', ['ui.state', 'restangular'])
 
 .config(function ($stateProvider) {
 
@@ -14,12 +14,10 @@ angular.module('prx.stories', ['ui.state'])
   });
 
 })
-.factory('Story', function ($q, $timeout) {
-  return {get: function () {
-    var deferred = $q.defer();
-    $timeout(function () { deferred.resolve({title: "OK"}); }, 2000);
-    return deferred.promise;
-  }};
+.factory('Story', function (Restangular) {
+  return Restangular.withConfig(function (config) {
+    config.setBaseUrl('http://api.prx4.dev/api/v1');
+  }).all('stories');
 })
 .controller('StoryCtrl', function ($scope, story) {
   $scope.story = story;

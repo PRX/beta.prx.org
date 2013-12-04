@@ -67,6 +67,7 @@ module.exports = {
       'vendor/angular/angular.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',
+      'vendor/lodash/lodash.js',
       'vendor/restangular/dist/restangular.js',
       'vendor/angular-touch/angular-touch.js'
     ],
