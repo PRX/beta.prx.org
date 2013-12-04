@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <% styles.forEach(function(file) { %>
-  <link rel="stylesheet" href="<%= file %>" /><% }); %>
 
-  <% scripts.forEach(function(file) { %>
-  <script src="<%= file %>"></script><% }); %>
+  <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
+  <% scripts.forEach(function(file) { %><script src="<%= file %>"></script><% }); %>
 </head>
 <body>
 <h1>PRX.org</h1>
