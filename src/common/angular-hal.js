@@ -1,163 +1,127 @@
 angular.module('angular-hal', ['ng'])
 .provider('ngHal', function () {
-  var models = {};
-  var entrypoint, http;
-
-  UriTemplate.prototype.hasKeys = function (keys) {
-    for (var i=0; i<keys.length; i++) {
-      if (!this.hasKey(keys[i])) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  function calculateVariableCount(uriTemplate) {
-    var count = 0;
-    angular.forEach(this.expressions, function (expression) {
-      if (expression['varspecs']) {
-        count += expression['varspecs'].length;
-      }
-    });
-    return count;
-  }
-
-  UriTemplate.prototype.variableCount = function () {
-    if (typeof this._variableCount === 'undefined') {
-      this._variableCount = calculateVariableCount(this);
-    }
-    return this._variableCount;
-  };
-
-  UriTemplate.prototype.hasKey = function (key) {
-    var i, j, expression;
-    for (j=0; j<this.expressions.length; j++) {
-      expression = this.expressions[j];
-      if (typeof expression['varspecs'] !== 'undefined') {
-        for(i=0; i<expression.varspecs.length; i++) {
-          if (expression.varspecs[i].varname == key) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  };
-
-  var slice = Array.prototype.slice;
-  function a2a (a) {
-    return slice.call(a);
-  }
-
-  function getModel(uri) {
-    if (typeof models[uri] === 'undefined') {
-      return AngularHalObject;
-    } else {
-      return models[uri];
-    }
-  }
-
-  function buildWithType () {
-    var types = a2a(arguments);
-    return function (data, status, headers, config) {
-      return buildHalObject(data, status, headers, config, types);
+  function bind (object, fun) {
+    return function () {
+      return fun.apply(object, Array.prototype.slice.call(arguments));
     };
   }
 
-  function buildHalObject(data, status, headers, config, types) {
-    var M = HalObject;
-    angular.forEach(types, function (type) {
-      if (M == HalObject && typeof models[type] !== 'undefined') {
-        M = models[type];
+  function wrap (Wrapper, fun) {
+    return function () {
+      return new Wrapper(fun.apply(undefined, Array.prototype.slice.call(arguments)));
+    };
+  }
+
+  var HAL = {
+    Object: function (promise) {
+      if (promise) {
+        promise = $q.when(promise);
+        HAL.Promise.call(this, promise);
+        promise = this.then();
+        this.config = promise.get('config');
+        var dataPromise = promise.get('data');
+        this.then   = bind(dataPromise, dataPromise.then);
       }
-    });
-
-    var links = {};
-    if (angular.isDefined(data['_links'])) {
-      angular.forEach(data._links, function (link, rel) {
-        links[rel] = new HalLink(rel, link, config);
-      });
-      delete data['_links'];
+    },
+    Link: function (linkspec) {
+      this.href = linkspec.href;
+      this.profile = linkspec['profile'];
+    },
+    Promise: function (promise) {
+      if (promise) { 
+        this.then = wrap(HAL.Promise, bind(promise, promise.then));
+      }
     }
-    return new M(data, links);
-  }
-
-  function AngularHal () {
-    http.get(entrypoint).success(buildHalObject);
-  }
-
-  function HalObject (data, links) {
-    this.getLinks = function () { return links; };
-    angular.extend(this, data);
-    window.thing = this;
-  }
-
-  HalObject.prototype.url = function () {
-    return this.getLinks()['self'].href();
   };
 
-  function HalLink (rel, data, config) {
-    if (!angular.isArray(data)) {
-      data = [data];
-    }
-    this.rel = rel;
-    this.templates = [];
-    angular.forEach(data, function (spec) {
-      if (spec.href.charAt(0) == '/') {
-        spec.href = config.url.split('/').slice(0,3).join('/') + spec.href;
-      }
-      spec.href = UriTemplate.parse(spec.href);
-      this.templates.push(spec);
-      console.log(spec);
-    }, this);
-  }
-
-  HalLink.prototype.selectLink = function (params) {
-    if (angular.isObject(params)) {
-      var keys = [];
-      angular.forEach(params, function(value, key) {
-        keys.push(key);
+  HAL.Promise.prototype = {
+    'catch': function (errback) {
+      return this.then(undefined, errback);
+    },
+    'finally': function (fin) {
+      return this.then()['finally'](fin);
+    },
+    'get': function (property) {
+      return this.then(function (data) {
+        return data[property];
       });
+    },
+    'call': function (method) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      return this.then(function (data) {
+        return data[method].apply(data, args);
+      });
+    }
+  };
 
-      for (i=0; i<this.templates.length; i++) {
-        if (this.templates[i].href.hasKeys(keys)) {
-          return this.templates[i];
+  HAL.Object.prototype = new HAL.Promise();
+
+  angular.extend(HAL.Object.prototype, {
+    links: function links () {
+      return $q.all([this, this.config]).then(function (data) {
+        var config = data[1];
+        data = data[0];
+        var links = {};
+        angular.forEach(data._links, function (link, rel) {
+          links[rel] = new HAL.Link(link, rel, config.url);
+        });
+        if (typeof links['self'] === 'undefined') {
+          links.self = new HAL.Link({href: config.url}, 'self', config.url);
         }
-      }
+        return links;
+      });
+    },
+    link: function link (rel) {
+      return this.links().then(function (links) {
+        if (links && links[rel]) {
+          return links[rel];
+        } else {
+          return $q.reject('no such link: ' + rel);
+        }
+      });
+    },
+    follow: function follow (rel) {
+      return new HAL.Object(this.link(rel).then(function (link) {
+        return $http.get(link.href).then(function (data) {
+          data.data = angular.extend(new HAL.Object(), modules[link.profile], data.data);
+          return data;
+        });
+      }));
+    },
+    url: function url () {
+      var self = this;
+      return this.link('self').then(function (link) {
+        return link.href;
+      });
+    },
+    save: function save () {
+      return $q.all([this.url(), this]).then(function (data) {
+        var link = data[0];
+        data = data[1];
+        return $http.put(link.href, data);
+      });
+    }
+  });
+
+  var root, $q, $http, modules = {};
+
+  this.setRootUrl = function (rootUrl) {
+    root = rootUrl;
+  };
+
+  this.defineModule = function (uri, module) {
+    if (typeof modules[uri] === 'undefined') {
+      modules[uri] = angular.copy(module);
     } else {
-      var template = this.templates[0];
-      for (i=1; i<this.templates.length; i++) {
-        if (template.href.variableCount() > this.templates[i].href.variableCount()) {
-          template = this.templates[i];
-        }
-      }
-      return template;
+      angular.extend(modules[uri], module);
     }
   };
 
-  HalLink.prototype.href = function (params) {
-    return this.selectLink(params).href.expand(params);
-  };
-
-  HalLink.prototype.follow = function (params) {
-    var link = this.selectLink(params);
-    return http.get(link.href.expand(params)).success(buildWithType(link.profile, this.rel));
-  };
-
-  return {
-    defineModel: function (uri, methods) {
-      if (typeof models[uri] === 'undefined') {
-        models[uri] = function () { HalObject.apply(this, a2a(arguments)); };
-        models[uri].prototype = {};
-      }
-      angular.extend(models[uri].prototype, methods);
-    },
-    setEntrypoint: function (newEntrypoint) {
-      entrypoint = newEntrypoint;
-    },
-    $get: function ($http) {
-      http = $http;
-      return new AngularHal();
-    }
-  };
+  this.$get = ['$http', '$q', function (h, q) {
+    $http = h;
+    $q = q;
+    var r = new HAL.Object(h.get(root));
+    console.log(r);
+    return r;
+  }];
 });
