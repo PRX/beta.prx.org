@@ -120,8 +120,6 @@ angular.module('angular-hal', ['ng'])
   this.$get = ['$http', '$q', function (h, q) {
     $http = h;
     $q = q;
-    var r = new HAL.Object(h.get(root));
-    console.log(r);
-    return r;
+    return new HAL.Object(h.get(root));
   }];
 });

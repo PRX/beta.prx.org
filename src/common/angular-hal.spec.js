@@ -109,7 +109,6 @@ describe('angular-hal', function () {
       $httpBackend.when('GET', '/api').respond({_links: { self: { href: '/api/update'}}});
       $httpBackend.expectPUT('/api/update', {foo: 'bar'});
       ngHal.then(function (object) {
-        console.log(object);
         object.foo = 'bar';
         object.save();
       });
