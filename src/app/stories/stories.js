@@ -1,6 +1,6 @@
-angular.module('prx.stories', ['ui.state', 'restangular'])
+angular.module('prx.stories', ['ui.state', 'restangular', 'angular-hal'])
 
-.config(function ($stateProvider) {
+.config(function ($stateProvider, ngHalProvider) {
 
   $stateProvider.state('story', {
     url: '/stories/:storyId',
@@ -13,12 +13,20 @@ angular.module('prx.stories', ['ui.state', 'restangular'])
     }
   });
 
+  ngHalProvider.defineModel('http://meta.prx.org/model/story', {
+    getSound: function () {
+      console.log("got a sound!");
+    }
+  });
+
+  ngHalProvider.setEntrypoint('http://api.prx4.dev/api/v1');
+
 })
 .factory('Story', function (Restangular) {
   return Restangular.withConfig(function (config) {
     config.setBaseUrl('http://api.prx4.dev/api/v1');
   }).all('stories');
 })
-.controller('StoryCtrl', function ($scope, story) {
+.controller('StoryCtrl', function ($scope, story, ngHal) {
   $scope.story = story;
 });
