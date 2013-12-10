@@ -387,7 +387,23 @@ describe('uri-template', function () {
         }
       });
     });
+
+    it ('gives a negative score when required uri components are missing', function () {
+      expect(UriTemplate.parse('/{a}').score({})).toBeLessThan(0);
+    });
+
+    it ('gives a greater score when more uri components are used', function () {
+      var template = UriTemplate.parse('{?foo,bar}');
+      expect(template.score({foo:1, bar: 2})).toBeGreaterThan(template.score({foo: 1}));
+    });
+
+    it ('has a greater score than a similar URI which uses fewer components', function () {
+      expect(UriTemplate.parse('{a}{.format}').score({a:1, format: true})).toBeGreaterThan(UriTemplate.parse('{a}').score({a:1, format: true}));
+    });
+
+    it ('prefers to use all parameters passed to it', function () {
+      var template = UriTemplate.parse('{a}{.format}');
+      expect(template.score({a:1, format: 2})).toBeGreaterThan(template.score({a:1 , format: 2, c: false}));
+    });
   });
-
-
 });

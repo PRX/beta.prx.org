@@ -8,6 +8,12 @@ angular.module('uri-template', [])
       if (this.string.length > 0) {
         array.push(this);
       }
+    },
+    isUnfulfillable: function (params) {
+      return false;
+    },
+    score: function (params) {
+      return 0;
     }
   };
 
@@ -84,9 +90,31 @@ angular.module('uri-template', [])
     
     if (typeof this.operator !== 'undefined' && this.operator !== '+') {
       result = this.operator + result;
-    }
+    } 
 
     return result;
+  };
+
+  VariableExpression.prototype.score = function (params) {
+    var result = 0;
+    angular.forEach(this.components, function (component) {
+      result += component.score(params);
+    });
+    return result;
+  };
+
+  VariableExpression.prototype.isUnfulfillable = function (params) {
+    if (this.operator !== '+' && typeof this.operator !== 'undefined') {
+      return false;
+    } else {
+      var fulfilled = false;
+      angular.forEach(this.components, function (component) {
+        if (!fulfilled && component.score(params) > 0) {
+          fulfilled = true;
+        }
+      });
+      return !fulfilled;
+    }
   };
 
   function VariableComponent (string, operator) {
@@ -150,7 +178,12 @@ angular.module('uri-template', [])
     return string;
   };
 
-
+  VariableComponent.prototype.score = function (params) {
+    if (typeof params[this.name] !== 'undefined') {
+      return 1;
+    }
+    return 0;
+  };
 
   function UriTemplate (uri) {
     var pieces = this._expressions = [];
@@ -171,6 +204,24 @@ angular.module('uri-template', [])
       result.push(expression.expand(params));
     });
     return result.join('');
+  };
+
+  UriTemplate.prototype.score = function (params) {
+    var result = 0;
+    angular.forEach(this._expressions, function (expression) {
+      if (result != -1) {
+        if (expression.isUnfulfillable(params)) {
+          result = -1;
+        } else {
+          result += expression.score(params);
+        }
+      }
+    });
+    var keyLength = 0;
+    angular.forEach(params, function () { keyLength += 1; });
+    keyLength = Math.min(keyLength, result * 2);
+
+    return result - ((keyLength - result) * 0.1);
   };
 
   this.parse = function (uri) {
