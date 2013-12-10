@@ -99,7 +99,7 @@ describe('angular-hal', function () {
     it ('can fetch links based on rel', inject(function ($httpBackend, ngHal) {
       $httpBackend.expectGET('/api');
       var href;
-      ngHal.link('foo').then(function (link) { href = link.href; });
+      ngHal.link('foo').then(function (link) { href = link.href(); });
       $httpBackend.flush();
       expect(href).toEqual('/api/foo');
     }));
@@ -212,6 +212,15 @@ describe('angular-hal', function () {
       $q.all([p, p.follow('foo')]).then(function (d) {
         expect(d[0].constructor).toBe(d[1].constructor);
       });
+      $httpBackend.flush();
+    }));
+
+    it ('compiles templated uris', inject(function ($httpBackend, ngHal) {
+      $httpBackend.expect('GET', '/api').respond({_links: { foo: { href: '/foo/{id}', templated: true}} });
+      $httpBackend.expect('GET', '/foo/123').respond({});
+
+      ngHal.follow('foo', {id: 123});
+
       $httpBackend.flush();
     }));
   });

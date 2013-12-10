@@ -1,4 +1,4 @@
-angular.module('angular-hal', ['ng'])
+angular.module('angular-hal', ['ng', 'uri-template'])
 .provider('ngHal', function () {
   function bind (object, fun) {
     return function () {
@@ -79,7 +79,12 @@ angular.module('angular-hal', ['ng'])
       memoize(this, 'get', 'call', 'link', 'follow', 'url');
     },
     Link: function (linkspec) {
-      this.href = linkspec.href;
+      if (linkspec.templated) {
+        this.templated = true;
+        this.template = UriTemplate.parse(linkspec.href);
+      } else {
+        this.string = linkspec.href;
+      }
       this.profile = linkspec['profile'];
     },
     Promise: function (promise) {
@@ -108,20 +113,30 @@ angular.module('angular-hal', ['ng'])
   };
 
   HAL.Document.prototype = {
-    _follow: function (rel) {
-      return $http.get(this.link(rel).href);
+    _follow: function (rel, params) {
+      return $http.get(this.link(rel).href(params));
     },
-    follow: function follow (rel) {
-      return new HAL.DocPromise(this._follow(rel));
+    follow: function follow (rel, params) {
+      return new HAL.DocPromise(this._follow(rel, params));
     },
     url: function url () {
-      return this.link('self').href;
+      return this.link('self').href();
     },
     save: function save () {
       $http.put(this.url(), this);
     },
     destroy: function destroy () {
       $http['delete'](this.url());
+    }
+  };
+
+  HAL.Link.prototype = {
+    href: function (params) {
+      if (this.templated) {
+        return this.template.expand(params);
+      } else {
+        return this.string;
+      }
     }
   };
 
@@ -132,9 +147,9 @@ angular.module('angular-hal', ['ng'])
         return document.link(rel) || $q.reject('no such link' + rel);
       });
     },
-    follow: function follow (rel) {
+    follow: function follow (rel, params) {
       return new HAL.DocPromise(this.then(function (document) {
-        return document._follow(rel);
+        return document._follow(rel, params);
       }), this.then(function (document) {
         return [document.link(rel).profile, rel];
       }));
@@ -151,7 +166,7 @@ angular.module('angular-hal', ['ng'])
     }
   });
 
-  var root, $q, $http, modules = {}, constructorCache = {};
+  var root, $q, $http, UriTemplate, modules = {}, constructorCache = {};
 
   this.setRootUrl = function (rootUrl) {
     root = rootUrl;
@@ -165,9 +180,10 @@ angular.module('angular-hal', ['ng'])
     }
   };
 
-  this.$get = ['$http', '$q', function (h, q) {
+  this.$get = ['$http', '$q', 'UriTemplate', function (h, q, u) {
     $http = h;
     $q = q;
+    UriTemplate = u;
     return new HAL.DocPromise(h.get(root), ['root']);
   }];
 });
