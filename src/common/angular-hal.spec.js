@@ -223,5 +223,48 @@ describe('angular-hal', function () {
 
       $httpBackend.flush();
     }));
+
+    it ('constructs objects based on links', inject(function ($httpBackend, ngHal) {
+      var foo;
+      ngHal.build('foo').then(function (d) {
+        foo = d;
+      });
+      $httpBackend.flush();
+      expect(foo.save).toBeDefined();
+    }));
+
+    it ('POSTS to the apropriate url when saving a newly constructed object', inject(function ($httpBackend, ngHal) {
+      $httpBackend.expect('POST', '/api/foo', {bar: 'baz'}).respond({});
+      ngHal.build('foo').then(function (foo) {
+        foo.bar = 'baz';
+        foo.save();
+      });
+      $httpBackend.flush();
+    }));
+
+    it ('updates the links for the record when saving is finished', inject(function ($httpBackend, ngHal) {
+      var doc;
+      $httpBackend.when('POST', '/api/foo').respond({_links: { self: { href: '/api/foo/123' } }, id: 123, name: 'j' });
+      ngHal.build('foo').then(function (foo) {
+        foo.save().then(function () {
+          doc = foo;
+        });
+      });
+      $httpBackend.flush();
+      expect(doc.name).toEqual('j');
+      expect(doc.url()).toEqual('/api/foo/123');
+    }));
+
+    it ('is persisted once saved', inject(function ($httpBackend, ngHal) {
+      var doc;
+      $httpBackend.when('POST', '/api/foo').respond({});
+      ngHal.build('foo').then(function (foo) {
+        expect(foo.persisted()).toBeFalsy();
+        foo.save();
+        doc = foo;
+      });
+      $httpBackend.flush();
+      expect(doc.persisted()).toBeTruthy();
+    }));
   });
 });

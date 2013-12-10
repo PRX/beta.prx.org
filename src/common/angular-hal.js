@@ -62,9 +62,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     Document: function (document, config) {
       var links = {};
       angular.forEach(document._links, function (link, rel) {
-        links[rel] = new HAL.Link(link, rel, config.url);
+        links[rel] = new HAL.Link(link, rel, config ? config.url : undefined);
       });
-      if (typeof links['self'] === 'undefined') {
+      if (typeof links['self'] === 'undefined' && typeof config !== 'undefined') {
         links.self = new HAL.Link({href: config.url}, 'self', config.url);
       }
       this.link = function (rel) { return links[rel]; };
@@ -122,11 +122,28 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     url: function url () {
       return this.link('self').href();
     },
+    persisted: function persisted () {
+      return !!this.link('self');
+    },
     save: function save () {
-      $http.put(this.url(), this);
+      var self = this;
+      if (this.persisted()) {
+        return $http.put(this.url(), this).then(function () {
+          return self;
+        });
+      } else {
+        return $http.post(this.link('create').href(), this).then(function (response) {
+          HAL.Document.call(self, response.data, response.config);
+          return self;
+        });
+      }
     },
     destroy: function destroy () {
       $http['delete'](this.url());
+    },
+    build: function build (rel) {
+      var link = this.link(rel);
+      return constructDocument({_links: {create: {href: link.href() }}}, undefined, [link.profile, rel]);
     }
   };
 
@@ -162,6 +179,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     destroy: function destroy () {
       return this.then(function (document) {
         return document.destroy();
+      });
+    },
+    build: function build (rel) {
+      return this.then(function (document) {
+        return document.build(rel);
       });
     }
   });
