@@ -322,7 +322,7 @@ describe('uri-template', function () {
       "testcases":[
         [ "{/empty_list}", [ "" ] ],
         [ "{/empty_list*}", [ "" ] ],
-        [ "{?empty_list}", [ ""] ],
+        [ "{?empty_list}", [ "" ] ],
         [ "{?empty_list*}", [ "" ] ],
         [ "{?empty_assoc}", [ "" ] ],
         [ "{?empty_assoc*}", [ "" ] ]
@@ -373,7 +373,7 @@ describe('uri-template', function () {
 
     angular.forEach(examples, function (example, description) {
       describe(description, function () {
-        if (example.level <= 4) {
+        if (true) {
           angular.forEach(example.testcases, function (testcase) {
             it ('correctly expands ' + testcase[0] + ' => ' + rep(testcase[1]), function () {
               var expanded = UriTemplate.parse(testcase[0]).expand(example.variables);

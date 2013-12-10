@@ -2,11 +2,12 @@ angular.module('uri-template', [])
 .service('UriTemplate', function () {
 
   var operators = ['+', '#', '.', '/', ';', '?', '&'];
-  
-  function Expression () { }
-  Expression.prototype.append = function (array) {
-    if (this.string.length > 0) {
-      array.push(this);
+
+  var Expression = {
+    append: function (array) {
+      if (this.string.length > 0) {
+        array.push(this);
+      }
     }
   };
 
@@ -14,7 +15,7 @@ angular.module('uri-template', [])
     this.string = string;
   }
 
-  ConstantExpression.prototype = Object.create(Expression.prototype);
+  ConstantExpression.prototype = Object.create(Expression);
   ConstantExpression.prototype.constructor = ConstantExpression;
   ConstantExpression.prototype.expand = function () {
     return this.string;
@@ -32,7 +33,7 @@ angular.module('uri-template', [])
     }, this);
   }
 
-  VariableExpression.prototype = Object.create(Expression.prototype);
+  VariableExpression.prototype = Object.create(Expression);
   VariableExpression.prototype.constructor = VariableExpression;
   VariableExpression.prototype.expand = function (params) {
     var result = [];
@@ -40,9 +41,7 @@ angular.module('uri-template', [])
     angular.forEach(this.components, function (component) {
       var object = component.expand(params);
 
-      if (angular.isArray(object)) {
-        result = result.concat(object);
-      } else if (component.splat) {
+      if (component.splat) {
         angular.forEach(object, function (value, key) {
           if (angular.isArray(value)) {
             angular.forEach(value, function (v) {
@@ -60,7 +59,7 @@ angular.module('uri-template', [])
         angular.forEach(object, function (value, key) {
           if (this.operator == ';' && (typeof value === 'undefined' || value.toString().length < 1)) {
             result.push(key);
-          } else {
+          } else if (result.length || typeof value !== 'undefined' && value.toString().length >= 1) {
             result.push(key+'='+value);
           }
         }, this);
@@ -71,7 +70,7 @@ angular.module('uri-template', [])
       }
     }, this);
 
-    if (result.length) {
+    if (result.join('').length) {
       if (this.operator == '.' || this.operator == '/' || this.operator == ';' || this.operator == '&') {
         result = result.join(this.operator);
       } else if (this.operator == '?') {
