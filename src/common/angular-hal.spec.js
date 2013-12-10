@@ -74,7 +74,7 @@ describe('angular-hal', function () {
     }));
 
     beforeEach(inject(function ($httpBackend) {
-      $httpBackend.when('GET', '/api').respond({
+      var document = {
         _links: {
           foo: {
             href: '/api/foo'
@@ -84,8 +84,12 @@ describe('angular-hal', function () {
           }
         },
         foo: 'split:me'
-      });
+      };
+
+      $httpBackend.when('GET', '/api').respond(document);
+      $httpBackend.when('GET', '/api/foo').respond(angular.copy(document));
     }));
+
 
     it ('calls the root url requested in configuration', inject(function ($httpBackend, ngHal) {
       $httpBackend.expectGET('/api');
@@ -123,12 +127,22 @@ describe('angular-hal', function () {
             cool = data.cool;
           });
         });
-        
+
         $httpBackend.flush();
         expect(cool).toEqual('sigil');
       }));
 
     });
+
+    it ('is a promise', inject(function ($httpBackend, ngHal) {
+      var o;
+      ngHal['finally'](function (e) {
+        o = true;
+      });
+      expect(o).toBeFalsy();
+      $httpBackend.flush();
+      expect(o).toBeTruthy();
+    }));
 
     it ('generates its own url based on _links.self', inject(function ($httpBackend, ngHal) {
       $httpBackend.expect('GET', '/api').respond({_links: {self: {href: '/api/v1'}}});
@@ -173,6 +187,12 @@ describe('angular-hal', function () {
       $httpBackend.flush();
     }));
 
+    it ('DELETEs the document URL when destroy is called', inject(function ($httpBackend, ngHal) {
+      $httpBackend.expect('DELETE', '/api').respond({});
+      ngHal.destroy();
+      $httpBackend.flush();
+    }));
+
     it ('memoizes property promises', inject(function (ngHal) {
       expect(ngHal.get('foo')).toBe(ngHal.get('foo'));
     }));
@@ -185,6 +205,14 @@ describe('angular-hal', function () {
       expect(e).toBe(false);
       $httpBackend.flush();
       expect(e).toBeTruthy();
+    }));
+
+    it ('caches constructors', inject(function ($httpBackend, ngHal, $q) {
+      var p = ngHal.follow('foo');
+      $q.all([p, p.follow('foo')]).then(function (d) {
+        expect(d[0].constructor).toBe(d[1].constructor);
+      });
+      $httpBackend.flush();
     }));
   });
 });

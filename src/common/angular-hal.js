@@ -83,7 +83,9 @@ angular.module('angular-hal', ['ng'])
       this.profile = linkspec['profile'];
     },
     Promise: function (promise) {
-      this.then = wrap(HAL.Promise, bind(promise, $q.when(promise).then));
+      promise = $q.when(promise);
+      this['finally'] = wrap(HAL.Promise, bind(promise, promise['finally']));
+      this.then = wrap(HAL.Promise, bind(promise, promise.then));
       memoize(this, 'get', 'call');
     }
   };
@@ -91,9 +93,6 @@ angular.module('angular-hal', ['ng'])
   HAL.Promise.prototype = {
     'catch': function (errback) {
       return this.then(undefined, errback);
-    },
-    'finally': function (fin) {
-      return this.then()['finally'](fin);
     },
     'get': function (property) {
       return this.then(function (data) {
@@ -112,14 +111,17 @@ angular.module('angular-hal', ['ng'])
     _follow: function (rel) {
       return $http.get(this.link(rel).href);
     },
-    follow: function (rel) {
+    follow: function follow (rel) {
       return new HAL.DocPromise(this._follow(rel));
     },
-    url: function () {
+    url: function url () {
       return this.link('self').href;
     },
-    save: function () {
+    save: function save () {
       $http.put(this.url(), this);
+    },
+    destroy: function destroy () {
+      $http['delete'](this.url());
     }
   };
 
@@ -140,6 +142,11 @@ angular.module('angular-hal', ['ng'])
     url: function url () {
       return this.then(function (document) {
         return document.url();
+      });
+    },
+    destroy: function destroy () {
+      return this.then(function (document) {
+        return document.destroy();
       });
     }
   });
