@@ -373,23 +373,21 @@ describe('uri-template', function () {
 
     angular.forEach(examples, function (example, description) {
       describe(description, function () {
-        if (true) {
-          angular.forEach(example.testcases, function (testcase) {
-            it ('correctly expands ' + testcase[0] + ' => ' + rep(testcase[1]), function () {
-              var expanded = UriTemplate.parse(testcase[0]).expand(example.variables);
-              if (angular.isArray(testcase[1])) {
-                expect(testcase[1]).toContain(expanded);
-              } else {
-                expect(expanded).toEqual(testcase[1]);
-              }
-            });
+        angular.forEach(example.testcases, function (testcase) {
+          it ('correctly expands ' + testcase[0] + ' => ' + rep(testcase[1]), function () {
+            var expanded = UriTemplate.parse(testcase[0]).expand(example.variables);
+            if (angular.isArray(testcase[1])) {
+              expect(testcase[1]).toContain(expanded);
+            } else {
+              expect(expanded).toEqual(testcase[1]);
+            }
           });
-        }
+        });
       });
     });
 
     it ('gives a negative score when required uri components are missing', function () {
-      expect(UriTemplate.parse('/{a}').score({})).toBeLessThan(0);
+      expect(UriTemplate.parse('/{a}{?foo}').score({})).toBeLessThan(0);
     });
 
     it ('gives a greater score when more uri components are used', function () {
