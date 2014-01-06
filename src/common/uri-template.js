@@ -200,6 +200,7 @@ angular.module('uri-template', [])
 
   UriTemplate.prototype.expand = function (params) {
     var result = [];
+    params = params ||  {};
     angular.forEach(this._expressions, function (expression) {
       result.push(expression.expand(params));
     });
@@ -208,6 +209,7 @@ angular.module('uri-template', [])
 
   UriTemplate.prototype.score = function (params) {
     var result = 0;
+    params = params || {};
     angular.forEach(this._expressions, function (expression) {
       if (result != -1) {
         if (expression.isUnfulfillable(params)) {

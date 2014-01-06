@@ -43,11 +43,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         Base = Object.create(angular.extend(Base, modules[module]));
       }
     });
-    var cxt = function (document, config) {
-      HAL.Document.call(this, document, config);
+    return function Document (document, config) {
+      return HAL.Document(document, config, Base);
     };
-    cxt.prototype = Base;
-    return cxt;
   }
 
   function constructDocument (document, config, mods) {
@@ -59,18 +57,13 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   }
 
   var HAL = {
-    Document: function (document, config) {
-      var links = {};
-      angular.forEach(document._links, function (link, rel) {
-        links[rel] = new HAL.Link(link, rel, config ? config.url : undefined);
-      });
-      if (typeof links['self'] === 'undefined' && typeof config !== 'undefined') {
-        links.self = new HAL.Link({href: config.url}, 'self', config.url);
-      }
-      this.link = function (rel) { return links[rel]; };
-      memoize(this, '_follow', 'follow');
-      delete document['_links'];
-      angular.extend(this, document);
+    Document: function HALDocument (document, config, Base) {
+      Base.addLinks(document, config);
+      memoize(Base, '_follow', 'follow');
+      Base.constructor = HAL.Document;
+      o = Object.create(Base);
+      o.importData(document);
+      return o;
     },
     DocPromise: function (promise, mods) {
       HAL.Promise.call(this, $q.all({response: promise, mods: $q.when(mods)}).then(function (args) {
@@ -78,14 +71,24 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }));
       memoize(this, 'get', 'call', 'link', 'follow', 'url');
     },
-    Link: function (linkspec) {
-      if (linkspec.templated) {
-        this.templated = true;
-        this.template = UriTemplate.parse(linkspec.href);
-      } else {
-        this.string = linkspec.href;
+    Link: function (linkspecs, rel, from) {
+      if (!angular.isArray(linkspecs)) {
+        linkspecs = [linkspecs];
       }
-      this.profile = linkspec['profile'];
+      this.specs = [];
+      angular.forEach(linkspecs, function (linkspec) {
+        if (from && from.indexOf('://') !== -1 && linkspec.href.split('://', 2).length != 2) {
+          if (linkspec.href[0] == '/') {
+            linkspec.href = from.split('/').slice(0, 3).join('/') + linkspec.href;
+          } else {
+            linkspec.href = [from.replace('/\/$/', ''), linkspec.href].join('/');
+          }
+        }
+        var spec = {};
+        spec.profile = linkspec.profile;
+        spec.template = UriTemplate.parse(linkspec.href);
+        this.specs.push(spec);
+      }, this);
     },
     Promise: function (promise) {
       promise = $q.when(promise);
@@ -133,7 +136,12 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         });
       } else {
         return $http.post(this.link('create').href(), this).then(function (response) {
-          HAL.Document.call(self, response.data, response.config);
+          var protowithlinks = self;
+          while (protowithlinks !== Object.prototype && !protowithlinks.hasOwnProperty('link')) {
+            protowithlinks = Object.getPrototypeOf(protowithlinks);
+          }
+          protowithlinks.addLinks(response.data, response.config);
+          self.importData(response.data);
           return self;
         });
       }
@@ -141,18 +149,48 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     destroy: function destroy () {
       $http['delete'](this.url());
     },
-    build: function build (rel) {
+    build: function build (rel, params) {
       var link = this.link(rel);
-      return constructDocument({_links: {create: {href: link.href() }}}, undefined, [link.profile, rel]);
+      return constructDocument({_links: {create: {href: link.href(params) }}}, undefined, [link.profile(params), rel]);
+    },
+    importData: function importData (document) {
+      delete document['_links'];
+      angular.extend(this, document);
+    },
+    addLinks: function addLinks (document, config) {
+      var links = {};
+      angular.forEach(document._links, function (link, rel) {
+        links[rel] = new HAL.Link(link, rel, config ? config.url : undefined);
+      });
+      if (typeof links['self'] === 'undefined' && typeof config !== 'undefined') {
+        links.self = new HAL.Link({href: config.url}, 'self', config.url);
+      }
+      this.link = function (rel) { return links[rel]; };
     }
   };
 
   HAL.Link.prototype = {
     href: function (params) {
-      if (this.templated) {
-        return this.template.expand(params);
-      } else {
-        return this.string;
+      var template = this.template(params);
+      if (template) {
+        return template.template.expand(params);
+      }
+    },
+    template: function (params) {
+      var highScore = -1, template;
+      angular.forEach(this.specs, function (spec) {
+        var score = spec.template.score(params);
+        if (score >= 0 && score > highScore) {
+          highScore = score;
+          template = spec;
+        }
+      });
+      return template;
+    },
+    profile: function (params) {
+      var template = this.template(params);
+      if (template) {
+        return template.profile;
       }
     }
   };
@@ -168,7 +206,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return new HAL.DocPromise(this.then(function (document) {
         return document._follow(rel, params);
       }), this.then(function (document) {
-        return [document.link(rel).profile, rel];
+        return [document.link(rel).profile(), rel];
       }));
     },
     url: function url () {

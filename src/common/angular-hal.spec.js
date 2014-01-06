@@ -68,6 +68,49 @@ describe('angular-hal', function () {
     });
   });
 
+  describe ('relative urls', function () {
+    beforeEach(module('angular-hal', function (ngHalProvider) {
+      ngHalProvider.setRootUrl('http://example.com/api');
+    }));
+    beforeEach(inject(function ($httpBackend) {
+      var document = {
+        _links: {
+          foo: {
+            href: 'foo'
+          },
+          bar: {
+            href: '/another'
+          },
+          baz: {
+            href: 'http://google.com'
+          }
+        }
+      };
+      $httpBackend.whenGET('http://example.com/api').respond(document);
+    }));
+
+    it ('appends links that should be appended to the current URL', inject(function (ngHal, $httpBackend) {
+      var href;
+      ngHal.link('foo').then(function (link) { href = link.href(); });
+      $httpBackend.flush();
+      expect(href).toEqual('http://example.com/api/foo');
+    }));
+
+    it ('maintains the host when host-relative links are used', inject(function (ngHal, $httpBackend) {
+      var href;
+      ngHal.link('bar').then(function (link) { href = link.href(); });
+      $httpBackend.flush();
+      expect(href).toEqual('http://example.com/another');
+    }));
+
+    it ('drops all context when absolute urls are used', inject(function (ngHal, $httpBackend) {
+      var href;
+      ngHal.link('baz').then(function (link) { href = link.href(); });
+      $httpBackend.flush();
+      expect(href).toEqual('http://google.com');
+    }));
+  });
+
   describe ('run phase', function () {
     beforeEach(module('angular-hal', function (ngHalProvider) {
       ngHalProvider.setRootUrl('/api');
@@ -81,6 +124,9 @@ describe('angular-hal', function () {
           },
           bar: {
             href: '/api/bar'
+          },
+          baz: {
+            href: '/api/{name}'
           }
         },
         foo: 'split:me'
@@ -104,11 +150,27 @@ describe('angular-hal', function () {
       expect(href).toEqual('/api/foo');
     }));
 
+    it ('returns undefined for links when there is no matching template', inject(function ($httpBackend, ngHal) {
+      var href;
+      ngHal.link('baz').then(function (link) { href = link.href(); });
+      $httpBackend.flush();
+      expect(href).toBeUndefined();
+    }));
+
+    it ('returns compiled paths when there is a matching template', inject(function ($httpBackend, ngHal) {
+      var href;
+      ngHal.link('baz').then(function (link) { href = link.href({name:'chris'}); });
+      $httpBackend.flush();
+      expect(href).toEqual('/api/chris');
+    }));
+
     describe('following', function () {
 
       beforeEach(inject(function ($httpBackend) {
-        $httpBackend.expectGET('/api/bar').respond({_links: {baz: {href: '/api/baz'}}});
-        $httpBackend.expectGET('/api/baz').respond({cool: 'sigil'});
+        $httpBackend.expectGET('/api/bar').respond({_links: {baz: {href: '/api/baz'}, bar: [{href: '/api/bar'}, {href: '/api/bar/{id}', templated: true}]}});
+        $httpBackend.whenGET('/api/baz').respond({cool: 'sigil'});
+        $httpBackend.whenGET('/api/bar').respond({a: 1});
+        $httpBackend.whenGET('/api/bar/1').respond({a: 2});
       }));
 
       it ('can follow multiple times on a promise', inject(function ($httpBackend, ngHal) {
@@ -130,6 +192,24 @@ describe('angular-hal', function () {
 
         $httpBackend.flush();
         expect(cool).toEqual('sigil');
+      }));
+
+      it ('picks a link when there is more than one available', inject(function ($httpBackend, ngHal) {
+        var response;
+        ngHal.follow('bar').follow('bar').then(function (data) {
+          response = data;
+        });
+        $httpBackend.flush();
+        expect(response.a).toBe(1);
+      }));
+
+      it ('picks a link with appropriate templates when required', inject(function ($httpBackend, ngHal) {
+        var response;
+        ngHal.follow('bar').follow('bar', {id: 1}).then(function (data) {
+          response = data;
+        });
+        $httpBackend.flush();
+        expect(response.a).toBe(2);
       }));
 
     });
