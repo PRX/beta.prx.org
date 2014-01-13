@@ -1,18 +1,188 @@
+@import "buttons.styl"
+@import "menus.styl"
+@import "reset.styl"
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700")
 
 blue = rgb(69, 155, 175)
 
+
+h1, h2, h3, h4, h5, h6
+  margin 0
+  font-weight 300
+
 html, body
   margin 0
+  color rgb(122, 122, 122)
 
 body 
   background rgb(245, 244, 242)
   font-family 'Open Sans', sans-serif
+  padding-top 35px
+  min-height 100%
+
+.open
+  header, div[ui-view]
+    -webkit-transition-property -webkit-transform
+    -webkit-transition-duration 0.2s
+    -webkit-transform translateX(250px)
+    width 100%
+  body
+    overflow hidden
+    width 100%
+  div.drawer
+    -webkit-transition-duration 0.2s
+    -webkit-transition-property -webkit-transform
+    -webkit-transform none
+.open-add, .open-remove
+  -webkit-transition-duration 0.2s
+.open-add-active
+  div[ui-view]
+    background rgb(245, 244, 242)
+  div.drawer
+    -webkit-transform translateX(0px)
+.open-remove-active
+  -webkit-transition-duration 0.2s
+  header, div[ui-view]
+    -webkit-transition-property -webkit-transform
+    -webkit-transition-duration 0.2s
+    -webkit-transform translateX(0px)
+    width 100%
+  div.drawer
+    -webkit-transition-duration 0.2s
+    -webkit-transition-property -webkit-transform
+    -webkit-transform translateX(-250px)
+
+.loading-bar
+  opacity 0.7
+  div
+    position: fixed
+    top: 0
+    height 1px
+    background rgb(245, 159, 81)
+    -webkit-transition width 0.3s linear
+    transition width 0.3s linear
+  &.hide 
+    display none
+  &.hide-add
+    display block
+    -webkit-transition-delay 1s
+    -webkit-transition-duration 0.5s
+    -webkit-transition-property opacity
+  &.hide-add-active
+    opacity 0
 
 header
+  position fixed
+  z-index 200
+  top 0
+  left 0
+  right 0
   text-align center
   background #FFF
   h1
     margin 0
+    background url('/assets/images/small-logo.png') center no-repeat
+    background-repeat no-repeat
+    background-size auto 17px
+    font-size 0px
     font-weight 400
+    height 47px
     color blue
+
+section.player
+  margin-top 0
+  background url('/assets/images/boston.png')
+  background-size cover
+  background-position center
+  padding 20px
+  height 150px
+  box-sizing border-box
+  position relative
+  &:before
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    display block
+    content ''
+    background rgba(0, 0, 0, 0.6)
+    z-index 9
+  &:after
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    display block
+    content ''
+    background rgba(255, 255, 255, 0.5)
+    z-index 8
+  h1
+    position relative
+    z-index 10
+    padding-top 12px
+    line-height 24px
+    font-size 20px
+    color #FFF
+    font-weight 300
+    max-height 70px
+    overflow hidden
+    &:before
+      @extend $button-orange
+      width 70px
+      height 70px
+      display block
+      font-family FontAwesome
+      font-size 40px
+      line-height 70px
+      content "\f04b"
+      float left
+      margin-right 14px
+  h3
+    padding-top 5px
+    line-height 26px
+    font-size 12px
+    clear both
+    font-weight 300
+    color #fff
+ul.actions
+  list-style-type none
+  padding 0 25px
+  margin 8px 0
+  display -webkit-flex
+  flex-wrap nowrap
+  align-content center
+  li
+    @extend $button-blue
+    flex-grow 1
+    flex-basis 1px
+    margin-left 10px
+    height 25px
+    line-height 25px
+    font-size 11px
+    font-weight 300
+    &.buy
+      @extend $button-orange
+    &:first-child
+      margin-left 0
+    .more
+      position absolute
+      right 8px
+      height 25px
+      line-height 25px
+section.body
+  background #fff
+  padding 25px
+  article
+    &:before
+      content ''
+      display block
+      margin 0 -25px 10px
+      border-top 1px solid rgb(225, 225, 225)
+    &:first-child:before
+      display none
+      margin 0
+    p
+      font-size 14px
+      font-weight 300

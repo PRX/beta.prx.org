@@ -1,32 +1,25 @@
-angular.module('prx.stories', ['ui.state', 'restangular', 'angular-hal'])
+angular.module('prx.stories', ['ui.state', 'angular-hal', 'prx-experiments'])
 
-.config(function ($stateProvider, ngHalProvider) {
+.config(function ($stateProvider, ngHalProvider, prxperimentProvider) {
 
   $stateProvider.state('story', {
     url: '/stories/:storyId',
     controller: 'StoryCtrl',
     templateUrl: 'stories/story.html',
     resolve: {
-      story: function (Story, $stateParams) {
-        return Story.get($stateParams.storyId);
-      }
+      story: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
+        return ngHal.follow('stories', {id: $stateParams.storyId});
+      }],
+      titleSize: ['prxperiment', function (prxperiment) {
+        return prxperiment.run('title', ['big', 'small']);
+      }]
     }
   });
 
-  ngHalProvider.defineModel('http://meta.prx.org/model/story', {
-    getSound: function () {
-      console.log("got a sound!");
-    }
-  });
-
-  ngHalProvider.setEntrypoint('http://api.prx4.dev/api/v1');
-
+  ngHalProvider.setRootUrl('http://api.'+ window.location.host +'/api/v1');
+  prxperimentProvider.base('http://x.prx.org').clientId('123');
 })
-.factory('Story', function (Restangular) {
-  return Restangular.withConfig(function (config) {
-    config.setBaseUrl('http://api.prx4.dev/api/v1');
-  }).all('stories');
-})
-.controller('StoryCtrl', function ($scope, story, ngHal) {
+.controller('StoryCtrl', function ($scope, story, titleSize) {
+  $scope.titleSize = titleSize;
   $scope.story = story;
 });

@@ -64,10 +64,18 @@ module.exports = {
    */
   vendor_files: {
     js: [
-      'vendor/angular/angular.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
-      'vendor/angular-ui-router/release/angular-ui-router.js',
+      'vendor/angular-ui-router/release/angular-ui-router.js'
+    ],
+    build_js: [
+      'vendor/angular/angular.js',
+      'vendor/angular-animate/angular-animate.js',
       'vendor/angular-touch/angular-touch.js'
+    ],
+    compile_js: [
+      'vendor/angular/angular.min.js',
+      'vendor/angular-animate/angular-animate.min.js',
+      'vendor/angular-touch/angular-touch.min.js'
     ],
     css: [
     ],

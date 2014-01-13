@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html ng-app="prx">
+<html ng-app="prx" ng-class="{'open': drawerOpen}">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title ng-bind="page.title">PRX.org</title>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <% scripts.forEach(function(file) { %><script src="<%= file %>"></script><% }); %>
 </head>
-<body>
+<body ng-class="klasses">
+  <prx-drawer></prx-drawer>
   <header>
-    <a ng-click="menuOpen()"></a>
+    <prx-loading-bar></prx-loading-bar>
+    <prx-drawer-button></prx-drawer-button>
     <h1>PRX</h1>
+    <prx-action-buttons></prx-action-buttons>
   </header>
-<div ui-view></div>
+  <div ui-view></div>
 <% if (!compile) { %><script src="http://localhost:35729/livereload.js"></script>
 <% } %></body>
 </html>

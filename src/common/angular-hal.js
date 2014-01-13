@@ -16,11 +16,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   function memoized (object, method) {
     var responses = {};
     var memoizedFunction = function () {
-      var args = [].slice.call(arguments);
-      if (typeof responses[args] === 'undefined') {
-        responses[args] = method.apply(object, args);
+      var args = [].slice.call(arguments), key = JSON.stringify(args);
+      if (typeof responses[key] === 'undefined') {
+        responses[key] = method.apply(object, args);
       }
-      return responses[args];
+      return responses[key];
     };
     memoizedFunction._memoized = true;
     return memoizedFunction;
