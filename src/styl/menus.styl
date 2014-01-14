@@ -1,0 +1,45 @@
+header nav {
+  max-width: 50%;
+  padding-left: 30px;
+}
+
+a.drawer {
+  padding-left: 10px;
+}
+
+div.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  background: rgb(243, 243, 243);
+  width: 250px;
+  border-right: 1px solid rgb(235, 235, 235);
+  -webkit-transform: translateX(-250px);
+}
+
+header {
+  a.drawer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 35px;
+    line-height: 35px;
+  }
+
+  nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 35px;
+    overflow: hidden;
+
+    a {
+      line-height: 35px;
+      float: right;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+}

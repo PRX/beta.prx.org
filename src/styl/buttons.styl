@@ -1,0 +1,24 @@
+orange = rgb(248, 172, 85);
+blue   = rgb(70, 156, 176);
+
+$button {
+  display: inline-block;
+  position: relative;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+  &:before {
+    position: absolute;
+    left: 8px;
+  }
+}
+
+$button-blue {
+  @extend $button;
+  background: blue;
+}
+
+$button-orange {
+  @extend $button;
+  background: orange;
+}

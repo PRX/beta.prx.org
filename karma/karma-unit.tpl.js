@@ -1,5 +1,5 @@
-module.exports = function ( karma ) {
-  karma.configure({
+module.exports = function ( config ) {
+  config.set({
     /**
      * From where to look for files, starting with the location of this file.
      */
@@ -28,6 +28,13 @@ module.exports = function ( karma ) {
      * How to report, by default.
      */
     reporters: ['dots', 'coverage'],
+
+    coverageReporter: {
+      reporters: [
+        {type: 'html', dir: 'coverage'},
+        {type: 'text-summary'}
+      ]
+    },
 
     /**
      * On which port should the browser connect, on which port is the test runner

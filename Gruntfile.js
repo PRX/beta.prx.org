@@ -134,7 +134,7 @@ module.exports = function ( grunt ) {
       build_vendorjs: {
         files: [
           {
-            src: [ '<%= vendor_files.js %>' ],
+            src: [ '<%= vendor_files.build_js %>', '<%= vendor_files.js %>' ],
             dest: '<%= build_dir %>/',
             cwd: '.',
             expand: true
@@ -189,6 +189,7 @@ module.exports = function ( grunt ) {
           banner: '<%= meta.banner %>'
         },
         src: [
+          '<%= vendor_files.compile_js %>',
           '<%= vendor_files.js %>',
           'module.prefix',
           '<%= build_dir %>/src/**/*.js',
@@ -196,7 +197,6 @@ module.exports = function ( grunt ) {
           '<%= html2js.common.dest %>',
           '<%= html2js.jade_app.dest %>',
           '<%= html2js.jade_common.dest %>',
-          '<%= vendor_files.js %>',
           'module.suffix'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
@@ -429,6 +429,7 @@ module.exports = function ( grunt ) {
       build: {
         dir: '<%= build_dir %>',
         src: [
+          '<%= vendor_files.build_js %>',
           '<%= vendor_files.js %>',
           '<%= build_dir %>/src/**/*.js',
           '<%= html2js.common.dest %>',
@@ -463,6 +464,7 @@ module.exports = function ( grunt ) {
       unit: {
         dir: '<%= build_dir %>',
         src: [
+          '<%= vendor_files.build_js %>',
           '<%= vendor_files.js %>',
           '<%= html2js.app.dest %>',
           '<%= html2js.common.dest %>',
@@ -537,7 +539,7 @@ module.exports = function ( grunt ) {
         files: [
           'src/assets/**/*'
         ],
-        tasks: [ 'copy:build_assets' ]
+        tasks: [ 'copy:build_app_assets', 'copy:build_vendor_assets' ]
       },
 
       /**

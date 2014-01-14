@@ -1,1 +1,17 @@
-h1 {{story.title}}
+section.player
+  h1 {{story.title}}
+  h3 by {{titleSize.choice}}
+ul.actions
+  li.love.fa.fa-heart Love
+  li.share.fa.fa-share Share
+  li.buy.fa.fa-shopping-cart
+    | Buy
+    span.fa.fa-sort-asc.more
+section.body
+  article
+    h3 Details
+    p(ph-txt="3s")
+  article
+    h3 Licensing
+    h4 Additional Terms
+    p(ph-txt="2s")
