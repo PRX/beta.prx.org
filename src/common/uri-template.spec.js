@@ -371,6 +371,10 @@ describe('uri-template', function () {
       expect(UriTemplate.parse('/').expand()).toBeDefined();
     });
 
+    it ('expands an unfulfillable uri to undefined', function () {
+      expect(UriTemplate.parse('/{name}/foo').expand({})).toBeUndefined();
+    });
+
     angular.forEach(examples, function (example, description) {
       describe(description, function () {
         angular.forEach(example.testcases, function (testcase) {

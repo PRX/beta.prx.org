@@ -199,12 +199,18 @@ angular.module('uri-template', [])
   }
 
   UriTemplate.prototype.expand = function (params) {
-    var result = [];
+    var result = [], failed = false;
     params = params ||  {};
     angular.forEach(this._expressions, function (expression) {
-      result.push(expression.expand(params));
+      if (!failed) {
+        if (expression.isUnfulfillable(params)) {
+          failed = true;
+        } else {
+          result.push(expression.expand(params));
+        }
+      }
     });
-    return result.join('');
+    return failed ? undefined : result.join('');
   };
 
   UriTemplate.prototype.score = function (params) {
