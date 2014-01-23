@@ -9,5 +9,8 @@
     "angular-ui-utils": "~0.1.0",
     "angular-touch": " ~1.2.10",
     "ngPlayerHater": "~0.0.6"
+  },
+  "resolutions": {
+    "angular": "1.2.10-build.2177+sha.5e9835b"
   }
 }
