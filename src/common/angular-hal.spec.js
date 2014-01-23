@@ -37,6 +37,31 @@ describe('angular-hal', function () {
       });
     });
 
+    it ('adds to the objects prototype chain with an injectable function', function () {
+      module('angular-hal', function (ngHalProvider) {
+        ngHalProvider.setRootUrl('/api/v1');
+        ngHalProvider.defineModule('http://meta.nghal.org/object', function (ngHal) {
+          return {
+            notByHal: function () { return ngHal; }
+          };
+        });
+      });
+
+      inject(function (ngHal, $httpBackend) {
+        $httpBackend.expectGET('/api/v1').respond({_links: {ducks: {href: '/api/ducks', profile: 'http://meta.nghal.org/object'}}});
+        $httpBackend.expectGET('/api/ducks').respond({duckling: 12221});
+        var resolvedHal, hald;
+        ngHal.then(function (hal) {
+          resolvedHal = hal;
+        });
+        ngHal.follow('ducks').call('notByHal').then(function (hal) {
+          hald = hal;
+        });
+        $httpBackend.flush();
+        expect(hald).toBe(resolvedHal);
+      });
+    });
+
     it ('adds to the objects prototype chain multiple times', function () {
       module('angular-hal', function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
@@ -127,7 +152,12 @@ describe('angular-hal', function () {
           },
           baz: {
             href: '/api/{name}'
-          }
+          },
+          lots: [
+            {href: '/api/one'},
+            {href: '/api/two'},
+            {href: '/api/{name}'}
+          ]
         },
         foo: 'split:me'
       };
@@ -162,6 +192,13 @@ describe('angular-hal', function () {
       ngHal.link('baz').then(function (link) { href = link.href({name:'chris'}); });
       $httpBackend.flush();
       expect(href).toEqual('/api/chris');
+    }));
+
+    it ('can return a list of hrefs', inject(function ($httpBackend, ngHal) {
+      var hrefs;
+      ngHal.link('lots').then(function (link) { hrefs = link.hrefs(); });
+      $httpBackend.flush();
+      expect(hrefs).toEqual(['/api/one', '/api/two']);
     }));
 
     describe('following', function () {

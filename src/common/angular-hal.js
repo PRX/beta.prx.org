@@ -40,7 +40,12 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     var Base = Object.create(HAL.Document.prototype);
     angular.forEach(mods, function (module) {
       if (typeof modules[module] !== 'undefined') {
-        Base = Object.create(angular.extend(Base, modules[module]));
+        angular.forEach(modules[module], function (mod) {
+          if (angular.isArray(mod) || angular.isFunction(mod)) {
+            mod = $injector.invoke(mod);
+          }
+          Base = Object.create(angular.extend(Base, mod));
+        });
       }
     });
     return function Document (document, config) {
@@ -176,6 +181,16 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         return template.template.expand(params);
       }
     },
+    hrefs: function (params) {
+      var hrefs = [], compiled;
+      angular.forEach(this.specs, function (spec) {
+        compiled = spec.template.expand(params);
+        if (typeof compiled !== 'undefined') {
+          hrefs.push(compiled);
+        }
+      });
+      return hrefs;
+    },
     template: function (params) {
       var highScore = -1, template;
       angular.forEach(this.specs, function (spec) {
@@ -226,23 +241,29 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     }
   });
 
-  var root, $q, $http, UriTemplate, modules = {}, constructorCache = {};
+  var root, $q, $http, UriTemplate, $injector, modules = {}, constructorCache = {};
 
   this.setRootUrl = function (rootUrl) {
     root = rootUrl;
+    return this;
   };
 
   this.defineModule = function (uri, module) {
     if (typeof modules[uri] === 'undefined') {
-      modules[uri] = angular.copy(module);
+      modules[uri] = [module];
     } else {
-      angular.extend(modules[uri], module);
+      modules[uri].push(module);
     }
+    return this;
   };
+  
+  var self = this;
 
-  this.$get = ['$http', '$q', 'UriTemplate', function (h, q, u) {
+  this.$get = ['$http', '$q', '$injector', 'UriTemplate', function (h, q, i, u) {
+    self.generateConstructor = constructor;
     $http = h;
     $q = q;
+    $injector = i;
     UriTemplate = u;
     return new HAL.DocPromise(h.get(root), ['root']);
   }];
