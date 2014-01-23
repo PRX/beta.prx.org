@@ -1,5 +1,5 @@
 angular.module('prxNavigation', ['ui.router'])
-.directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout) {
+.directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope) {
   function instrument(route, scope) {
     if (!route._loadingInstrumented) {
       var numResolutions = 2;
@@ -38,37 +38,56 @@ angular.module('prxNavigation', ['ui.router'])
     }
   }
 
+  var topScope;
+
   return {
     restrict: 'E',
     scope: true,
     replace: true,
-    template: '<div class="loading-bar" ng-class="{hide: finishedPercent() == 100, reset: reset}"><div ng-style="barStyle()"></div></div>',
-    link: function (scope) {
-      scope.totalResolutions = 3;
-      scope.finishedResolutions = 1;
-      
-      scope.finishedPercent = function () {
-        return parseInt(scope.finishedResolutions * 100 / scope.totalResolutions, 10);
-      };
-      
-      scope.barStyle = function () {
-        return { width: scope.finishedPercent() + '%' };
-      };
+    template: '<div class="loading" ng-class="{hide: hide(), reset: reset()}"><div class="bar" ng-style="barStyle()"></div></div>',
+    compile: function () {
+      if (typeof topScope === 'undefined') {
+        topScope = $rootScope.$new(true);
+        topScope.totalResolutions = 3;
+        topScope.finishedResolutions = 1;
+        topScope.hide = false;
 
-      scope.$on('$stateChangeStart', function (event, route) {
-        instrument(route, scope);
-        scope.reset = true;
-        scope.finishedResolutions = 0;
-        scope.totalResolutions = route._loadingResolutions;
-        $timeout(function () {
-          scope.finishedResolutions += 1;
-          scope.reset = false;
-        }, 1);
-      });
+        topScope.$on('$stateChangeStart', function (event, route) {
+          instrument(route, topScope);
+          topScope.reset = true;
+          topScope.hide = false;
+          topScope.finishedResolutions = 0;
+          topScope.totalResolutions = route._loadingResolutions;
+          $timeout(function () {
+            topScope.finishedResolutions += 1;
+            topScope.reset = false;
+          }, 1);
+        });
 
-      scope.$on('$stateChangeSuccess', function () {
-        scope.finishedResolutions = scope.totalResolutions;
-      });
+        topScope.$on('$stateChangeSuccess', function () {
+          $timeout(function () {
+            topScope.hide = true;
+          }, 10);
+        });
+      }
+
+      return function link (scope) {
+        scope.finishedPercent = function () {
+          return ~~(topScope.finishedResolutions * 100 / topScope.totalResolutions);
+        };
+      
+        scope.barStyle = function () {
+          return { width: this.finishedPercent() + '%' };
+        };
+
+        scope.hide = function () {
+          return topScope.hide;
+        };
+
+        scope.reset = function () {
+          return topScope.reset;
+        };
+      };
     }
   };
 });
