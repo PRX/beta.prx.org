@@ -283,7 +283,8 @@ module.exports = function ( grunt ) {
         options: {
           compress: false,
           "include css": true,
-          linenos: true
+          linenos: true,
+          import: ['nib']
         }
       },
       compile: {

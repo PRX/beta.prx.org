@@ -1,14 +1,14 @@
+@import "reset.styl";
+@import "variables.styl";
 @import "buttons.styl";
 @import "menus.styl";
-@import "reset.styl";
-@import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700");
+@import "typography.styl";
+@import "header.styl";
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
 
-blue = rgb(69, 155, 175);
-
-
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-  font-weight: 300;
+body {
+  min-height: 100%;
+  padding-bottom: 10px;
 }
 
 html, body {
@@ -16,11 +16,8 @@ html, body {
   color: rgb(122, 122, 122);
 }
 
-body {
-  background: rgb(245, 244, 242);
-  font-family: 'Open Sans', sans-serif;
-  padding-top: 35px;
-  min-height: 100%;
+div[ui-view] {
+  padding-top: action-bar-height;
 }
 
 .open {
@@ -124,9 +121,21 @@ section.player {
   background: url('/assets/images/boston.png');
   background-size: cover;
   background-position: center;
-  padding: 20px;
+  padding: 14px;
   height: 150px;
-  box-sizing: border-box;
+
+  .category {
+    position: relative;
+    z-index: 10;
+    color: light-grey;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 10px;
+    margin-left: 81px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+  }
+  
   position: relative;
   &:before {
     position: absolute;
@@ -141,10 +150,8 @@ section.player {
   }
 
   &:after {
-    position: absolute;
-    left: 0;
+    absolute: top left;
     right: 0;
-    top: 0;
     bottom: 0;
     display: block;
     content: '';
@@ -155,26 +162,14 @@ section.player {
   h1 {
     position: relative;
     z-index: 10;
-    padding-top: 12px;
-    line-height: 24px;
-    font-size: 20px;
+    line-height: 26px;
+    font-size: 22px;
+    margin-top: 3px;
     color: #FFF;
     font-weight: 300;
-    max-height: 70px;
+    height: 80px;
+    padding-bottom: 5px;
     overflow: hidden;
-
-    &:before {
-      @extend $button-orange;
-      width: 70px;
-      height: 70px;
-      display: block;
-      font-family: FontAwesome;
-      font-size: 40px;
-      line-height: 70px;
-      content: "\f04b";
-      float: left;
-      margin-right: 14px;
-    }
   }
 
   h3 {
@@ -189,13 +184,12 @@ section.player {
 
 ul.actions {
   list-style-type: none;
-  padding: 0 25px;
-  margin: 8px 0;
+  padding: 8px 14px;
   display: -webkit-flex;
   flex-wrap: nowrap;
   align-content: center;
   li {
-    @extend $button-blue;
+    button-blue(true);
     flex-grow: 1;
     flex-basis: 1px;
     margin-left: 10px;
@@ -205,7 +199,7 @@ ul.actions {
     font-weight: 300;
 
     &.buy {
-      @extend $button-orange;
+      button-orange(true);
     }
     &:first-child {
       margin-left: 0;
@@ -221,12 +215,12 @@ ul.actions {
 
 section.body {
   background: #fff;
-  padding: 25px;
+  padding: 0 14px;
   article {
     &:before {
       content: '';
       display: block;
-      margin: 0 -25px 10px;
+      margin: 0 -14px 10px;
       border-top: 1px solid rgb(225, 225, 225);
     }
 
@@ -236,6 +230,7 @@ section.body {
     }
     p {
       font-size: 14px;
+      line-height: 22px;
       font-weight: 300;
     }
   }
