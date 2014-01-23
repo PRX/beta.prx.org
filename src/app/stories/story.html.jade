@@ -1,4 +1,6 @@
 section.player
+  .category documentary
+  .toggle-button(ng-class="{play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()")
   h1 {{story.title}}
   h3 by {{titleSize.choice}}
 ul.actions
@@ -9,9 +11,9 @@ ul.actions
     span.fa.fa-sort-asc.more
 section.body
   article
-    h3 Details
+    h2 Details
     p(ph-txt="3s")
   article
-    h3 Licensing
-    h4 Additional Terms
+    h2 Licensing
+    h3 Additional Terms
     p(ph-txt="2s")

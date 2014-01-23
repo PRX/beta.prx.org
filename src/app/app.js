@@ -1,11 +1,8 @@
-angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'placeholders', 'ui.router', 'prx.home', 'prx.stories', 'templates-jade_app'])
-// .run(function ($rootScope) {
-//   if (navigator.userAgent.match(/iPhone|iPad/)) {
-//     $rootScope.klasses = ['iOS'];
-//   } else if (navigator.userAgent.match(/Android/)) {
-//     $rootScope.klasses = ['iOS'];
-//   }
-// })
+angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'placeholders', 'ui.router', 'prx.home', 'prx.stories', 'templates-jade_app', 'prx.player'])
+.run(function ($rootScope, playerHater, $animate) {
+  $rootScope.player = playerHater;
+  $rootScope.animate = $animate;
+})
 .directive('prxActionButtons', function ($window) {
   return {
     restrict: 'E',
@@ -26,7 +23,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'placeholders', 
 .directive('prxDrawerButton', function ($rootScope) {
   return {
     restrict: 'E',
-    template: '<a class="drawer fa fa-bars " ng-click="openDrawer()"></a>',
+    template: '<a class="drawer" ng-click="openDrawer()"></a>',
     link: function (scope) {
       $rootScope.closeDrawer = function () {
         $rootScope.drawerOpen = false;
@@ -40,6 +37,6 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'placeholders', 
 .directive('prxDrawer', function () {
   return {
     restrict: 'E',
-    template: '<div class="drawer" ng-click="closeDrawer()"><a >Search</a></div>'
+    templateUrl: 'drawer.html'
   };
 });

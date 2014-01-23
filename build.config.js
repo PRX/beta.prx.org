@@ -65,7 +65,8 @@ module.exports = {
   vendor_files: {
     js: [
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
-      'vendor/angular-ui-router/release/angular-ui-router.js'
+      'vendor/angular-ui-router/release/angular-ui-router.js',
+      'vendor/ngPlayerHater/ng-player-hater.min.js'
     ],
     build_js: [
       'vendor/angular/angular.js',
@@ -80,6 +81,7 @@ module.exports = {
     css: [
     ],
     assets: [
+      'vendor/soundmanager/swf/soundmanager2_flash9.swf'
     ]
   },
 

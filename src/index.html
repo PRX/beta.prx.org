@@ -7,15 +7,28 @@
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <% scripts.forEach(function(file) { %><script src="<%= file %>"></script><% }); %>
 </head>
-<body ng-class="klasses">
+<body ng-class="{'with-player': !!player.nowPlaying}">
   <prx-drawer></prx-drawer>
   <header>
     <prx-loading-bar></prx-loading-bar>
     <prx-drawer-button></prx-drawer-button>
-    <h1>PRX</h1>
+    <h1><a>PRX</a></h1>
     <prx-action-buttons></prx-action-buttons>
   </header>
-  <div ui-view></div>
+  <div ui-view>
+    <prx-loading-bar></prx-loading-bar>
+  </div>
+  <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
+    <div class="toggle-button" ng-class="{play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
+      <small>{{player.nowPlaying.position | timeCode }}</small>
+    </div>
+    <div class="thumb"></div>
+    <div class="title">{{player.nowPlaying.story.title}}</div>
+    <ul class="actions">
+      <li class="share"></li>
+      <li class="love"></li>
+    </ul>
+  </div>
 <% if (!compile) { %><script src="http://localhost:35729/livereload.js"></script>
 <% } %></body>
 </html>
