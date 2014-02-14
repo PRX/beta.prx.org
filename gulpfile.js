@@ -124,8 +124,14 @@ gulp.task('css', function () {
 });
 
 gulp.task('specs', ['templates', 'buildJs'], function () {
+  var karmaCfg = {configFile: c.karmaCfg, action: 'run'};
+
+  if (process.env.TRAVIS) {
+    karmaCfg.browsers = ['Firefox', 'PhantomJS'];
+  }
+  
   return gulp.src(specJs, {read: false})
-    .pipe(karma({configFile: c.karmaCfg, action: 'run'}));
+    .pipe(karma(karmaCfg));
 });
 
 gulp.task('buildJs', ['jshint'], function () {
