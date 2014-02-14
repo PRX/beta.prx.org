@@ -1,4 +1,1 @@
-angular.module('prx.home', ['ui.router'])
-.config(function () {
-  console.log('configs3');
-});
+angular.module('prx.home', ['ui.router']);
