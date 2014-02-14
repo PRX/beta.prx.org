@@ -237,7 +237,7 @@ gulp.on('err', function (e) {
   }
 });
 
-gulp.task('checkCoverage', ['js'], function () {
+gulp.task('checkCoverage', ['specs'], function () {
   return gulp.src('.')
     .pipe(istnbl({
       thresholds: c.covReq,
