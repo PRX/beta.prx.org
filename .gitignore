@@ -5,3 +5,4 @@ vendor
 bin
 .DS_Store
 .powder
+tmp

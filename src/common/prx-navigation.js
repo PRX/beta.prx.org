@@ -1,6 +1,15 @@
 angular.module('prxNavigation', ['ui.router'])
 .directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope) {
   function instrument(route, scope) {
+    function finish (v) {
+      scope.finishedResolutions += 1;
+      return v;
+    }
+
+    function error (v) {
+      return $q.reject(v);
+    }
+
     if (!route._loadingInstrumented) {
       var numResolutions = 2;
       route.resolve = route.resolve || {};
@@ -8,10 +17,7 @@ angular.module('prxNavigation', ['ui.router'])
         numResolutions += 1;
         if (angular.isString(resolve)) {
           route.resolve[name] = function () {
-            return $q.when($injector.get(resolve)).then(function (v) {
-              scope.finishedResolutions += 1;
-              return v;
-            });
+            return $q.when($injector.get(resolve)).then(finish, error);
           };
         } else {
           route.resolve[name] = $injector.annotate(resolve);
@@ -19,10 +25,7 @@ angular.module('prxNavigation', ['ui.router'])
             resolve = resolve[resolve.length-1];
           }
           route.resolve[name].push(function () {
-            return $q.when(resolve.apply(this, arguments)).then(function (v) {
-              scope.finishedResolutions += 1;
-              return v;
-            });
+            return $q.when(resolve.apply(this, arguments)).then(finish, error);
           });
         }
       });
@@ -65,6 +68,12 @@ angular.module('prxNavigation', ['ui.router'])
         });
 
         topScope.$on('$stateChangeSuccess', function () {
+          $timeout(function () {
+            topScope.hide = true;
+          }, 10);
+        });
+
+        topScope.$on('$stateChangeError', function () {
           $timeout(function () {
             topScope.hide = true;
           }, 10);

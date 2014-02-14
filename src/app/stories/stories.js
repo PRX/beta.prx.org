@@ -1,6 +1,6 @@
 angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'ngPlayerHater'])
 
-.config(function ($stateProvider, ngHalProvider, prxperimentProvider) {
+.config(function ($stateProvider, ngHalProvider, prxperimentProvider, $urlRouterProvider) {
 
   $stateProvider.state('story', {
     url: '/stories/:storyId',
@@ -16,6 +16,10 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'n
     }
   });
 
+  $urlRouterProvider
+    .when('/pieces/:pieceId', "/stories/{pieceId}")
+    .otherwise('/not_found');
+    
   var urls = [
     'https://dl.dropboxusercontent.com/u/125516/Microcastle/01%20Cover%20Me%20%28Slowly%29.mp3',
     'https://dl.dropboxusercontent.com/u/125516/Microcastle/02%20Agoraphobia.mp3',
@@ -23,7 +27,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'n
     'https://dl.dropboxusercontent.com/u/125516/Microcastle/04%20Little%20Kids.mp3'
   ];
 
-  ngHalProvider.setRootUrl('http://api.'+ window.location.host +'/api/v1')
+  ngHalProvider.setRootUrl('http://api.'+ window.location.hostname +'/api/v1')
   .defineModule('http://meta.prx.org/model/story', ['playerHater', function (playerHater) {
     return {
       sound: function () {
@@ -64,7 +68,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'n
   }]);
   prxperimentProvider.base('http://x.prx.org').clientId('123');
 })
-.controller('StoryCtrl', function ($scope, story, titleSize) {
+.controller('StoryCtrl', function ($scope, story, titleSize, $stateParams) {
   $scope.titleSize = titleSize;
   $scope.story = story;
+  $scope.activeStory = $scope.activeStory || {};
+  $scope.activeStory.id = ~~$stateParams.storyId;
 });

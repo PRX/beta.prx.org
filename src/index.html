@@ -3,15 +3,16 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title ng-bind="page.title">PRX.org</title>
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <base href="/">
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <% scripts.forEach(function(file) { %><script src="<%= file %>"></script><% }); %>
+  <meta name="fragment" content="!">
 </head>
-<body ng-class="{'with-player': !!player.nowPlaying}">
-  <prx-drawer></prx-drawer>
+<body ng-controller="appCtrl" ng-class="{'with-player': !!player.nowPlaying}">
+  <prx-drawer ng-flag="showMenu"></prx-drawer>
   <header>
     <prx-loading-bar></prx-loading-bar>
-    <prx-drawer-button></prx-drawer-button>
+    <prx-drawer-button ng-flag="showMenu"></prx-drawer-button>
     <h1><a>PRX</a></h1>
     <prx-action-buttons></prx-action-buttons>
   </header>
