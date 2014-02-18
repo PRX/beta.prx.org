@@ -2,7 +2,12 @@
   "buildDir": "public",
   "compile_dir": "bin",
   "app": {
-    "js": [ "src/**/*.js", "!src/**/*.spec.js", "!src/assets/**/*.js", "!src/server.js" ],
+    "js": [
+      "src/**/*.js",
+      "!src/**/*.spec.js",
+      "!src/assets/**/*.js",
+      "!src/common/angular-hal-mock.js"
+    ],
     "specs": [ "src/**/*.spec.js" ],
     "html": [ "src/index.html" ],
     "stylus": [ "src/styl/main.styl" ],
@@ -13,6 +18,7 @@
   "test": {
     "js": [
       "vendor/angular/angular.js",
+      "src/common/angular-hal-mock.js",
       "vendor/angular-mocks/angular-mocks.js"
     ]
   },

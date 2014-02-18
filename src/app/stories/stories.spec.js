@@ -13,6 +13,18 @@ describe('prx.stories', function () {
     }));
   });
 
+  describe ('story state', function () {
+    var state;
+    beforeEach(inject(function ($state) {
+      state = $state.get('story');
+    }));
+
+    it ('resolves the story', inject(function (ngHal, $injector) {
+      expect(resolutionOf('story', 'story', {storyId: 212}))
+        .toFollow('stories', {id: 212});
+    }));
+  });
+
   describe ('story module', function () {
 
     var ngHal, story, playerHater;
