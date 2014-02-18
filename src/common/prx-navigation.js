@@ -1,5 +1,14 @@
 angular.module('prxNavigation', ['ui.router'])
-.directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope) {
+.directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope, $animate) {
+  if (typeof window.callPhantom !== 'undefined') {
+    $animate.enabled(false);
+  }
+  function renderDone() {
+    if (typeof window.callPhantom !== 'undefined') {
+      $timeout(window.callPhantom, 1);
+    }
+  }
+
   function instrument(route, scope) {
     function finish (v) {
       scope.finishedResolutions += 1;
@@ -68,14 +77,18 @@ angular.module('prxNavigation', ['ui.router'])
         });
 
         topScope.$on('$stateChangeSuccess', function () {
+          
           $timeout(function () {
             topScope.hide = true;
+            renderDone();
           }, 10);
         });
 
         topScope.$on('$stateChangeError', function () {
+          
           $timeout(function () {
             topScope.hide = true;
+            renderDone();
           }, 10);
         });
       }

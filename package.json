@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "gzippo": "~0.2.0",
-    "express": "~3.3.7"
+    "express": "~3.3.7",
+    "phantomjs": "~1.9.7-1"
   },
   "devDependencies": {
     "karma-coverage": "~0.1.1",
