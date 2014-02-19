@@ -490,12 +490,20 @@ describe('angular-hal', function () {
         $httpBackend.expect('GET', '/api').respond(document);
       }));
 
-      xit ('can fetch embedded documents using follow as a cache', function () {
-        var mDoc;
+      it ('can fetch embedded documents using follow as a cache', function () {
         ngHal.follow('owner').then(function (doc) {
           expect(doc.name).toEqual('name');
         });
         $httpBackend.flush();
+      });
+
+      it ('can fetch several embedded documents at once', function () {
+        var docs;
+        ngHal.follow('audio').then(function (audios) {
+          docs = audios;
+        });
+        $httpBackend.flush();
+        expect(docs.length).toBe(2);
       });
     });
   });

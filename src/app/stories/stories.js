@@ -8,10 +8,13 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'n
     templateUrl: 'stories/story.html',
     resolve: {
       story: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
-        return ngHal.follow('stories', {id: $stateParams.storyId});
+        return ngHal.followOne('stories', {id: $stateParams.storyId});
       }],
       titleSize: ['prxperiment', function (prxperiment) {
         return prxperiment.run('title', ['big', 'small']);
+      }],
+      audioFiles: ['story', function (story) {
+        return story.follow('audio');
       }]
     }
   });
@@ -19,30 +22,29 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'n
   $urlRouterProvider
     .when('/pieces/:pieceId', "/stories/{pieceId}")
     .otherwise('/not_found');
-    
-  var urls = [
-    'https://dl.dropboxusercontent.com/u/125516/Microcastle/01%20Cover%20Me%20%28Slowly%29.mp3',
-    'https://dl.dropboxusercontent.com/u/125516/Microcastle/02%20Agoraphobia.mp3',
-    'https://dl.dropboxusercontent.com/u/125516/Microcastle/03%20Never%20Stops.mp3',
-    'https://dl.dropboxusercontent.com/u/125516/Microcastle/04%20Little%20Kids.mp3'
-  ];
 
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .defineModule('http://meta.prx.org/model/story', ['playerHater', function (playerHater) {
     return {
+      audioFiles: function () {
+        return this.$audioFiles = this.$audioFiles || this.follow('audio');
+      },
       sound: function () {
         if (typeof this._sound !== 'undefined') { return this._sound; }
         if (playerHater.nowPlaying && playerHater.nowPlaying.story && playerHater.nowPlaying.story.id == this.id) {
           playerHater.nowPlaying.story = this;
-          return this._sound = playerHater.nowPlaying;
+          return this.$sound = playerHater.nowPlaying;
         }
-        var files = angular.copy(urls);
-        angular.forEach(files, function (file, index) {
-          files[index] = {url: file};
+        return this.audioFiles().then(function (audioFiles) {
+          var files = [];
+          angular.forEach(audioFiles, function (audioFile) {
+            files.push(audioFile.url);
+          });
+
+          this.$sound = playerHater.newSong.apply(playerHater, files);
+          this.$sound.story = this;
+          return this._sound;
         });
-        this._sound = playerHater.newSong.apply(playerHater, files);
-        this._sound.story = this;
-        return this._sound;
       },
       play: function () {
         if (this.sound() == playerHater.nowPlaying) {

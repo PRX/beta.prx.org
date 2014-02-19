@@ -40,7 +40,7 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
           }
 
           var resolution = this.actual, halMock = {stack: []}, result;
-          halMock.follow = jasmine.createSpy('follow').andCallFake(function (rel, params) {
+          halMock.follow = halMock.followOne = jasmine.createSpy('follow').andCallFake(function (rel, params) {
             halMock.stack.push([rel, params]);
             return halMock;
           });

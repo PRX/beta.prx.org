@@ -14,6 +14,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    **/
   function Document (data, context) {
     this.link = this.links = linkCollection(data._links, context);
+    this.$embedded = data._embedded || {};
     this.context = context;
     var propHolder = Object.create(this);
     angular.forEach(data, function (value, key) {
@@ -40,6 +41,32 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
+      return $q.when(this.followEmbedded(rel))
+        .catch(bound(this.followLink, this, rel, params));
+    },
+    followOne: function followOne (rel, params) {
+      return this.links.getDocument(rel, params);
+    },
+    followAll: function followAll (rel, params) {
+      return this.links.getDocuments(rel, params);
+    },
+    followEmbedded: function followEmbedded (rel) {
+      if (typeof this.$embedded[rel] === 'undefined') {
+        return $q.reject('No embedded object with rel ' + rel);
+      }
+      var embed = this.$embedded[rel];
+      if (!angular.isArray(embed)) {
+        return this.context.construct(embed, rel);
+      } else {
+        var results = [];
+        angular.forEach(embed, function (e) {
+          results.push(this.context.construct(e, rel));
+        }, this);
+        return results;
+      }
+      return $q.reject("Nope");
+    },
+    followLink: function followLink (rel, params) {
       var size = this.links.all(rel, params).length;
       if (size == 1) {
         return this.followOne(rel, params);
@@ -47,12 +74,6 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         return this.followAll(rel, params);
       }
       return $q.reject("No link with rel " + rel);
-    },
-    followOne: function followOne (rel, params) {
-      return this.links.getDocument(rel, params);
-    },
-    followAll: function followAll (rel, params) {
-      return this.links.getDocuments(rel, params);
     },
     persisted: function persisted () {
       return !!this.link('self');
@@ -91,7 +112,21 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   /**
    * HAL Link Collection
    *
-   * Handles different ways to access individual links
+   * Handles different ways to access individual links.
+   *
+   * The object returned by this function is attached to
+   * documents as both `link' and `links', meaning that
+   * the following are all valid:
+   *
+   *     doc.link(rel).to(params);
+   *     doc.links(rel).to(params);
+   *     doc.link.to(rel, params);
+   *     doc.links.to(rel, params);
+   *     doc.link(rel, params).to();
+   *     doc.links(rel, params).to();
+   *
+   * and all do the same thing. This should probably be
+   * fixed at some point.
    */
 
   function linkCollection(rLinks, context) {
@@ -221,10 +256,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   function Promise (promise) {
     promise = $q.when(promise);
-    this['finally'] = reconstruct(Promise, bound(promise,
-      promise['finally']));
-    this.then = reconstruct(Promise, bound(promise,
-      promise.then));
+    this['finally'] = reconstruct(Promise,
+      bound(promise['finally'], promise));
+    this.then = reconstruct(Promise,
+      bound(promise.then, promise));
   }
 
   Promise.prototype = {
@@ -257,9 +292,12 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   // helper which ensures that the recipient of the
   // method call will always be the passed object.
-  function bound(object, method) {
+  function bound() {
+    var lambda = function () {};
+    var args = [].slice.apply(arguments);
     return function () {
-      return method.apply(object, [].slice.call(arguments));
+      return lambda.call.apply(lambda.call,
+        args.concat([].slice.call(arguments)));
     };
   }
 
@@ -389,6 +427,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         return (this.mixins[mixin] || []).slice(0);
       }
     },
+    construct: function construct (doc, rel) {
+      var link = linkCollection(doc._links, this)('self');
+      return this.makeConstructor([link.profile(), rel])
+        (doc, link.href());
+    },
     // A function which generates an object with the
     // prototype chain consisting of Document at the root
     // and the requested mixins built up to the top.
@@ -466,7 +509,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   rootProvider.$get = getNgHal;
   getNgHal.$inject = ['$cacheFactory', '$http', '$injector', '$q', 'UriTemplate'];
   function getNgHal ($cacheFactory, $http, $injector, _$q_, _UriTemplate_) {
-    rootProvider.generateConstructor = bound(rootContext, rootContext.makeConstructor);
+    rootProvider.generateConstructor = bound(rootContext.makeConstructor, rootContext);
     rootContext.http = $http;
     rootContext.injector = $injector;
     $q = _$q_;

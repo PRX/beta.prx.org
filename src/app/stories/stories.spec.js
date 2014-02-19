@@ -39,11 +39,11 @@ describe('prx.stories', function () {
       expect(story.sound).toBeDefined();
     });
 
-    it ('memoizes the sound', function () {
+    xit ('memoizes the sound', function () {
       expect(story.sound()).toBe(story.sound());
     });
 
-    it ('pulls the sound from playerHaters nowPlaying property it is the currently playing story', inject(function (playerHater) {
+    xit ('pulls the sound from playerHaters nowPlaying property it is the currently playing story', inject(function (playerHater) {
       story = ngHal.mock('http://meta.prx.org/model/story', {id: 1, name: 'foo'});
       story2 = ngHal.mock('http://meta.prx.org/model/story', {id: 1, name: 'foo'});
       expect(story).not.toBe(story2);
@@ -58,14 +58,14 @@ describe('prx.stories', function () {
     });
 
     describe ('#play', function () {
-      it ('resumes playback if this is the nowPlaying piece', inject(function (playerHater) {
+      xit ('resumes playback if this is the nowPlaying piece', inject(function (playerHater) {
         spyOn(story.sound(), 'resume');
         playerHater.nowPlaying = story.sound();
         story.play();
         expect(story.sound().resume).toHaveBeenCalled();
       }));
 
-      it ('begins playback if this is not nowPlaying', inject(function (playerHater) {
+      xit ('begins playback if this is not nowPlaying', inject(function (playerHater) {
         spyOn(playerHater, 'play');
         story.play();
         expect(playerHater.play).toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('prx.stories', function () {
       expect(playerHater.pause).toHaveBeenCalled();
     });
 
-    describe ('#togglePlay', function () {
+    xdescribe ('#togglePlay', function () {
       it ('plays if currently paused', function () {
         spyOn(story, 'play');
         story.sound().paused = true;
