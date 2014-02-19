@@ -27,7 +27,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'prx-experiments', 'n
     'https://dl.dropboxusercontent.com/u/125516/Microcastle/04%20Little%20Kids.mp3'
   ];
 
-  ngHalProvider.setRootUrl('http://api.'+ window.location.hostname +'/api/v1')
+  ngHalProvider.setRootUrl(FEAT.apiServer)
   .defineModule('http://meta.prx.org/model/story', ['playerHater', function (playerHater) {
     return {
       sound: function () {

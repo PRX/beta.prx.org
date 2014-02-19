@@ -204,9 +204,9 @@ describe('angular-hal', function () {
     describe('following', function () {
 
       beforeEach(inject(function ($httpBackend) {
-        $httpBackend.expectGET('/api/bar').respond({_links: {baz: {href: '/api/baz'}, bar: [{href: '/api/bar'}, {href: '/api/bar/{id}', templated: true}]}});
+        $httpBackend.expectGET('/api/bar').respond({_links: {baz: {href: '/api/baz'}, bar: [{href: '/api/bng'}, {href: '/api/bar/{id}', templated: true}]}});
         $httpBackend.whenGET('/api/baz').respond({cool: 'sigil'});
-        $httpBackend.whenGET('/api/bar').respond({a: 1});
+        $httpBackend.whenGET('/api/bng').respond({a: 1});
         $httpBackend.whenGET('/api/bar/1').respond({a: 2});
       }));
 
@@ -383,5 +383,57 @@ describe('angular-hal', function () {
       $httpBackend.flush();
       expect(doc.persisted()).toBeTruthy();
     }));
+
+    describe('embedded documents', function () {
+      var ngHal, $httpBackend;
+
+      beforeEach(inject(function (_$httpBackend_, _ngHal_) {
+        ngHal = _ngHal_;
+        $httpBackend = _$httpBackend_;
+        var document = {
+          _links: {
+            owner: {
+              href: '/api/owner'
+            },
+            versions: {
+              href: '/api/versions'
+            },
+          },
+          title: "a title",
+          _embedded: {
+            owner: {
+              _links:  {
+                self: { href: '/api/owner' }
+              },
+              name: 'name'
+            },
+            audio: [
+              {
+                _links: {
+                  self: { href: '/api/audio1' }
+                },
+                name: 'audio1'
+              },
+              {
+                _links: {
+                  self: { href: '/api/audio2' }
+                },
+                name: 'audio2'
+              }
+            ]
+          }
+        };
+
+        $httpBackend.expect('GET', '/api').respond(document);
+      }));
+
+      it ('can fetch embedded documents using follow as a cache', function () {
+        var mDoc;
+        ngHal.follow('owner').then(function (doc) {
+          expect(doc.name).toEqual('name');
+        });
+        $httpBackend.flush();
+      });
+    });
   });
 });
