@@ -25,7 +25,8 @@
   "vendor": {
     "js": [
       "vendor/angular-ui-router/release/angular-ui-router.js",
-      "vendor/ngPlayerHater/ng-player-hater.min.js"
+      "vendor/ngPlayerHater/ng-player-hater.js",
+      "vendor/soundmanager/script/soundmanager2-nodebug-jsmin.js"
     ],
     "buildJs": [
       "vendor/angular/angular.js",

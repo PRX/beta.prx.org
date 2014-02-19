@@ -18,11 +18,6 @@ describe('prx.stories', function () {
     beforeEach(inject(function ($state) {
       state = $state.get('story');
     }));
-
-    it ('resolves the story', inject(function (ngHal, $injector) {
-      expect(resolutionOf('story', 'story', {storyId: 212}))
-        .toFollow('stories', {id: 212});
-    }));
   });
 
   describe ('story module', function () {
@@ -32,7 +27,7 @@ describe('prx.stories', function () {
     beforeEach(inject(function (_ngHal_, _playerHater_) {
       ngHal = _ngHal_;
       playerHater = _playerHater_;
-      story = ngHal.mock('http://meta.prx.org/model/story');
+      story = ngHal.mock('http://meta.prx.org/model/story', {$audioFiles: [{url: '/foo.mp3' }]});
     }));
 
     it ('can get a sound', function () {
