@@ -64,7 +64,6 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         }, this);
         return results;
       }
-      return $q.reject("Nope");
     },
     followLink: function followLink (rel, params) {
       var size = this.links.all(rel, params).length;
@@ -293,7 +292,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   // helper which ensures that the recipient of the
   // method call will always be the passed object.
   function bound() {
-    var lambda = function () {};
+    var lambda = Function.prototype;
     var args = [].slice.apply(arguments);
     return function () {
       return lambda.call.apply(lambda.call,
