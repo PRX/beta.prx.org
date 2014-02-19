@@ -1,6 +1,6 @@
 angular.module('angular-hal', ['ng', 'uri-template'])
 .provider('ngHal', function () {
-  var $http, $injector, providers = {}, $q, UriTemplate;
+  var $q, UriTemplate;
 
   /**
    * HAL Document
@@ -12,10 +12,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * are instance specific are not serialized / have some-
    * where to go.
    **/
-  function Document (data, config) {
+  function Document (data, context) {
+    this.link = linkAccessor(data._links, context);
+    this.context = context;
     var propHolder = Object.create(this);
-    this.link = linkAccessor(data._links,
-      config ? config.url : undefined);
     angular.forEach(data, function (value, key) {
       if (key != '_links' && key  != '_embedded') {
         propHolder[key] = angular.copy(value);
@@ -28,20 +28,20 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     constructor: Document,
     build: function build (rel, params) {
       var link = this.link(rel);
-      return mkConstructor([link.profile(params), rel])({
+      return this.context.makeConstructor([link.profile(params), rel])({
         _links: {
           create: {
             href:link.href(params)
           }
         }
-      });
+      }, undefined);
     },
     destroy: function destroy () {
-      $http['delete'](this.url());
+      this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
       return new DocumentPromise(this.link(rel).get(params),
-        [this.link(rel).profile(params), rel]);
+        [this.link(rel).profile(params), rel], this.context);
     },
     persisted: function persisted () {
       return !!this.link('self');
@@ -49,46 +49,33 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     save: function save () {
       var self = this;
       if (this.persisted()) {
-        return $http.put(this.url(), this).then(function () {
+        return this.context.put(this.url(), this).then(function () {
           return self;
         });
       } else {
-        return $http.post(this.link('create').href(), this).then(function (response) {
-          var protowithlinks = self;
-          while (protowithlinks !== Object.prototype &&
-            !protowithlinks.hasOwnProperty('link')) {
-            protowithlinks = Object.getPrototypeOf(protowithlinks);
-          }
-          protowithlinks.link = linkAccessor(response.data._links,
-            response.config.url);
-          angular.forEach(response.data, function (value, key) {
-            if (key != '_links' && key  != '_embedded') {
-              self[key] = angular.copy(value);
+        return this.context.post(this.link('create').href(), this)
+          .then(function (response) {
+            var protowithlinks = self;
+            while (protowithlinks !== Object.prototype &&
+              !protowithlinks.hasOwnProperty('link')) {
+              protowithlinks = Object.getPrototypeOf(protowithlinks);
             }
+            self.context.origin = response.config.url;
+            protowithlinks.link = linkAccessor(response.data._links,
+              self.context);
+            angular.forEach(response.data, function (value, key) {
+              if (key != '_links' && key  != '_embedded') {
+                self[key] = angular.copy(value);
+              }
+            });
+            return self;
           });
-          return self;
-        });
       }
     },
     url: function url () {
       return this.link('self').href();
     }
   };
-
-  // returns a constructor with the prototype set to an
-  // object with all of the mixins requested already
-  // attached. This is really the only place that should
-  // ever need to call `Document'
-  function mkConstructor (mixins) {
-    function Constructor (data, config) {
-      if (!(this instanceof Constructor)) {
-        return new Constructor(data, config);
-      }
-      return Document.call(this, data, config);
-    }
-    Constructor.prototype = prototypeForMixins(mixins);
-    return Constructor;
-  }
 
   /**
    * HAL Link
@@ -98,27 +85,13 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * URL which can then be promised into a HAL Document.
    */
 
-  function Link (lSpecs, relation, origin) {
-    var aRelative = (origin && origin.indexOf('://') !== -1),
-      starter;
-    if (aRelative) {
-      starter = origin.split('/').slice(0, 3).join('/');
-      origin = origin.replace(/\/$/, '');
-    }
-
+  function Link (lSpecs, relation, context) {
     if (!angular.isArray(lSpecs)) {
       lSpecs = [lSpecs];
     }
-
+    this.context = context;
     this.specs = [];
     angular.forEach(lSpecs, function (spec) {
-      if (aRelative && spec.href.split('://', 2).length != 2) {
-        if (spec.href[0] == '/') {
-          spec.href =  starter + spec.href;
-        } else {
-          spec.href = [origin, spec.href].join('/');
-        }
-      }
       this.specs.push({
         profile: spec.profile,
         template: UriTemplate.parse(spec.href)
@@ -159,21 +132,22 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     profile: function (params) {
       return this.template(params).profile;
     },
-    get: function () {
-      return $http.get(this.href());
+    get: function (opts) {
+      return this.context.get(this.href(opts));
     }
   };
 
   // helper which generates an accessor method for
   // links.
-  function linkAccessor(oLinks, origin) {
+  function linkAccessor(oLinks, context) {
     var links = {};
     angular.forEach(oLinks, function (link, rel) {
-      links[rel] = new Link(link, rel, origin);
+      links[rel] = new Link(link, rel, context);
     });
     if (typeof links['self'] === 'undefined' &&
-      typeof origin !== 'undefined') {
-      links.self = new Link({href: origin}, 'self');
+      typeof context.origin !== 'undefined') {
+      links.self = new Link({href: context.origin},
+        'self', context);
     }
 
     return function link (rel) {
@@ -241,15 +215,14 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * make sense since the resolution of the promise
    * will be a HAL Document.
    */
-
-  function DocumentPromise (dPromise, mPromise) {
-    Promise.call(this, $q.all({d:dPromise, m:mPromise})
+  function DocumentPromise (dPromise, mPromise, cPromise) {
+    Promise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise})
       .then(mkPromisedDoc));
   }
 
   function mkPromisedDoc (opts) {
-    return new (mkConstructor(opts.m))(opts.d.data,
-      opts.d.config);
+    return new (opts.c.makeConstructor(opts.m))(opts.d.data,
+      opts.d.config.url);
   }
 
   DocumentPromise.prototype = Object.create(Promise.prototype);
@@ -267,9 +240,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     follow: function follow (rel, opts) {
       return new DocumentPromise(this.then(function (document) {
-        return document.link(rel, opts).get();
+        return document.link(rel).get(opts);
       }), this.then(function (document) {
-        return [document.link(rel, opts).profile(), rel];
+        return [document.link(rel).profile(opts), rel];
+      }), this.then(function (document) {
+        return document.context;
       }));
     },
     link: function link (rel) {
@@ -284,67 +259,149 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     }
   });
 
-  // A function which generates an object with the
-  // prototype chain consisting of Document at the root
-  // and the requested mixins built up to the top.
-  function prototypeForMixins (mixins) {
-    var proto = Object.create(Document.prototype);
-    angular.forEach(mixins, function (mixin) {
-      if (typeof this.mixins[mixin] !== 'undefined') {
-        angular.forEach(this.mixins[mixin], function (mix) {
-          if (angular.isArray(mix) || angular.isFunction(mix)) {
-            mix = $injector.invoke(mix);
-          }
-          proto = angular.extend(Object.create(proto), mix);
-        });
-      }
-    }, providers['default']);
-    return proto;
-  }
-
   /**
-   * ngHal Provider
+   * ngHal Context
    *
    * This is responsible for holding the configuration
-   * options set in angular's `config' blocks.
+   * options set in angular's `config' blocks and holding
+   * global state.
    */
 
-  function NgHalProvider (parent) {
-    this.root = '/';
+  function Context (parent, origin) {
+    this.origin = origin;
     this.mixins = {};
     this.parent = parent;
   }
 
-  NgHalProvider.prototype = {
-    constructor: NgHalProvider, 
-    setRootUrl: function setRootUrl (rootUrl) {
-      this.root = rootUrl;
-      return this;
+  Context.prototype = {
+    constructor: Context,
+    subContext: function subContext (origin) {
+      var obj = Object.create(this);
+      Context.call(obj, this,
+        arguments.length ? origin : this.origin);
+      return obj;
     },
-    defineModule: function defineModule (uri, module) {
-      if (typeof this.mixins[uri] === 'undefined') {
-        this.mixins[uri] = [module];
-      } else {
-        this.mixins[uri].push(module);
+    get: function get (path, config) {
+      return this.http.get(this.relativePath(path), config);
+    },
+    put: function put (path, data, config) {
+      return this.http.put(this.relativePath(path), data, config);
+    },
+    post: function post (path, data, config) {
+      return this.http.post(this.relativePath(path), data, config);
+    },
+    'delete': function (path, config) {
+      return this.http['delete'](this.relativePath(path), config);
+    },
+    // returns a constructor with the prototype set to an
+    // object with all of the mixins requested already
+    // attached. This is really the only place that should
+    // ever need to call `Document'
+    makeConstructor: function makeConstructor (mixins) {
+      var context = this;
+      function Constructor (data, url) {
+        if (!(this instanceof Constructor)) {
+          return new Constructor(data, url);
+        }
+        return Document.call(this, data, context.subContext(url));
       }
-      return this;
+      Constructor.prototype = this.prototypeForMixins(mixins);
+      return Constructor;
+    },
+    mixin: function (mixin, def) {
+      this.mixins[mixin] = [].concat(this.mixins[mixin], def);
+    },
+    mixinsFor: function mixinsFor (mixin) {
+      if (this.parent) {
+        return this.parent.mixinsFor(mixin).concat(this.mixins[mixin]);
+      } else {
+        return (this.mixins[mixin] || []).slice(0);
+      }
+    },
+    // A function which generates an object with the
+    // prototype chain consisting of Document at the root
+    // and the requested mixins built up to the top.
+    prototypeForMixins: function prototypeForMixins (mixins) {
+      var proto = Object.create(Document.prototype);
+      angular.forEach(mixins.reverse(), function (mixin) {
+        angular.forEach(this.mixinsFor(mixin), function (mix) {
+          if (angular.isArray(mix) || angular.isFunction(mix)) {
+            mix = this.injector.invoke(mix);
+          }
+          proto = angular.extend(Object.create(proto), mix);
+        }, this);
+      }, this);
+      return proto;
+    },
+    relativePath: function relativePath (path) {
+      if (this.origin && path.split('://', 2).length != 2 &&
+        this.origin.indexOf('://') !== -1) {
+        if (path[0] == '/') {
+          path =  this.origin.split('/')
+            .slice(0, 3).join('/') + path;
+        } else {
+          path = [this.origin.replace(/\/$/, ''), path].join('/');
+        }
+      }
+      return path;
     }
   };
 
-  NgHalProvider.runtimeMethods = {
-    generateConstructor: mkConstructor
-  };
-
-  // Only one of our providers is an actual angular provider.
-  providers['default'] = new NgHalProvider();
-  providers['default'].$get = getNgHal;
-  getNgHal.$inject = ['$cacheFactory', '$injector', '$http', '$q', 'UriTemplate'];
-  function getNgHal ($cacheFactory, _$injector_, _$http_, _$q_, _UriTemplate_) {
-    angular.extend(NgHalProvider.prototype, NgHalProvider.runtimeMethods);
-    $http = _$http_; $injector = _$injector_; $q = _$q_;
-    UriTemplate = _UriTemplate_;
-    return new DocumentPromise($http.get(this.root), ['root']);
+  function ContextProvider(context) {
+    this.ctx = context;
+    this.subProviders = {};
   }
 
-  return providers['default'];
+  ContextProvider.prototype = {
+    constructor: ContextProvider,
+    setRootUrl: function setRootUrl (rootUrl) {
+      this.ctx.origin = rootUrl;
+      return this;
+    },
+    defineModule: function defineModule (uri, module) {
+      return this.mixin(uri, module);
+    },
+    mixin: function mixin (uri, def) {
+      this.ctx.mixin(uri, def);
+      return this;
+    },
+    get: function () {
+      if (!this._gotten) { 
+        var self = this, p = new DocumentPromise(this.ctx.get(this.ctx.origin),
+          ['root'], this.ctx);
+        p.context = function (context) {
+          return self.subProviders[context].get();
+        };
+        this._gotten = p;
+      }
+      return this._gotten;
+    },
+    context: function context (contextName, def) {
+      var provider = this.subProviders[contextName] =
+        this.subProviders[contextName] || 
+        new ContextProvider(this.ctx.subContext());
+      if (angular.isFunction(def)) {
+        def.call(provider, provider);
+        return this;  
+      } else {
+        return provider;
+      }
+    }
+  };
+
+  var rootContext = new Context(),
+    rootProvider = new ContextProvider(rootContext);
+
+  rootProvider.$get = getNgHal;
+  getNgHal.$inject = ['$cacheFactory', '$http', '$injector', '$q', 'UriTemplate'];
+  function getNgHal ($cacheFactory, $http, $injector, _$q_, _UriTemplate_) {
+    rootProvider.generateConstructor = bound(rootContext, rootContext.makeConstructor);
+    rootContext.http = $http;
+    rootContext.injector = $injector;
+    $q = _$q_;
+    UriTemplate = _UriTemplate_;
+    return this.get();
+  }
+
+  return rootProvider;
 });
