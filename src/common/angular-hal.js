@@ -13,7 +13,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * where to go.
    **/
   function Document (data, context) {
-    this.link = linkAccessor(data._links, context);
+    this.link = this.links = linkCollection(data._links, context);
     this.context = context;
     var propHolder = Object.create(this);
     angular.forEach(data, function (value, key) {
@@ -40,8 +40,19 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
-      return new DocumentPromise(this.link(rel).get(params),
-        [this.link(rel).profile(params), rel], this.context);
+      var size = this.links.all(rel, params).length;
+      if (size == 1) {
+        return this.followOne(rel, params);
+      } else if (size > 1) {
+        return this.followAll(rel, params);
+      }
+      return $q.reject("No link with rel " + rel);
+    },
+    followOne: function followOne (rel, params) {
+      return this.links.getDocument(rel, params);
+    },
+    followAll: function followAll (rel, params) {
+      return this.links.getDocuments(rel, params);
     },
     persisted: function persisted () {
       return !!this.link('self');
@@ -61,7 +72,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
               protowithlinks = Object.getPrototypeOf(protowithlinks);
             }
             self.context.origin = response.config.url;
-            protowithlinks.link = linkAccessor(response.data._links,
+            protowithlinks.link = linkCollection(response.data._links,
               self.context);
             angular.forEach(response.data, function (value, key) {
               if (key != '_links' && key  != '_embedded') {
@@ -76,6 +87,43 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return this.link('self').href();
     }
   };
+
+  /**
+   * HAL Link Collection
+   *
+   * Handles different ways to access individual links
+   */
+
+  function linkCollection(rLinks, context) {
+    var links = {};
+    angular.forEach(rLinks, function (link, rel) {
+      links[rel] = new Link(link, rel, context);
+    });
+    if (typeof links['self'] === 'undefined' &&
+      typeof context.origin !== 'undefined') {
+      links.self = new Link({href: context.origin},
+        'self', context);
+    }
+    function accessor (rel, opts) {
+      var link = links[rel];
+      if (!link) { return undefined; }
+      var obj = {};
+      angular.forEach(Link.prototype, function (method, name) {
+        obj[name] = function (params) {
+          return method.call(link, angular.extend({}, opts, params));
+        };
+      });
+      return obj;
+    }
+
+    angular.forEach(Link.prototype, function (method, name) {
+      accessor[name] = function (rel, params) {
+        return method.call(links[rel], params);
+      };
+    });
+
+    return accessor;
+  }
 
   /**
    * HAL Link
@@ -102,23 +150,18 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   Link.prototype = {
     constructor: Link,
-    href: function (params) {
-      var template = this.template(params);
-      if (template) {
-        return template.template.expand(params);
-      }
-    },
-    hrefs: function (params) {
-      var hrefs = [], compiled;
+    all: function (params) {
+      var result = [];
       angular.forEach(this.specs, function (spec) {
         compiled = spec.template.expand(params);
         if (typeof compiled !== 'undefined') {
-          hrefs.push(compiled);
+          result.push(angular.extend({},
+            spec, {href: compiled}));
         }
       });
-      return hrefs;
+      return result;
     },
-    template: function (params) {
+    to: function to (params) {
       var highScore = -1, template;
       angular.forEach(this.specs, function (spec) {
         var score = spec.template.score(params);
@@ -127,33 +170,46 @@ angular.module('angular-hal', ['ng', 'uri-template'])
           template = spec;
         }
       });
-      return template;
+      if (template) {
+        return angular.extend({}, template,
+          {href: template.template.expand(params)});
+      }
     },
-    profile: function (params) {
-      return this.template(params).profile;
+    href: function (params) {
+      var template = this.template(params);
+      if (template) {
+        return template.template.expand(params);
+      }
     },
-    get: function (opts) {
-      return this.context.get(this.href(opts));
+    hrefs: function (params) {
+      var hrefs = [];
+      angular.forEach(this.all(params), function (spec) {
+        hrefs.push(spec.href);
+      });
+      return hrefs;
+    },
+    template: function (params) {
+      return this.to(params);
+    },
+    profile: function profile (params) {
+      return this.to(params).profile;
+    },
+    getDocument: function getDocument (params) {
+      var spec = this.to(params);
+      return new DocumentPromise(
+        this.context.get(spec.template.expand(params)),
+        [spec.profile, this.rel], this.context);
+    },
+    getDocuments: function getDocuments (params) {
+      var specs = this.all(params), array = [];
+      angular.forEach(specs, function (spec) {
+        array.push(new DocumentPromise(
+          this.context.get(spec.template.expand(params)),
+          [spec.profile, this.rel], this.context));
+      }, this);
+      return $q.all(array);
     }
   };
-
-  // helper which generates an accessor method for
-  // links.
-  function linkAccessor(oLinks, context) {
-    var links = {};
-    angular.forEach(oLinks, function (link, rel) {
-      links[rel] = new Link(link, rel, context);
-    });
-    if (typeof links['self'] === 'undefined' &&
-      typeof context.origin !== 'undefined') {
-      links.self = new Link({href: context.origin},
-        'self', context);
-    }
-
-    return function link (rel) {
-      return links[rel];
-    };
-  }
 
   /**
    * HAL Promise
@@ -214,6 +270,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * has some additional methods which we can assume
    * make sense since the resolution of the promise
    * will be a HAL Document.
+   *
+   * This function works in 2 different ways - if the
+   * first parameter resolves to a Document, you're
+   * golden. Otherwise, it will use the mixin and context
+   * promises to make a new constructor.
    */
   function DocumentPromise (dPromise, mPromise, cPromise) {
     Promise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise})
@@ -221,6 +282,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   }
 
   function mkPromisedDoc (opts) {
+    if (opts.d instanceof DocumentPromise ||
+      opts.d instanceof Document || angular.isArray(opts.d)) {
+      return opts.d;
+    }
     return new (opts.c.makeConstructor(opts.m))(opts.d.data,
       opts.d.config.url);
   }
@@ -240,16 +305,22 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     follow: function follow (rel, opts) {
       return new DocumentPromise(this.then(function (document) {
-        return document.link(rel).get(opts);
-      }), this.then(function (document) {
-        return [document.link(rel).profile(opts), rel];
-      }), this.then(function (document) {
-        return document.context;
+        return document.follow(rel, opts);
       }));
     },
-    link: function link (rel) {
+    followOne: function followOne (rel, opts) {
+      return new DocumentPromise(this.then(function (document) {
+        return document.followOne(rel, opts);
+      }));
+    },
+    followAll: function followAll (rel, opts) {
+      return new DocumentPromise(this.then(function (document) {
+        return document.follow(rel, opts);
+      }));
+    },
+    link: function link (rel, opts) {
       return this.then(function (document) {
-        return document.link(rel) || $q.reject('no such link' + rel);
+        return document.link(rel, opts) || $q.reject('no such link' + rel);
       });
     },
     url: function url () {

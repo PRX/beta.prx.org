@@ -37,7 +37,7 @@ describe('angular-hal', function () {
         expect(searchUrl).toBe('http://bing.com');
 
         $httpBackend.when('GET', 'http://bing.com').respond({name: "NOT AGAIN"});
-        ngHal.context('search').then(function (d) { searchUrl = d.name });
+        ngHal.context('search').then(function (d) { searchUrl = d.name; });
         ngHal.context('prx').url().then(function (u) { prxUrl = u; });
         $httpBackend.flush();
         expect(searchUrl).not.toBeDefined();
@@ -233,6 +233,41 @@ describe('angular-hal', function () {
       expect(hrefs).toEqual(['/api/one', '/api/two']);
     }));
 
+    it ('can follow more than one link simultaneously', inject(function ($httpBackend, ngHal) {
+      var docs;
+      $httpBackend.whenGET('/api/one').respond({a:1});
+      $httpBackend.whenGET('/api/two').respond({b:2});
+      $httpBackend.whenGET('/api/chris').respond({c:3});
+      ngHal.follow('lots', {name: 'chris'}).then(function (d) {
+        docs = d;
+      });
+      $httpBackend.flush();
+      var merged = angular.extend.apply(angular, [{}].concat(docs));
+      expect(merged).toEqual({a:1, b:2, c:3});
+    }));
+
+    it ('can follow more than one simultaneously when asked explicitly', inject(function ($httpBackend, ngHal) {
+      var docs;
+      $httpBackend.whenGET('/api/one').respond({a:1});
+      $httpBackend.whenGET('/api/two').respond({b:2});
+      $httpBackend.whenGET('/api/chris').respond({c:3});
+      ngHal.followAll('lots', {name: 'chris'}).then(function (d) {
+        docs = d;
+      });
+      $httpBackend.flush();
+      var merged = angular.extend.apply(angular, [{}].concat(docs));
+      expect(merged).toEqual({a:1, b:2, c:3});
+    }));
+
+    it ('fails when no such rel exists', inject(function ($httpBackend, ngHal) {
+      var failed;
+      ngHal.follow('unknown').then(undefined, function (e) {
+        failed = true;
+      });
+      $httpBackend.flush();
+      expect(failed).toBeTruthy();
+    }));
+
     describe('following', function () {
 
       beforeEach(inject(function ($httpBackend) {
@@ -265,7 +300,7 @@ describe('angular-hal', function () {
 
       it ('picks a link when there is more than one available', inject(function ($httpBackend, ngHal) {
         var response;
-        ngHal.follow('bar').follow('bar').then(function (data) {
+        ngHal.follow('bar').followOne('bar').then(function (data) {
           response = data;
         });
         $httpBackend.flush();
@@ -274,7 +309,7 @@ describe('angular-hal', function () {
 
       it ('picks a link with appropriate templates when required', inject(function ($httpBackend, ngHal) {
         var response;
-        ngHal.follow('bar').follow('bar', {id: 1}).then(function (data) {
+        ngHal.follow('bar').followOne('bar', {id: 1}).then(function (data) {
           response = data;
         });
         $httpBackend.flush();
