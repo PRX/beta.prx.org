@@ -7,9 +7,8 @@ describe('angular-hal-mock', function () {
     });
   }));
 
-  it('allows mocking objets with mixins', inject(function (ngHal) {
+  it('allows mocking objects with mixins', inject(function (ngHal) {
     var mock = ngHal.mock('http://meta.nghal.org/object', {id: 1});
-
     expect(mock.getId()).toBe(1);
   }));
 

@@ -1,0 +1,64 @@
+{
+  "buildDir": "public",
+  "compile_dir": "bin",
+  "app": {
+    "js": [
+      "src/**/*.js",
+      "!src/**/*.spec.js",
+      "!src/assets/**/*.js",
+      "!src/common/angular-hal-mock.js"
+    ],
+    "specs": [ "src/**/*.spec.js" ],
+    "html": [ "src/index.html" ],
+    "stylus": [ "src/styl/main.styl" ],
+    "jade": [ "src/**/*.html.jade" ],
+    "assets": [ "src/assets/**/*" ],
+    "server": "lib/server.js"
+  },
+  "test": {
+    "js": [
+      "vendor/angular/angular.js",
+      "src/common/angular-hal-mock.js",
+      "vendor/angular-mocks/angular-mocks.js"
+    ]
+  },
+  "vendor": {
+    "js": [
+      "vendor/angular-ui-router/release/angular-ui-router.js",
+      "vendor/ngPlayerHater/ng-player-hater.js",
+      "vendor/soundmanager/script/soundmanager2-nodebug-jsmin.js"
+    ],
+    "buildJs": [
+      "vendor/angular/angular.js",
+      "vendor/angular-animate/angular-animate.js",
+      "vendor/angular-touch/angular-touch.js"
+    ],
+    "compile_js": [
+      "vendor/angular/angular.min.js",
+      "vendor/angular-animate/angular-animate.min.js",
+      "vendor/angular-touch/angular-touch.min.js"
+    ],
+    "css": [
+      "vendor/angular/angular-csp.css"
+    ],
+    "assets": [
+      "vendor/soundmanager/swf/soundmanager2_flash9.swf"
+    ]
+  },
+  "jsHintCfg": {
+    "curly" : true,
+    "immed" : true,
+    "newcap": true,
+    "noarg" : true,
+    "sub"   : true,
+    "boss"  : true,
+    "eqnull": true
+  },
+  "karmaCfg": "./karma/karma-unit.js",
+  "covReq": {
+    "statements" : 75,
+    "branches" : 75,
+    "lines" : 75,
+    "functions" : 75
+  }
+}

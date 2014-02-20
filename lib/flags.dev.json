@@ -1,0 +1,4 @@
+{
+  "showMenu": false,
+  "apiServer": "http://prx-backend.dev/api/v1"
+}

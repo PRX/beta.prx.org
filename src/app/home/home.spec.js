@@ -5,5 +5,4 @@ describe('prx.home', function () {
   it('has some functionality (change me)', function () {
     expect(true).toBe(true);
   });
-
 });

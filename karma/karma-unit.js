@@ -9,19 +9,16 @@ module.exports = function ( config ) {
      * This is the list of file patterns to load into the browser during testing.
      */
     files: [
-      <% scripts.forEach( function ( file ) { %>'<%= file %>',
-      <% }); %>
-      'src/**/*.js',
-      'src/**/*.coffee',
+      'public/**/*.js'
     ],
     exclude: [
-      'src/assets/**/*.js'
+      'public/assets/**/*.js'
     ],
+
     frameworks: [ 'jasmine' ],
     plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-coverage' ],
     preprocessors: {
-      '**/*.coffee': 'coffee',
-       'src/**/*.js': ['coverage']
+       'public/{app,common}/**/*.js': ['coverage']
     },
 
     /**
@@ -63,11 +60,7 @@ module.exports = function ( config ) {
      * the aesthetic advantage of not launching a browser every time you save.
      */
     browsers: [
-      <% if (travis) { %>
-      'Firefox', 'PhantomJS'
-      <% } else { %>
       'Chrome'
-      <% } %>
     ]
   });
 };

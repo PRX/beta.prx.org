@@ -15,6 +15,36 @@ describe('angular-hal', function () {
       });
     });
 
+    it ('can define a secondary context', function () {
+      module('angular-hal', function (ngHalProvider) {
+        ngHalProvider.setRootUrl('http://yahoo.com');
+        ngHalProvider.context('search', function () {
+          this.setRootUrl('http://bing.com');
+        });
+
+        ngHalProvider.context('prx').setRootUrl('http://prx.org/api');
+      });
+
+      inject(function (ngHal, $rootScope, $httpBackend) {
+        var url, searchUrl, prxUrl;
+        $httpBackend.when('GET', 'http://yahoo.com').respond({});
+        $httpBackend.when('GET', 'http://bing.com').respond({});
+        $httpBackend.when('GET', 'http://prx.org/api').respond({});
+        ngHal.url().then(function (u) { url = u; });
+        ngHal.context('search').url().then(function (u) { searchUrl = u; });
+        $httpBackend.flush();
+        expect(url).toBe('http://yahoo.com');
+        expect(searchUrl).toBe('http://bing.com');
+
+        $httpBackend.when('GET', 'http://bing.com').respond({name: "NOT AGAIN"});
+        ngHal.context('search').then(function (d) { searchUrl = d.name; });
+        ngHal.context('prx').url().then(function (u) { prxUrl = u; });
+        $httpBackend.flush();
+        expect(searchUrl).not.toBeDefined();
+        expect(prxUrl).toEqual('http://prx.org/api');
+      });
+    });
+
     it ('can add to an objects prototype chain based on link profiles', function () {
       module('angular-hal', function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
@@ -116,14 +146,16 @@ describe('angular-hal', function () {
 
     it ('appends links that should be appended to the current URL', inject(function (ngHal, $httpBackend) {
       var href;
-      ngHal.link('foo').then(function (link) { href = link.href(); });
+      $httpBackend.expectGET('http://example.com/api/foo').respond({});
+      ngHal.follow('foo').url().then(function (url) { href = url; });
       $httpBackend.flush();
       expect(href).toEqual('http://example.com/api/foo');
     }));
 
     it ('maintains the host when host-relative links are used', inject(function (ngHal, $httpBackend) {
       var href;
-      ngHal.link('bar').then(function (link) { href = link.href(); });
+      $httpBackend.expectGET('http://example.com/another').respond({});
+      ngHal.follow('bar').url().then(function (url) { href = url; });
       $httpBackend.flush();
       expect(href).toEqual('http://example.com/another');
     }));
@@ -201,12 +233,47 @@ describe('angular-hal', function () {
       expect(hrefs).toEqual(['/api/one', '/api/two']);
     }));
 
+    it ('can follow more than one link simultaneously', inject(function ($httpBackend, ngHal) {
+      var docs;
+      $httpBackend.whenGET('/api/one').respond({a:1});
+      $httpBackend.whenGET('/api/two').respond({b:2});
+      $httpBackend.whenGET('/api/chris').respond({c:3});
+      ngHal.follow('lots', {name: 'chris'}).then(function (d) {
+        docs = d;
+      });
+      $httpBackend.flush();
+      var merged = angular.extend.apply(angular, [{}].concat(docs));
+      expect(merged).toEqual({a:1, b:2, c:3});
+    }));
+
+    it ('can follow more than one simultaneously when asked explicitly', inject(function ($httpBackend, ngHal) {
+      var docs;
+      $httpBackend.whenGET('/api/one').respond({a:1});
+      $httpBackend.whenGET('/api/two').respond({b:2});
+      $httpBackend.whenGET('/api/chris').respond({c:3});
+      ngHal.followAll('lots', {name: 'chris'}).then(function (d) {
+        docs = d;
+      });
+      $httpBackend.flush();
+      var merged = angular.extend.apply(angular, [{}].concat(docs));
+      expect(merged).toEqual({a:1, b:2, c:3});
+    }));
+
+    it ('fails when no such rel exists', inject(function ($httpBackend, ngHal) {
+      var failed;
+      ngHal.follow('unknown').then(undefined, function (e) {
+        failed = true;
+      });
+      $httpBackend.flush();
+      expect(failed).toBeTruthy();
+    }));
+
     describe('following', function () {
 
       beforeEach(inject(function ($httpBackend) {
-        $httpBackend.expectGET('/api/bar').respond({_links: {baz: {href: '/api/baz'}, bar: [{href: '/api/bar'}, {href: '/api/bar/{id}', templated: true}]}});
+        $httpBackend.expectGET('/api/bar').respond({_links: {baz: {href: '/api/baz'}, bar: [{href: '/api/bng'}, {href: '/api/bar/{id}', templated: true}]}});
         $httpBackend.whenGET('/api/baz').respond({cool: 'sigil'});
-        $httpBackend.whenGET('/api/bar').respond({a: 1});
+        $httpBackend.whenGET('/api/bng').respond({a: 1});
         $httpBackend.whenGET('/api/bar/1').respond({a: 2});
       }));
 
@@ -233,7 +300,7 @@ describe('angular-hal', function () {
 
       it ('picks a link when there is more than one available', inject(function ($httpBackend, ngHal) {
         var response;
-        ngHal.follow('bar').follow('bar').then(function (data) {
+        ngHal.follow('bar').followOne('bar').then(function (data) {
           response = data;
         });
         $httpBackend.flush();
@@ -242,7 +309,7 @@ describe('angular-hal', function () {
 
       it ('picks a link with appropriate templates when required', inject(function ($httpBackend, ngHal) {
         var response;
-        ngHal.follow('bar').follow('bar', {id: 1}).then(function (data) {
+        ngHal.follow('bar').followOne('bar', {id: 1}).then(function (data) {
           response = data;
         });
         $httpBackend.flush();
@@ -308,10 +375,6 @@ describe('angular-hal', function () {
       $httpBackend.expect('DELETE', '/api').respond({});
       ngHal.destroy();
       $httpBackend.flush();
-    }));
-
-    it ('memoizes property promises', inject(function (ngHal) {
-      expect(ngHal.get('foo')).toBe(ngHal.get('foo'));
     }));
 
     it ('rejects a link when there is no such rel', inject(function ($httpBackend, ngHal) {
@@ -383,5 +446,65 @@ describe('angular-hal', function () {
       $httpBackend.flush();
       expect(doc.persisted()).toBeTruthy();
     }));
+
+    describe('embedded documents', function () {
+      var ngHal, $httpBackend;
+
+      beforeEach(inject(function (_$httpBackend_, _ngHal_) {
+        ngHal = _ngHal_;
+        $httpBackend = _$httpBackend_;
+        var document = {
+          _links: {
+            owner: {
+              href: '/api/owner'
+            },
+            versions: {
+              href: '/api/versions'
+            },
+          },
+          title: "a title",
+          _embedded: {
+            owner: {
+              _links:  {
+                self: { href: '/api/owner' }
+              },
+              name: 'name'
+            },
+            audio: [
+              {
+                _links: {
+                  self: { href: '/api/audio1' }
+                },
+                name: 'audio1'
+              },
+              {
+                _links: {
+                  self: { href: '/api/audio2' }
+                },
+                name: 'audio2'
+              }
+            ]
+          }
+        };
+
+        $httpBackend.expect('GET', '/api').respond(document);
+      }));
+
+      it ('can fetch embedded documents using follow as a cache', function () {
+        ngHal.follow('owner').then(function (doc) {
+          expect(doc.name).toEqual('name');
+        });
+        $httpBackend.flush();
+      });
+
+      it ('can fetch several embedded documents at once', function () {
+        var docs;
+        ngHal.follow('audio').then(function (audios) {
+          docs = audios;
+        });
+        $httpBackend.flush();
+        expect(docs.length).toBe(2);
+      });
+    });
   });
 });

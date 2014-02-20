@@ -28,7 +28,6 @@ div[ui-view] {
   }
   
   body {
-    overflow: hidden;
     width: 100%;
   }
 
@@ -41,6 +40,7 @@ div[ui-view] {
 .open-add, .open-remove {
   transition-duration: 0.2s;
 }
+
 .open-add-active {
   div[ui-view] {
     background: rgb(245, 244, 242);
@@ -255,10 +255,25 @@ div[ui-view] .loading {
 }
 
 div[ui-view].ng-enter {
-  opacity: 0;
-  transition: 0.2s linear all;
+  opacity: 0.8;
+  transform: translateX(300px);
+  transition: 0.5s opacity, 0.5s transform;
+  absolute: top left;
+  z-index: 150;
   &.ng-enter-active {
+    transform: translateX(0px);
     opacity: 1;
+  }
+}
+
+div[ui-view].ng-leave {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: 0.5s opacity, 0.5s transform;
+  &.ng-leave-active {
+    opacity: 0.5;
+    transform-origin: 0 120px;
+    transform: perspective(300px) translate3d(-150px, 0, -25px);
   }
 }
 
