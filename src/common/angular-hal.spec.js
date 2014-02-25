@@ -125,10 +125,15 @@ describe('angular-hal', function () {
     it ('handles transformed attachment', function () {
       module('angular-hal', function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
-        ngHalProvider.transform('http://meta.nghal.org/object', function () {
-          this.name = this.follow('link').call('name');
-          this.sandwich = "yes";
-          this.baz = this.follow('link').get('baz');
+        ngHalProvider.defineModule('http://meta.nghal.org/object', function (resolved) {
+          var link = resolved.follow('link');
+          resolved.name = link.call('name');
+          resolved.sandwich = "yes";
+          resolved.baz = link.get('baz');
+
+          return function (doc) {
+            doc.cool = false;
+          };
         });
         ngHalProvider.defineModule('http://meta.nghal.org/link', {
           name: function () {
@@ -142,12 +147,13 @@ describe('angular-hal', function () {
         $httpBackend.when('GET', '/api/v1').respond({_links: {foo: {href:'/foo', profile: 'http://meta.nghal.org/object'}}});
         $httpBackend.when('GET', '/foo').respond({_links: {link: {href: '/bar', profile: 'http://meta.nghal.org/link'}}});
         $httpBackend.when('GET', '/bar').respond({baz: 'bux'});
-        var name, sandwich, baz;
+        var name, sandwich, baz, cool;
 
         ngHal.follow('foo').then(function (foo) {
           name = foo.name;
           sandwich = foo.sandwich;
           baz = foo.baz;
+          cool = foo.cool;
         });
 
         $httpBackend.flush();
@@ -155,6 +161,7 @@ describe('angular-hal', function () {
         expect(name).toEqual('bux');
         expect(sandwich).toEqual('yes');
         expect(baz).toEqual('bux');
+        expect(cool).toBeFalsy();
       });
     });
   });

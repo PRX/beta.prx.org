@@ -17,17 +17,15 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
 
   ngHalProvider.setRootUrl(FEAT.apiServer)
-  .defineModule('http://meta.prx.org/model/story', ['Story', function (Story) {
+  .mixin('http://meta.prx.org/model/story', ['Story', 'resolved', function (Story, resolved) {
+    resolved.$audioFiles = resolved.follow('audio');
+    resolved.$image = resolved.follow('image');
     return Story.prototype;
   }])
-  .transform('http://meta.prx.org/model/story', function () {
-    this.$audioFiles = this.follow('audio');
-    this.$image = this.follow('image');
-  })
-  .transform('account', function () {
-    this.name = this.follow('opener').call('name');
-  })
-  .defineModule('opener', {
+  .mixin('account', ['resolved', function (resolved) {
+    resolved.name = resolved.follow('opener').call('name');
+  }])
+  .mixin('opener', {
     name: function () {
       return this.first_name + ' ' + this.last_name;
     }
