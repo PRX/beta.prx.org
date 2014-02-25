@@ -41,7 +41,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
-      return $q.when(this.followEmbedded(rel))
+      return new DocumentPromise(this.followEmbedded(rel))
         .catch(bound(this.followLink, this, rel, params));
     },
     followOne: function followOne (rel, params) {
@@ -210,10 +210,13 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }
     },
     href: function (params) {
-      var template = this.template(params);
+      var template = this.to(params);
       if (template) {
         return template.template.expand(params);
       }
+    },
+    url: function (params) {
+      return this.context.relativePath(this.href(params));
     },
     hrefs: function (params) {
       var hrefs = [];
@@ -221,9 +224,6 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         hrefs.push(spec.href);
       });
       return hrefs;
-    },
-    template: function (params) {
-      return this.to(params);
     },
     profile: function profile (params) {
       return this.to(params).profile;
@@ -323,8 +323,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       opts.d instanceof Document || angular.isArray(opts.d)) {
       return opts.d;
     }
-    return new (opts.c.makeConstructor(opts.m))(opts.d.data,
-      opts.d.config.url);
+    return opts.c.construct(opts.d.data, opts.m, opts.d.config.url);
   }
 
   DocumentPromise.prototype = Object.create(Promise.prototype);
@@ -368,6 +367,60 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   });
 
   /**
+   * Transformer
+   *
+   * Let's see where this goes.
+   */
+
+  function Transformer (parent, req) {
+    this.parent = parent;
+    this.req = req;
+    return Object.create(this);
+  }
+
+  Transformer.prototype = {
+    call: function (method) {
+      return new Transformer(this, ['call', method]);
+    },
+    follow: function (link, params) {
+      return new Transformer(this, ['follow', link, params]);
+    },
+    get: function (prop) {
+      return new Transformer(this, ['get', prop]);
+    },
+    toPromise: function (obj) {
+      if (this.parent) {
+        obj = this.parent.toPromise(obj);
+      }
+      if (this.req) {
+        obj = obj[this.req[0]].apply(obj, this.req.slice(1));
+      }
+      return obj;
+    },
+    promised: function (obj) {
+      var p = {};
+      angular.forEach(this, function (value, key) {
+        p[key] = value['toPromise'] ? value.toPromise(obj) : value;
+      });
+      return p;
+    },
+    mixin: function () {
+      var self = this;
+      return function () {
+        var _self = this;
+        return $q.all(self.promised(this)).then(function (resolutions) {
+          angular.forEach(resolutions, function (value, key) {
+            _self[key] = value;
+          });
+          return _self;
+        });
+      };
+    }
+  };
+
+
+
+  /**
    * ngHal Context
    *
    * This is responsible for holding the configuration
@@ -378,6 +431,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   function Context (parent, origin) {
     this.origin = origin;
     this.mixins = {};
+    this.transformations = {};
     this.parent = parent;
   }
 
@@ -386,7 +440,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     subContext: function subContext (origin) {
       var obj = Object.create(this);
       Context.call(obj, this,
-        arguments.length ? origin : this.origin);
+        arguments.length ? this.relativePath(origin) : this.origin);
       return obj;
     },
     get: function get (path, config) {
@@ -416,20 +470,51 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       Constructor.prototype = this.prototypeForMixins(mixins);
       return Constructor;
     },
+    makeTransformer: function makeTransformer (uris) {
+      var transformers = [];
+      angular.forEach(uris, function (uri) {
+        transformers = transformers.concat(this.transformersFor(uri));
+      }, this);
+      if (transformers.length) {
+        return function (document) {
+          document = $q.when(document);
+          angular.forEach(transformers, function (transformer) {
+            document = document.then(function (doc) {
+              return transformer.call(doc);
+            });
+          });
+          return document;
+        };
+      } else {
+        return function (d) { return d; };
+      }
+    },
     mixin: function (mixin, def) {
-      this.mixins[mixin] = [].concat(this.mixins[mixin], def);
+      this.mixins[mixin] = [].concat(this.mixins[mixin] || [], def);
+    },
+    transform: function (uri, def) {
+      this.transformations[uri] = [].concat(this.transformations[uri] || [], def);
     },
     mixinsFor: function mixinsFor (mixin) {
       if (this.parent) {
-        return this.parent.mixinsFor(mixin).concat(this.mixins[mixin]);
+        return this.parent.mixinsFor(mixin).concat(this.mixins[mixin] || []);
       } else {
         return (this.mixins[mixin] || []).slice(0);
       }
     },
-    construct: function construct (doc, rel) {
-      var link = linkCollection(doc._links, this)('self');
-      return this.makeConstructor([link.profile(), rel])
-        (doc, link.href());
+    transformersFor: function transformersFor (uri) {
+      if (this.parent) {
+        return this.parent.transformersFor(uri).concat(this.transformations[uri] || []);
+      } else {
+        return (this.transformations[uri] || []).slice(0);
+      }
+    },
+    construct: function construct (doc, uris, url) {
+      var selfLink = linkCollection(doc._links, this)('self');
+      url = url || selfLink.href();
+      uris = [].concat(uris, selfLink.profile());
+      return this.makeTransformer(uris)(
+        this.makeConstructor(uris)(doc, url));
     },
     // A function which generates an object with the
     // prototype chain consisting of Document at the root
@@ -447,6 +532,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return proto;
     },
     relativePath: function relativePath (path) {
+      if (typeof path === 'undefined') { return path; }
       if (this.origin && path.split('://', 2).length != 2 &&
         this.origin.indexOf('://') !== -1) {
         if (path[0] == '/') {
@@ -476,6 +562,12 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     mixin: function mixin (uri, def) {
       this.ctx.mixin(uri, def);
+      return this;
+    },
+    transform: function (uri, transformer) {
+      var transformSpec = new Transformer();
+      transformer.call(transformSpec);
+      this.ctx.transform(uri, transformSpec.mixin());
       return this;
     },
     get: function () {

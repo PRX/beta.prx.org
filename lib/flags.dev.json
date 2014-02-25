@@ -1,4 +1,5 @@
 {
   "showMenu": false,
-  "apiServer": "http://prx-backend.dev/api/v1"
+  "apiServer": "http://prx-backend.10.1.10.65.xip.io/api/v1",
+  "lovesharebuy": false
 }

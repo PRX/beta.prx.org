@@ -35,7 +35,7 @@ var featsDev = __dirname + '/lib/flags.dev.json';
 
 function bStyl() {
   return gulp.src(c.app.stylus)
-    .pipe(stylus({
+  .pipe(stylus({
       set: ['linenos'],
       use: ['nib']
     }));

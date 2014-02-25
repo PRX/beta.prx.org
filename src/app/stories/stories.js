@@ -7,6 +7,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
     resolve: {
       story: ['Story', '$stateParams', function (Story, $stateParams) {
         return Story.get($stateParams.storyId);
+      }],
+      account: ['story', function (story) {
+        return story.follow('account');
       }]
     }
   });
@@ -16,9 +19,21 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .defineModule('http://meta.prx.org/model/story', ['Story', function (Story) {
     return Story.prototype;
-  }]);
+  }])
+  .transform('http://meta.prx.org/model/story', function () {
+    this.$audioFiles = this.follow('audio');
+    this.$image = this.follow('image');
+  })
+  .transform('account', function () {
+    this.name = this.follow('opener').call('name');
+  })
+  .defineModule('opener', {
+    name: function () {
+      return this.first_name + ' ' + this.last_name;
+    }
+  });
 })
-.factory('Story', function (ngHal, playerHater) {
+.factory('Story', function (ngHal, playerHater, $q) {
   function Story () {
     return ngHal.build('story');
   }
@@ -31,8 +46,12 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
           playerHater.nowPlaying.story = this;
           return this.$sound = playerHater.nowPlaying;
         }
+        var audioFiles = [];
+        angular.forEach(this.$audioFiles, function (audioFile) {
+          audioFiles.push({url: audioFile.links('enclosure').url()});
+        });
 
-        this.$sound = playerHater.newSong.apply(playerHater, this.$audioFiles);
+        this.$sound = playerHater.newSong.apply(playerHater, audioFiles);
         this.$sound.story = this;
       }
       return this.$sound;
@@ -43,6 +62,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
       } else {
         playerHater.play(this.sound());  
       }
+    },
+    imageUrl: function () {
+      return (this.$imageUrl = this.$imageUrl || this.$image.link('enclosure').url());
     },
     pause: function () {
       playerHater.pause(this.sound());
@@ -55,23 +77,19 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
       }
     },
     paused: function () {
-      return (typeof this._sound === 'undefined' || this._sound.paused);
+      return (typeof this.$sound === 'undefined' || this.$sound.paused);
     }
   };
   
   Story.get = function (storyId) {
-    return ngHal.followOne('stories', {id: storyId}).then(function (story) {
-      return story.follow('audio').then(function (audioFiles) {
-        story.$audioFiles = audioFiles;
-        return story;
-      });
-    });
+    return ngHal.followOne('stories', {id: storyId});
   };
 
   return Story;
 })
-.controller('StoryCtrl', function ($scope, story, $stateParams) {
+.controller('StoryCtrl', function ($scope, story, account, $stateParams) {
   $scope.story = story;
+  $scope.account = account;
   $scope.activeStory = $scope.activeStory || {};
   $scope.activeStory.id = ~~$stateParams.storyId;
 });
