@@ -184,23 +184,24 @@ section.player {
   h1 {
     position: relative;
     z-index: 10;
-    line-height: 26px;
-    font-size: 22px;
-    margin-top: 3px;
-    color: #FFF;
+    color: white;
     font-weight: 300;
     height: 80px;
     padding-bottom: 5px;
     overflow: hidden;
   }
 
-  h3 {
-    padding-top: 5px;
-    line-height: 26px;
-    font-size: 12px;
-    clear: both;
+  h4 {
+    color: white;
+    float: left;
     font-weight: 300;
-    color: #fff;
+    line-height: 26px;
+    padding-top: 5px;
+    margin-right: 10px;
+    strong {
+      font-weight: 500;
+    }
+
   }
 }
 
@@ -227,29 +228,6 @@ div[ui-view] .loading {
     height: 100%;
   }
 }
-
-// div[ui-view].ng-enter {
-//   opacity: 0.8;
-//   transform: translateX(300px);
-//   transition: 0.5s opacity, 0.5s transform;
-//   absolute: top left;
-//   z-index: 150;
-//   &.ng-enter-active {
-//     transform: translateX(0px);
-//     opacity: 1;
-//   }
-// }
-
-// div[ui-view].ng-leave {
-//   opacity: 1;
-//   transform: translate3d(0, 0, 0);
-//   transition: 0.5s opacity, 0.5s transform;
-//   &.ng-leave-active {
-//     opacity: 0.5;
-//     transform-origin: 0 120px;
-//     transform: perspective(300px) translate3d(-150px, 0, -25px);
-//   }
-// }
 
 div[ui-view] ul.actions {
   background: lightest-grey;
@@ -284,14 +262,13 @@ div[ui-view] ul.actions {
 }
 
 section.body {
-  background: #fff;
   padding: 0 14px;
   article {
     &:before {
       content: '';
       display: block;
-      margin: 0 -14px 10px;
-      border-top: 1px solid rgb(225, 225, 225);
+      margin: 20px -14px 20px;
+      border-top: 1px solid lightest-grey;
     }
 
     &:first-child:before {
@@ -303,5 +280,32 @@ section.body {
       line-height: 22px;
       font-weight: 300;
     }
+  }
+}
+
+.img {
+  background-color: lightest-grey;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.account {
+  .img {
+    float: left;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid lightest-grey;
+    margin-right: 15px;
+    margin-bottom: 12px;
+  }
+  h2 {
+    line-height: 70px;
+  }
+  .path, .location {
+    font-size: 12px;
+    clear: both;
+    margin-bottom: 8px;
   }
 }

@@ -23,11 +23,12 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
     return Story.prototype;
   }])
   .mixin('account', ['resolved', function (resolved) {
-    resolved.name = resolved.follow('opener').call('name');
+    resolved.imageUrl = resolved.follow('image').call('link', 'enclosure').call('url');
+    resolved.address = resolved.follow('address');
   }])
-  .mixin('opener', {
-    name: function () {
-      return this.first_name + ' ' + this.last_name;
+  .mixin('address', {
+    toString: function () {
+      return this.city + ', ' + this.state;
     }
   });
 })

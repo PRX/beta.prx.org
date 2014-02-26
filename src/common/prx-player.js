@@ -9,7 +9,11 @@ angular.module('prx.player', ['ngPlayerHater'])
     return num;
   }
 
-  function timeCode(time) {
+  function timeCode(time, fmt) {
+    if (typeof fmt === 'undefined') {
+      fmt = 'long';
+    }
+
     var hours, minutes, seconds;
     if (isNaN(time)) {
       return zero;
@@ -20,7 +24,11 @@ angular.module('prx.player', ['ngPlayerHater'])
     minutes = ~~((time % 3600) / 60);
     seconds = ~~(time % 60);
 
-    return [dd(hours), ":", dd(minutes), ":", dd(seconds)].join('');
+    if (fmt == 'long' || hours) {
+      return [dd(hours), ":", dd(minutes), ":", dd(seconds)].join('');
+    } else if (fmt == 'short') {
+      return [minutes, ":", dd(seconds)].join('');
+    }
   }
 
   return timeCode;
