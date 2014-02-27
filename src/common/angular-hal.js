@@ -62,7 +62,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         angular.forEach(embed, function (e) {
           results.push(this.context.construct(e, rel));
         }, this);
-        return results;
+        return $q.all(results);
       }
     },
     followLink: function followLink (rel, params) {
