@@ -150,6 +150,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return obj;
     }
 
+    accessor.dump = function () {
+      return angular.copy(rLinks);
+    };
+
     angular.forEach(Link.prototype, function (method, name) {
       accessor[name] = function (rel, params) {
         return method.call(links[rel], params);
