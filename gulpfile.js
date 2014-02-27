@@ -35,7 +35,7 @@ var featsDev = __dirname + '/lib/flags.dev.json';
 
 function bStyl() {
   return gulp.src(c.app.stylus)
-    .pipe(stylus({
+  .pipe(stylus({
       set: ['linenos'],
       use: ['nib']
     }));
@@ -118,7 +118,6 @@ gulp.task('jshint', function () {
 
 gulp.task('css', function () {
   return es.concat(gulp.src(c.vendor.css), bStyl())
-  .pipe(newer(buildDir + '/assets/' + fileName + '.css'))
   .pipe(concat(fileName + '.css'))
   .pipe(gulp.dest(buildDir + '/assets/'));
 });

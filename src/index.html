@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="prx" ng-class="{'open': drawerOpen}">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title ng-bind="page.title">PRX.org</title>
   <base href="/">
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
@@ -19,13 +19,14 @@
   <div ui-view>
     <prx-loading-bar></prx-loading-bar>
   </div>
+  <a href="http://www.prx.org/pieces/{{activePiece.id}}">Show Desktop Site</a>
   <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
     <div class="toggle-button" ng-class="{play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
       <small>{{player.nowPlaying.position | timeCode }}</small>
     </div>
-    <div class="thumb"></div>
+    <div class="thumb" ng-style="{'background-image': 'url(' + player.nowPlaying.story.imageUrl() + ')' }"></div>
     <div class="title">{{player.nowPlaying.story.title}}</div>
-    <ul class="actions">
+    <ul class="actions" ng-flag="lovesharebuy">
       <li class="share"></li>
       <li class="love"></li>
     </ul>

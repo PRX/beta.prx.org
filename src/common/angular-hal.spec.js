@@ -121,6 +121,49 @@ describe('angular-hal', function () {
         expect(resp).toEqual([4, 5, 3]);
       });
     });
+
+    it ('handles transformed attachment', function () {
+      module('angular-hal', function (ngHalProvider) {
+        ngHalProvider.setRootUrl('/api/v1');
+        ngHalProvider.defineModule('http://meta.nghal.org/object', function (resolved) {
+          var link = resolved.follow('link');
+          resolved.name = link.call('name');
+          resolved.sandwich = "yes";
+          resolved.baz = link.get('baz');
+
+          return function (doc) {
+            doc.cool = false;
+          };
+        });
+        ngHalProvider.defineModule('http://meta.nghal.org/link', {
+          name: function () {
+            return this.baz;
+          }
+        });
+      });
+
+
+      inject(function (ngHal, $httpBackend) {
+        $httpBackend.when('GET', '/api/v1').respond({_links: {foo: {href:'/foo', profile: 'http://meta.nghal.org/object'}}});
+        $httpBackend.when('GET', '/foo').respond({_links: {link: {href: '/bar', profile: 'http://meta.nghal.org/link'}}});
+        $httpBackend.when('GET', '/bar').respond({baz: 'bux'});
+        var name, sandwich, baz, cool;
+
+        ngHal.follow('foo').then(function (foo) {
+          name = foo.name;
+          sandwich = foo.sandwich;
+          baz = foo.baz;
+          cool = foo.cool;
+        });
+
+        $httpBackend.flush();
+
+        expect(name).toEqual('bux');
+        expect(sandwich).toEqual('yes');
+        expect(baz).toEqual('bux');
+        expect(cool).toBeFalsy();
+      });
+    });
   });
 
   describe ('relative urls', function () {
@@ -231,6 +274,13 @@ describe('angular-hal', function () {
       ngHal.link('lots').then(function (link) { hrefs = link.hrefs(); });
       $httpBackend.flush();
       expect(hrefs).toEqual(['/api/one', '/api/two']);
+    }));
+
+    it ('can get a single href', inject(function ($httpBackend, ngHal) {
+      var href;
+      ngHal.link('lots').then(function (h) { href = h.url(); });
+      $httpBackend.flush();
+      expect(href).toEqual('/api/one');
     }));
 
     it ('can follow more than one link simultaneously', inject(function ($httpBackend, ngHal) {

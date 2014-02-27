@@ -1,5 +1,6 @@
 body {
   font-family: 'Open Sans', sans-serif;
+  text-rendering: optimizeLegibility;
   color: grey;
 }
 
@@ -20,6 +21,24 @@ h2 {
 h3 {
   font-size: 18px;
   line-height: 44px;
+}
+
+h4 {
+  font-size: 16px;
+  line-height: 44px;
+}
+
+@media screen and (max-width : 480px) {
+  h1 {
+    font-size: 22px;
+    line-height: 26px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  h4 {
+    font-size: 12px;
+  }
 }
 
 p {

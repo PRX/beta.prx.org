@@ -2,8 +2,9 @@ section.player
   .category documentary
   .toggle-button(ng-class="{play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()")
   h1 {{story.title}}
-  h3 by {{titleSize.choice}}
-ul.actions
+  h4 by <strong>{{account.name}}</strong>
+  h4 Length: {{story.length * 1000 | timeCode: 'short' }}
+ul.actions(ng-flag="lovesharebuy")
   li.love.fa.fa-heart Love
   li.share.fa.fa-share Share
   li.buy.fa.fa-shopping-cart
@@ -12,35 +13,12 @@ ul.actions
 section.body
   article.details
     h2 Details
-    p From mining to manufacturing, housework to ranching, hear surprising information about the labor movement, the return of overseas jobs, U.S. manufacturing, employment, and the auto industry, plus quitting, firing, and hiring, all highlighted by songs about unusual, tough, and dangerous jobs.
-  article.licensing
-    h2 Licensing
-    ul
-      li You may broadcast and Internet simulcast this piece an unlimited number of times for the period of 1 year.
-      li You may offer this piece on your website, as a stream only.
-      li You may only edit or excerpt this piece with permission.
-    h3 Additional Terms
-    p Additional TermsIf you air the program without breaks, you have permission to edit out "I'm Charlie Warren" at the outcue of Parts 1 and 2. That will eliminate the unneeded repetition of the name within seconds.
-  article.purchasing
-    h2 Purchasing
-    ul
-      li
-        a Download MP3 - Audition only
-      li
-        a Request opt-in for "Demo OP"
-      li
-        a Download carriage reports
-  article.timing
-    h2 Timing & Cues
+    p(ng-bind="story.short_description")
     dl
-      dt 0:58:24
-      dd Program length to voice out
-      dt 0:58:48
-      dd Total program length including music bed
-  article.related
-    h2 Purchasers of this piece also bought (5)
-  article.broadcast-history
-    h2 Broadcast History
-    p 2008 Debut. Licensed by a total of 24 stations in '08, '09, '10, '11 &amp; '12.
-    p Employment figures and other script material updated for 2013.
-  article
+      dt Added to PRX:
+      dd(ng-bind="story.published_at | timeAgo")
+  article.account
+    prx-img(src="account.imageUrl")
+    h2(ng-bind="account.name")
+    .path(ng-bind="account.path")
+    .location(ng-bind="account.address")

@@ -41,7 +41,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
-      return $q.when(this.followEmbedded(rel))
+      return new DocumentPromise(this.followEmbedded(rel))
         .catch(bound(this.followLink, this, rel, params));
     },
     followOne: function followOne (rel, params) {
@@ -214,10 +214,13 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }
     },
     href: function (params) {
-      var template = this.template(params);
+      var template = this.to(params);
       if (template) {
         return template.template.expand(params);
       }
+    },
+    url: function (params) {
+      return this.context.relativePath(this.href(params));
     },
     hrefs: function (params) {
       var hrefs = [];
@@ -225,9 +228,6 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         hrefs.push(spec.href);
       });
       return hrefs;
-    },
-    template: function (params) {
-      return this.to(params);
     },
     profile: function profile (params) {
       return this.to(params).profile;
@@ -318,7 +318,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * promises to make a new constructor.
    */
   function DocumentPromise (dPromise, mPromise, cPromise) {
-    Promise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise})
+    Promise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise })
       .then(mkPromisedDoc));
   }
 
@@ -327,8 +327,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       opts.d instanceof Document || angular.isArray(opts.d)) {
       return opts.d;
     }
-    return new (opts.c.makeConstructor(opts.m))(opts.d.data,
-      opts.d.config.url);
+    return opts.c.construct(opts.d.data, opts.m, opts.d.config.url);
   }
 
   DocumentPromise.prototype = Object.create(Promise.prototype);
@@ -372,6 +371,97 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   });
 
   /**
+   * ResolutionDependencyHolder
+   *
+   * Holds the chains of dependencies.
+   */
+
+  function ResolutionDependencyHolder () { }
+
+  ResolutionDependencyHolder.prototype = {
+    constructor: ResolutionDependencyHolder,
+    hasTransformations: function () {
+      return Object.keys(this).length > 0;
+    },
+    toTransformer: function () {
+      var dependencies = this;
+      return function (object) {
+        var depPromises = {};
+        angular.forEach(dependencies, function (dependency, key) {
+          depPromises[key] = (dependency instanceof DocumentDependency) ?
+            dependency.resolve(object) : dependency;
+        });
+        return $q.all(depPromises).then(function (resolution) {
+          angular.forEach(resolution, function (val, key) {
+            object[key] = val;
+          });
+          return object;
+        });
+      };
+    }
+  };
+
+  angular.forEach(['call', 'follow', 'get'], function (method) {
+    ResolutionDependencyHolder.prototype[method] = function () {
+      return new DocumentDependency(undefined,
+        [method].concat([].slice.call(arguments)));
+    };
+  });
+
+  /**
+   * DocumentDependency
+   *
+   * Really a chain of method calls.
+   */
+
+  function DocumentDependency (recipient, called) {
+    this.recipient = recipient;
+    if (called[0] == 'follow') {
+      called.unshift('call');
+    }
+    this.called = called;
+  }
+
+  DocumentDependency.prototype = {
+    constructor: DocumentDependency,
+    resolve: function (resolution) {
+      if (this.resolved) {
+        return this.resolved;
+      }
+      if (this.recipient) {
+        resolution = this.recipient.resolve(resolution);
+      }
+      var called = this.called;
+      return this.resolved = $q.when(resolution).then(function (r) {
+        switch(called[0]) {
+          case 'call':
+            return r[called[1]].apply(r, called.slice(2));
+          case 'get':
+            return r[called[1]];
+        }
+      });
+    }
+  };
+
+  angular.forEach(['call', 'follow', 'get'], function (method) {
+    DocumentDependency.prototype[method] = function () {
+      return new DocumentDependency(this,
+        [method].concat([].slice.call(arguments)));
+    };
+  });
+
+  function documentOr(fn) {
+    return function (doc) {
+      var ret = fn(doc);
+      if (typeof ret !== 'undefined') {
+        return ret;
+      } else {
+        return doc;
+      }
+    };
+  }
+
+  /**
    * ngHal Context
    *
    * This is responsible for holding the configuration
@@ -382,6 +472,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   function Context (parent, origin) {
     this.origin = origin;
     this.mixins = {};
+    this.transformations = {};
     this.parent = parent;
   }
 
@@ -390,7 +481,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     subContext: function subContext (origin) {
       var obj = Object.create(this);
       Context.call(obj, this,
-        arguments.length ? origin : this.origin);
+        arguments.length ? this.relativePath(origin) : this.origin);
       return obj;
     },
     get: function get (path, config) {
@@ -415,42 +506,64 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         if (!(this instanceof Constructor)) {
           return new Constructor(data, url);
         }
-        return Document.call(this, data, context.subContext(url));
+        var doc = Document.call(this, data, context.subContext(url));
+        if (Constructor.prototype.__transform.length) {
+          doc = $q.when(doc);
+          angular.forEach(Constructor.prototype.__transform, function (fn) {
+            doc = doc.then(documentOr(fn));
+          });
+        }
+        return doc;
       }
       Constructor.prototype = this.prototypeForMixins(mixins);
       return Constructor;
     },
     mixin: function (mixin, def) {
-      this.mixins[mixin] = [].concat(this.mixins[mixin], def);
+      this.mixins[mixin] = this.mixins[mixin] || [];
+      this.mixins[mixin].push(def);
     },
     mixinsFor: function mixinsFor (mixin) {
       if (this.parent) {
-        return this.parent.mixinsFor(mixin).concat(this.mixins[mixin]);
+        return this.parent.mixinsFor(mixin).concat(this.mixins[mixin] || []);
       } else {
         return (this.mixins[mixin] || []).slice(0);
       }
     },
-    construct: function construct (doc, rel) {
-      var link = linkCollection(doc._links, this)('self');
-      return this.makeConstructor([link.profile(), rel])
-        (doc, link.href());
+    construct: function construct (doc, uris, url) {
+      var selfLink = linkCollection(doc._links, this)('self');
+      url = url || selfLink.href();
+      uris = [].concat(uris, selfLink.profile());
+      return this.makeConstructor(uris)(doc, url);
     },
     // A function which generates an object with the
     // prototype chain consisting of Document at the root
     // and the requested mixins built up to the top.
     prototypeForMixins: function prototypeForMixins (mixins) {
       var proto = Object.create(Document.prototype);
+      proto.__transform = [];
       angular.forEach(mixins.reverse(), function (mixin) {
         angular.forEach(this.mixinsFor(mixin), function (mix) {
+          var others = {};
           if (angular.isArray(mix) || angular.isFunction(mix)) {
-            mix = this.injector.invoke(mix);
+            if (this.injector.annotate(mix).indexOf('resolved') !== -1) {
+              others.resolved = new ResolutionDependencyHolder();
+            }
+            mix = this.injector.invoke(mix, this, others);
           }
-          proto = angular.extend(Object.create(proto), mix);
+          if (others.resolved && others.resolved.hasTransformations()) {
+            proto.__transform.push(others.resolved.toTransformer());
+          }
+          if (angular.isFunction(mix)) {
+            proto.__transform.push(mix);
+          } else {
+            proto = angular.extend(Object.create(proto), mix);
+          }
         }, this);
       }, this);
       return proto;
     },
     relativePath: function relativePath (path) {
+      if (typeof path === 'undefined') { return path; }
       if (this.origin && path.split('://', 2).length != 2 &&
         this.origin.indexOf('://') !== -1) {
         if (path[0] == '/') {
