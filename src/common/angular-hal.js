@@ -41,8 +41,8 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
-      return new DocumentPromise(this.followEmbedded(rel))
-        .catch(bound(this.followLink, this, rel, params));
+      return new DocumentPromise(this.followEmbedded(rel)
+        .catch(bound(this.followLink, this, rel, params)));
     },
     followOne: function followOne (rel, params) {
       return this.links.getDocument(rel, params);
@@ -56,7 +56,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }
       var embed = this.$embedded[rel];
       if (!angular.isArray(embed)) {
-        return this.context.construct(embed, rel);
+        return $q.when(this.context.construct(embed, rel));
       } else {
         var results = [];
         angular.forEach(embed, function (e) {
