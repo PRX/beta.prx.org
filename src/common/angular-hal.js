@@ -531,8 +531,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     construct: function construct (doc, uris, url) {
       var selfLink = linkCollection(doc._links, this)('self');
-      url = url || selfLink.href();
-      uris = [].concat(uris, selfLink.profile());
+      if (selfLink) {
+        url = url || selfLink.href();
+        uris = [].concat(uris, selfLink.profile());
+      }
       return this.makeConstructor(uris)(doc, url);
     },
     // A function which generates an object with the
