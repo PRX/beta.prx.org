@@ -9,7 +9,8 @@ module.exports = function ( config ) {
      * This is the list of file patterns to load into the browser during testing.
      */
     files: [
-      'public/**/*.js'
+      'public/**/*.js',
+      'src/common/angular-hal-mock.js'
     ],
     exclude: [
       'public/assets/**/*.js'
@@ -18,7 +19,7 @@ module.exports = function ( config ) {
     frameworks: [ 'jasmine' ],
     plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-coverage' ],
     preprocessors: {
-       'public/{app,common}/**/*.js': ['coverage']
+       '*/{app,common}/**/!(*.spec).js': ['coverage']
     },
 
     /**
