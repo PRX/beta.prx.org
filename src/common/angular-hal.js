@@ -484,6 +484,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         arguments.length ? this.relativePath(origin) : this.origin);
       return obj;
     },
+    disableTransforms: false,
     get: function get (path, config) {
       return this.http.get(this.relativePath(path), config);
     },
@@ -507,13 +508,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
           return new Constructor(data, url);
         }
         var doc = Document.call(this, data, context.subContext(url));
-        if (Constructor.prototype.__transform.length) {
-          doc = $q.when(doc);
-          angular.forEach(Constructor.prototype.__transform, function (fn) {
-            doc = doc.then(documentOr(fn));
-          });
+        if (Context.prototype.disableTransforms) {
+          return doc;
+        } else {
+          return doc.transform();
         }
-        return doc;
       }
       Constructor.prototype = this.prototypeForMixins(mixins);
       return Constructor;
@@ -542,7 +541,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     // and the requested mixins built up to the top.
     prototypeForMixins: function prototypeForMixins (mixins) {
       var proto = Object.create(Document.prototype);
-      proto.__transform = [];
+      var transform = [];
       angular.forEach(mixins.reverse(), function (mixin) {
         angular.forEach(this.mixinsFor(mixin), function (mix) {
           var others = {};
@@ -553,15 +552,28 @@ angular.module('angular-hal', ['ng', 'uri-template'])
             mix = this.injector.invoke(mix, this, others);
           }
           if (others.resolved && others.resolved.hasTransformations()) {
-            proto.__transform.push(others.resolved.toTransformer());
+            transform.push(others.resolved.toTransformer());
           }
           if (angular.isFunction(mix)) {
-            proto.__transform.push(mix);
+            transform.push(mix);
           } else {
             proto = angular.extend(Object.create(proto), mix);
           }
         }, this);
       }, this);
+      proto.transform = function () {
+        var promise = $q.when(this);
+        var self = this;
+        angular.forEach(transform, function (fn) {
+          promise = promise.then(documentOr(fn));
+        });
+        return promise.then(function (o) {
+          if (o !== self) {
+            angular.copy(o, self);
+          }
+          return o;
+        });
+      };
       return proto;
     },
     relativePath: function relativePath (path) {
@@ -627,6 +639,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   rootProvider.$get = getNgHal;
   getNgHal.$inject = ['$cacheFactory', '$http', '$injector', '$q', 'UriTemplate'];
   function getNgHal ($cacheFactory, $http, $injector, _$q_, _UriTemplate_) {
+    rootProvider.disableTransforms = function () {
+      Context.prototype.disableTransforms = true;
+    };
     rootProvider.generateConstructor = bound(rootContext.makeConstructor, rootContext);
     rootContext.http = $http;
     rootContext.injector = $injector;
