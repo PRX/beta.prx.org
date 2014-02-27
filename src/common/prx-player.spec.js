@@ -37,6 +37,10 @@ describe('prx.player', function () {
       expect(timeCode(11000)).toEqual('00:00:11');
     });
 
+    it('has a short format', function () {
+      expect(timeCode(11000, 'short')).toEqual('0:11');
+    });
+
   });
 
 });

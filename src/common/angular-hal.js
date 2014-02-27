@@ -567,12 +567,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         angular.forEach(transform, function (fn) {
           promise = promise.then(documentOr(fn));
         });
-        return promise.then(function (o) {
-          if (o !== self) {
-            angular.copy(o, self);
-          }
-          return o;
-        });
+        return promise;
       };
       return proto;
     },

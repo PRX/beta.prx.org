@@ -9,8 +9,6 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     return doc;
   }
 
-  function identity (o) { return o; }
-
   function promised(obj) {
     var sfs = [];
     obj = $q.when(obj).then(function (obj) {
