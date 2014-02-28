@@ -39,26 +39,28 @@ describe('prx.stories', function () {
     }));
   });
 
+  describe ('account mixin', function () {
+    it ('prefetches the image url and address', inject(function (ngHal, $rootScope) {
+      var account = ngHal.mock('account');
+      account.stubFollow('image', ngHal.mockEnclosure('image.png'));
+      account.stubFollow('address', ngHal.mock('address', {city: 'Springfield', state: "ST"}));
+      account.transform();
+      expect(account.imageUrl).toEqual('image.png');
+      expect(account.address.toString()).toEqual("Springfield, ST");
+    }));
+  });
+
   describe ('story module', function () {
 
-    var ngHal, story, playerHater, $rs;
+    var ngHal, story, playerHater;
 
-    function flush() {
-      $rs.$digest();
-    }
-
-    beforeEach(inject(function (_ngHal_, _playerHater_, $rootScope) {
+    beforeEach(inject(function (_ngHal_, _playerHater_) {
       ngHal = _ngHal_;
-      $rs = $rootScope;
       playerHater = _playerHater_;
-      var storyMock = ngHal.mock('http://meta.prx.org/model/story');
-      storyMock.stubFollow('audio', [ngHal.mock({_links:{enclosure:{href:'/foo.mp3'}}})]);
-      storyMock.stubFollow('image', ngHal.mock({_links:{enclosure:{href:'/foo.png'}}}));
-      ngHal.stubFollow('story', storyMock);
-      ngHal.follow('story').then(function (doc) {
-        story = doc;
-      });
-      flush();
+      story = ngHal.mock('http://meta.prx.org/model/story');
+      story.stubFollow('audio', [ngHal.mockEnclosure('/foo.mp3')]);
+      story.stubFollow('image', ngHal.mockEnclosure('/foo.png'));
+      story.transform();
     }));
 
     it ('can get a sound', function () {
@@ -69,56 +71,46 @@ describe('prx.stories', function () {
       expect(story.sound()).toBe(story.sound());
     });
 
-  //   xit ('pulls the sound from playerHaters nowPlaying property it is the currently playing story', inject(function (playerHater) {
-  //     story = ngHal.mock('http://meta.prx.org/model/story', {id: 1, name: 'foo'});
-  //     story2 = ngHal.mock('http://meta.prx.org/model/story', {id: 1, name: 'foo'});
-  //     expect(story).not.toBe(story2);
+    it ('can play', function () {
+      expect(story.play).toBeDefined();
+    });
 
-  //     playerHater.nowPlaying = story.sound();
+    describe ('#play', function () {
+      it ('resumes playback if this is the nowPlaying piece', inject(function (playerHater) {
+        spyOn(story.sound(), 'resume');
+        playerHater.nowPlaying = story.sound();
+        story.play();
+        expect(story.sound().resume).toHaveBeenCalled();
+      }));
 
-  //     expect(story2.sound()).toBe(story.sound());
-  //   }));
+      it ('begins playback if this is not nowPlaying', inject(function (playerHater) {
+        spyOn(playerHater, 'play');
+        story.play();
+        expect(playerHater.play).toHaveBeenCalled();
+        expect(playerHater.play.mostRecentCall.args[0]).toBe(story.sound());
+      }));
+    });
 
-  //   it ('can play', function () {
-  //     expect(story.play).toBeDefined();
-  //   });
+    it ('can pause', function () {
+      spyOn(playerHater, 'pause');
+      story.pause();
+      expect(playerHater.pause).toHaveBeenCalled();
+    });
 
-  //   describe ('#play', function () {
-  //     xit ('resumes playback if this is the nowPlaying piece', inject(function (playerHater) {
-  //       spyOn(story.sound(), 'resume');
-  //       playerHater.nowPlaying = story.sound();
-  //       story.play();
-  //       expect(story.sound().resume).toHaveBeenCalled();
-  //     }));
+    describe ('#togglePlay', function () {
+      it ('plays if currently paused', function () {
+        spyOn(story, 'play');
+        story.sound().paused = true;
+        story.togglePlay();
+        expect(story.play).toHaveBeenCalled();
+      });
 
-  //     xit ('begins playback if this is not nowPlaying', inject(function (playerHater) {
-  //       spyOn(playerHater, 'play');
-  //       story.play();
-  //       expect(playerHater.play).toHaveBeenCalled();
-  //       expect(playerHater.play.mostRecentCall.args[0]).toBe(story.sound());
-  //     }));
-  //   });
-
-  //   it ('can pause', function () {
-  //     spyOn(playerHater, 'pause');
-  //     story.pause();
-  //     expect(playerHater.pause).toHaveBeenCalled();
-  //   });
-
-  //   xdescribe ('#togglePlay', function () {
-  //     it ('plays if currently paused', function () {
-  //       spyOn(story, 'play');
-  //       story.sound().paused = true;
-  //       story.togglePlay();
-  //       expect(story.play).toHaveBeenCalled();
-  //     });
-
-  //     it ('pauses if currently playing', function () {
-  //       spyOn(story, 'pause');
-  //       story.sound().paused = false;
-  //       story.togglePlay();
-  //       expect(story.pause).toHaveBeenCalled();
-  //     });
-  //   });
+      it ('pauses if currently playing', function () {
+        spyOn(story, 'pause');
+        story.sound().paused = false;
+        story.togglePlay();
+        expect(story.pause).toHaveBeenCalled();
+      });
+    });
   });
 });

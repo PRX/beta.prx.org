@@ -113,4 +113,14 @@ describe('angular-hal-mock', function () {
       expect(href).toBe('/asd');
     });
   });
+
+  it ('has a shorthand for mocking something with an enclosure', inject(function (ngHal) {
+    var mock = ngHal.mockEnclosure('http://prx.org');
+    expect(mock.link('enclosure').url()).toEqual('http://prx.org');
+  }));
+
+  it ('defaults to file.ext when no args passed', inject(function (ngHal) {
+    var mock = ngHal.mockEnclosure();
+    expect(mock.link('enclosure').url()).toEqual('file.ext');
+  }));
 });
