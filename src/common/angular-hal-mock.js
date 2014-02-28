@@ -66,9 +66,8 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     doc.stubFollow = function (rel, obj) {
       docFollowStubs[rel] = promised(obj);
     };
-    doc.stubFollowOne = function (rel, id, obj) {
-      docFollowOneStubs[rel] || (docFollowOneStubs[rel] = {});
-      docFollowOneStubs[rel][id] = promised(obj);
+    doc.stubFollowOne = function (rel, obj) {
+      docFollowOneStubs[rel] = promised(obj);
     };
     var originalFollow = doc.follow;
     doc.follow = function (rel, params) {
@@ -80,9 +79,8 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     };
     var originalFollowOne = doc.followOne;
     doc.followOne = function(rel, params) {
-      if (typeof docFollowOneStubs[rel] !== 'undefined' &&
-          typeof docFollowOneStubs[rel][params.id] !== 'undefined') {
-          return docFollowOneStubs[rel][params.id];
+      if (typeof docFollowOneStubs[rel] !== 'undefined') {
+          return docFollowOneStubs[rel];
         } else {
           return originalFollowOne.call(doc, rel, params);
         }

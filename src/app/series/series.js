@@ -1,5 +1,5 @@
 angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
-.config(function ($stateProvider, ngHalProvider, $urlRouterProvider) {
+.config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('series', {
     url: '/series/:seriesId',
     controller: 'SeriesCtrl',
@@ -16,14 +16,10 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
 
 ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/series', ['resolved', function (resolved) {
-    resolved.image = resolved.follow('image');
-  }])
-  .mixin('http://meta.prx.org/model/series_image', ['resolved', function (resolved) {
-    resolved.imageUrl = resolved.call('link', 'enclosure').call('url');
+    resolved.imageUrl = resolved.follow('image').call('link', 'enclosure').call('url');
   }]);
 })
 .controller('SeriesCtrl', function ($scope, series, stories) {
   $scope.series = series;
   $scope.stories = stories;
-  console.log(series);
 });
