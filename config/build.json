@@ -56,9 +56,9 @@
   },
   "karmaCfg": "./karma/karma-unit.js",
   "covReq": {
-    "statements" : 75,
-    "branches" : 75,
-    "lines" : 75,
-    "functions" : 75
+    "statements" : 85,
+    "branches" : 85,
+    "lines" : 85,
+    "functions" : 85
   }
 }

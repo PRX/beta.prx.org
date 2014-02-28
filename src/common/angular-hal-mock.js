@@ -1,6 +1,6 @@
 angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
 .config(function ($provide, ngHalProvider) {
-  var $q, FAKE_ROOT = 'http://nghal.org/fake_root';
+  var $q, $rootScope, FAKE_ROOT = 'http://nghal.org/fake_root';
 
   function unfolded(doc) {
     if (angular.isFunction(doc.links)) {
@@ -16,6 +16,11 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
         obj.stubFollow.apply(obj, sf);
       });
       return obj;
+    }).then(function (doc) {
+      if (doc && doc.transform) {
+        return doc.transform();
+      }
+      return doc;
     });
     var then = obj.then;
     obj.stubFollow = function () {
@@ -56,18 +61,28 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
         return originalFollow.call(doc, rel, params);
       }
     };
-
+    var originalTransform = doc.transform;
+    doc.transform = function () {
+      var p = originalTransform.call(doc);
+      if (!$rootScope.$$phase){
+        $rootScope.$digest();
+      }
+      return p;
+    }
     return doc;
   }
 
   ngHalProvider.setRootUrl(FAKE_ROOT);
-  $provide.decorator('ngHal', ['$delegate', '$httpBackend', '$q', function ($delegate, $httpBackend, _$q_) {
+  $provide.decorator('ngHal', ['$delegate', '$httpBackend', '$q', '$rootScope', function ($delegate, $httpBackend, _$q_, _$rootScope_) {
     $q = _$q_;
+    $rootScope = _$rootScope_;
 
+    ngHalProvider.disableTransforms();
     if (ngHalProvider.ctx.origin == FAKE_ROOT) {
       $httpBackend.when('GET', FAKE_ROOT).respond({});
       $httpBackend.flush(1);
     }
+
     var mock = promised($delegate.then(function (d) {
       return mocked(d);
     }));
@@ -76,7 +91,7 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
       return $delegate.context.apply($delegate, [].slice.call(arguments));
     };
 
-    mock.mock = function mock (o) {
+    mock.mock = function (o) {
       var args = Array.prototype.slice.call(arguments);
       if (angular.isObject(args[args.length-1])) {
         o = args.pop();
@@ -85,6 +100,10 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
       }
 
       return mocked(ngHalProvider.generateConstructor(args)(unfolded(o)));
+    };
+
+    mock.mockEnclosure = function (url) {
+      return this.mock({_links:{enclosure:{href:url||'file.ext'}}});
     };
 
     return mock;

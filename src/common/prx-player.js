@@ -26,7 +26,7 @@ angular.module('prx.player', ['ngPlayerHater'])
 
     if (fmt == 'long' || hours) {
       return [dd(hours), ":", dd(minutes), ":", dd(seconds)].join('');
-    } else if (fmt == 'short') {
+    } else {
       return [minutes, ":", dd(seconds)].join('');
     }
   }
