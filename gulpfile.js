@@ -191,9 +191,9 @@ gulp.task('build', function (cb) {
   runSeq('clean', ['templates', 'js', 'css', 'assets'], 'html', cb);
 });
 
-gulp.task('dist', ['distJs']);
+gulp.task('dist', ['distJs', 'distAssets', 'distHtml']);
 
-gulp.task('distJs', function () {
+gulp.task('distJs', ['specs'], function () {
   return es.merge(
     gulp.src(vComplJs),
     gulp.src(c.app.js).pipe(ngmin())
@@ -208,8 +208,24 @@ gulp.task('distJs', function () {
   .pipe(gulp.dest(complDir + '/assets'));
 });
 
+gulp.task('distAssets', ['css', 'assets'], function () {
+  return gulp.src(buildDir + '/assets/**/*')
+    .pipe(gulp.dest(complDir + '/assets/'));
+});
+
+gulp.task('distHtml', function () {
+  var ctx = {
+    styles:['/assets/' + fileName + '.css'],
+    scripts:['/assets/' + fileName + '.min.js'],
+    compile: true
+  };
+  return gulp.src(c.app.html)
+    .pipe(templt(ctx))
+    .pipe(gulp.dest(complDir));
+});
+
 gulp.task('compile', function (cb) {
-  runSeq('clean', 'build', 'dist', cb);
+  runSeq('clean', 'dist', cb);
 });
 
 gulp.task('build_', function (cb) {
