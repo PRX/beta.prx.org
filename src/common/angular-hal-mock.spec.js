@@ -92,6 +92,32 @@ describe('angular-hal-mock', function () {
     expect(result).toBe(1);
   }));
 
+  it ('can stub followOnes', inject(function(ngHal, $rootScope) {
+    var doc1 = ngHal.mock('http://meta.nghal.org/object');
+    var doc2 = ngHal.mock('http://meta.nghal.org/object');
+    var doc3 = ngHal.mock({b:3});
+    var rDoc2, rDoc3, result;
+    doc1.stubFollowOne('foo', doc2);
+    doc2.stubFollowOne('bar', doc3);
+
+    doc1.followOne('foo').then(function(d){
+      rDoc2 = d;
+      return d;
+    }).followOne('bar').then(function(d) {
+      rDoc3 = d;
+      return d;
+    }).get('b').then(function(b) {
+      result = b;
+    });
+
+    $rootScope.$digest();
+
+    expect(rDoc2).toBe(doc2);
+    expect(rDoc3).toBe(doc3);
+    expect(result).toBe(3);
+
+  }));
+
   it ('has a shorthand to stubFollow on stubbed promises', inject(function (ngHal, $rootScope) {
     var result;
     ngHal.stubFollow('foo', ngHal.mock('http://meta.nghal.org/object', {id:3}));

@@ -11,9 +11,13 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
 
   function promised(obj) {
     var sfs = [];
+    var sfos = [];
     obj = $q.when(obj).then(function (obj) {
       angular.forEach(sfs, function (sf) {
         obj.stubFollow.apply(obj, sf);
+      });
+      angular.forEach(sfos, function (sfo) {
+        obj.stubFollowOne.apply(obj, sfo);
       });
       return obj;
     }).then(function (doc) {
@@ -26,12 +30,20 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     obj.stubFollow = function () {
       sfs.push([].slice.call(arguments));
     };
+    obj.stubFollowOne = function() {
+      sfos.push([].slice.call(arguments));
+    };
     obj.then = function () {
       return promised(then.apply(obj, [].slice.call(arguments)));
     };
     obj.follow = function (rel, params) {
       return promised(this.then(function (d) {
         return d.follow(rel, params);
+      }));
+    };
+    obj.followOne = function (rel, params) {
+      return promised(this.then(function (d) {
+        return d.followOne(rel, params);
       }));
     };
     obj.get = function (prop) {
@@ -49,17 +61,29 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
   }
 
   function mocked (doc) {
-    var docStubs = {};
+    var docFollowStubs = {};
+    var docFollowOneStubs = {};
     doc.stubFollow = function (rel, obj) {
-      docStubs[rel] = promised(obj);
+      docFollowStubs[rel] = promised(obj);
+    };
+    doc.stubFollowOne = function (rel, obj) {
+      docFollowOneStubs[rel] = promised(obj);
     };
     var originalFollow = doc.follow;
     doc.follow = function (rel, params) {
-      if (typeof docStubs[rel] !== 'undefined') {
-        return docStubs[rel];
+      if (typeof docFollowStubs[rel] !== 'undefined') {
+        return docFollowStubs[rel];
       } else {
         return originalFollow.call(doc, rel, params);
       }
+    };
+    var originalFollowOne = doc.followOne;
+    doc.followOne = function(rel, params) {
+      if (typeof docFollowOneStubs[rel] !== 'undefined') {
+          return docFollowOneStubs[rel];
+        } else {
+          return originalFollowOne.call(doc, rel, params);
+        }
     };
     var originalTransform = doc.transform;
     doc.transform = function () {
