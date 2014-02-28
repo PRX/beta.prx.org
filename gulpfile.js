@@ -126,7 +126,7 @@ gulp.task('specs', ['templates', 'buildJs'], function () {
   var karmaCfg = {configFile: c.karmaCfg, action: 'run'};
 
   if (process.env.TRAVIS) {
-    karmaCfg.browsers = ['PhantomJS'];
+    karmaCfg.browsers = ['PhantomJS', 'Firefox'];
   }
 
   return gulp.src(specJs, {read: false})
