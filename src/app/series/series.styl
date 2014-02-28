@@ -1,0 +1,33 @@
+.series {
+
+    .seriesImg {
+        margin: 20px auto 40px;
+        width: 250px;
+        height: 250px;
+        position: relative;
+
+        &::after {
+            content: '';
+            background-image: url('/assets/images/image_shadow.png');
+            width: 232px;
+            height: 25px;
+            position: absolute;
+            top: 250px;
+            left: 9px;
+        }
+    }
+
+    .title {
+        color: dark-grey;
+    }
+
+    .subtitle {
+
+        color: dark-grey;
+
+        .label {
+            font-weight: bold;
+        }
+    }
+
+}

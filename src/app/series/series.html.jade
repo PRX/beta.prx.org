@@ -1,6 +1,7 @@
-section.header
-  h1 {{series.title}}
 section.body
-  prx-img(src="series.imageUrl", style="height:100px;")
-  div(ng-repeat="story in stories")
-    p {{story.title}}
+  .series
+
+    .subtitle
+        .label produced by:
+    div(ng-repeat="story in stories")
+        p {{story.title}}
