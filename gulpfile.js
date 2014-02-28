@@ -1,4 +1,4 @@
-var c   = require( './build.json' );
+var c   = require( './config/build.json' );
 var pkg = require('./package.json');
 
 var gulp   = require('gulp');
@@ -31,7 +31,7 @@ var fileName = pkg.name + "-" + pkg.version;
 var specJs   = c.test.js.concat(buildDir+"/**/*.js", c.app.specs);
 var vBuildJs = c.vendor.js.concat(c.vendor.buildJs);
 var allAppJs = c.app.js.concat(vBuildJs);
-var featsDev = __dirname + '/lib/flags.dev.json';
+var featsDev = __dirname + '/config/flags.dev.json';
 
 function bStyl() {
   return gulp.src(c.app.stylus)
@@ -70,7 +70,7 @@ function bStyl() {
 })();
 
 gulp.task('clean', function () {
-  return gulp.src([buildDir, './coverage'], {read: false})
+  return gulp.src([buildDir, 'coverage'], {read: false})
     .pipe(clean());
 });
 
