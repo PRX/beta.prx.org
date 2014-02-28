@@ -183,7 +183,7 @@ gulp.task('templates', function () {
       compiled.pipe(map(function(code) { return code; }))
       .pipe(gulp.dest(buildDir)),
       compiled.pipe(aTempl('templates.js', {standalone: true}))
-        .pipe(gulp.dest(buildDir))
+        .pipe(gulp.dest(buildDir + '/app'))
     );
 });
 
@@ -193,10 +193,12 @@ gulp.task('build', function (cb) {
 
 gulp.task('dist', ['distJs', 'distAssets', 'distHtml']);
 
-gulp.task('distJs', ['specs'], function () {
+gulp.task('distJs', ['buildJs', 'templates'], function () {
   return es.merge(
     gulp.src(vComplJs),
-    gulp.src(c.app.js).pipe(ngmin())
+    gulp.src(c.app.js.concat(buildDir + '/app/templates.js'))
+      .pipe(ngmin())
+      .pipe(feats(featsDev, {strict: true, default: false}))
   ).pipe(concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
   .pipe(uglify({preserveComments: 'some', outSourceMap: true}))
@@ -224,8 +226,14 @@ gulp.task('distHtml', function () {
     .pipe(gulp.dest(complDir));
 });
 
+gulp.task('testDist', function () {
+  var karmaCfg = {configFile: c.karmaCfg, action: 'run', reporters: 'dots', browsers:['PhantomJS']};
+  return gulp.src(c.test.js.concat(complDir+"/**/*.js", c.app.specs), {read: false})
+    .pipe(karma(karmaCfg));
+});
+
 gulp.task('compile', function (cb) {
-  runSeq('clean', 'dist', cb);
+  runSeq('clean', 'dist', 'testDist', cb);
 });
 
 gulp.task('build_', function (cb) {
