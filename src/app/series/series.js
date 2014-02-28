@@ -18,13 +18,11 @@ ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/series', ['resolved', function (resolved) {
     resolved.$image = resolved.follow('image');
   }])
-  .mixin('http://meta.prx.org/model/image', ['resolved', function (resolved) {
+  .mixin('http://meta.prx.org/model/image/series', ['resolved', function (resolved) {
     resolved.$imageUrl = resolved.call('link', 'enclosure').call('url');
   }]);
 })
 .controller('SeriesCtrl', function ($scope, series, stories) {
   $scope.series = series;
   $scope.stories = stories;
-  console.log($scope.series);
-  console.log($scope.stories[0]);
 });
