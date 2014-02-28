@@ -92,6 +92,47 @@ describe('angular-hal-mock', function () {
     expect(result).toBe(1);
   }));
 
+  it ('can stub followOnes', inject(function(ngHal, $rootScope) {
+    var doc1 = ngHal.mock('http://meta.nghal.org/object');
+    var doc2 = ngHal.mock('http://meta.nghal.org/object');
+    var doc3 = ngHal.mock('http://meta.nghal.org/object');
+    var doc4 = ngHal.mock({b:4});
+    var doc5 = ngHal.mock({b:5});
+    var rDoc2, rDoc3, rDoc4, rDoc5, result4, result5;
+    doc2.stubFollowOne('bar', 4, doc4);
+    doc3.stubFollowOne('bar', 5, doc5);
+    doc1.stubFollowOne('foo', 2, doc2);
+    doc1.stubFollowOne('foo', 3, doc3);
+
+    doc1.followOne('foo', {id:2}).then(function(d){
+      rDoc2 = d;
+      return d;
+    }).followOne('bar', {id:4}).then(function(d) {
+      rDoc4 = d;
+      return d;
+    }).get('b').then(function(b) {
+      result4 = b;
+    });
+
+    doc1.followOne('foo', {id:3}).then(function(d) {
+      rDoc3 = d;
+      return d;
+    }).followOne('bar', {id:5}).then(function(d) {
+      rDoc5 = d;
+      return d;
+    }).get('b').then(function(b) {
+      result5 = b;
+    });
+
+    $rootScope.$digest();
+
+    expect(rDoc2).toBe(doc2);
+    expect(rDoc3).toBe(doc3);
+    expect(result4).toBe(4);
+    expect(result5).toBe(5);
+
+  }));
+
   it ('has a shorthand to stubFollow on stubbed promises', inject(function (ngHal, $rootScope) {
     var result;
     ngHal.stubFollow('foo', ngHal.mock('http://meta.nghal.org/object', {id:3}));
