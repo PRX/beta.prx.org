@@ -60,7 +60,7 @@ describe('prx.series', function () {
       series.stubFollow('image', {id: 3});
       ngHal.stubFollowOne('series', 1, series);
       $injector.invoke(state.resolve.series, null, {$stateParams: {seriesId: 1}}).then(function(s) {
-        result = s.$image.id;
+        result = s.image.id;
       });
       $rootScope.$digest();
       expect(result).toBe(3);
@@ -75,7 +75,7 @@ describe('prx.series', function () {
       ngHal.stubFollowOne('series', 1, series);
 
       $injector.invoke(state.resolve.series, null, {$stateParams: {seriesId: 1}}).then(function(s) {
-        result = s.$image.$imageUrl;
+        result = s.image.imageUrl;
       });
       $rootScope.$digest();
       expect(result).toBe(url);

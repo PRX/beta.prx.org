@@ -1,6 +1,6 @@
 section.header
   h1 {{series.title}}
-  img(src="{{series.$image.$imageUrl}}")
+  img(ng-src="{{series.image.imageUrl}}")
 section.body
   div(ng-repeat="story in stories")
     p {{story.title}}
