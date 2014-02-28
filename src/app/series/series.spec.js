@@ -8,7 +8,7 @@ describe('prx.series', function () {
     it ('attaches the series injected to $scope', inject(function ($controller, ngHal) {
       var scope = {};
       var series = ngHal.mock('http://meta.prx.org/model/series', {id: 32832, stories: {href:"/api/v1/series/32832/stories"}});
-      $controller('SeriesCtrl', {series: series, stories: null, $scope: scope});
+      $controller('SeriesCtrl', {series: series, stories: [], $scope: scope});
       expect(scope.series).toBe(series);
     }));
 
