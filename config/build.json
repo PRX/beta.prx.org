@@ -1,6 +1,6 @@
 {
   "buildDir": "public",
-  "compile_dir": "bin",
+  "compileDir": "bin",
   "app": {
     "js": [
       "src/**/*.js",
@@ -33,7 +33,7 @@
       "vendor/angular-animate/angular-animate.js",
       "vendor/angular-touch/angular-touch.js"
     ],
-    "compile_js": [
+    "compileJs": [
       "vendor/angular/angular.min.js",
       "vendor/angular-animate/angular-animate.min.js",
       "vendor/angular-touch/angular-touch.min.js"

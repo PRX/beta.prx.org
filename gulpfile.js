@@ -16,6 +16,8 @@ var walk   = require('walk');
 var karma  = require('gulp-karma');
 var newer  = require('gulp-newer');
 var runSeq = require('run-sequence');
+var ngmin  = require('gulp-ngmin');
+var uglify = require('gulp-uglify');
 var tinyLr = require('tiny-lr');
 var path   = require('path');
 var map    = require('vinyl-map');
@@ -24,12 +26,14 @@ var jshint = require('jshint').JSHINT;
 var feats  = require('./lib/gulp-featureflags');
 
 var buildDir = c.buildDir;
+var complDir = c.compileDir;
 var cwd      = __dirname;
 var src      = cwd + '/src';
 var hintCfg  = c.jsHintCfg;
 var fileName = pkg.name + "-" + pkg.version;
 var specJs   = c.test.js.concat(buildDir+"/**/*.js", c.app.specs);
-var vBuildJs = c.vendor.js.concat(c.vendor.buildJs);
+var vBuildJs = c.vendor.buildJs.concat(c.vendor.js);
+var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
 var featsDev = __dirname + '/config/flags.dev.json';
 
@@ -70,7 +74,7 @@ function bStyl() {
 })();
 
 gulp.task('clean', function () {
-  return gulp.src([buildDir, 'coverage'], {read: false})
+  return gulp.src([buildDir, complDir, 'coverage'], {read: false})
     .pipe(clean());
 });
 
@@ -185,6 +189,27 @@ gulp.task('templates', function () {
 
 gulp.task('build', function (cb) {
   runSeq('clean', ['templates', 'js', 'css', 'assets'], 'html', cb);
+});
+
+gulp.task('dist', ['distJs']);
+
+gulp.task('distJs', function () {
+  return es.merge(
+    gulp.src(vComplJs),
+    gulp.src(c.app.js).pipe(ngmin())
+  ).pipe(concat(fileName+'.js'))
+  .pipe(gulp.dest(complDir + '/assets'))
+  .pipe(uglify({preserveComments: 'some', outSourceMap: true}))
+  .pipe(rename(function (path) {
+    if (path.extname == '.js') {
+      path.extname = '.min.js';
+    }
+  }))
+  .pipe(gulp.dest(complDir + '/assets'));
+});
+
+gulp.task('compile', function (cb) {
+  runSeq('clean', 'build', 'dist', cb);
 });
 
 gulp.task('build_', function (cb) {
