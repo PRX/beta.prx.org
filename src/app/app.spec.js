@@ -16,7 +16,7 @@ describe('prx', function () {
     it ('has the background-image set to the src prop', function () {
       $scope.src = "foo.jpg";
       $scope.$digest();
-      expect(element.css('background-image')).toMatch(/^url\(.*foo\.jpg\)$/);
+      expect(element.css('background-image')).toMatch(/^url\(.*foo\.jpg.*\)$/);
     });
   });
 });
