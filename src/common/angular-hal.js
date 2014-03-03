@@ -1,8 +1,50 @@
 angular.module('angular-hal', ['ng', 'uri-template'])
-.provider('ngHal', function () {
-  var $q, UriTemplate;
+.factory('halUriMatcher', function () {
+  function UriMatcher(uri) {
+    var self = this;
+    this.matchers = [];
+    this.splats = [];
+    this.exp = new RegExp('^' + uri.replace(/([\/\A])(\:|\?|\*)([^\/]+)/g, function (_, start, sigil, name) {
+      self.matchers.push(name);
+      if (sigil == ':') {
+        self.splats.push(false);
+        return start + "([^\\/]+)";
+      } else if (sigil == '?') {
+        self.splats.push(false);
+        return "(?:" + start + "([^\\/]*))?";
+      } else {
+        self.splats.push(true);
+        return "(?:" + start + "(.*))?";
+      }
+    }).replace(/\/$/, '/?') + '$');
+  }
 
-  /**
+  UriMatcher.prototype = {
+    constructor: UriMatcher,
+    test: function (test) {
+      return this.exp.test(test);
+    },
+    match: function (tester) {
+      var match = this.exp.exec(tester);
+      if (match) {
+        var result = {};
+        angular.forEach(this.matchers, function (matcher, index) {
+          if (this.splats[index]) {
+            return result[matcher] = match[index+1].split('/');
+          }
+          result[matcher] = match[index+1];
+        }, this);
+        return result;
+      }
+      return null;
+    }
+  };
+
+  return UriMatcher;
+})
+.factory('halDocument', function (halLinkCollection, halDocumentPromise, $q) {
+  var DocumentPromise = halDocumentPromise;
+   /**
    * HAL Document
    * 
    * This is not strictly a constructor - it expects to be
@@ -13,7 +55,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * where to go.
    **/
   function Document (data, context) {
-    this.link = this.links = linkCollection(data._links, context);
+    this.link = this.links = halLinkCollection(data._links, context);
     this.$embedded = data._embedded || {};
     this.context = context;
     var propHolder = Object.create(this);
@@ -42,7 +84,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     follow: function follow (rel, params) {
       return new DocumentPromise(this.followEmbedded(rel)
-        .catch(bound(this.followLink, this, rel, params)));
+        .catch(angular.bind(this, this.followLink, rel, params)));
     },
     followOne: function followOne (rel, params) {
       return this.links.getDocument(rel, params);
@@ -92,7 +134,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
               protowithlinks = Object.getPrototypeOf(protowithlinks);
             }
             self.context.origin = response.config.url;
-            protowithlinks.link = linkCollection(response.data._links,
+            protowithlinks.link = halLinkCollection(response.data._links,
               self.context);
             angular.forEach(response.data, function (value, key) {
               if (key != '_links' && key  != '_embedded') {
@@ -107,6 +149,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return this.link('self').href();
     }
   };
+
+  return Document;
+})
+.factory('halLinkCollection', function (halLink) {
+  var Link = halLink;
 
   /**
    * HAL Link Collection
@@ -128,7 +175,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * fixed at some point.
    */
 
-  function linkCollection(rLinks, context) {
+  return function linkCollection(rLinks, context) {
     var links = {};
     angular.forEach(rLinks, function (link, rel) {
       links[rel] = new Link(link, rel, context);
@@ -161,7 +208,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     });
 
     return accessor;
-  }
+  };
+})
+.factory('halLink', function (UriTemplate, halDocumentPromise, $q) {
+  var DocumentPromise = halDocumentPromise;
 
   /**
    * HAL Link
@@ -249,61 +299,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     }
   };
 
-  /**
-   * HAL Promise
-   *
-   * This is a subclass of the $q promise mechanism included
-   * with Angular. Provides some helper methods which make it
-   * easier to compose a graph of promises. Basically sugar.
-   */
-
-  function Promise (promise) {
-    promise = $q.when(promise);
-    this['finally'] = reconstruct(Promise,
-      bound(promise['finally'], promise));
-    this.then = reconstruct(Promise,
-      bound(promise.then, promise));
-  }
-
-  Promise.prototype = {
-    constructor: Promise,
-    'catch': function (errback) {
-      return this.then(undefined, errback);
-    },
-    'get': function (property) {
-      return this.then(function (data) {
-        return data[property];
-      });
-    },
-    'call': function (method) {
-      var args = Array.prototype.slice.call(arguments, 1);
-      return this.then(function (data) {
-        return data[method].apply(data, args);
-      });
-    }
-  };
-
-  // function which wraps the return value of method in
-  // the constructor. Used to ensure HALPromise's stay
-  // HALPromises instead of reverting to $q promises.
-  function reconstruct(Constructor, method) {
-    return function () {
-      return new Constructor(method.apply(null,
-        [].slice.call(arguments)));
-    };
-  }
-
-  // helper which ensures that the recipient of the
-  // method call will always be the passed object.
-  function bound() {
-    var lambda = Function.prototype;
-    var args = [].slice.apply(arguments);
-    return function () {
-      return lambda.call.apply(lambda.call,
-        args.concat([].slice.call(arguments)));
-    };
-  }
-
+  return Link;
+})
+.factory('halDocumentPromise', function ($q, halPromise) {
   /**
    * HAL Document Promise
    *
@@ -318,19 +316,18 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * promises to make a new constructor.
    */
   function DocumentPromise (dPromise, mPromise, cPromise) {
-    Promise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise })
+    halPromise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise })
       .then(mkPromisedDoc));
   }
 
   function mkPromisedDoc (opts) {
-    if (opts.d instanceof DocumentPromise ||
-      opts.d instanceof Document || angular.isArray(opts.d)) {
+    if (opts.d instanceof DocumentPromise || !opts.c ) {
       return opts.d;
     }
     return opts.c.construct(opts.d.data, opts.m, opts.d.config.url);
   }
 
-  DocumentPromise.prototype = Object.create(Promise.prototype);
+  DocumentPromise.prototype = Object.create(halPromise.prototype);
   angular.extend(DocumentPromise.prototype, {
     constructor: DocumentPromise,
     build: function build (rel) {
@@ -369,6 +366,58 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       });
     }
   });
+
+  return DocumentPromise;
+})
+.factory('halPromise', function ($q) {
+  // function which wraps the return value of method in
+  // the constructor. Used to ensure HALPromise's stay
+  // HALPromises instead of reverting to $q promises.
+  function reconstruct(Constructor, method) {
+    return function () {
+      return new Constructor(method.apply(null,
+        [].slice.call(arguments)));
+    };
+  }
+
+  /**
+   * HAL Promise
+   *
+   * This is a subclass of the $q promise mechanism included
+   * with Angular. Provides some helper methods which make it
+   * easier to compose a graph of promises. Basically sugar.
+   */
+
+  function Promise (promise) {
+    promise = $q.when(promise);
+    this['finally'] = reconstruct(Promise,
+      angular.bind(promise, promise['finally']));
+    this.then = reconstruct(Promise,
+      angular.bind(promise, promise.then));
+  }
+
+  Promise.prototype = {
+    constructor: Promise,
+    'catch': function (errback) {
+      return this.then(undefined, errback);
+    },
+    'get': function (property) {
+      return this.then(function (data) {
+        return data[property];
+      });
+    },
+    'call': function (method) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      return this.then(function (data) {
+        return data[method].apply(data, args);
+      });
+    }
+  };
+
+  return Promise;
+})
+.provider('ngHal', function () {
+  var $q, halLinkCollection, DocumentPromise, Document, UriMatcher;
 
   /**
    * ResolutionDependencyHolder
@@ -471,7 +520,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   function Context (parent, origin) {
     this.origin = origin;
-    this.mixins = {};
+    this.mixins = [];
     this.transformations = {};
     this.parent = parent;
   }
@@ -517,19 +566,24 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       Constructor.prototype = this.prototypeForMixins(mixins);
       return Constructor;
     },
-    mixin: function (mixin, def) {
-      this.mixins[mixin] = this.mixins[mixin] || [];
-      this.mixins[mixin].push(def);
+    mixin: function (uri, def) {
+      this.mixins.push([new UriMatcher(uri), def]);
     },
-    mixinsFor: function mixinsFor (mixin) {
+    mixinsFor: function mixinsFor (uri) {
+      var myMixins = [];
+      angular.forEach(this.mixins, function (mixin) {
+        if (mixin[0].test(uri)) {
+          myMixins.push([mixin[1], mixin[0].match(uri)]);
+        }
+      });
       if (this.parent) {
-        return this.parent.mixinsFor(mixin).concat(this.mixins[mixin] || []);
+        return this.parent.mixinsFor(uri).concat(myMixins);
       } else {
-        return (this.mixins[mixin] || []).slice(0);
+        return myMixins;
       }
     },
     construct: function construct (doc, uris, url) {
-      var selfLink = linkCollection(doc._links, this)('self');
+      var selfLink = halLinkCollection(doc._links, this)('self');
       if (selfLink) {
         url = url || selfLink.href();
         uris = [].concat(uris, selfLink.profile());
@@ -543,8 +597,8 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       var proto = Object.create(Document.prototype);
       var transform = [];
       angular.forEach(mixins.reverse(), function (mixin) {
-        angular.forEach(this.mixinsFor(mixin), function (mix) {
-          var others = {};
+        angular.forEach(this.mixinsFor(mixin), function (mixinDefinition) {
+          var mix = mixinDefinition[0], others = mixinDefinition[1];
           if (angular.isArray(mix) || angular.isFunction(mix)) {
             if (this.injector.annotate(mix).indexOf('resolved') !== -1) {
               others.resolved = new ResolutionDependencyHolder();
@@ -588,6 +642,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   function ContextProvider(context) {
     this.ctx = context;
+    this.mixins = [];
     this.subProviders = {};
   }
 
@@ -601,11 +656,14 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return this.mixin(uri, module);
     },
     mixin: function mixin (uri, def) {
-      this.ctx.mixin(uri, def);
+      this.mixins.push([uri, def]);
       return this;
     },
     get: function () {
-      if (!this._gotten) { 
+      if (!this._gotten) {
+        angular.forEach(this.mixins, function (mixin) {
+          this.ctx.mixin(mixin[0], mixin[1]);
+        }, this);
         var self = this, p = new DocumentPromise(this.ctx.get(this.ctx.origin),
           ['root'], this.ctx);
         p.context = function (context) {
@@ -632,16 +690,19 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     rootProvider = new ContextProvider(rootContext);
 
   rootProvider.$get = getNgHal;
-  getNgHal.$inject = ['$cacheFactory', '$http', '$injector', '$q', 'UriTemplate'];
-  function getNgHal ($cacheFactory, $http, $injector, _$q_, _UriTemplate_) {
+  getNgHal.$inject = ['$cacheFactory', 'halDocument', 'halDocumentPromise', 'halLinkCollection', '$http', '$injector', '$q', 'halUriMatcher'];
+  function getNgHal ($cacheFactory, halDocument, halDocumentPromise, hll, $http, $injector, _$q_, halUriMatcher) {
     rootProvider.disableTransforms = function () {
       Context.prototype.disableTransforms = true;
     };
-    rootProvider.generateConstructor = bound(rootContext.makeConstructor, rootContext);
+    Document = halDocument;
+    halLinkCollection = hll;
+    UriMatcher = halUriMatcher;
+    DocumentPromise = halDocumentPromise;
+    rootProvider.generateConstructor = angular.bind(rootContext, rootContext.makeConstructor);
     rootContext.http = $http;
     rootContext.injector = $injector;
     $q = _$q_;
-    UriTemplate = _UriTemplate_;
     return this.get();
   }
 

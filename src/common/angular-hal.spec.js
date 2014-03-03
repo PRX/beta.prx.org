@@ -1,5 +1,99 @@
 describe('angular-hal', function () {
 
+  describe ('halUriMatcher', function () {
+    var HalUriMatcher;
+
+    beforeEach(module('angular-hal'));
+
+    beforeEach(inject(function (halUriMatcher) {
+      HalUriMatcher = halUriMatcher;
+    }));
+
+    it ('can construct', function () {
+      var matcher = new HalUriMatcher('/foo/bar');
+      expect(matcher instanceof HalUriMatcher).toBeTruthy();
+    });
+
+    describe ('static uris', function () {
+      var matcher;
+
+      beforeEach(function () {
+        matcher = new HalUriMatcher('/foo/bar');
+      });
+
+      it ('can pass a test', function () {
+        expect(matcher.test('/foo/bar')).toBeTruthy();
+      });
+
+      it ('can fail a test', function () {
+        expect(matcher.test('/baz')).toBeFalsy();
+      });
+    });
+
+    describe ('uris with a placeholder', function () {
+      var matcher;
+      beforeEach(function () {
+        matcher = new HalUriMatcher('/foo/:bar');
+      });
+
+      it ('can pass a test', function () {
+        expect(matcher.test('/foo/1')).toBeTruthy();
+      });
+
+      it ('can fail a test', function () {
+        expect(matcher.test('/foo/bar/baz')).toBeFalsy();
+      });
+
+      it ('can match', function () {
+        expect(matcher.match('/foo/biz').bar).toEqual('biz');
+      });
+
+      it ('can fail to match', function () {
+        expect(matcher.match('/foo/bar/baz')).toBeFalsy();
+      });
+
+      it ('wont pass if the field is missing', function () {
+        expect(matcher.match('/foo/')).toBeFalsy();
+      });
+    });
+
+    describe('uris with an optional placeholder', function () {
+      var matcher;
+      beforeEach(function () {
+        matcher = new HalUriMatcher('/foo/?bar');
+      });
+
+      it ('can pass a test with the optional field missing', function () {
+        expect(matcher.test('/foo/')).toBeTruthy();
+      });
+
+      it ('passes with leading slash missing', function () {
+        expect(matcher.test('/foo')).toBeTruthy();
+      });
+
+      it ('works in the middle of a uri', function () {
+        matcher = new HalUriMatcher('/foo/?bar/baz');
+        expect(matcher.test('/foo/baz')).toBeTruthy();
+        expect(matcher.match('/foo/bing/baz').bar).toEqual('bing');
+      });
+    });
+
+    describe('uris with a splat placeholder', function () {
+      var matcher;
+      beforeEach(function () {
+        matcher = new HalUriMatcher('/foo/*bar');
+      });
+
+      it ('can pass a test with multiple values in the splat', function () {
+        expect(matcher.test('/foo/bar/baz')).toBeTruthy();
+      });
+
+      it ('returns an array on a matched splat', function () {
+        expect(matcher.match('/foo/bar/baz').bar).toEqual(['bar', 'baz']);
+      });
+    });
+  });
+
   describe ('configure phase', function() {
     it ('can set the entrypoint url', function () {
       module('angular-hal', function (ngHalProvider) {
@@ -64,6 +158,25 @@ describe('angular-hal', function () {
         expect(duck.duckling).toEqual(12221);
         expect(duck.bar).toEqual(12121);
         expect(duck.foo()).toEqual(12221);
+      });
+    });
+
+    it ('matches placeholders for profiles or rels', function () {
+      module('angular-hal', function (ngHalProvider) {
+        ngHalProvider.setRootUrl('/api/v1');
+        ngHalProvider.defineModule('http://meta.nghal.org/object/:subtype', function (subtype) {
+          return {
+            type: subtype
+          };
+        });
+      });
+
+      inject(function (ngHal, $httpBackend) {
+        $httpBackend.when('GET', '/api/v1').respond({_links: {self: {profile: 'http://meta.nghal.org/object/orange', href: '/'}}});
+        var result;
+        ngHal.get('type').then(function (r) { result = r; });
+        $httpBackend.flush();
+        expect(result).toEqual('orange');
       });
     });
 
