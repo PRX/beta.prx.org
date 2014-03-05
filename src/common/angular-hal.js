@@ -66,13 +66,14 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }
     },
     followLink: function followLink (rel, params) {
-      var size = this.links.all(rel, params).length;
-      if (size == 1) {
+      var links = this.links.all(rel, params);
+      if (!links) {
+        return $q.reject("No link with rel " + rel);
+      } else if (links.length == 1) {
         return this.followOne(rel, params);
-      } else if (size > 1) {
+      } else if (links.length > 1) {
         return this.followAll(rel, params);
       }
-      return $q.reject("No link with rel " + rel);
     },
     persisted: function persisted () {
       return !!this.link('self');
@@ -156,7 +157,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
     angular.forEach(Link.prototype, function (method, name) {
       accessor[name] = function (rel, params) {
-        return method.call(links[rel], params);
+        var link = links[rel];
+        if (!link) { return undefined; }
+        return method.call(link, params);
       };
     });
 
