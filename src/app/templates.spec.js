@@ -1,5 +1,5 @@
 describe('templates', function () {
-  beforeEach(module('templates', function ($provide) {
+  beforeEach(module('prx', 'templates', function ($provide) {
     $provide.decorator('$templateCache', function ($delegate) {
       var put = $delegate.put;
       $delegate.toTest = [];
@@ -9,7 +9,7 @@ describe('templates', function () {
       };
       return $delegate;
     });
-  }), 'prx');
+  }));
 
   it ('can compile all templates', inject(function ($rootScope, $compile, $templateCache) {
     var scope = $rootScope.$new();
