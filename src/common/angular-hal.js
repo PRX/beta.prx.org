@@ -314,6 +314,15 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * first parameter resolves to a Document, you're
    * golden. Otherwise, it will use the mixin and context
    * promises to make a new constructor.
+   *
+   *  dPromise - resolves to a document, or the data to 
+   *             construct one.
+   *  mPromise - (optional) resolves to a list of mixins
+   *             the document uses. Required if dPromise
+   *             does not resolve to a document.
+   *  cPromise - (optional) resolves to a context on
+   *             which to construct the document. Required
+   *             if dPromise does not resolve to a document.
    */
   function DocumentPromise (dPromise, mPromise, cPromise) {
     halPromise.call(this, $q.all({d:dPromise, m:mPromise, c:cPromise })
