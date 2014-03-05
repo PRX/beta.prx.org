@@ -1,0 +1,1 @@
+role :web, %w{deploy@m.prx.org}
