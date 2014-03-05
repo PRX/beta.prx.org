@@ -36,6 +36,7 @@ var vBuildJs = c.vendor.buildJs.concat(c.vendor.js);
 var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
 var featsDev = __dirname + '/config/flags.dev.json';
+var featDist = __dirname + '/config/flags.release.json';
 
 function bStyl() {
   return gulp.src(c.app.stylus)
@@ -198,7 +199,7 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
     gulp.src(vComplJs),
     gulp.src(c.app.js.concat(buildDir + '/app/templates.js'))
       .pipe(ngmin())
-      .pipe(feats(featsDev, {strict: true, default: false}))
+      .pipe(feats(featDist, {strict: true, default: false}))
   ).pipe(concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
   .pipe(uglify({preserveComments: 'some', outSourceMap: true}))
