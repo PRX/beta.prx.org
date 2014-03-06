@@ -30,7 +30,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         var result = {};
         angular.forEach(this.matchers, function (matcher, index) {
           if (this.splats[index]) {
-            return result[matcher] = match[index+1].split('/');
+            if (match[index+1]) {
+              return result[matcher] = match[index+1].split('/');  
+            } else {
+              return result[matcher] = [];
+            }
           }
           result[matcher] = match[index+1];
         }, this);
@@ -87,7 +91,8 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         .catch(angular.bind(this, this.followLink, rel, params)));
     },
     followOne: function followOne (rel, params) {
-      return this.links.getDocument(rel, params);
+      return this.links.getDocument(rel, params) ||
+        $q.reject('no link with rel ' + rel);
     },
     followAll: function followAll (rel, params) {
       return this.links.getDocuments(rel, params);
@@ -109,11 +114,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     followLink: function followLink (rel, params) {
       var links = this.links.all(rel, params);
-      if (!links) {
+      if (!links || !links.length) {
         return $q.reject("No link with rel " + rel);
       } else if (links.length == 1) {
         return this.followOne(rel, params);
-      } else if (links.length > 1) {
+      } else {
         return this.followAll(rel, params);
       }
     },

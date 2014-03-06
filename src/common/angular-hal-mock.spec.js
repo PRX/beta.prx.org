@@ -93,14 +93,13 @@ describe('angular-hal-mock', function () {
   }));
 
   it ('can stub followOnes', inject(function(ngHal, $rootScope) {
-    var doc1 = ngHal.mock('http://meta.nghal.org/object');
     var doc2 = ngHal.mock('http://meta.nghal.org/object');
     var doc3 = ngHal.mock({b:3});
     var rDoc2, rDoc3, result;
-    doc1.stubFollowOne('foo', doc2);
+    ngHal.stubFollowOne('foo', doc2);
     doc2.stubFollowOne('bar', doc3);
 
-    doc1.followOne('foo').then(function(d){
+    ngHal.followOne('foo').then(function(d){
       rDoc2 = d;
       return d;
     }).followOne('bar').then(function(d) {
@@ -109,8 +108,6 @@ describe('angular-hal-mock', function () {
     }).get('b').then(function(b) {
       result = b;
     });
-
-    $rootScope.$digest();
 
     expect(rDoc2).toBe(doc2);
     expect(rDoc3).toBe(doc3);
@@ -149,4 +146,61 @@ describe('angular-hal-mock', function () {
     var mock = ngHal.mockEnclosure();
     expect(mock.link('enclosure').url()).toEqual('file.ext');
   }));
+
+  describe ('transformation', function () {
+    var ngHal;
+
+    beforeEach(module(function (ngHalProvider) {
+      ngHalProvider.mixin('type', function () {
+        return function (obj) { obj.value += 1; };
+      });
+    }));
+
+    beforeEach(inject(function (_ngHal_) {
+      ngHal = _ngHal_;
+    }));
+
+    it ('requires a manual call for non-resolved (root) mocks', function () {
+      var mock = ngHal.mock('type', {value: 1});
+      expect(mock.value).toEqual(1);
+      mock.transform();
+      expect(mock.value).toEqual(2);
+    });
+
+    it ('happens automatically for resolved mocks', function () {
+      ngHal.stubFollow('foo', ngHal.mock('type', {value: 1}));
+      var mock;
+
+      ngHal.follow('foo').then(function (m) {
+        mock = m;
+      });
+
+      expect(mock.value).toEqual(2);
+    });
+
+    it ('does not happen twice', function () {
+      var mock1, mock2;
+      ngHal.stubFollow('foo', ngHal.mock('type', {value: 1}));
+
+      ngHal.follow('foo').then(function (m) {
+        mock1 = m;
+      });
+      ngHal.follow('foo').then(function (m) {
+        mock2 = m;
+      });
+
+      expect(mock1.value).toEqual(2);
+      expect(mock2).toEqual(mock1);
+    });
+
+    it ('lets you match on promise resolutions', function () {
+      ngHal.stubFollow('asd', {foo: 'bar'});
+      expect(ngHal.follow('asd').get('foo')).toResolveTo('bar');
+      expect(ngHal.follow('asd').get('foo')).not.toResolveTo('bang');
+    });
+
+    it ('errors on promise resolutions when the promise is not ready', inject(function ($q) {
+      expect($q.defer().promise).not.toResolve();
+    }));
+  });
 });

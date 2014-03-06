@@ -24,7 +24,7 @@
     <div class="toggle-button" ng-class="{play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
       <small>{{player.nowPlaying.position | timeCode }}</small>
     </div>
-    <div class="thumb" ng-style="{'background-image': 'url(' + player.nowPlaying.story.imageUrl() + ')' }"></div>
+    <prx-img src="player.nowPlaying.story.imageUrl" class="thumb"></prx-img>
     <div class="title">{{player.nowPlaying.story.title}}</div>
     <ul class="actions" ng-flag="lovesharebuy">
       <li class="share"></li>
