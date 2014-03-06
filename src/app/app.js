@@ -1,4 +1,4 @@
-angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'prx.home', 'prx.stories', 'prx.series', 'templates', 'prx.player', 'ngFlag'])
+angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'prx.home', 'prx.stories', 'prx.series', 'templates', 'prx.player', 'ngFlag', 'angulartics', 'angulartics.google.analytics'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider) {
   $urlRouterProvider.when('/', '/stories/123');
   $locationProvider.html5Mode(true);

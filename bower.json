@@ -11,6 +11,6 @@
     "ngPlayerHater": "~0.0.6"
   },
   "resolutions": {
-    "angular": "~1.2.10"
+    "angular": "1.2.13-build.2262+sha.a9fcb0d"
   }
 }
