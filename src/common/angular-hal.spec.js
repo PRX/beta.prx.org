@@ -91,6 +91,10 @@ describe('angular-hal', function () {
       it ('returns an array on a matched splat', function () {
         expect(matcher.match('/foo/bar/baz').bar).toEqual(['bar', 'baz']);
       });
+
+      it ('returns an empty array when it is missing with the leading slash missing', function () {
+        expect(matcher.match('/foo').bar).toEqual([]);
+      });
     });
   });
 
@@ -422,14 +426,17 @@ describe('angular-hal', function () {
       expect(merged).toEqual({a:1, b:2, c:3});
     }));
 
-    it ('fails when no such rel exists', inject(function ($httpBackend, ngHal) {
-      var failed;
-      ngHal.follow('unknown').then(undefined, function (e) {
-        failed = true;
-      });
-      $httpBackend.flush();
-      expect(failed).toBeTruthy();
-    }));
+
+    angular.forEach(['follow', 'followOne'], function (method) {
+      it (method + ' fails when no such rel exists', inject(function ($httpBackend, ngHal) {
+        var failed;
+        ngHal[method]('unknown').then(undefined, function (e) {
+          failed = true;
+        });
+        $httpBackend.flush();
+        expect(failed).toBeTruthy();
+      }));
+    });
 
     describe('following', function () {
 

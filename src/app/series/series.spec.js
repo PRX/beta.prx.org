@@ -54,18 +54,20 @@ describe('prx.series', function () {
       expect(items.s).toBe(1);
     }));
 
-    it ('mixes in the imageUrl for the series image', inject(function(ngHal, $rootScope) {
-      var url = 'http://example.com';
-      var series = ngHal.mock('http://meta.prx.org/model/series');
-      var image = ngHal.mockEnclosure(url);
-      series.stubFollow('image', image);
-      ngHal.stubFollowOne('series', series);
-
-      $injector.invoke(state.resolve.series, null, {$stateParams: {seriesId: 1}}).then(function(s) {
+    it ('mixes in the imageUrl for the series image', inject(function(ngHal) {
+      var result,
+        url = 'example.png',
+        series = ngHal.mock('http://meta.prx.org/model/series'),
+        spy = ngHal.stubFollowOne('series', series);
+      series.stubFollow('image', ngHal.mockEnclosure(url));
+  
+      $injector.invoke(state.resolve.series, null, {$stateParams: {seriesId: 123}}).then(function (s) {
         result = s.imageUrl;
       });
-      $rootScope.$digest();
+
       expect(result).toBe(url);
+      expect(spy.calls.length).toEqual(1);
+      expect(spy.mostRecentCall.args[0]).toEqual({id: 123});
     }));
   });
 

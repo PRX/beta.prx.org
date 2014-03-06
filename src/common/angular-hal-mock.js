@@ -9,32 +9,49 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     return doc;
   }
 
-  function promised(obj) {
+  function promiseTransform (p) {
+    return $q.when(p).then(transform);
+  }
+
+  function transform (doc) {
+    if (doc && doc.transform) {
+      return doc.transform();
+    }
+    return doc;
+  }
+
+  function promised (obj) {
+    if (obj.then && obj.stubFollow) { return obj; }
     var sfs = [];
     var sfos = [];
-    obj = $q.when(obj).then(function (obj) {
-      angular.forEach(sfs, function (sf) {
-        obj.stubFollow.apply(obj, sf);
-      });
-      angular.forEach(sfos, function (sfo) {
-        obj.stubFollowOne.apply(obj, sfo);
-      });
-      return obj;
-    }).then(function (doc) {
-      if (doc && doc.transform) {
-        return doc.transform();
-      }
-      return doc;
-    });
+    var stubbed = false;
+    obj = $q.when(obj);
     var then = obj.then;
-    obj.stubFollow = function () {
-      sfs.push([].slice.call(arguments));
+    obj.stubFollow = function (rel, obj) {
+      var spy = jasmine.createSpy().andReturn(promised(promiseTransform(obj)));
+      sfs.push([rel, spy]);
+      return spy;
     };
-    obj.stubFollowOne = function() {
-      sfos.push([].slice.call(arguments));
+    obj.stubFollowOne = function (rel, obj) {
+      var spy = jasmine.createSpy().andReturn(promised(promiseTransform(obj)));
+      sfos.push([rel, spy]);
+      return spy;
     };
     obj.then = function () {
-      return promised(then.apply(obj, [].slice.call(arguments)));
+      if (!stubbed) {
+        stubbed = then.call(obj, function (obj) {
+          angular.forEach(sfs, function (sf) {
+            obj.stubFollow_.apply(obj, sf);
+          });
+          angular.forEach(sfos, function (sfo) {
+            obj.stubFollowOne_.apply(obj, sfo);
+          });
+          return obj;
+        });
+      }
+      var p = promised(stubbed.then.apply(stubbed, [].slice.call(arguments)));
+      if (!$rootScope.$$phase) { $rootScope.$digest(); } 
+      return p;
     };
     obj.follow = function (rel, params) {
       return promised(this.then(function (d) {
@@ -64,15 +81,23 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     var docFollowStubs = {};
     var docFollowOneStubs = {};
     doc.stubFollow = function (rel, obj) {
-      docFollowStubs[rel] = promised(obj);
+      return this.stubFollow_(rel, jasmine.createSpy().andReturn(
+        promised(promiseTransform(obj))));
     };
     doc.stubFollowOne = function (rel, obj) {
-      docFollowOneStubs[rel] = promised(obj);
+      return this.stubFollowOne_(rel, jasmine.createSpy().andReturn(
+        promised(promiseTransform(obj))));
+    };
+    doc.stubFollow_ = function (rel, spy) {
+      return docFollowStubs[rel] = spy;
+    };
+    doc.stubFollowOne_ = function (rel, spy) {
+      return docFollowOneStubs[rel] = spy;
     };
     var originalFollow = doc.follow;
     doc.follow = function (rel, params) {
       if (typeof docFollowStubs[rel] !== 'undefined') {
-        return docFollowStubs[rel];
+        return docFollowStubs[rel](params);
       } else {
         return originalFollow.call(doc, rel, params);
       }
@@ -80,7 +105,7 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     var originalFollowOne = doc.followOne;
     doc.followOne = function(rel, params) {
       if (typeof docFollowOneStubs[rel] !== 'undefined') {
-          return docFollowOneStubs[rel];
+          return transform(docFollowOneStubs[rel](params));
         } else {
           return originalFollowOne.call(doc, rel, params);
         }
@@ -122,12 +147,13 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
       } else {
         o = {};
       }
-
       return mocked(ngHalProvider.generateConstructor(args)(unfolded(o)));
     };
 
-    mock.mockEnclosure = function (url) {
-      return this.mock({_links:{enclosure:{href:url||'file.ext'}}});
+    mock.mockEnclosure = function () {
+      var args = [].slice.call(arguments), url = args.pop();
+      return this.mock.apply(this,
+        args.concat({_links:{enclosure:{href:url||'file.ext'}}}));
     };
 
     return mock;

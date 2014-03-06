@@ -5,11 +5,11 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
     controller: 'StoryCtrl',
     templateUrl: 'stories/story.html',
     resolve: {
-      story: ['Story', '$stateParams', function (Story, $stateParams) {
-        return Story.get($stateParams.storyId);
+      story: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
+        return ngHal.followOne('prx:story', {id: $stateParams.storyId});
       }],
       account: ['story', function (story) {
-        return story.follow('account');
+        return story.follow('prx:account');
       }]
     }
   });
@@ -17,74 +17,64 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
 
   ngHalProvider.setRootUrl(FEAT.apiServer)
-  .mixin('http://meta.prx.org/model/story', ['Story', 'resolved', function (Story, resolved) {
-    resolved.$audioFiles = resolved.follow('audio');
-    resolved.$image = resolved.follow('image');
-    return Story.prototype;
+  .mixin('http://meta.prx.org/model/story', ['resolved', 'playerHater', function (resolved, playerHater) {
+    resolved.$audioFiles = resolved.follow('prx:audio');
+    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
+    return {
+      sound: function () {
+        if (typeof this.$sound === 'undefined') {
+          var audioFiles = [];
+          angular.forEach(this.$audioFiles, function (audioFile) {
+            audioFiles.push({url: audioFile.links('enclosure').url()});
+          });
+
+          this.$sound = playerHater.newSong.apply(playerHater, audioFiles);
+          this.$sound.story = this;
+        }
+        return this.$sound;
+      },
+      play: function () {
+        if (this.sound() == playerHater.nowPlaying) {
+          playerHater.resume();
+        } else {
+          playerHater.play(this.sound());  
+        }
+      },
+      pause: function () {
+        playerHater.pause(this.sound());
+      },
+      togglePlay: function () {
+        if (this.paused()) {
+          this.play();
+        } else {
+          this.pause();
+        }
+      },
+      paused: function () {
+        return (typeof this.$sound === 'undefined' || this.$sound.paused);
+      }
+    };
   }])
-  .mixin('account', ['resolved', function (resolved) {
-    resolved.imageUrl = resolved.follow('image').call('link', 'enclosure').call('url');
-    resolved.address = resolved.follow('address');
+  .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
+    resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
   }])
-  .mixin('address', {
+  .mixin('http://meta.prx.org/model/account/:type', ['type', 'resolved', function (type, resolved) {
+    if (type == 'individual') {
+      // unnecessary, but demonstrating the combination of
+      // uri templates and pre-resolution. Pretty useful.
+      resolved.imageUrl = resolved.follow('prx:opener').
+        follow('prx:image').
+        get('enclosureUrl');
+    } else {
+      resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
+    }
+    resolved.address = resolved.follow('prx:address');
+  }])
+  .mixin('http://meta.prx.org/model/address', {
     toString: function () {
       return this.city + ', ' + this.state;
     }
   });
-})
-.factory('Story', function (ngHal, playerHater, $q) {
-  function Story () {
-    return ngHal.build('story');
-  }
-  
-  Story.prototype = {
-    sound: function () {
-      if (typeof this.$sound === 'undefined') {
-        if (playerHater.nowPlaying && playerHater.nowPlaying.story &&
-          playerHater.nowPlaying.story.id == this.id) {
-          playerHater.nowPlaying.story = this;
-          return this.$sound = playerHater.nowPlaying;
-        }
-        var audioFiles = [];
-        angular.forEach(this.$audioFiles, function (audioFile) {
-          audioFiles.push({url: audioFile.links('enclosure').url()});
-        });
-
-        this.$sound = playerHater.newSong.apply(playerHater, audioFiles);
-        this.$sound.story = this;
-      }
-      return this.$sound;
-    },
-    play: function () {
-      if (this.sound() == playerHater.nowPlaying) {
-        playerHater.resume();
-      } else {
-        playerHater.play(this.sound());  
-      }
-    },
-    imageUrl: function () {
-      return (this.$imageUrl = this.$imageUrl || this.$image.link('enclosure').url());
-    },
-    pause: function () {
-      playerHater.pause(this.sound());
-    },
-    togglePlay: function () {
-      if (this.paused()) {
-        this.play();
-      } else {
-        this.pause();
-      }
-    },
-    paused: function () {
-      return (typeof this.$sound === 'undefined' || this.$sound.paused);
-    }
-  };
-  
-  Story.get = function (storyId) {
-    return ngHal.followOne('stories', {id: storyId});
-  };
-
-  return Story;
 })
 .controller('StoryCtrl', function ($scope, story, account, $stateParams) {
   $scope.story = story;

@@ -12,22 +12,22 @@ describe('prx.stories', function () {
   });
 
   describe ('story state', function () {
-    var state, $injector;
-    beforeEach(inject(function ($state, _$injector_) {
+    var state, $injector, ngHal;
+    beforeEach(inject(function ($state, _$injector_, _ngHal_) {
       state = $state.get('story');
       $injector = _$injector_;
+      ngHal = _ngHal_;
     }));
 
     it ('gets the story based on the storyId', function () {
-      var Story = jasmine.createSpyObj('Story', ['get']);
-
-      $injector.invoke(state.resolve.story, null, {Story: Story, $stateParams: {storyId: 123}});
-      expect(Story.get.mostRecentCall.args[0]).toBe(123);
+      var spy = ngHal.stubFollowOne('prx:story', ngHal.mock());
+      $injector.invoke(state.resolve.story, null, {$stateParams: {storyId: 123}});
+      expect(spy.mostRecentCall.args[0]).toEqual({id: 123});
     });
 
     it ('gets the account based on the story', inject(function (ngHal, $rootScope) {
       var story = ngHal.mock(), account;
-      story.stubFollow('account', {a:1});
+      story.stubFollow('prx:account', {a:1});
 
       $injector.invoke(state.resolve.account, null, {story: story}).then(function (a) {
         account = a;
@@ -41,12 +41,22 @@ describe('prx.stories', function () {
 
   describe ('account mixin', function () {
     it ('prefetches the image url and address', inject(function (ngHal, $rootScope) {
-      var account = ngHal.mock('account');
-      account.stubFollow('image', ngHal.mockEnclosure('image.png'));
-      account.stubFollow('address', ngHal.mock('address', {city: 'Springfield', state: "ST"}));
+      var account = ngHal.mock('http://meta.prx.org/model/account/foo');
+      account.stubFollow('prx:image', ngHal.mockEnclosure('http://meta.prx.org/model/image', 'image.png'));
+      account.stubFollow('prx:address', ngHal.mock('http://meta.prx.org/model/address', {city: 'Springfield', state: "ST"}));
       account.transform();
       expect(account.imageUrl).toEqual('image.png');
       expect(account.address.toString()).toEqual("Springfield, ST");
+    }));
+
+    it ('follows down to opener when it is an individual account', inject(function (ngHal, $rootScope) {
+      var account = ngHal.mock('http://meta.prx.org/model/account/individual');
+      var user = ngHal.mock('http://meta.prx.org/model/user');
+      account.stubFollow('prx:opener', user);
+      user.stubFollow('prx:image', ngHal.mockEnclosure('http://meta.prx.org/model/image', 'image.png'));
+      account.stubFollow('prx:address', ngHal.mock());
+      account.transform();
+      expect(account.imageUrl).toEqual('image.png');
     }));
   });
 
@@ -58,8 +68,8 @@ describe('prx.stories', function () {
       ngHal = _ngHal_;
       playerHater = _playerHater_;
       story = ngHal.mock('http://meta.prx.org/model/story');
-      story.stubFollow('audio', [ngHal.mockEnclosure('/foo.mp3')]);
-      story.stubFollow('image', ngHal.mockEnclosure('/foo.png'));
+      story.stubFollow('prx:audio', [ngHal.mockEnclosure('/foo.mp3')]);
+      story.stubFollow('prx:image', ngHal.mockEnclosure('/foo.png'));
       story.transform();
     }));
 

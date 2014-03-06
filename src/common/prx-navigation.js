@@ -84,8 +84,8 @@ angular.module('prxNavigation', ['ui.router'])
           }, 10);
         });
 
-        topScope.$on('$stateChangeError', function () {
-          
+        topScope.$on('$stateChangeError', function (event, toState, stateParams, url, fromState, error) {
+          console.error(error);
           $timeout(function () {
             topScope.hide = true;
             renderDone();
