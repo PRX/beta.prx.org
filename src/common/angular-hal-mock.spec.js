@@ -192,5 +192,15 @@ describe('angular-hal-mock', function () {
       expect(mock1.value).toEqual(2);
       expect(mock2).toEqual(mock1);
     });
+
+    it ('lets you match on promise resolutions', function () {
+      ngHal.stubFollow('asd', {foo: 'bar'});
+      expect(ngHal.follow('asd').get('foo')).toResolveTo('bar');
+      expect(ngHal.follow('asd').get('foo')).not.toResolveTo('bang');
+    });
+
+    it ('errors on promise resolutions when the promise is not ready', inject(function ($q) {
+      expect($q.defer().promise).not.toResolve();
+    }));
   });
 });

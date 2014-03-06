@@ -61,11 +61,10 @@ describe('prx.series', function () {
         spy = ngHal.stubFollowOne('series', series);
       series.stubFollow('image', ngHal.mockEnclosure(url));
   
-      $injector.invoke(state.resolve.series, null, {$stateParams: {seriesId: 123}}).then(function (s) {
-        result = s.imageUrl;
-      });
+      var promise = $injector.
+      invoke(state.resolve.series, null, {$stateParams: {seriesId: 123}});
 
-      expect(result).toBe(url);
+      expect(promise.get('imageUrl')).toResolveTo(url);
       expect(spy.calls.length).toEqual(1);
       expect(spy.mostRecentCall.args[0]).toEqual({id: 123});
     }));

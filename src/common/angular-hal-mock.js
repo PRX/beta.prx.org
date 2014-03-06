@@ -2,6 +2,32 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
 .config(function ($provide, ngHalProvider) {
   var $q, $rootScope, FAKE_ROOT = 'http://nghal.org/fake_root';
 
+  beforeEach(function () {
+    this.addMatchers({
+      toResolveTo: function (expected) {
+        var actual, complete = false;
+        $q.when(this.actual).then(function (result) {
+          complete = true;
+          actual = result;
+        });
+        $rootScope.$digest();
+        if (!complete) {
+          this.message = "Expected promise to resolve to " + expected + ", promise was not resolved";
+          return false;
+        }
+        return angular.equals(expected, actual);
+      },
+      toResolve: function () {
+        var complete = false;
+        $q.when(this.actual).then(function () {
+          complete = true;
+        });
+        $rootScope.$digest();
+        return complete;
+      }
+    });
+  });
+
   function unfolded(doc) {
     if (angular.isFunction(doc.links)) {
       doc._links = doc.links.dump();

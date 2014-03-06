@@ -28,14 +28,9 @@ describe('prx.stories', function () {
     it ('gets the account based on the story', inject(function (ngHal, $rootScope) {
       var story = ngHal.mock(), account;
       story.stubFollow('prx:account', {a:1});
-
-      $injector.invoke(state.resolve.account, null, {story: story}).then(function (a) {
-        account = a;
-      });
-
-      $rootScope.$digest();
-
-      expect(account.a).toBe(1);
+      expect($injector.
+          invoke(state.resolve.account, null, {story: story}).
+          get('a')).toResolveTo(1);
     }));
   });
 
