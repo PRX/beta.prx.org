@@ -11,6 +11,7 @@ module.exports = function ( config ) {
       reporters: [
         {type: 'html', dir: 'coverage'},
         {type: 'json', dir: 'coverage'},
+        {type: 'lcov', dir: 'coverage'},
         {type: 'text-summary'}
       ]
     },

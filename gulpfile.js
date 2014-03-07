@@ -1,6 +1,9 @@
 var c   = require( './config/build.json' );
 var pkg = require('./package.json');
 
+var spawn  = require('child_process').spawn;
+var fs     = require('fs');
+
 var gulp   = require('gulp');
 var es     = require('event-stream');
 var through= require('through2');
@@ -35,8 +38,8 @@ var specJs   = c.test.js.concat(buildDir+"/**/*.js", c.app.specs);
 var vBuildJs = c.vendor.buildJs.concat(c.vendor.js);
 var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
-var featsDev = __dirname + '/config/flags.dev.json';
-var featDist = __dirname + '/config/flags.release.json';
+var featsDev = cwd + '/config/flags.dev.json';
+var featDist = cwd + '/config/flags.release.json';
 
 function bStyl() {
   return gulp.src(c.app.stylus)
@@ -295,4 +298,29 @@ gulp.task('checkCoverage', ['specs'], function () {
     }));
 });
 
-gulp.task('ci', ['checkCoverage']);
+gulp.task('coveralls', ['checkCoverage'], function (done) {
+  var ps = spawn(cwd+'/node_modules/coveralls/bin/coveralls.js');
+  var coverageDir = cwd + '/coverage/';
+  fs.readdir(coverageDir, pickFolder);
+  ps.on('exit', function (c) {
+    done();
+  });
+  ps.stdout.on('data', log);
+  ps.stderr.on('data', log);
+
+  function pickFolder (err, folders) {
+    var folder = folders[0];
+    fs.readFile(coverageDir + folder + '/lcov.info', pipeFile);
+  }
+
+  function pipeFile (err, data) {
+    ps.stdin.write(data);
+    ps.stdin.end();
+  }
+
+  function log (data) {
+    gutil.log(data.toString().replace(/^\n|\n$/g, ''));
+  }
+});
+
+gulp.task('ci', ['checkCoverage', 'coveralls']);
