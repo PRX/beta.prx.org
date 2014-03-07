@@ -8,6 +8,7 @@
     "angular-ui-router": "~0.2",
     "angular-ui-utils": "~0.1",
     "angular-touch": " ~1.2",
-    "ngPlayerHater": "0.0.7"
+    "ngPlayerHater": "0.0.7",
+    "angulartics": "~0.12"
   }
 }
