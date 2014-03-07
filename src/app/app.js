@@ -1,5 +1,6 @@
-angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'prx.home', 'prx.stories', 'prx.series', 'templates', 'prx.player', 'ngFlag', 'angulartics', 'angulartics.google.analytics'])
-.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider) {
+angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'prx.home', 'prx.stories', 'prx.series', 'templates', 'prx.player', 'ngFlag', 'angulartics', 'angulartics.google.analytics', 'angulartics.prx.count'])
+.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider, $analyticsProvider) {
+  $analyticsProvider.firstPageview(false);
   $urlRouterProvider.when('/', '/stories/123');
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
