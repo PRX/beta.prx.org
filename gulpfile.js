@@ -302,6 +302,7 @@ gulp.task('coveralls', ['checkCoverage'], function (done) {
   var ps = spawn(cwd+'/node_modules/coveralls/bin/coveralls.js');
   var coverageDir = cwd + '/coverage/';
   fs.readdir(coverageDir, pickFolder);
+  
   ps.on('exit', done);
   ps.stdout.on('data', log);
   ps.stderr.on('data', log);
