@@ -3,30 +3,46 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
   var $q, $rootScope, FAKE_ROOT = 'http://nghal.org/fake_root';
 
   beforeEach(function () {
-    this.addMatchers({
-      toResolveTo: function (expected) {
-        var actual, complete = false;
-        $q.when(this.actual).then(function (result) {
-          complete = true;
-          actual = result;
-        });
-        $rootScope.$digest();
-        if (!complete) {
-          this.message = "Expected promise to resolve to " + expected + ", promise was not resolved";
-          return false;
-        }
-        return angular.equals(expected, actual);
+    jasmine.addMatchers({
+      toResolveTo: function (util, customEquality) {
+        return {
+          compare: function (actual, expected) {
+            var complete = false;
+            inject(function ($q, $rootScope) {
+              $rootScope.$apply(function () {
+                $q.when(actual).then(function (result) {
+                  complete = true;
+                  actual = result;
+                });
+              });
+            });
+            if (!complete) {
+              return { pass: false, message: "Expected promise to resolve."};
+            }
+            var result = {pass: util.equals(actual, expected, customEquality)};
+            if (result.pass) {
+              result.message = "Expected promise not to resolve to " + actual;
+            } else {
+              result.message = "Expected promised " + actual + " to resolve to " + expected;
+            }
+            return result;
+          }
+        };
       },
       toResolve: function () {
-        var actual = this.actual, complete = false;
-        inject(function ($rootScope, $q) {
-          $rootScope.$apply(function () {
-            $q.when(actual).then(function () {
-              complete = true;
-            });
-          });
-        });
-        return complete;
+        return {
+          compare: function (actual) {
+            var result = {pass: false};
+            inject(function ($q, $rootScope) {
+              $rootScope.$apply(function () {
+                $q.when(actual).then(function () {
+                  result.pass = true;
+                });
+              });
+            });            
+            return result;
+          }
+        };
       }
     });
   });
@@ -57,12 +73,12 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     obj = $q.when(obj);
     var then = obj.then;
     obj.stubFollow = function (rel, obj) {
-      var spy = jasmine.createSpy().andReturn(promised(promiseTransform(obj)));
+      var spy = jasmine.createSpy().and.returnValue(promised(promiseTransform(obj)));
       sfs.push([rel, spy]);
       return spy;
     };
     obj.stubFollowOne = function (rel, obj) {
-      var spy = jasmine.createSpy().andReturn(promised(promiseTransform(obj)));
+      var spy = jasmine.createSpy().and.returnValue(promised(promiseTransform(obj)));
       sfos.push([rel, spy]);
       return spy;
     };
@@ -110,11 +126,11 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     var docFollowStubs = {};
     var docFollowOneStubs = {};
     doc.stubFollow = function (rel, obj) {
-      return this.stubFollow_(rel, jasmine.createSpy().andReturn(
+      return this.stubFollow_(rel, jasmine.createSpy().and.returnValue(
         promised(promiseTransform(obj))));
     };
     doc.stubFollowOne = function (rel, obj) {
-      return this.stubFollowOne_(rel, jasmine.createSpy().andReturn(
+      return this.stubFollowOne_(rel, jasmine.createSpy().and.returnValue(
         promised(promiseTransform(obj))));
     };
     doc.stubFollow_ = function (rel, spy) {

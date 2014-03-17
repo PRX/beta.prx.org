@@ -22,7 +22,7 @@ describe('prx.stories', function () {
     it ('gets the story based on the storyId', function () {
       var spy = ngHal.stubFollowOne('prx:story', ngHal.mock());
       $injector.invoke(state.resolve.story, null, {$stateParams: {storyId: 123}});
-      expect(spy.mostRecentCall.args[0]).toEqual({id: 123});
+      expect(spy.calls.mostRecent().args[0]).toEqual({id: 123});
     });
 
     it ('gets the account based on the story', inject(function (ngHal, $rootScope) {
@@ -82,7 +82,7 @@ describe('prx.stories', function () {
         spyOn(playerHater, 'play');
         story.play();
         expect(playerHater.play).toHaveBeenCalled();
-        expect(playerHater.play.mostRecentCall.args[0]).toBe(story.sound());
+        expect(playerHater.play.calls.mostRecent().args[0]).toBe(story.sound());
       }));
     });
 

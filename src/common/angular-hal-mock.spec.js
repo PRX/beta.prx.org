@@ -207,7 +207,7 @@ describe('angular-hal-mock', function () {
       expect($q.defer().promise).not.toResolve();
     }));
 
-    it ('succeeds when promise is resolved', inject(function ($q, $rootScope) {
+    it ('succeeds when promise is resolved', inject(function ($q) {
       expect($q.when(true)).toResolve();
     }));
   });

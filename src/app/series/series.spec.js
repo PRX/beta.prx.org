@@ -30,7 +30,7 @@ describe('prx.series', function () {
     it ('gets the series', inject(function(ngHal, $rootScope, $q) {
       var series = ngHal.mock({a: 1});
       var result;
-      spyOn(ngHal, 'followOne').andReturn($q.when(series));
+      spyOn(ngHal, 'followOne').and.returnValue($q.when(series));
       $injector.invoke(state.resolve.series, null, {$stateParams: {seriesId: 32823}}).then(function(s) {
         result = s;
       });
@@ -65,8 +65,8 @@ describe('prx.series', function () {
       invoke(state.resolve.series, null, {$stateParams: {seriesId: 123}});
 
       expect(promise.get('imageUrl')).toResolveTo(url);
-      expect(spy.calls.length).toEqual(1);
-      expect(spy.mostRecentCall.args[0]).toEqual({id: 123});
+      expect(spy.calls.count()).toEqual(1);
+      expect(spy.calls.mostRecent().args[0]).toEqual({id: 123});
     }));
   });
 

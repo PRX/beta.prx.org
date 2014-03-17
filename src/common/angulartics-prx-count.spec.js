@@ -8,7 +8,7 @@ describe ('angulartics prx count', function () {
   }));
 
   function getArgs() {
-    args = TheCount.logAction.mostRecentCall.args[0];
+    args = TheCount.logAction.calls.mostRecent().args[0];
   }
 
   describe ('page tracking', function () {
