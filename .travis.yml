@@ -11,3 +11,6 @@ cache:
   directories:
     - vendor
     - node_modules
+notifications:
+  webhooks:
+    - http://quiet-spire-9365.herokuapp.com/hubot/travis?room=tech-team@conference.prx02.managed.contegix.com
