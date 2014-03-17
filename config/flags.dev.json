@@ -1,5 +1,6 @@
 {
   "showMenu": false,
   "apiServer": "http://prx-backend.dev/api/v1",
-  "lovesharebuy": false
+  "lovesharebuy": false,
+  "COUNT_HOST": "http://localhost"
 }

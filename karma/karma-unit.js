@@ -4,7 +4,7 @@ module.exports = function ( config ) {
     files: [ 'public/**/*.js', 'src/common/angular-hal-mock.js' ],
     exclude: [ 'public/assets/**/*.js' ],
     frameworks: [ 'jasmine' ],
-    plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coffee-preprocessor', 'karma-coverage' ],
+    plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coverage' ],
     preprocessors: { '*/{app,common}/**/!(*.spec).js': ['coverage'] },
     reporters: ['dots', 'coverage'],
     coverageReporter: {

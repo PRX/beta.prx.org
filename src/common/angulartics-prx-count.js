@@ -13,7 +13,7 @@
       };
 
       $delegate.eventTrack = function (eventName, eventValue) {
-        TheCount.logAction({action: eventName, action_value: JSON.stringify(action_value)});
+        TheCount.logAction({action: eventName, action_value: JSON.stringify(eventValue)});
         eventTrack.call(this, eventName, eventValue);
       };
 

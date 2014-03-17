@@ -22,7 +22,7 @@ describe('prx.stories', function () {
     it ('gets the story based on the storyId', function () {
       var spy = ngHal.stubFollowOne('prx:story', ngHal.mock());
       $injector.invoke(state.resolve.story, null, {$stateParams: {storyId: 123}});
-      expect(spy.mostRecentCall.args[0]).toEqual({id: 123});
+      expect(spy.calls.mostRecent().args[0]).toEqual({id: 123});
     });
 
     it ('gets the account based on the story', inject(function (ngHal, $rootScope) {
@@ -42,16 +42,6 @@ describe('prx.stories', function () {
       account.transform();
       expect(account.imageUrl).toEqual('image.png');
       expect(account.address.toString()).toEqual("Springfield, ST");
-    }));
-
-    it ('follows down to opener when it is an individual account', inject(function (ngHal, $rootScope) {
-      var account = ngHal.mock('http://meta.prx.org/model/account/individual');
-      var user = ngHal.mock('http://meta.prx.org/model/user');
-      account.stubFollow('prx:opener', user);
-      user.stubFollow('prx:image', ngHal.mockEnclosure('http://meta.prx.org/model/image', 'image.png'));
-      account.stubFollow('prx:address', ngHal.mock());
-      account.transform();
-      expect(account.imageUrl).toEqual('image.png');
     }));
   });
 
@@ -92,7 +82,7 @@ describe('prx.stories', function () {
         spyOn(playerHater, 'play');
         story.play();
         expect(playerHater.play).toHaveBeenCalled();
-        expect(playerHater.play.mostRecentCall.args[0]).toBe(story.sound());
+        expect(playerHater.play.calls.mostRecent().args[0]).toBe(story.sound());
       }));
     });
 

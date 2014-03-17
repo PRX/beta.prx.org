@@ -498,6 +498,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         resolution = this.recipient.resolve(resolution);
       }
       var called = this.called;
+      if (called[0] == 'catch') {
+        return this.resolved = $q.when(resolution)['catch'](called[1]);
+      }
       return this.resolved = $q.when(resolution).then(function (r) {
         switch(called[0]) {
           case 'call':
@@ -515,6 +518,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         [method].concat([].slice.call(arguments)));
     };
   });
+
+  DocumentDependency.prototype.or = function or (value) {
+    return new DocumentDependency(this, ['catch', function () { return value; }]);
+  };
 
   function documentOr(fn) {
     return function (doc) {

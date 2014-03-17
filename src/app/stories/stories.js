@@ -59,15 +59,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
     resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
   }])
   .mixin('http://meta.prx.org/model/account/:type', ['type', 'resolved', function (type, resolved) {
-    if (type == 'individual') {
-      // unnecessary, but demonstrating the combination of
-      // uri templates and pre-resolution. Pretty useful.
-      resolved.imageUrl = resolved.follow('prx:opener').
-        follow('prx:image').
-        get('enclosureUrl');
-    } else {
-      resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
-    }
+    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
     resolved.address = resolved.follow('prx:address');
   }])
   .mixin('http://meta.prx.org/model/address', {
