@@ -247,6 +247,7 @@ describe('angular-hal', function () {
           resolved.name = link.call('name');
           resolved.sandwich = "yes";
           resolved.baz = link.get('baz');
+          resolved.boo = link.follow('nonexistent').or('sigil');
 
           return function (doc) {
             doc.cool = false;
@@ -259,18 +260,18 @@ describe('angular-hal', function () {
         });
       });
 
-
       inject(function (ngHal, $httpBackend) {
         $httpBackend.when('GET', '/api/v1').respond({_links: {foo: {href:'/foo', profile: 'http://meta.nghal.org/object'}}});
         $httpBackend.when('GET', '/foo').respond({_links: {link: {href: '/bar', profile: 'http://meta.nghal.org/link'}}});
         $httpBackend.when('GET', '/bar').respond({baz: 'bux'});
-        var name, sandwich, baz, cool;
+        var name, sandwich, baz, cool, boo;
 
         ngHal.follow('foo').then(function (foo) {
           name = foo.name;
           sandwich = foo.sandwich;
           baz = foo.baz;
           cool = foo.cool;
+          boo = foo.boo;
         });
 
         $httpBackend.flush();
@@ -279,6 +280,7 @@ describe('angular-hal', function () {
         expect(sandwich).toEqual('yes');
         expect(baz).toEqual('bux');
         expect(cool).toBeFalsy();
+        expect(boo).toEqual('sigil');
       });
     });
   });
