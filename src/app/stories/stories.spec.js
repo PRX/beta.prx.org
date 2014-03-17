@@ -43,16 +43,6 @@ describe('prx.stories', function () {
       expect(account.imageUrl).toEqual('image.png');
       expect(account.address.toString()).toEqual("Springfield, ST");
     }));
-
-    it ('follows down to opener when it is an individual account', inject(function (ngHal, $rootScope) {
-      var account = ngHal.mock('http://meta.prx.org/model/account/individual');
-      var user = ngHal.mock('http://meta.prx.org/model/user');
-      account.stubFollow('prx:opener', user);
-      user.stubFollow('prx:image', ngHal.mockEnclosure('http://meta.prx.org/model/image', 'image.png'));
-      account.stubFollow('prx:address', ngHal.mock());
-      account.transform();
-      expect(account.imageUrl).toEqual('image.png');
-    }));
   });
 
   describe ('story module', function () {
