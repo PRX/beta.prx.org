@@ -18,11 +18,14 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
         return angular.equals(expected, actual);
       },
       toResolve: function () {
-        var complete = false;
-        $q.when(this.actual).then(function () {
-          complete = true;
+        var actual = this.actual, complete = false;
+        inject(function ($rootScope, $q) {
+          $rootScope.$apply(function () {
+            $q.when(actual).then(function () {
+              complete = true;
+            });
+          });
         });
-        $rootScope.$digest();
         return complete;
       }
     });
