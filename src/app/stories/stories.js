@@ -21,6 +21,14 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
         templateUrl: 'stories/detail_modal.html'
       }
     }
+  })
+  .state('story.remindMe', {
+    views: {
+      'modal@': {
+        controller: 'StoryDetailCtrl',
+        templateUrl: 'stories/remind_me_modal.html'
+      }
+    }
   });
 
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
