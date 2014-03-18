@@ -13,7 +13,9 @@ ul.actions(ng-flag="lovesharebuy")
 section.body
   article.details
     h2 Details
-    p(ng-bind="story.short_description")
+    p
+      | {{story.short_description}} 
+      a.unbreakable(ui-sref=".details") (View Full Description)
     dl
       dt Added to PRX:
       dd(ng-bind="story.published_at | timeAgo")

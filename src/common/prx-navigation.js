@@ -1,5 +1,7 @@
 angular.module('prxNavigation', ['ui.router'])
 .directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope, $animate) {
+  var modalKey = 'modal@';
+
   if (typeof window.callPhantom !== 'undefined') {
     $animate.enabled(false);
   }
@@ -10,6 +12,29 @@ angular.module('prxNavigation', ['ui.router'])
   }
 
   function instrument(route, scope) {
+    if (route.views && route.views[modalKey] &&
+          !route.views[modalKey].instrumented) {
+      var view = route.views[modalKey];
+      view.instrumented = true;
+      route.data = route.data || {}; route.data.modal = true;
+      if (view.templateUrl) {
+        var templateUrl = view.templateUrl;
+        delete view.templateUrl;
+        view.templateProvider = ['$stateParams',
+          '$http', '$templateCache',
+          function ($stateParams, $http, $templateCache) {
+            var url = templateUrl;
+            if (angular.isFunction(url)) {
+              url = templateUrl($stateParams);
+            }
+            return $http.get(url, {cache: $templateCache}).then(function (response) {
+              return "<a class='dismiss' ui-sref='^'></a>" + response.data;
+            });
+          }
+        ];
+      }
+    }
+
     function finish (v) {
       scope.finishedResolutions += 1;
       return v;
@@ -77,7 +102,7 @@ angular.module('prxNavigation', ['ui.router'])
         });
 
         topScope.$on('$stateChangeSuccess', function () {
-          
+
           $timeout(function () {
             topScope.hide = true;
             renderDone();
@@ -97,7 +122,7 @@ angular.module('prxNavigation', ['ui.router'])
         scope.finishedPercent = function () {
           return ~~(topScope.finishedResolutions * 100 / topScope.totalResolutions);
         };
-      
+
         scope.barStyle = function () {
           return { width: this.finishedPercent() + '%' };
         };

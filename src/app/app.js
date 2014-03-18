@@ -12,6 +12,15 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
 .controller('appCtrl', function ($scope, playerHater) {
   $scope.player = playerHater;
   $scope.activeStory = {};
+  $scope.modal = {visible: false};
+  $scope.$on('$stateChangeStart', function (event, state, params, from) {
+    if (from.abstract) {
+      $scope.modal.visible = !!(state.data || {}).modal;
+    }
+  });
+  $scope.$on('$stateChangeSuccess', function (event, state) {
+    $scope.modal.visible = !!(state.data || {}).modal;
+  });
 })
 .filter('timeAgo', function () {
   return function (time) {
