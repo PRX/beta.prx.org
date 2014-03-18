@@ -12,7 +12,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
 .controller('appCtrl', function ($scope, playerHater) {
   $scope.player = playerHater;
   $scope.activeStory = {};
-  $scope.modal = {visible: false};
+  $scope.modal = {};
   $scope.$on('$stateChangeStart', function (event, state, params, from) {
     if (from.abstract) {
       $scope.modal.visible = !!(state.data || {}).modal;
