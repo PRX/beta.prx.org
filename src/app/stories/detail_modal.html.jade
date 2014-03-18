@@ -2,6 +2,8 @@ h1(ng-bind="story.title")
 p(ng-bind-html="story.description")
 ul.actions
   li
-    a(ui-sref="^({autoPlay: true})") Listen Now
+    a.listen(ui-sref="story({storyId:story.id, autoPlay: true})") Listen Now
   li
-    a(ui-sref="^.remindMe") ListenLater
+    a.schedule(ui-sref="story.remindMe({storyId: story.id})") Listen Later
+  li
+    a.view(ui-sref="story({storyId: story.id})") View

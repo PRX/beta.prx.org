@@ -3,6 +3,8 @@
   fixed: top right;
   left: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.85);
+  overflow-x: hidden;
+  overflow-y: auto;
 
   padding: 25px;
 
@@ -25,6 +27,42 @@
   }
 
   ul.actions {
+    margin-top: 15px;
+    li a {
+      &:hover {
+        text-decoration: none;
+        background: darker-blue;
+      }
+      color: white;
+      height: 40px;
+      line-height: 40px;
+      margin-bottom: 10px;
+      display: block;
+      background: blue;
 
+      &.listen:after {
+        image: '/assets/images/headphones_white.png' auto 14px;
+      }
+
+      &.schedule:after {
+        image: '/assets/images/calendar_white.png' auto 14px;
+      }
+
+      &.view:after {
+        image: '/assets/images/eye_white.png' auto 14px;
+      }
+
+      &.listen, &.schedule, &.view {
+        &:after {
+          display: inline-block;
+          content: '';
+          float: left;
+          height: 40px;
+          width: 60px;
+          background-position: 12px center;
+          background-repeat: no-repeat;
+        }
+      }
+    }
   }
 }
