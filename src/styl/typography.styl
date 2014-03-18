@@ -29,6 +29,12 @@ h4 {
 }
 
 @media screen and (max-width : 480px) {
+  body {
+    font-weight: 400;
+    line-height: 22px;
+    font-size: 14px;
+  }
+
   h1 {
     font-size: 22px;
     line-height: 26px;
@@ -41,11 +47,6 @@ h4 {
   }
 }
 
-p {
-  font-size: 14px;
-  line-height: 22px;
-}
-
 a {
   color: blue;
   text-decoration: none;
@@ -55,4 +56,11 @@ a {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.unbreakable {
+  &:before {
+    content: ' ';
+  }
+  white-space:nowrap;
 }
