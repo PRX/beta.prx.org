@@ -1,7 +1,11 @@
 angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'prx.home', 'prx.stories', 'prx.series', 'templates', 'prx.player', 'ngFlag', 'angulartics', 'angulartics.google.analytics', 'angulartics.prx.count'])
-.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider, $analyticsProvider) {
+.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider, $analyticsProvider, $stateProvider) {
   $analyticsProvider.firstPageview(false);
-  $urlRouterProvider.when('/', '/stories/123');
+  $urlRouterProvider.when('/', '/stories/73865');
+  $stateProvider.state('not_found', {
+    url: '/not_found',
+    template: '<h1>404 - Not Found</h1>'
+  });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
 })

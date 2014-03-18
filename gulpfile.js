@@ -130,7 +130,7 @@ gulp.task('css', function () {
   .pipe(gulp.dest(buildDir + '/assets/'));
 });
 
-gulp.task('specs', ['templates', 'buildJs'], function () {
+gulp.task('specs', ['templates', 'buildJs'], function (cb) {
   var karmaCfg = {configFile: c.karmaCfg, action: 'run'};
 
   if (process.env.TRAVIS) {
@@ -138,7 +138,7 @@ gulp.task('specs', ['templates', 'buildJs'], function () {
   }
 
   return gulp.src(specJs, {read: false})
-    .pipe(karma(karmaCfg));
+    .pipe(karma(karmaCfg)).on('error', cb);
 });
 
 gulp.task('buildJs', ['jshint'], function () {

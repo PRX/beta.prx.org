@@ -200,7 +200,15 @@ describe('angular-hal-mock', function () {
     });
 
     it ('errors on promise resolutions when the promise is not ready', inject(function ($q) {
+      expect($q.defer().promise).not.toResolveTo(null);
+    }));
+
+    it ('errors on promise resolutions when the promise is not ready', inject(function ($q) {
       expect($q.defer().promise).not.toResolve();
+    }));
+
+    it ('succeeds when promise is resolved', inject(function ($q) {
+      expect($q.when(true)).toResolve();
     }));
   });
 });

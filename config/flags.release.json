@@ -1,5 +1,6 @@
 {
   "apiServer" : "https://hal.prx.org/api/v1",
   "showMenu" : false,
-  "lovesharebuy": false
+  "lovesharebuy": false,
+  "COUNT_HOST": "http://count.prx.org"
 }
