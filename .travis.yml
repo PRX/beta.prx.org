@@ -1,16 +1,17 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - npm install --quiet -g gulp bower
-  - bower install
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- npm install --quiet -g gulp bower
+- bower install
 script: gulp ci
 cache:
   directories:
-    - vendor
-    - node_modules
+  - vendor
+  - node_modules
 notifications:
-  webhooks:
-    - http://quiet-spire-9365.herokuapp.com/hubot/travis?room=tech-team@conference.prx02.managed.contegix.com
+  hipchat:
+    rooms:
+      secure: hfMJ2fgCjOZAoDc12DXGxqAqI9QDvoX/zeLoM/MQB0VnN+IM9viCgoKqE9TYRS6WbtNuTeN5venCYQ0AujlniZyzXW7L0y8oIT7JZ5eVHHdNJ0G/j34fT2RGf0ACljgu1o3INfmZaV2RnOh5Tzr7ep8PLpDMJeBmFEH55XmLiiw=
