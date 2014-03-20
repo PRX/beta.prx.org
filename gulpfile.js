@@ -25,6 +25,10 @@ var tinyLr = require('tiny-lr');
 var path   = require('path');
 var map    = require('vinyl-map');
 var istnbl = require('gulp-istanbul-enforcer');
+var csso   = require('gulp-csso');
+var rework = require('gulp-rework');
+var moveMe = require('rework-move-media');
+var imgmin = require('gulp-imagemin');
 var jshint = require('jshint').JSHINT;
 var feats  = require('./lib/gulp-featureflags');
 
@@ -45,8 +49,12 @@ function bStyl() {
   return gulp.src(c.app.stylus)
   .pipe(stylus({
       set: ['linenos'],
-      use: ['nib']
-    }));
+      use: ['nib'],
+      paths: [__dirname + '/public'],
+      urlFunc: ['url']
+    }))
+    .pipe(rework(moveMe()))
+    .pipe(csso());
 }
 
 
@@ -88,6 +96,7 @@ gulp.task('assets', function () {
       gulp.src(c.vendor.assets, {base: cwd})
     )
     .pipe(newer(buildDir))
+    .pipe(imgmin())
     .pipe(gulp.dest(buildDir));
 });
 
@@ -119,12 +128,12 @@ gulp.task('jshint', function () {
         next(new gutil.PluginError('gulp-jshint', formatErrors(errors)));
         this.end();
       } else {
-        next();  
+        next();
       }
     }));
 });
 
-gulp.task('css', function () {
+gulp.task('css', ['assets'], function () {
   return es.concat(gulp.src(c.vendor.css), bStyl())
   .pipe(concat(fileName + '.css'))
   .pipe(gulp.dest(buildDir + '/assets/'));
@@ -238,6 +247,10 @@ gulp.task('testDist', function () {
 
 gulp.task('compile', function (cb) {
   runSeq('clean', 'dist', 'testDist', cb);
+});
+
+gulp.task('compileServer', function () {
+  require(cwd+'/'+c.app.server).listen(process.env.PORT||8080, complDir);
 });
 
 gulp.task('build_', function (cb) {

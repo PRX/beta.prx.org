@@ -2,5 +2,6 @@
   "showMenu": false,
   "apiServer": "http://prx-backend.dev/api/v1",
   "lovesharebuy": false,
-  "COUNT_HOST": "http://localhost"
+  "COUNT_HOST": "http://localhost",
+  "LISTEN_LATER": true
 }
