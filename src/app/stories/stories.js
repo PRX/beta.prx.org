@@ -1,7 +1,7 @@
 angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider) {
   $stateProvider.state('story', {
-    url: '/stories/:storyId',
+    url: '/stories/:storyId?autoPlay',
     controller: 'StoryCtrl',
     templateUrl: 'stories/story.html',
     resolve: {
@@ -11,6 +11,15 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
       account: ['story', function (story) {
         return story.follow('prx:account');
       }]
+    }
+  })
+  .state('story.details', {
+    url: '/details',
+    views: {
+      'modal@': {
+        controller: 'StoryDetailCtrl',
+        templateUrl: 'stories/detail_modal.html'
+      }
     }
   });
 
@@ -37,7 +46,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
         if (this.sound() == playerHater.nowPlaying) {
           playerHater.resume();
         } else {
-          playerHater.play(this.sound());  
+          playerHater.play(this.sound());
         }
       },
       pause: function () {
@@ -53,6 +62,11 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
       paused: function () {
         return (typeof this.$sound === 'undefined' || this.$sound.paused);
       }
+    };
+  }])
+  .mixin('http://meta.prx.org/model/story', ['$sce', function ($sce) {
+    return function (story) {
+      story.description = $sce.trustAsHtml(story.description);
     };
   }])
   .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
@@ -73,4 +87,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   $scope.account = account;
   $scope.activeStory = $scope.activeStory || {};
   $scope.activeStory.id = ~~$stateParams.storyId;
+})
+.controller('StoryDetailCtrl', function ($scope, story) {
+  $scope.story = story;
 });

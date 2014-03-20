@@ -1,5 +1,9 @@
 describe('templates', function () {
-  beforeEach(module('prx', 'templates', function ($provide) {
+  var $scope, $compile;
+
+  beforeEach(module('prx', 'templates', function ($provide, $stateProvider) {
+    $stateProvider.state('fakeState', {});
+
     $provide.decorator('$templateCache', function ($delegate) {
       var put = $delegate.put;
       $delegate.toTest = [];
@@ -11,10 +15,18 @@ describe('templates', function () {
     });
   }));
 
-  it ('can compile all templates', inject(function ($rootScope, $compile, $templateCache) {
-    var scope = $rootScope.$new();
+  beforeEach(inject(function ($state, $rootScope, _$compile_) {
+    var fakeState = $state.get('fakeState');
+    fakeState.parent = fakeState;
+    $state.$current = fakeState;
+
+    $scope = $rootScope.$new();
+    $compile = _$compile_;
+  }));
+
+  it ('can compile all templates', inject(function ($templateCache) {
     angular.forEach($templateCache.toTest, function (uri) {
-      $compile($templateCache.get(uri))(scope);
+      $compile($templateCache.get(uri))($scope);
     });
   }));
 });

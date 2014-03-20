@@ -4,6 +4,7 @@
 @import "menus.styl";
 @import "typography.styl";
 @import "header.styl";
+@import "modal.styl";
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
 
 body {
@@ -20,13 +21,13 @@ div[ui-view] {
 }
 
 .open {
-  
+
   header, div[ui-view], .persistent-player {
     transition: transform 0.2s;
     transform: translateX(250px);
     width: 100%;
   }
-  
+
   body {
     width: 100%;
   }
@@ -229,7 +230,7 @@ div[ui-view] .loading {
   }
 }
 
-div[ui-view] ul.actions {
+div[ui-view=''] ul.actions {
   background: lightest-grey;
   list-style-type: none;
   padding: 8px 14px;
@@ -275,11 +276,11 @@ section.body {
       display: none;
       margin: 0;
     }
-    p {
-      font-size: 14px;
-      line-height: 22px;
-      font-weight: 300;
-    }
+    // p {
+    //   font-size: 14px;
+    //   line-height: 22px;
+    //   font-weight: 300;
+    // }
   }
 }
 
@@ -307,5 +308,22 @@ section.body {
     font-size: 12px;
     clear: both;
     margin-bottom: 8px;
+  }
+}
+
+.details  {
+  p a {
+    font-weight: 600;
+  }
+  dl {
+    margin-top: 10px;
+    dt {
+      display: inline-block;
+    }
+    dd {
+      display: inline-block;
+      font-weight: 600;
+      margin-left: 5px;
+    }
   }
 }

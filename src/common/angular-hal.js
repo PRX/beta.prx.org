@@ -31,7 +31,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         angular.forEach(this.matchers, function (matcher, index) {
           if (this.splats[index]) {
             if (match[index+1]) {
-              return result[matcher] = match[index+1].split('/');  
+              return result[matcher] = match[index+1].split('/');
             } else {
               return result[matcher] = [];
             }
@@ -50,7 +50,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   var DocumentPromise = halDocumentPromise;
    /**
    * HAL Document
-   * 
+   *
    * This is not strictly a constructor - it expects to be
    * subclassed and invoked on an instance of a subclass.
    * It also does not return `this', instead creating an
@@ -223,7 +223,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   /**
    * HAL Link
-   * 
+   *
    * Contrasted with above, this actually *is* a constructor.
    * Responsible for determining how to turn a link into a
    * URL which can then be promised into a HAL Document.
@@ -323,7 +323,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
    * golden. Otherwise, it will use the mixin and context
    * promises to make a new constructor.
    *
-   *  dPromise - resolves to a document, or the data to 
+   *  dPromise - resolves to a document, or the data to
    *             construct one.
    *  mPromise - (optional) resolves to a list of mixins
    *             the document uses. Required if dPromise
@@ -620,6 +620,15 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     prototypeForMixins: function prototypeForMixins (mixins) {
       var proto = Object.create(Document.prototype);
       var transform = [];
+
+      // uniq the array so that the first instance of a
+      // uri is always the only one.
+      angular.forEach(mixins, function (uri, index) {
+        if (mixins.indexOf(uri) !== index) {
+            mixins.splice(index, 1);
+        }
+      });
+
       angular.forEach(mixins.reverse(), function (mixin) {
         angular.forEach(this.mixinsFor(mixin), function (mixinDefinition) {
           var mix = mixinDefinition[0], others = mixinDefinition[1];
@@ -639,6 +648,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
           }
         }, this);
       }, this);
+
+      transform = transform.reverse();
+
       proto.transform = function () {
         var promise = $q.when(this);
         var self = this;
@@ -699,11 +711,11 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     },
     context: function context (contextName, def) {
       var provider = this.subProviders[contextName] =
-        this.subProviders[contextName] || 
+        this.subProviders[contextName] ||
         new ContextProvider(this.ctx.subContext());
       if (angular.isFunction(def)) {
         def.call(provider, provider);
-        return this;  
+        return this;
       } else {
         return provider;
       }
