@@ -14,4 +14,4 @@ cache:
 notifications:
   hipchat:
     rooms:
-      secure: hfMJ2fgCjOZAoDc12DXGxqAqI9QDvoX/zeLoM/MQB0VnN+IM9viCgoKqE9TYRS6WbtNuTeN5venCYQ0AujlniZyzXW7L0y8oIT7JZ5eVHHdNJ0G/j34fT2RGf0ACljgu1o3INfmZaV2RnOh5Tzr7ep8PLpDMJeBmFEH55XmLiiw=
+      secure: QD5mL+SG+V3gSV8CKPK8oMh+ga9oygOJwxnIev3ik5dA7G5eH81penO9wSMeypyUp66RbVaJrp5tKTmBWFdI+HTIT7cNYGeujUxOn+GJ51c02lLjEHmNKja/VU+CzSOd42nhPPNGib3WRhFYKiGolBnePeoe83jF76W7zkFcslY=
