@@ -3,7 +3,7 @@ p(ng-bind-html="story.description")
 ul.actions
   li
     a.listen(ui-sref="story({storyId:story.id, autoPlay: true})") Listen Now
-  li
+  li(ng-flag="LISTEN_LATER")
     a.schedule(ui-sref="story.remindMe({storyId: story.id})") Listen Later
   li
     a.view(ui-sref="story({storyId: story.id})") View
