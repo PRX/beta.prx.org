@@ -98,6 +98,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   $scope.account = account;
   $scope.activeStory = $scope.activeStory || {};
   $scope.activeStory.id = ~~$stateParams.storyId;
+  if ($stateParams.autoPlay) {
+    story.play();
+  }
 })
 .controller('StoryDetailCtrl', function ($scope, story) {
   $scope.story = story;
