@@ -621,7 +621,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       var proto = Object.create(Document.prototype);
       var transform = [];
 
-      // uniq the array so that the first instace of a
+      // uniq the array so that the first instance of a
       // uri is always the only one.
       angular.forEach(mixins, function (uri, index) {
         if (mixins.indexOf(uri) !== index) {
@@ -650,7 +650,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }, this);
 
       transform = transform.reverse();
-      
+
       proto.transform = function () {
         var promise = $q.when(this);
         var self = this;
