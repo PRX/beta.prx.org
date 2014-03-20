@@ -249,6 +249,10 @@ gulp.task('compile', function (cb) {
   runSeq('clean', 'dist', 'testDist', cb);
 });
 
+gulp.task('compileServer', function () {
+  require(cwd+'/'+c.app.server).listen(process.env.PORT||8080, complDir);
+});
+
 gulp.task('build_', function (cb) {
   runSeq('clean', ['templates', 'buildJs', 'css', 'assets'], 'html', cb);
 });
