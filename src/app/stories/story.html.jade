@@ -14,11 +14,11 @@ section.body
   article.details
     h2 Details
     p
-      | {{story.short_description}} 
+      | {{story.shortDescription}}
       a.unbreakable(ui-sref=".details") (View Full Description)
     dl
       dt Added to PRX:
-      dd(ng-bind="story.published_at | timeAgo")
+      dd(ng-bind="story.publishedAt | timeAgo")
   article.account
     prx-img(src="account.imageUrl")
     h2(ng-bind="account.name")
