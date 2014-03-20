@@ -83,8 +83,8 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
     resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
   }])
-  .mixin('http://meta.prx.org/model/account/:type', ['type', 'resolved', function (type, resolved) {
-    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
+  .mixin('http://meta.prx.org/model/account/:type/*splat', ['type', 'resolved', function (type, resolved) {
+    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
     resolved.address = resolved.follow('prx:address');
   }])
   .mixin('http://meta.prx.org/model/address', {
