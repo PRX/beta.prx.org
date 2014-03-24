@@ -33,6 +33,26 @@
     color: #FFF;
   }
 
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
+    display:block;
+    height:0;
+    background-color:transparent;
+  }
+
+  ::-webkit-scrollbar-track-piece {
+    background-color:rgba(orange, 0.2);
+  }
+
+  ::-webkit-scrollbar-thumb:vertical {
+    margin: 1px;
+    background-color: orange;
+  }
+
   article {
     overflow-y: auto;
     flex-shrink: 100;
@@ -40,39 +60,46 @@
 
   ul.actions {
     padding-top: 25px;
-    li a {
-      &:hover {
-        text-decoration: none;
-        background: darker-blue;
-      }
-      color: white;
-      height: 40px;
-      line-height: 40px;
+    li {
       margin-bottom: 10px;
-      display: block;
-      background: blue;
 
-      &.listen:after {
-        image: '/assets/images/headphones_white.png' auto 14px;
+      &:last-child {
+        margin-bottom: 0;
       }
+      
+      a {
+        &:hover {
+          text-decoration: none;
+          background: darker-blue;
+        }
+        color: white;
+        height: 40px;
+        line-height: 40px;
+        display: block;
+        background: blue;
 
-      &.schedule:after {
-        image: '/assets/images/calendar_white.png' auto 14px;
-      }
+        &.listen:after {
+          image: '/assets/images/headphones_white.png' auto 14px;
+        }
 
-      &.view:after {
-        image: '/assets/images/eye_white.png' auto 14px;
-      }
+        &.schedule:after {
+          image: '/assets/images/calendar_white.png' auto 14px;
+        }
 
-      &.listen, &.schedule, &.view {
-        &:after {
-          display: inline-block;
-          content: '';
-          float: left;
-          height: 40px;
-          width: 60px;
-          background-position: 12px center;
-          background-repeat: no-repeat;
+        &.view:after {
+          image: '/assets/images/eye_white.png' auto 14px;
+        }
+
+        &.listen, &.schedule, &.view {
+          &:after {
+            display: inline-block;
+            content: '';
+            float: left;
+            height: 40px;
+            width: 60px;
+            background-position: 12px center;
+            background-repeat: no-repeat;
+          }
         }
       }
     }
