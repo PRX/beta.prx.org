@@ -23,9 +23,8 @@ angular.module('prx', ['ngAnimate',
   });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
-
 });
-angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate',])
+angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
 .controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
   $scope.player = playerHater;
   $scope.activeStory = {};
