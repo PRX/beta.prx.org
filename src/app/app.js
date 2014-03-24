@@ -9,7 +9,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
 })
-.controller('appCtrl', function ($scope, playerHater) {
+.controller('appCtrl', function ($scope, $location, playerHater) {
   $scope.player = playerHater;
   $scope.activeStory = {};
   $scope.modal = {};
@@ -20,6 +20,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   });
   $scope.$on('$stateChangeSuccess', function (event, state) {
     $scope.modal.visible = !!(state.data || {}).modal;
+    $scope.desktopUrl = "http://www.prx.org" + $location.path().replace(/^\/stories/, '/pieces');
   });
 })
 .filter('timeAgo', function () {
@@ -27,7 +28,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
     if (!(time instanceof Date)) {
       time = Date.parse(time);
     }
-    var diff = new Date() - time;
+    var diff = Math.floor(new Date() - time);
     var seconds = diff / 1000;
     var minutes = seconds / 60;
     var hours = minutes / 60;
@@ -50,18 +51,18 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
       return "about a day ago";
     } else if (days < 28) {
       return Math.round(days) + " days ago";
-    } else if (days < 35) {
+    } else if (days < 40) {
       return "about a month ago";
     } else if (days < 365) {
       return Math.round(months) + " months ago";
-    } else if (years < 2) {
+    } else if (years < 2 && months < 11.5) {
       if (months >= 1.5) {
         return "a year and " + Math.round(months) + " months ago";
       } else {
         return "about a year ago";
       }
-    } else if (months >= 1.5) {
-        return Math.round(years) + " years and " + Math.round(months) + " months ago";
+    } else if (months >= 1.5 && months < 11.5) {
+        return Math.floor(years) + " years and " + Math.round(months) + " months ago";
     } else {
       return Math.round(years) + " years ago";
     }
@@ -79,9 +80,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   return {
     restrict: 'E',
     link: function (scope, el, attrs) {
-      scope.items = [
-        {text: 'Full Site', href: 'story({storyId: activeStory.id+1})'}
-      ];
+      scope.items = [];
     },
     template: "<nav><a ng-repeat='item in items' ui-sref='{{item.href}}'>{{item.text}}</a></nav>"
   };
@@ -104,5 +103,21 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   return {
     restrict: 'E',
     templateUrl: 'drawer.html'
+  };
+})
+.directive('modalContainer', function () {
+  return {
+    restrict: 'C',
+    link: function (scope, element) {
+      scope.$on("$stateChangeSuccess", function (e, state) {
+        if ((state.data || {}).modal) {
+          var holder = element.children().eq(0);
+          var actions = holder.children()[3] || {};
+          var article = holder.find('article').eq(0);
+          holder.css('padding-bottom', 25 + actions.offsetHeight + 'px');
+          article.css('max-height', document.documentElement.clientHeight - article[0].offsetTop - actions.offsetHeight - 112 + 'px');
+        }
+      });
+    }
   };
 });

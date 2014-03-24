@@ -23,6 +23,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
     }
   });
 
+  /* istanbul ignore else */
   if (FEAT.LISTEN_LATER) {
     $stateProvider.state('story.remindMe', {
       views: {

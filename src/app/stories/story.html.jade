@@ -1,5 +1,5 @@
 section.player
-  .category documentary
+  .category audio story
   .toggle-button(ng-class="{play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()", analytics-on="click", analytics-event="play")
   h1 {{story.title}}
   h4 by <strong>{{account.name}}</strong>
@@ -12,15 +12,10 @@ ul.actions(ng-flag="lovesharebuy")
     span.fa.fa-sort-asc.more
 section.body
   article.details
-    h2 Details
     p
       | {{story.shortDescription}}
-      a.unbreakable(ui-sref=".details") (View Full Description)
-    dl
-      dt Added to PRX:
-      dd(ng-bind="story.publishedAt | timeAgo")
+      a.unbreakable(ui-sref=".details" ng-if="story.description") (View Full Description)
   article.account
     prx-img(src="account.imageUrl")
     h2(ng-bind="account.name")
-    .path(ng-bind="account.path")
     .location(ng-bind="account.address")

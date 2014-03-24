@@ -1,18 +1,21 @@
-.modal {
+.modalContainer {
   z-index: 500;
   fixed: top right;
   left: 0; bottom: 0;
+  max-height: 100%;
   background: rgba(0, 0, 0, 0.85);
   overflow-x: hidden;
-  overflow-y: auto;
-
   padding: 25px;
+
+  .modal {
+    position: relative;
+  }
 
   a.dismiss {
     width: 20px;
     height: 20px;
     image: '/assets/images/cancel_white.png' 20px;
-    absolute: top 13px right 13px;
+    absolute: top -7px right -7px;
     display: block;
   }
 
@@ -22,12 +25,17 @@
     margin-top: 10px;
   }
 
-  h1, h2, p {
+  h1, h2, article {
     color: #FFF;
   }
 
+  article {
+    overflow-y: auto;
+  }
+
   ul.actions {
-    margin-top: 15px;
+    absolute: bottom left;
+    right: 0;
     li a {
       &:hover {
         text-decoration: none;
