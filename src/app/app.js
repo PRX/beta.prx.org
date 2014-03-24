@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 angular.module('prx', ['ngAnimate',
   'prxNavigation',
   'ngTouch',
@@ -12,6 +13,7 @@ angular.module('prx', ['ngAnimate',
   'angulartics.google.analytics',
   'angulartics.prx.count',
   'prx.appCtrl',
+  'prx.url-translate',
   'prx.title'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider) {
@@ -23,9 +25,10 @@ angular.module('prx', ['ngAnimate',
   });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
+
 });
 angular.module('prx.appCtrl', ['prx.player'])
-.controller('appCtrl', function ($scope, $location, playerHater) {
+.controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
   $scope.player = playerHater;
   $scope.activeStory = {};
   $scope.modal = {};
@@ -36,7 +39,7 @@ angular.module('prx.appCtrl', ['prx.player'])
   });
   $scope.$on('$stateChangeSuccess', function (event, state) {
     $scope.modal.visible = !!(state.data || {}).modal;
-    $scope.desktopUrl = "http://www.prx.org" + $location.path().replace(/^\/stories/, '/pieces');
+    $scope.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
   });
 })
 .filter('timeAgo', function () {

@@ -1,5 +1,5 @@
-angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
-.config(function ($stateProvider, ngHalProvider, $urlRouterProvider) {
+angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx.url-translate'])
+.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider.state('story', {
     url: '/stories/:storyId?autoPlay',
     controller: 'StoryCtrl',
@@ -40,6 +40,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   }
 
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
+  urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
 
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/story', ['resolved', 'playerHater', function (resolved, playerHater) {

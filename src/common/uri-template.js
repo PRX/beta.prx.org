@@ -82,15 +82,15 @@ angular.module('uri-template', [])
       } else if (this.operator == '?') {
         result = result.join('&');
       } else {
-        result = result.join(',');  
+        result = result.join(',');
       }
     } else {
       return '';
     }
-    
+
     if (typeof this.operator !== 'undefined' && this.operator !== '+') {
       result = this.operator + result;
-    } 
+    }
 
     return result;
   };
@@ -186,6 +186,7 @@ angular.module('uri-template', [])
   };
 
   function UriTemplate (uri) {
+    this.string = uri;
     var pieces = this._expressions = [];
     angular.forEach(uri.split('{'), function (part, index) {
       if (part.indexOf('}') !== -1) {
@@ -230,6 +231,10 @@ angular.module('uri-template', [])
     keyLength = Math.min(keyLength, result * 2);
 
     return result - ((keyLength - result) * 0.1);
+  };
+
+  UriTemplate.prototype.toString = function () {
+    return this.string;
   };
 
   this.parse = function (uri) {
