@@ -9,6 +9,12 @@ describe('prx.stories', function () {
       expect(scope.story).toBe(sigil);
       expect(scope.account).toBe(sigil);
     }));
+
+    it ('starts playback of the story if autoPlay is requested', inject(function ($controller) {
+      var story = jasmine.createSpyObj('story', ['play']);
+      $controller('StoryCtrl', {story: story, account: {}, $stateParams: {autoPlay: true}, $scope: {}});
+      expect(story.play).toHaveBeenCalled();
+    }));
   });
 
   describe ('StoryDetailCtrl', function () {

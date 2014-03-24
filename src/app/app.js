@@ -28,7 +28,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
     if (!(time instanceof Date)) {
       time = Date.parse(time);
     }
-    var diff = new Date() - time;
+    var diff = Math.floor(new Date() - time);
     var seconds = diff / 1000;
     var minutes = seconds / 60;
     var hours = minutes / 60;
@@ -51,18 +51,18 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
       return "about a day ago";
     } else if (days < 28) {
       return Math.round(days) + " days ago";
-    } else if (days < 35) {
+    } else if (days < 40) {
       return "about a month ago";
     } else if (days < 365) {
       return Math.round(months) + " months ago";
-    } else if (years < 2) {
+    } else if (years < 2 && months < 11.5) {
       if (months >= 1.5) {
         return "a year and " + Math.round(months) + " months ago";
       } else {
         return "about a year ago";
       }
-    } else if (months >= 1.5) {
-        return Math.round(years) + " years and " + Math.round(months) + " months ago";
+    } else if (months >= 1.5 && months < 11.5) {
+        return Math.floor(years) + " years and " + Math.round(months) + " months ago";
     } else {
       return Math.round(years) + " years ago";
     }
