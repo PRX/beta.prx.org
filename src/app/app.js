@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 angular.module('prx', ['ngAnimate',
   'prxNavigation',
   'ngTouch',
@@ -13,7 +12,6 @@ angular.module('prx', ['ngAnimate',
   'angulartics.google.analytics',
   'angulartics.prx.count',
   'prx.appCtrl',
-  'prx.url-translate',
   'prx.title'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider) {
@@ -27,7 +25,7 @@ angular.module('prx', ['ngAnimate',
   ngFlagProvider.flags(FEAT.JSON);
 
 });
-angular.module('prx.appCtrl', ['prx.player'])
+angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate',])
 .controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
   $scope.player = playerHater;
   $scope.activeStory = {};
