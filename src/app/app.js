@@ -104,20 +104,4 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
     restrict: 'E',
     templateUrl: 'drawer.html'
   };
-})
-.directive('modalContainer', function () {
-  return {
-    restrict: 'C',
-    link: function (scope, element) {
-      scope.$on("$stateChangeSuccess", function (e, state) {
-        if ((state.data || {}).modal) {
-          var holder = element.children().eq(0);
-          var actions = holder.children()[3] || {};
-          var article = holder.find('article').eq(0);
-          holder.css('padding-bottom', 25 + actions.offsetHeight + 'px');
-          article.css('max-height', document.documentElement.clientHeight - article[0].offsetTop - actions.offsetHeight - 112 + 'px');
-        }
-      });
-    }
-  };
 });
