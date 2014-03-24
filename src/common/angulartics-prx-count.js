@@ -1,14 +1,13 @@
 (function (angular) {
-  angular.module('angulartics.prx.count', ['angulartics'])
+  angular.module('angulartics.prx.count', ['angulartics', 'prx.url-translate'])
   .config(['$provide', function ($provide) {
-    $provide.decorator('$analytics', ['$delegate', '$window', function ($delegate, $window) {
+    $provide.decorator('$analytics', ['$delegate', '$window', 'urlTranslate', function ($delegate, $window, urlTranslate) {
       var pageTrack = $delegate.pageTrack;
       var eventTrack = $delegate.eventTrack;
       var prefix = window.location.protocol + '//' + window.location.host;
 
       $delegate.pageTrack = function (url) {
-        var remappedUrl = prefix + url.replace(/^\/stories/, '/pieces');
-        TheCount.logAction({action: 'view', url: remappedUrl});
+        TheCount.logAction({action: 'view', url: prefix + urlTranslate(url)});
         pageTrack.call(this, url);
       };
 

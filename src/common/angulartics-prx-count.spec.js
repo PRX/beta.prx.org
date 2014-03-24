@@ -28,12 +28,6 @@ describe ('angulartics prx count', function () {
     it ('passes the url correctly', function () {
       expect(args.url).toEqual(window.location.protocol + '//' + window.location.host + '/foo');
     });
-
-    it ('rewrites urls to the old uri format for stories', function () {
-      $analytics.pageTrack('/stories/123');
-      getArgs();
-      expect(args.url).toEqual(window.location.protocol + '//' + window.location.host + '/pieces/123');
-    });
   });
 
   describe ('event tracking', function () {
