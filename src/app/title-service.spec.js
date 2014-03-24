@@ -7,12 +7,12 @@ describe('title service', function () {
     }).state('base.noTitle', {
       resolve: {
         foo: function () {
-          return 'fooFromResolve'
+          return 'fooFromResolve';
         }
       }
     }).state('base.noTitle.nested', {
       title: function (foo) {
-        return foo + "/transform";
+        return [foo, "transform"];
       }
     })
     .state('base.noTitle.nested.againNoTitle', {
@@ -33,7 +33,7 @@ describe('title service', function () {
   }));
 
   it ('works', function () {
-    expect(stateTitle.string).toEqual("base » fooFromResolve/transform » overrideResolve");
+    expect(stateTitle.string).toEqual("base » fooFromResolve » transform » overrideResolve");
   });
 
   it ('returns string for toString', function () {
@@ -42,16 +42,16 @@ describe('title service', function () {
 
   it ('can set prefix', function () {
     stateTitle.setPrefix('asdf');
-    expect(stateTitle.string).toEqual("asdf » base » fooFromResolve/transform » overrideResolve");
+    expect(stateTitle.string).toEqual("asdf » base » fooFromResolve » transform » overrideResolve");
   });
 
   it ('can reset prefix', function () {
     stateTitle.setPrefix('asdf');
     $state.go('base.noTitle.nested.againNoTitle');
     $rootScope.$digest();
-    expect(stateTitle.string).toEqual("asdf » base » fooFromResolve/transform");
+    expect(stateTitle.string).toEqual("asdf » base » fooFromResolve » transform");
     stateTitle.setPrefix('foo');
-    expect(stateTitle.string).toEqual("foo » base » fooFromResolve/transform");
+    expect(stateTitle.string).toEqual("foo » base » fooFromResolve » transform");
   });
 
   describe ('directive', function () {
@@ -72,7 +72,7 @@ describe('title service', function () {
       var elm = $compile("<title>foo</title>")($scope);
       $state.go('base.noTitle.nested.againNoTitle.last');
       $rootScope.$digest();
-      expect(elm.text()).toEqual("foo » base » fooFromResolve/transform » overrideResolve");
+      expect(elm.text()).toEqual("foo » base » fooFromResolve » transform » overrideResolve");
     });
   });
 
