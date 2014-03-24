@@ -37,7 +37,6 @@ describe('prx', function () {
       $scope.$emit('$stateChangeSuccess', {});
       expect($scope.$apply('modal.visible')).toBeFalsy();
     });
-
   });
 
   describe('prxImg directive', function () {

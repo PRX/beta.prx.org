@@ -9,7 +9,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
 })
-.controller('appCtrl', function ($scope, playerHater) {
+.controller('appCtrl', function ($scope, $location, playerHater) {
   $scope.player = playerHater;
   $scope.activeStory = {};
   $scope.modal = {};
@@ -20,6 +20,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   });
   $scope.$on('$stateChangeSuccess', function (event, state) {
     $scope.modal.visible = !!(state.data || {}).modal;
+    $scope.desktopUrl = "http://www.prx.org" + $location.path().replace(/^\/stories/, '/pieces');
   });
 })
 .filter('timeAgo', function () {
@@ -79,9 +80,7 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   return {
     restrict: 'E',
     link: function (scope, el, attrs) {
-      scope.items = [
-        {text: 'Full Site', href: 'story({storyId: activeStory.id+1})'}
-      ];
+      scope.items = [];
     },
     template: "<nav><a ng-repeat='item in items' ui-sref='{{item.href}}'>{{item.text}}</a></nav>"
   };
@@ -104,5 +103,21 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   return {
     restrict: 'E',
     templateUrl: 'drawer.html'
+  };
+})
+.directive('modalContainer', function () {
+  return {
+    restrict: 'C',
+    link: function (scope, element) {
+      scope.$on("$stateChangeSuccess", function (e, state) {
+        if ((state.data || {}).modal) {
+          var holder = element.children().eq(0);
+          var actions = holder.children()[3] || {};
+          var article = holder.find('article').eq(0);
+          holder.css('padding-bottom', 25 + actions.offsetHeight + 'px');
+          article.css('max-height', document.documentElement.clientHeight - article[0].offsetTop - actions.offsetHeight - 112 + 'px');
+        }
+      });
+    }
   };
 });

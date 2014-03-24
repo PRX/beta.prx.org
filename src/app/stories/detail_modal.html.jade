@@ -1,5 +1,5 @@
 h1(ng-bind="story.title")
-p(ng-bind-html="story.description")
+article(ng-bind-html="story.description")
 ul.actions
   li
     a.listen(ui-sref="story({storyId:story.id, autoPlay: true})") Listen Now

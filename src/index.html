@@ -15,13 +15,13 @@
     <h1><a>PRX</a></h1>
     <prx-action-buttons></prx-action-buttons>
   </header>
-  <div ng-show="modal.visible" class="modal">
-    <div ui-view="modal"></div>
+  <div ng-show="modal.visible" class="modalContainer">
+    <div ui-view="modal" class="modal"></div>
   </div>
   <div ui-view>
     <prx-loading-bar></prx-loading-bar>
   </div>
-  <a href="http://www.prx.org/pieces/{{activePiece.id}}">Show Desktop Site</a>
+  <a ng-href="{{desktopUrl}}">Show Desktop Site</a>
   <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
     <div class="toggle-button" ng-class="{play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
       <small>{{player.nowPlaying.position | timeCode }}</small>
