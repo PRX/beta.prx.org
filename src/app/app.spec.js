@@ -2,7 +2,7 @@ describe('prx', function () {
   describe ('appCtrl', function () {
     var $controller, $scope, ctrl;
 
-    beforeEach(module('prx'));
+    beforeEach(module('prx.appCtrl'));
     beforeEach(inject(function (_$controller_, $rootScope) {
       $controller = _$controller_;
       $scope = $rootScope.$new();

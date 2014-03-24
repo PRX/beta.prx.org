@@ -1,5 +1,20 @@
-angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'prx.home', 'prx.stories', 'prx.series', 'templates', 'prx.player', 'ngFlag', 'angulartics', 'angulartics.google.analytics', 'angulartics.prx.count'])
-.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider, $analyticsProvider, $stateProvider) {
+angular.module('prx', ['ngAnimate',
+  'prxNavigation',
+  'ngTouch',
+  'ui.router',
+  'prx.home',
+  'prx.stories',
+  'prx.series',
+  'templates',
+  'prx.player',
+  'ngFlag',
+  'angulartics',
+  'angulartics.google.analytics',
+  'angulartics.prx.count',
+  'prx.appCtrl',
+  'prx.title'])
+.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
+  $analyticsProvider, $stateProvider) {
   $analyticsProvider.firstPageview(false);
   $urlRouterProvider.when('/', '/stories/73865');
   $stateProvider.state('not_found', {
@@ -8,7 +23,8 @@ angular.module('prx', ['ngAnimate', 'prxNavigation', 'ngTouch', 'ui.router', 'pr
   });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
-})
+});
+angular.module('prx.appCtrl', ['prx.player'])
 .controller('appCtrl', function ($scope, $location, playerHater) {
   $scope.player = playerHater;
   $scope.activeStory = {};

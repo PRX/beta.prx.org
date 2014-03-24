@@ -4,6 +4,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
     url: '/stories/:storyId?autoPlay',
     controller: 'StoryCtrl',
     templateUrl: 'stories/story.html',
+    title: ['story', function (story) {
+      return ['Stories', story.title];
+    }],
     resolve: {
       story: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
         return ngHal.followOne('prx:story', {id: $stateParams.storyId});
@@ -15,6 +18,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater'])
   })
   .state('story.details', {
     url: '/details',
+    title: "Details",
     views: {
       'modal@': {
         controller: 'StoryDetailCtrl',
