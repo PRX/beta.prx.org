@@ -8,7 +8,11 @@
   padding: 25px;
 
   .modal {
-    position: relative;
+    absolute: top 25px left 25px;
+    bottom: 25px; right 25px;
+    display: flex;
+    flex-direction: column;
+
   }
 
   a.dismiss {
@@ -31,11 +35,11 @@
 
   article {
     overflow-y: auto;
+    flex-shrink: 100;
   }
 
   ul.actions {
-    absolute: bottom left;
-    right: 0;
+    padding-top: 25px;
     li a {
       &:hover {
         text-decoration: none;
