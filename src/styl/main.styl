@@ -150,10 +150,12 @@ section.player, .persistent-player {
 
 .persistent-player {
   display: none;
+  flex-direction: row;
   height: 67px;
-  fixed: bottom left;
+  fixed: bottom left; right: 0px;
   z-index: 1000;
-  right: 0px;
+  padding-top: 2px;
+
 
   &:before {
     content: '';
@@ -167,6 +169,7 @@ section.player, .persistent-player {
 
   background: darkest-blue;
   .scrubber-track {
+    absolute: top left; right: 0;
     height: 2px;
     background: lightest-grey;
     .scrubber {
@@ -182,7 +185,8 @@ section.player, .persistent-player {
     line-height: 65px;
     font-size: 22px;
     margin: 0;
-    background-color: transparent !important;
+    flex: none;
+    background-color: transparent;
 
     small {
       absolute: bottom left;
@@ -198,20 +202,27 @@ section.player, .persistent-player {
     width: 55px;
     height: 55px;
     float: left;
+    flex: none;
     background: light-blue;
     background-position: center;
     background-size: cover;
   }
-  .title {
+
+  .about {
+    height: 100%;
     font-size: 11px;
-    absolute: top 12px left 140px;
-    right: 45px;
-    color: white;
-    display: inline-block;
     line-height: 15px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .byline {
+      font-weight: 300;
+    }
   }
+
   .actions {
-    absolute: top 7px right 5px;
+    flex: none;
     width: 25px;
     li {
       button-blue(true);
@@ -244,7 +255,7 @@ section.player, .persistent-player {
 }
 
 .persistent-player.show, .persistent-player.show-add {
-  display: block;
+  display: flex;
 }
 
 section.player {

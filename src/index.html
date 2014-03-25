@@ -30,7 +30,10 @@
       <small>{{player.nowPlaying.position | timeCode }}</small>
     </div>
     <prx-img src="player.nowPlaying.story.imageUrl" class="thumb"></prx-img>
-    <div class="title">{{player.nowPlaying.story.title}}</div>
+    <div class="about">
+      <div class="title">{{player.nowPlaying.story.title}}</div>
+      <div class="byline">by {{player.nowPlaying.account.name}}</div>
+    </div>
     <ul class="actions" ng-flag="lovesharebuy">
       <li class="share"></li>
       <li class="love"></li>
