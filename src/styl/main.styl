@@ -150,11 +150,21 @@ section.player, .persistent-player {
 
 .persistent-player {
   display: none;
-  height: 65px;
+  height: 70px;
   fixed: bottom left;
   z-index: 1000;
   right: 0px;
   background: darkest-blue;
+  .scrubber-track {
+    height: 5px;
+    background: lightest-grey;
+    .scrubber {
+      width: 0;
+      height: 100%;
+      border-right: 1px solid orange;
+      background-color: dark-orange;
+    }
+  }
   .toggle-button {
     width: 65px;
     height: 65px;
