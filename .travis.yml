@@ -16,5 +16,5 @@ notifications:
     rooms:
       secure: QD5mL+SG+V3gSV8CKPK8oMh+ga9oygOJwxnIev3ik5dA7G5eH81penO9wSMeypyUp66RbVaJrp5tKTmBWFdI+HTIT7cNYGeujUxOn+GJ51c02lLjEHmNKja/VU+CzSOd42nhPPNGib3WRhFYKiGolBnePeoe83jF76W7zkFcslY=
     template:
-      - '%{repository_name}@%{branch}(%{commit}:%{author})  %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Change view</a>)'
+      - '<strong>%{repository_name}#%{commit} on %{branch} by %{author}</strong> (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Change view</a>)'
     format: html
