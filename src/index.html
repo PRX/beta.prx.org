@@ -6,8 +6,36 @@
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="shortcut icon" sizes="196x196" href="/assets/images/app_icon@3x.png">
   <base href="/">
-  <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <meta name="fragment" content="!">
+  <style type="text/css">
+    *[ng-cloak] {
+      display: none;
+    }
+    html, body {
+      height: 100%;
+      padding: 0; margin: 0;
+    }
+    header {
+      display: block;
+      position: fixed;
+      height: 100%;
+      left: 0; right: 0; top: 0; bottom: 0;
+    }
+    header h1 {
+      font-size: 0;
+      display: block;
+      position: absolute;
+      left: 0;right:0;top:0;bottom:0;
+      height: 100%;
+      -webkit-transition: height 0.5s;
+      background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG0AAAAoCAMAAADDs4S7AAADAFBMVEX2tmXzojn50Z7++/UwiKKaw8797trwjAzymCXymimDtcPuewD2vHH5zpje6+7wiATwhwD//PrxlBz4xoX+/v6Tvsr2vnSJuMX62a3vgQD85srwigeNvMn1rlTwjAoSdZLU5On98+X98N4th6HK3+RkpLb63LXO4eb+9uz9791sqLq81t31uWpXnbD5zZX0rVLwjhD3wHrymSb1s1374sH1tWLvhADj7vF7ssHl7/LC2uHvhgDxliC10tqix9H969X86M4pg53xkhj+9Oj61KT74L4KcY785ccviKFFkqj6/Pz1sVr86dDy9/inytT0qkr2u2/zoDXu9fb50JpJlar4y5D3w381iqL0q0xRma3xlyImgZtBkKbynjI6jKT2umzzpUE0iaL86tL3xIL8580phqHS5Ok9jqWy0drxkxr61qj75MXxkRb4yo5xqrr++fPylyLq8vTwjg797Nb3vnYjf5rxkBU3iqLwiALynTDzpD7xlR7xjxI5jKPymir73rj++PH62rH3wXwaepbY5+xeoLP616r606IwiKH4yY2uztcHb4x5r7///v398uP0pkPynjDyliH4zJL4x4jviAPxkhbtdgD//Pj/+/fwiwr0qEZ3rr5Ol6xNlqvzpkIyiKDznzPxmCXynS/wigjynC3ymywziaIyiaLynC7ynS7ynCzwiQX737vwjQ362KsyiKLwiwn+9+7627Pwiwj+9er98OD8/f7848TymSf98eL4yIv748T3+vv9/v7737w1iaLzoztxq7z0rE7xlBv51KPP4+n0+PnH3OIPc5D2+frwigU/kKb3v3fw9vf1tF/4+/swh6DxlySexdH1r1b+9uv7/f1zrb3//fvR4ufxlSDX6Ozn8fS11N0Wd5P2vG/2vXPp8fPvhQLg7O+sz9n+9Of3wn3wixLR4+hnp7lop7n61qz1u3Pz+PkffZjxkBPznC6oytOrzNX++vP62bD4xIKMu8f4yo3848P1+frwign++O/0p0Tymyc2iqLymyv///8dwIT3AAAIUUlEQVRYw5WYe0ATRxrAFwwkCJgYHxS2UEssFaUQE12tiYrxwFBjAQWjOYEG9Ww0VFrU8Aitb1EqttKHj9bSJcnmYQRPW6naQq3teXfq3ZXrcS/P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");
+      -webkit-background-size:auto 20px;
+      -moz-background-size:auto 20px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size:auto 20px
+    }
+  </style>
 </head>
 <body ng-controller="appCtrl" ng-class="{'with-player': !!player.nowPlaying}">
   <prx-drawer ng-flag="showMenu"></prx-drawer>
@@ -17,14 +45,12 @@
     <h1><a>PRX</a></h1>
     <prx-action-buttons></prx-action-buttons>
   </header>
-  <div ng-show="modal.visible" class="modalContainer">
+  <div ng-show="modal.visible" class="modalContainer" ng-cloak>
     <div ui-view="modal" class="modal"></div>
   </div>
-  <div ui-view>
-    <prx-loading-bar></prx-loading-bar>
-  </div>
-  <a class="full-site" ng-href="{{desktopUrl}}">Show Desktop Site</a>
-  <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
+  <div ui-view ng-cloak></div>
+  <a class="full-site" ng-href="{{desktopUrl}}" ng-cloak>Show Desktop Site</a>
+  <div class="persistent-player" ng-class="{show: !!player.nowPlaying}" ng-cloak>
     <div class="scrubber-track"><div class="scrubber" ng-style="{width: player.nowPlaying.position / player.nowPlaying.story.length / 10 + '%'}"></div></div>
     <div class="toggle-button" ng-class="{loading: player.nowPlaying.story.loading(), play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
       <small>{{player.nowPlaying.position | timeCode }}</small>
@@ -48,5 +74,6 @@
   ga('create', 'UA-164824-46', 'prx.org');
 </script><% scripts.forEach(function(file) { %>
 <script src="<%= file %>"></script><% }); %>
+<% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
 </body>
 </html>
