@@ -84,12 +84,27 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
     }
   };
 })
-.directive('prxImg', function () {
+.directive('prxImg', function ($timeout) {
   return {
     restrict: 'E',
     replace: true,
     scope: { src: '=' },
-    template: "<div class='img' ng-style='{\"background-image\":\"url(\"+src+\")\"}'/>"
+    template: "<div class='img' ng-class='{loaded:loaded}'><img><div></div></div>",
+    link: function (scope, element) {
+      var imgTag = element.children().eq(0);
+      var holder = element.children().eq(1);
+      imgTag.on('load', function () {
+        holder.css('background-image', 'url('+imgTag.attr('src')+')');
+        $timeout(function () {
+          scope.loaded = true;
+        }, 60); // Trying to make sure that it is in the buffer.
+      });
+      scope.$watch('src', function (src) {
+        holder.css('background-image', null);
+        scope.loaded = false;
+        imgTag.attr('src', src);
+      });
+    }
   };
 })
 .directive('prxActionButtons', function ($window) {

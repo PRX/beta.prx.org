@@ -358,10 +358,28 @@ section.body {
 }
 
 .img {
+  position: relative;
+  overflow: hidden;
   background-color: lightest-grey;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  transform: translateX(0);
+
+  div {
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0;
+  }
+
+  img {
+    display: none;
+  }
+
+  &.loaded div {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+
 }
 
 .account {
