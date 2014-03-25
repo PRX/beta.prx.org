@@ -13,7 +13,7 @@ ul.actions(ng-flag="lovesharebuy")
 section.body
   article.details
     p
-      | {{story.shortDescription}}
+      | {{story.shortDescription}} #{''}
       a.unbreakable(ui-sref=".details" ng-if="story.description") (View Full Description)
   article.account
     prx-img(src="account.imageUrl")

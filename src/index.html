@@ -21,7 +21,7 @@
   <div ui-view>
     <prx-loading-bar></prx-loading-bar>
   </div>
-  <a ng-href="{{desktopUrl}}">Show Desktop Site</a>
+  <a class="full-site" ng-href="{{desktopUrl}}">Show Desktop Site</a>
   <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
     <div class="toggle-button" ng-class="{play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
       <small>{{player.nowPlaying.position | timeCode }}</small>

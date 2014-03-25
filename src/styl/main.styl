@@ -1,19 +1,30 @@
 @import "reset.styl";
 @import "variables.styl";
 @import "buttons.styl";
+@import "scrollbars.styl";
 @import "menus.styl";
 @import "typography.styl";
 @import "header.styl";
 @import "modal.styl";
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
 
-body {
-  min-height: 100%;
-  padding-bottom: 10px;
+html {
+  height: 100%;
 }
 
-body.with-player div[ui-view] {
-  padding-bottom: 75px;
+body {
+  min-height: 100%;
+  padding-bottom: 50px;
+  position: relative;
+}
+
+body.with-player {
+  a.full-site {
+    bottom: 75px;
+  }
+  div[ui-view] {
+    padding-bottom: 75px;
+  }
 }
 
 div[ui-view] {
@@ -170,11 +181,20 @@ section.player {
   background-image: url('/assets/images/tl_blue_mics.png');
   padding: 14px;
   height: 150px;
+  position: relative;
+
+  &:before {
+    content: '';
+    display: block;
+    background-color: rgba(dark-grey, 0.3);
+    absolute: top left;
+    right: 0; bottom: 0;
+  }
 
   .category {
     position: relative;
     z-index: 10;
-    color: light-grey;
+    color: lightest-grey;
     text-transform: uppercase;
     font-size: 11px;
     line-height: 10px;
@@ -201,6 +221,8 @@ section.player {
     padding-top: 5px;
     margin-right: 10px;
     white-space: nowrap;
+    position: relative;
+    z-index: 10;
     strong {
       font-weight: bold;
     }
@@ -328,5 +350,20 @@ section.body {
       font-weight: 600;
       margin-left: 5px;
     }
+  }
+}
+
+a.full-site {
+  absolute: bottom 10px left; right: 0;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-top: 1px solid lightest-grey;
+  border-bottom: 1px solid lightest-grey;
+  &:hover, &:active {
+    text-decoration: none;
+    background-color: blue;
+    color: white;
+    border-color: darker-blue;
   }
 }

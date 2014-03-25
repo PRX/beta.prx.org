@@ -1,4 +1,6 @@
 .modalContainer {
+  modal-scrollbar();
+
   z-index: 500;
   fixed: top right;
   left: 0; bottom: 0;
@@ -33,26 +35,6 @@
     color: #FFF;
   }
 
-  ::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
-  }
-
-  ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
-    display:block;
-    height:0;
-    background-color:transparent;
-  }
-
-  ::-webkit-scrollbar-track-piece {
-    background-color:rgba(orange, 0.2);
-  }
-
-  ::-webkit-scrollbar-thumb:vertical {
-    margin: 1px;
-    background-color: orange;
-  }
-
   article {
     overflow-y: auto;
     flex-shrink: 100;
@@ -66,7 +48,7 @@
       &:last-child {
         margin-bottom: 0;
       }
-      
+
       a {
         &:hover {
           text-decoration: none;
