@@ -154,6 +154,17 @@ section.player, .persistent-player {
   fixed: bottom left;
   z-index: 1000;
   right: 0px;
+
+  &:before {
+    content: '';
+    background-color: orange;
+    absolute: bottom left;
+    width: 65px; height: 65px;
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    image: '/assets/images/player_bars.png' 65px;
+  }
+
   background: darkest-blue;
   .scrubber-track {
     height: 2px;
@@ -171,6 +182,8 @@ section.player, .persistent-player {
     line-height: 65px;
     font-size: 22px;
     margin: 0;
+    background-color: transparent !important;
+
     small {
       absolute: bottom left;
       width: 65px;
