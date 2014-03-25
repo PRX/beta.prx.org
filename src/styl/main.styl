@@ -76,6 +76,28 @@ div[ui-view] {
   }
 }
 
+@keyframes spinner-outside {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: rotate(1080deg);
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes spinner-inside {
+  1% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: rotate(720deg);
+    animation-timing-function: linear;
+  }
+}
+
 section.player, .persistent-player {
   .toggle-button {
     position: relative;
@@ -93,6 +115,32 @@ section.player, .persistent-player {
     }
     &.pause {
       image: '/assets/images/bt_pause.png' auto 25px;
+    }
+    &.loading {
+      image: none;
+      &:before {
+        content: '';
+        absolute: top 50% right 50%;
+        width: 25px; height: 25px;
+        margin: -12.5px -12.5px 0;
+        image: '/assets/images/bt_loading_outer.png' auto 25px;
+        animation-name: spinner-outside;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-play-state: running;
+      }
+      &:after {
+        content: '';
+        absolute: top 50% right 50%;
+        width: 17px; height: 17px;
+        margin: -8.5px -8.5px 0;
+        image: '/assets/images/bt_loading_inner.png' auto 17px;
+        animation-name: spinner-inside;
+        animation-duration: 3s;
+        animation-direction: reverse;
+        animation-iteration-count: infinite;
+        animation-play-state: running;
+      }
     }
     float: left;
     margin-right: 10px;
@@ -230,7 +278,7 @@ section.player {
   }
 }
 
-div[ui-view] .loading {
+div[ui-view] > .loading {
   fixed: top 50% left 20px;
   right: 20px;
   height: 22px;

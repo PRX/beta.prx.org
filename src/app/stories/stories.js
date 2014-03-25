@@ -78,6 +78,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
       },
       paused: function () {
         return (typeof this.$sound === 'undefined' || this.$sound.paused);
+      },
+      loading: function () {
+        return typeof this.$sound !== 'undefined' && !this.$sound.paused && isNaN(this.$sound.position);
       }
     };
   }])

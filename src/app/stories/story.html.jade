@@ -1,6 +1,6 @@
 section.player
   .category audio story
-  .toggle-button(ng-class="{play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()", analytics-on="click", analytics-event="play")
+  .toggle-button(ng-class="{loading: story.loading(), play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()", analytics-on="click", analytics-event="play")
   h1 {{story.title}}
   h4 by <strong>{{account.name}}</strong>
   h4 Length: {{story.length * 1000 | timeCode: 'short' }}
