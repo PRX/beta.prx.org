@@ -47,6 +47,6 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-164824-46', 'prx.org');
 </script><% scripts.forEach(function(file) { %>
-<script src="<%= file %>"></script><% }); %>
+<script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
 </body>
 </html>
