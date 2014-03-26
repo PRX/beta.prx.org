@@ -1,19 +1,30 @@
 @import "reset.styl";
 @import "variables.styl";
 @import "buttons.styl";
+@import "scrollbars.styl";
 @import "menus.styl";
 @import "typography.styl";
 @import "header.styl";
 @import "modal.styl";
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
 
-body {
-  min-height: 100%;
-  padding-bottom: 10px;
+html {
+  height: 100%;
 }
 
-body.with-player div[ui-view] {
-  padding-bottom: 75px;
+body {
+  min-height: 100%;
+  padding-bottom: 50px;
+  position: relative;
+}
+
+body.with-player {
+  a.full-site {
+    bottom: 75px;
+  }
+  div[ui-view] {
+    padding-bottom: 75px;
+  }
 }
 
 div[ui-view] {
@@ -65,6 +76,28 @@ div[ui-view] {
   }
 }
 
+@keyframes spinner-outside {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: rotate(1080deg);
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes spinner-inside {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: rotate(720deg);
+    animation-timing-function: linear;
+  }
+}
+
 section.player, .persistent-player {
   .toggle-button {
     position: relative;
@@ -83,6 +116,32 @@ section.player, .persistent-player {
     &.pause {
       image: '/assets/images/bt_pause.png' auto 25px;
     }
+    &.loading {
+      image: none;
+      &:before {
+        content: '';
+        absolute: top 50% right 50%;
+        width: 25px; height: 25px;
+        margin: -12.5px -12.5px 0;
+        image: '/assets/images/bt_loading_outer.png' auto 25px;
+        animation-name: spinner-outside;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-play-state: running;
+      }
+      &:after {
+        content: '';
+        absolute: top 50% right 50%;
+        width: 17px; height: 17px;
+        margin: -8.5px -8.5px 0;
+        image: '/assets/images/bt_loading_inner.png' auto 17px;
+        animation-name: spinner-inside;
+        animation-duration: 3s;
+        animation-direction: reverse;
+        animation-iteration-count: infinite;
+        animation-play-state: running;
+      }
+    }
     float: left;
     margin-right: 10px;
     margin-top: 5px;
@@ -91,16 +150,44 @@ section.player, .persistent-player {
 
 .persistent-player {
   display: none;
-  height: 65px;
-  fixed: bottom left;
-  right: 0px;
+  flex-direction: row;
+  height: 67px;
+  fixed: bottom left; right: 0px;
+  z-index: 1000;
+  padding-top: 2px;
+
+
+  &:before {
+    content: '';
+    background-color: orange;
+    absolute: bottom left;
+    width: 65px; height: 65px;
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    image: '/assets/images/player_bars.png' 65px;
+  }
+
   background: darkest-blue;
+  .scrubber-track {
+    absolute: top left; right: 0;
+    height: 2px;
+    background: lightest-grey;
+    .scrubber {
+      width: 0;
+      height: 100%;
+      border-right: 1px solid orange;
+      background-color: dark-orange;
+    }
+  }
   .toggle-button {
     width: 65px;
     height: 65px;
     line-height: 65px;
     font-size: 22px;
     margin: 0;
+    flex: none;
+    background-color: transparent;
+
     small {
       absolute: bottom left;
       width: 65px;
@@ -115,20 +202,27 @@ section.player, .persistent-player {
     width: 55px;
     height: 55px;
     float: left;
+    flex: none;
     background: light-blue;
     background-position: center;
     background-size: cover;
   }
-  .title {
+
+  .about {
+    height: 100%;
     font-size: 11px;
-    absolute: top 10px left 140px;
-    right: 45px;
-    color: white;
-    display: inline-block;
     line-height: 15px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .byline {
+      font-weight: 300;
+    }
   }
+
   .actions {
-    absolute: top 5px right 5px;
+    flex: none;
     width: 25px;
     li {
       button-blue(true);
@@ -161,7 +255,7 @@ section.player, .persistent-player {
 }
 
 .persistent-player.show, .persistent-player.show-add {
-  display: block;
+  display: flex;
 }
 
 section.player {
@@ -169,11 +263,20 @@ section.player {
   background-image: url('/assets/images/tl_blue_mics.png');
   padding: 14px;
   height: 150px;
+  position: relative;
+
+  &:before {
+    content: '';
+    display: block;
+    background-color: rgba(dark-grey, 0.3);
+    absolute: top left;
+    right: 0; bottom: 0;
+  }
 
   .category {
     position: relative;
     z-index: 10;
-    color: light-grey;
+    color: lightest-grey;
     text-transform: uppercase;
     font-size: 11px;
     line-height: 10px;
@@ -200,6 +303,8 @@ section.player {
     padding-top: 5px;
     margin-right: 10px;
     white-space: nowrap;
+    position: relative;
+    z-index: 10;
     strong {
       font-weight: bold;
     }
@@ -207,7 +312,7 @@ section.player {
   }
 }
 
-div[ui-view] .loading {
+div[ui-view] > .loading {
   fixed: top 50% left 20px;
   right: 20px;
   height: 22px;
@@ -287,10 +392,28 @@ section.body {
 }
 
 .img {
+  position: relative;
+  overflow: hidden;
   background-color: lightest-grey;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  transform: translateX(0);
+
+  div {
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0;
+  }
+
+  img {
+    display: none;
+  }
+
+  &.loaded div {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+
 }
 
 .account {
@@ -327,5 +450,20 @@ section.body {
       font-weight: 600;
       margin-left: 5px;
     }
+  }
+}
+
+a.full-site {
+  absolute: bottom 10px left; right: 0;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-top: 1px solid lightest-grey;
+  border-bottom: 1px solid lightest-grey;
+  &:hover, &:active {
+    text-decoration: none;
+    background-color: blue;
+    color: white;
+    border-color: darker-blue;
   }
 }

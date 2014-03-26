@@ -16,11 +16,17 @@ $button-with-icon {
 }
 
 $background-orange {
-  background: orange;
+  background-color: orange;
+  &:hover {
+    background-color: dark-orange;
+  }
 }
 
 $background-blue {
-  background: blue;
+  background-color: blue;
+  &:hover {
+    background-color: dark-blue;
+  }
 }
 
 button-blue(with-icon=false) {
@@ -29,7 +35,7 @@ button-blue(with-icon=false) {
   } else {
     @extend $button;
   }
-  @extend $background-blue;  
+  @extend $background-blue;
 }
 
 button-orange(with-icon=false) {
@@ -40,4 +46,3 @@ button-orange(with-icon=false) {
   }
   @extend $background-orange;
 }
-

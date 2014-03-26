@@ -56,6 +56,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
 
           this.$sound = playerHater.newSong.apply(playerHater, audioFiles);
           this.$sound.story = this;
+          this.$sound.account = this.$account;
         }
         return this.$sound;
       },
@@ -78,6 +79,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
       },
       paused: function () {
         return (typeof this.$sound === 'undefined' || this.$sound.paused);
+      },
+      loading: function () {
+        return typeof this.$sound !== 'undefined' && !this.$sound.paused && isNaN(this.$sound.position);
       }
     };
   }])
@@ -102,6 +106,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
 .controller('StoryCtrl', function ($scope, story, account, $stateParams) {
   $scope.story = story;
   $scope.account = account;
+  story.$account = account;
   $scope.activeStory = $scope.activeStory || {};
   $scope.activeStory.id = ~~$stateParams.storyId;
   if ($stateParams.autoPlay) {

@@ -3,6 +3,8 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>prx.org</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="/assets/images/app_icon@3x.png">
   <base href="/">
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <meta name="fragment" content="!">
@@ -21,13 +23,17 @@
   <div ui-view>
     <prx-loading-bar></prx-loading-bar>
   </div>
-  <a ng-href="{{desktopUrl}}">Show Desktop Site</a>
+  <a class="full-site" ng-href="{{desktopUrl}}">Show Desktop Site</a>
   <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
-    <div class="toggle-button" ng-class="{play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
+    <div class="scrubber-track"><div class="scrubber" ng-style="{width: player.nowPlaying.position / player.nowPlaying.story.length / 10 + '%'}"></div></div>
+    <div class="toggle-button" ng-class="{loading: player.nowPlaying.story.loading(), play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
       <small>{{player.nowPlaying.position | timeCode }}</small>
     </div>
     <prx-img src="player.nowPlaying.story.imageUrl" class="thumb"></prx-img>
-    <div class="title">{{player.nowPlaying.story.title}}</div>
+    <div class="about">
+      <div class="title">{{player.nowPlaying.story.title}}</div>
+      <div class="byline">by {{player.nowPlaying.account.name}}</div>
+    </div>
     <ul class="actions" ng-flag="lovesharebuy">
       <li class="share"></li>
       <li class="love"></li>
@@ -41,6 +47,6 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-164824-46', 'prx.org');
 </script><% scripts.forEach(function(file) { %>
-<script src="<%= file %>"></script><% }); %>
+<script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
 </body>
 </html>

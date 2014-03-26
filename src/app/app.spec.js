@@ -52,12 +52,6 @@ describe('prx', function () {
       $scope.src = 1;
       expect(element.hasClass('img')).toBeTruthy();
     });
-
-    it ('has the background-image set to the src prop', function () {
-      $scope.src = "foo.jpg";
-      $scope.$digest();
-      expect(element.css('background-image')).toMatch(/^url\(.*foo\.jpg.*\)$/);
-    });
   });
 
   describe ('timeAgo filter', function () {
