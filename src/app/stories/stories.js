@@ -1,4 +1,4 @@
-angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx.url-translate'])
+angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx.url-translate', 'prx.accounts'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider.state('story', {
     url: '/stories/:storyId?autoPlay',
@@ -92,10 +92,6 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
   }])
   .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
     resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
-  }])
-  .mixin('http://meta.prx.org/model/account/:type/*splat', ['type', 'resolved', function (type, resolved) {
-    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
-    resolved.address = resolved.follow('prx:address');
   }])
   .mixin('http://meta.prx.org/model/address', {
     toString: function () {

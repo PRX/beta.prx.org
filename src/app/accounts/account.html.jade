@@ -1,0 +1,10 @@
+section.body.profile
+  prx-img.profile(src="account.current.imageUrl")
+  h1(ng-bind="account.current.name")
+  article.details
+    h3(ng-bind="account.current.path")
+    h3(ng-bind="account.current.address")
+  summary(ng-bind-html="account.current.description")
+  h2 Recent Stories
+  .story(ng-repeat="story in account.recentStories")
+    h2(ng-bind="story.title")

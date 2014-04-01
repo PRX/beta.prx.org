@@ -16,6 +16,8 @@ section.body
       | {{story.shortDescription}} #{''}
       a.unbreakable(ui-sref=".details" ng-if="story.description") (View Full Description)
   article.account
-    prx-img(src="account.imageUrl")
-    h2(ng-bind="account.name")
+    a(ui-sref="account")
+      prx-img(src="account.imageUrl")
+    h2
+      a(ng-bind="account.name", ui-sref="account")
     .location(ng-bind="account.address")
