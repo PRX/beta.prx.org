@@ -51,6 +51,9 @@
     "gulp-rework": "^0.2.1",
     "rework": "^0.20.2",
     "rework-move-media": "0.0.5",
-    "gulp-imagemin": "^0.1.5"
+    "gulp-imagemin": "^0.1.5",
+    "node-notifier": "^2.0.4",
+    "protractor": "^0.20.1",
+    "gulp-protractor": "0.0.7"
   }
 }

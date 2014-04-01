@@ -2,6 +2,6 @@
   "apiServer" : "https://hal.prx.org/api/v1",
   "showMenu" : false,
   "lovesharebuy": false,
-  "COUNT_HOST": "http://count.prx.org",
+  "COUNT_HOST": "https://count.prx.org",
   "LISTEN_LATER": false
 }
