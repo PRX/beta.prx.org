@@ -2,7 +2,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider.state('story', {
     url: '/stories/:storyId?autoPlay',
-    controller: 'StoryCtrl',
+    controller: 'StoryCtrl as story',
     templateUrl: 'stories/story.html',
     title: ['story', function (story) {
       return ['Stories', story.title];
@@ -21,7 +21,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
     title: "Details",
     views: {
       'modal@': {
-        controller: 'StoryDetailCtrl',
+        controller: 'StoryDetailCtrl as story',
         templateUrl: 'stories/detail_modal.html'
       }
     }
@@ -32,7 +32,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
     $stateProvider.state('story.remindMe', {
       views: {
         'modal@': {
-          controller: 'StoryDetailCtrl',
+          controller: 'StoryDetailCtrl as story',
           templateUrl: 'stories/remind_me_modal.html'
         }
       }
@@ -99,16 +99,13 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
     }
   });
 })
-.controller('StoryCtrl', function ($scope, story, account, $stateParams) {
-  $scope.story = story;
-  $scope.account = account;
-  story.$account = account;
-  $scope.activeStory = $scope.activeStory || {};
-  $scope.activeStory.id = ~~$stateParams.storyId;
+.controller('StoryCtrl', function (story, account, $stateParams) {
+  this.current = story;
+  this.account = account;
   if ($stateParams.autoPlay) {
     story.play();
   }
 })
-.controller('StoryDetailCtrl', function ($scope, story) {
-  $scope.story = story;
+.controller('StoryDetailCtrl', function (story) {
+  this.current = story;
 });

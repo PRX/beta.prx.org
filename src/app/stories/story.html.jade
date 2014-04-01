@@ -1,6 +1,6 @@
 section.player
   .category audio story
-  .toggle-button(ng-class="{loading: story.loading(), play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()", analytics-on="click", analytics-event="play")
+  .toggle-button(ng-class="{loading: story.current.loading(), play: story.current.paused(), pause: !story.current.paused()}", ng-click="story.current.togglePlay()", analytics-on="click", analytics-event="play")
   h1 {{story.title}}
   h4 by <strong>{{account.name}}</strong>
   h4 Length: {{story.length * 1000 | timeCode: 'short' }}
@@ -14,10 +14,10 @@ section.body
   article.details
     p
       | {{story.shortDescription}} #{''}
-      a.unbreakable(ui-sref=".details" ng-if="story.description") (View Full Description)
+      a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
   article.account
-    a(ui-sref="account")
-      prx-img(src="account.imageUrl")
+    a(ui-sref="story.account")
+      prx-img(src="story.account.imageUrl")
     h2
-      a(ng-bind="account.name", ui-sref="account")
-    .location(ng-bind="account.address")
+      a(ng-bind="story.account.name", ui-sref="story.account")
+    .location(ng-bind="story.account.address")

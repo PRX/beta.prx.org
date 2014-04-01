@@ -9,7 +9,7 @@
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
   <meta name="fragment" content="!">
 </head>
-<body ng-controller="appCtrl" ng-class="{'with-player': !!player.nowPlaying}">
+<body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying}">
   <prx-drawer ng-flag="showMenu"></prx-drawer>
   <header>
     <prx-loading-bar></prx-loading-bar>
@@ -17,22 +17,22 @@
     <h1><a>PRX</a></h1>
     <prx-action-buttons></prx-action-buttons>
   </header>
-  <div ng-show="modal.visible" class="modalContainer">
+  <div ng-show="app.modalVisible" class="modalContainer">
     <div ui-view="modal" class="modal"></div>
   </div>
   <div ui-view>
     <prx-loading-bar></prx-loading-bar>
   </div>
-  <a class="full-site" ng-href="{{desktopUrl}}">Show Desktop Site</a>
-  <div class="persistent-player" ng-class="{show: !!player.nowPlaying}">
-    <div class="scrubber-track"><div class="scrubber" ng-style="{width: player.nowPlaying.position / player.nowPlaying.story.length / 10 + '%'}"></div></div>
-    <div class="toggle-button" ng-class="{loading: player.nowPlaying.story.loading(), play: player.nowPlaying.paused, pause: !player.nowPlaying.paused}" ng-click="player.togglePlayback()">
-      <small>{{player.nowPlaying.position | timeCode }}</small>
+  <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a>
+  <div class="persistent-player" ng-class="{show: !!app.player.nowPlaying}">
+    <div class="scrubber-track"><div class="scrubber" ng-style="{width: app.player.nowPlaying.position / app.player.nowPlaying.story.length / 10 + '%'}"></div></div>
+    <div class="toggle-button" ng-class="{loading: app.player.nowPlaying.story.loading(), play: app.player.nowPlaying.paused, pause: !app.player.nowPlaying.paused}" ng-click="app.player.togglePlayback()">
+      <small>{{app.player.nowPlaying.position | timeCode }}</small>
     </div>
-    <prx-img src="player.nowPlaying.story.imageUrl" class="thumb"></prx-img>
+    <prx-img src="app.player.nowPlaying.story.imageUrl" class="thumb"></prx-img>
     <div class="about">
-      <div class="title">{{player.nowPlaying.story.title}}</div>
-      <div class="byline">by {{player.nowPlaying.account.name}}</div>
+      <div class="title">{{app.player.nowPlaying.story.title}}</div>
+      <div class="byline">by {{app.player.nowPlaying.account.name}}</div>
     </div>
     <ul class="actions" ng-flag="lovesharebuy">
       <li class="share"></li>

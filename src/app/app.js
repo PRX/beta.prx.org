@@ -41,17 +41,17 @@ angular.module('prx', ['ngAnimate',
 });
 angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
 .controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
-  $scope.player = playerHater;
-  $scope.activeStory = {};
-  $scope.modal = {};
+  var app = this;
+  this.player = playerHater;
+  this.modalVisible = false;
   $scope.$on('$stateChangeStart', function (event, state, params, from) {
     if (from.abstract) {
-      $scope.modal.visible = !!(state.data || {}).modal;
+      app.modalVisible = !!(state.data || {}).modal;
     }
   });
   $scope.$on('$stateChangeSuccess', function (event, state) {
-    $scope.modal.visible = !!(state.data || {}).modal;
-    $scope.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
+    app.modalVisible = !!(state.data || {}).modal;
+    app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
   });
 })
 .filter('timeAgo', function () {
