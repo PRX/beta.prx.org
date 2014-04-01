@@ -1,5 +1,5 @@
 angular.module('prx.accounts', ['ui.router', 'angular-hal'])
-.config(function ($stateProvider, ngHalProvider) {
+.config(function ($stateProvider, ngHalProvider, urlTranslateProvider) {
   $stateProvider.state('account', {
     abstract: true,
     resolve: {}
@@ -30,6 +30,14 @@ angular.module('prx.accounts', ['ui.router', 'angular-hal'])
       };
     }
   ]);
+})
+.directive('prxAccount', function () {
+  return {
+    restrict: 'E',
+    scope: {account: '='},
+    templateUrl: 'accounts/embedded_account.html',
+    replace: true
+  };
 })
 .controller('AccountCtrl', function (account, recentStories) {
   this.current = account;

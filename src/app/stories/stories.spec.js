@@ -28,7 +28,7 @@ describe('prx.stories', function () {
   describe ('story state', function () {
     var state, $injector, ngHal;
     beforeEach(inject(function ($state, _$injector_, _ngHal_) {
-      state = $state.get('story');
+      state = $state.get('story.show');
       $injector = _$injector_;
       ngHal = _ngHal_;
     }));

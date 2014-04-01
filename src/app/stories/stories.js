@@ -1,9 +1,17 @@
 angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx.url-translate', 'prx.accounts'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
-  $stateProvider.state('story', {
+  $stateProvider
+  .state('story', {
+    abstract: true
+  })
+  .state('story.show', {
     url: '/stories/:storyId?autoPlay',
-    controller: 'StoryCtrl as story',
-    templateUrl: 'stories/story.html',
+    views: {
+      '@': {
+        controller: 'StoryCtrl as story',
+        templateUrl: 'stories/story.html'
+      }
+    },
     title: ['story', function (story) {
       return ['Stories', story.title];
     }],
@@ -16,7 +24,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
       }]
     }
   })
-  .state('story.details', {
+  .state('story.show.details', {
     url: '/details',
     title: "Details",
     views: {
@@ -43,9 +51,9 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
   urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
 
   ngHalProvider.setRootUrl(FEAT.apiServer)
-  .mixin('http://meta.prx.org/model/story', ['resolved', 'playerHater', function (resolved, playerHater) {
+  .mixin('http://meta.prx.org/model/story/*any', ['resolved', 'playerHater', function (resolved, playerHater) {
     resolved.$audioFiles = resolved.follow('prx:audio');
-    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
+    resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
     return {
       sound: function () {
         if (typeof this.$sound === 'undefined') {
@@ -98,6 +106,14 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
       return this.city + ', ' + this.state;
     }
   });
+})
+.directive('prxStory', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'stories/embedded_story.html',
+    scope: {story: '='}
+  };
 })
 .controller('StoryCtrl', function (story, account, $stateParams) {
   this.current = story;

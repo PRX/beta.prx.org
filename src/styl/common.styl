@@ -1,0 +1,52 @@
+main {
+  padding-top: action-bar-height;
+}
+
+section {
+  clear: both;
+}
+
+article > section, article > aside > section {
+  padding: 15px;
+}
+
+article > section + section, article > section + aside {
+  border-top: 1px solid lightest-grey;
+}
+
+// prx-img directive
+.img {
+  position: relative;
+  overflow: hidden;
+  background-color: lightest-grey;
+  transform: translateX(0);
+  div {
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0;
+  }
+  img {
+    display: none;
+  }
+  &.loaded div {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+}
+
+a.full-site {
+  absolute: bottom 10px left; right: 0;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-top: 1px solid lightest-grey;
+  border-bottom: 1px solid lightest-grey;
+  &:hover, &:active {
+    text-decoration: none;
+    background-color: blue;
+    color: white;
+    border-color: darker-blue;
+  }
+}

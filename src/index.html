@@ -20,15 +20,15 @@
   <div ng-show="app.modalVisible" class="modalContainer">
     <div ui-view="modal" class="modal"></div>
   </div>
-  <div ui-view>
+  <main ui-view>
     <prx-loading-bar></prx-loading-bar>
-  </div>
+  </main>
   <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a>
   <div class="persistent-player" ng-class="{show: !!app.player.nowPlaying}">
     <div class="scrubber-track"><div class="scrubber" ng-style="{width: app.player.nowPlaying.position / app.player.nowPlaying.story.length / 10 + '%'}"></div></div>
-    <div class="toggle-button" ng-class="{loading: app.player.nowPlaying.story.loading(), play: app.player.nowPlaying.paused, pause: !app.player.nowPlaying.paused}" ng-click="app.player.togglePlayback()">
+    <button class="toggle-button" ng-class="{loading: app.player.nowPlaying.story.loading(), play: app.player.nowPlaying.paused, pause: !app.player.nowPlaying.paused}" ng-click="app.player.togglePlayback()">
       <small>{{app.player.nowPlaying.position | timeCode }}</small>
-    </div>
+    </button>
     <prx-img src="app.player.nowPlaying.story.imageUrl" class="thumb"></prx-img>
     <div class="about">
       <div class="title">{{app.player.nowPlaying.story.title}}</div>

@@ -6,7 +6,10 @@
 @import "typography.styl";
 @import "header.styl";
 @import "modal.styl";
+@import "player.styl";
 @import "profile.styl";
+@import "common.styl";
+@import "story.styl";
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
 
 html {
@@ -23,448 +26,157 @@ body.with-player {
   a.full-site {
     bottom: 75px;
   }
-  div[ui-view] {
+  main {
     padding-bottom: 75px;
   }
 }
 
-div[ui-view] {
-  padding-top: action-bar-height;
-}
-
-.open {
-
-  header, div[ui-view], .persistent-player {
-    transition: transform 0.2s;
-    transform: translateX(250px);
-    width: 100%;
-  }
-
-  body {
-    width: 100%;
-  }
-
-  div.drawer {
-    transition: transform 0.2s;
-    transform: none;
-  }
-}
-
-.open-add, .open-remove {
-  transition-duration: 0.2s;
-}
-
-.open-add-active {
-  div[ui-view] {
-    background: rgb(245, 244, 242);
-  }
-  div.drawer {
-    transform: none;
-  }
-}
-
-.open-remove-active {
-  transition-duration: 0.2s;
-
-  header, div[ui-view], .persistent-player {
-    transition: transform 0.2s;
-    transform: none;
-    width: 100%;
-  }
-  div.drawer {
-    transition: transform 0.2s;
-    transform: translateX(-250px);
-  }
-}
-
-@keyframes spinner-outside {
-  0% {
-    transform: rotate(0deg);
-    animation-timing-function: linear;
-  }
-  100% {
-    transform: rotate(1080deg);
-    animation-timing-function: linear;
-  }
-}
-
-@keyframes spinner-inside {
-  0% {
-    transform: rotate(0deg);
-    animation-timing-function: linear;
-  }
-  100% {
-    transform: rotate(720deg);
-    animation-timing-function: linear;
-  }
-}
-
-section.player, .persistent-player {
-  .toggle-button {
-    position: relative;
-    z-index: 10;
-    button-orange();
-    width: 70px;
-    height: 70px;
-    display: block;
-    font-size: 40px;
-    line-height: 70px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    &.play {
-      image: '/assets/images/bt_play.png' auto 25px;
-    }
-    &.pause {
-      image: '/assets/images/bt_pause.png' auto 25px;
-    }
-    &.loading {
-      image: none;
-      &:before {
-        content: '';
-        absolute: top 50% right 50%;
-        width: 25px; height: 25px;
-        margin: -12.5px -12.5px 0;
-        image: '/assets/images/bt_loading_outer.png' auto 25px;
-        animation-name: spinner-outside;
-        animation-duration: 3s;
-        animation-iteration-count: infinite;
-        animation-play-state: running;
-      }
-      &:after {
-        content: '';
-        absolute: top 50% right 50%;
-        width: 17px; height: 17px;
-        margin: -8.5px -8.5px 0;
-        image: '/assets/images/bt_loading_inner.png' auto 17px;
-        animation-name: spinner-inside;
-        animation-duration: 3s;
-        animation-direction: reverse;
-        animation-iteration-count: infinite;
-        animation-play-state: running;
-      }
-    }
-    float: left;
-    margin-right: 10px;
-    margin-top: 5px;
-  }
-}
-
-.persistent-player {
-  display: none;
-  flex-direction: row;
-  height: 67px;
-  fixed: bottom left; right: 0px;
-  z-index: 1000;
-  padding-top: 2px;
-
-
-  &:before {
-    content: '';
-    background-color: orange;
-    absolute: bottom left;
-    width: 65px; height: 65px;
-    background-position: bottom left;
-    background-repeat: no-repeat;
-    image: '/assets/images/player_bars.png' 65px;
-  }
-
-  background: darkest-blue;
-  .scrubber-track {
-    absolute: top left; right: 0;
-    height: 2px;
-    background: lightest-grey;
-    .scrubber {
-      width: 0;
-      height: 100%;
-      border-right: 1px solid orange;
-      background-color: dark-orange;
-    }
-  }
-  .toggle-button {
-    width: 65px;
-    height: 65px;
-    line-height: 65px;
-    font-size: 22px;
-    margin: 0;
-    flex: none;
-    background-color: transparent;
-
-    small {
-      absolute: bottom left;
-      width: 65px;
-      font-size: 11px;
-      line-height: 14px;
-      font-weight: 300;
-      color: darkest-blue;
-    }
-  }
-  .thumb {
-    margin: 5px 10px;
-    width: 55px;
-    height: 55px;
-    float: left;
-    flex: none;
-    background: light-blue;
-    background-position: center;
-    background-size: cover;
-  }
-
-  .about {
-    height: 100%;
-    font-size: 11px;
-    line-height: 15px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    .byline {
-      font-weight: 300;
-    }
-  }
-
-  .actions {
-    flex: none;
-    width: 25px;
-    li {
-      button-blue(true);
-      margin: 0 0 5px;
-      height: 25px;
-      width: 25px;
-      &:before {
-        font-size: 10px;
-        line-height: 25px;
-      }
-
-      &.share:before {
-        content: '\f064';
-      }
-      &.love:before {
-        content: '\f004';
-      }
-    }
-  }
-}
-
-.persistent-player.show-add {
-  transform: translateY(65px);
-  transition: transform 0.2s;
-}
-
-.persistent-player.show-add-active {
-  display: block;
-  transform: translateY(0px);
-}
-
-.persistent-player.show, .persistent-player.show-add {
-  display: flex;
-}
-
-section.player {
-  margin-top: 0;
-  background-image: url('/assets/images/tl_blue_mics.png');
-  padding: 14px;
-  height: 150px;
-  position: relative;
-
-  &:before {
-    content: '';
-    display: block;
-    background-color: rgba(dark-grey, 0.3);
-    absolute: top left;
-    right: 0; bottom: 0;
-  }
-
-  .category {
-    position: relative;
-    z-index: 10;
-    color: lightest-grey;
-    text-transform: uppercase;
-    font-size: 11px;
-    line-height: 10px;
-    margin-left: 81px;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-  }
-
-  h1 {
-    position: relative;
-    z-index: 10;
-    color: white;
-    font-weight: 300;
-    height: 80px;
-    padding-bottom: 5px;
-    overflow: hidden;
-  }
-
-  h4 {
-    color: white;
-    float: left;
-    font-weight: 300;
-    line-height: 26px;
-    padding-top: 5px;
-    margin-right: 10px;
-    white-space: nowrap;
-    position: relative;
-    z-index: 10;
-    strong {
-      font-weight: bold;
-    }
-
-  }
-}
-
-div[ui-view] > .loading {
-  fixed: top 50% left 20px;
-  right: 20px;
-  height: 22px;
-  margin-top: -5px;
-  background: lightest-grey;
-
-  &:before {
-    color: white;
-    content: 'Loading...';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    text-align: center;
-    line-height: 22px;
-    font-size: 11px;
-    text-transform: uppercase;
-  }
-
-  .bar {
-    height: 100%;
-  }
-}
-
-div[ui-view=''] ul.actions {
-  background: lightest-grey;
-  list-style-type: none;
-  padding: 8px 14px;
-  display: -webkit-flex;
-  flex-wrap: nowrap;
-  align-content: center;
-  li {
-    button-blue(true);
-    flex-grow: 1;
-    flex-basis: 1px;
-    margin-left: 10px;
-    height: 25px;
-    line-height: 25px;
-    font-size: 11px;
-    font-weight: 300;
-
-    &.buy {
-      button-orange(true);
-    }
-    &:first-child {
-      margin-left: 0;
-    }
-    .more {
-      position: absolute;
-      right: 8px;
-      height: 25px;
-      line-height: 25px;
-    }
-  }
-}
-
-section.body {
-  padding: 0 14px;
-  margin: 20px 0;
-  article {
-    &:before {
-      content: '';
-      display: block;
-      margin: 20px -14px 20px;
-      border-top: 1px solid lightest-grey;
-    }
-
-    &:first-child:before {
-      display: none;
-      margin: 0;
-    }
-    // p {
-    //   font-size: 14px;
-    //   line-height: 22px;
-    //   font-weight: 300;
-    // }
-  }
-}
-
-.img {
-  position: relative;
-  overflow: hidden;
-  background-color: lightest-grey;
-  transform: translateX(0);
-
-  div {
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0;
-  }
-
-  img {
-    display: none;
-  }
-
-  &.loaded div {
-    opacity: 1;
-    transition: opacity 0.2s;
-  }
-
-}
-
-.account {
-  .img {
-    float: left;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 3px solid lightest-grey;
-    margin-right: 15px;
-    margin-bottom: 12px;
-  }
-  h2 {
-    line-height: 70px;
-  }
-  .path, .location {
-    font-size: 12px;
-    clear: both;
-    margin-bottom: 8px;
-  }
-}
-
-.details  {
-  p a {
-    font-weight: bold;
-  }
-  dl {
-    margin-top: 10px;
-    dt {
-      display: inline-block;
-    }
-    dd {
-      display: inline-block;
-      font-weight: 600;
-      margin-left: 5px;
-    }
-  }
-}
-
-a.full-site {
-  absolute: bottom 10px left; right: 0;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  border-top: 1px solid lightest-grey;
-  border-bottom: 1px solid lightest-grey;
-  &:hover, &:active {
-    text-decoration: none;
-    background-color: blue;
-    color: white;
-    border-color: darker-blue;
-  }
-}
+//
+// .open {
+//
+//   header, div[ui-view], .persistent-player {
+//     transition: transform 0.2s;
+//     transform: translateX(250px);
+//     width: 100%;
+//   }
+//
+//   body {
+//     width: 100%;
+//   }
+//
+//   div.drawer {
+//     transition: transform 0.2s;
+//     transform: none;
+//   }
+// }
+//
+// .open-add, .open-remove {
+//   transition-duration: 0.2s;
+// }
+//
+// .open-add-active {
+//   div[ui-view] {
+//     background: rgb(245, 244, 242);
+//   }
+//   div.drawer {
+//     transform: none;
+//   }
+// }
+//
+// .open-remove-active {
+//   transition-duration: 0.2s;
+//
+//   header, div[ui-view], .persistent-player {
+//     transition: transform 0.2s;
+//     transform: none;
+//     width: 100%;
+//   }
+//   div.drawer {
+//     transition: transform 0.2s;
+//     transform: translateX(-250px);
+//   }
+// }
+//
+//
+//
+//
+//
+//
+// div[ui-view] > .loading {
+//   fixed: top 50% left 20px;
+//   right: 20px;
+//   height: 22px;
+//   margin-top: -5px;
+//   background: lightest-grey;
+//
+//   &:before {
+//     color: white;
+//     content: 'Loading...';
+//     width: 100%;
+//     height: 100%;
+//     position: absolute;
+//     text-align: center;
+//     line-height: 22px;
+//     font-size: 11px;
+//     text-transform: uppercase;
+//   }
+//
+//   .bar {
+//     height: 100%;
+//   }
+// }
+//
+// div[ui-view=''] ul.actions {
+//   background: lightest-grey;
+//   list-style-type: none;
+//   padding: 8px 14px;
+//   display: -webkit-flex;
+//   flex-wrap: nowrap;
+//   align-content: center;
+//   li {
+//     button-blue(true);
+//     flex-grow: 1;
+//     flex-basis: 1px;
+//     margin-left: 10px;
+//     height: 25px;
+//     line-height: 25px;
+//     font-size: 11px;
+//     font-weight: 300;
+//
+//     &.buy {
+//       button-orange(true);
+//     }
+//     &:first-child {
+//       margin-left: 0;
+//     }
+//     .more {
+//       position: absolute;
+//       right: 8px;
+//       height: 25px;
+//       line-height: 25px;
+//     }
+//   }
+// }
+//
+// section.body {
+//   padding: 0 14px;
+//   margin: 20px 0;
+//   article {
+//     &:before {
+//       content: '';
+//       display: block;
+//       margin: 20px -14px 20px;
+//       border-top: 1px solid lightest-grey;
+//     }
+//
+//     &:first-child:before {
+//       display: none;
+//       margin: 0;
+//     }
+//     // p {
+//     //   font-size: 14px;
+//     //   line-height: 22px;
+//     //   font-weight: 300;
+//     // }
+//   }
+// }
+//
+//
+//
+// .details  {
+//   p a {
+//     font-weight: bold;
+//   }
+//   dl {
+//     margin-top: 10px;
+//     dt {
+//       display: inline-block;
+//     }
+//     dd {
+//       display: inline-block;
+//       font-weight: 600;
+//       margin-left: 5px;
+//     }
+//   }
+// }
+//
