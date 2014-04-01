@@ -14,7 +14,7 @@ angular.module('prx', ['ngAnimate',
   'prx.appCtrl',
   'prx.title'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
-  $analyticsProvider, $stateProvider) {
+  $analyticsProvider, $stateProvider, ngHalProvider) {
   $analyticsProvider.firstPageview(false);
   $urlRouterProvider.when('/', '/stories/73865');
   $stateProvider.state('not_found', {
@@ -23,6 +23,20 @@ angular.module('prx', ['ngAnimate',
   });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
+  ngHalProvider.mixin('http://meta.prx.org/model/:type/*splat', ['type', function (type) {
+    var stateName = type+'.show';
+    var idName = type + 'Id';
+    return {
+      stateName: type + '.show',
+      stateParams: function () {
+        if(!angular.isDefined(this.$$stateParams)) {
+          this.$$stateParams = {};
+          this.$$stateParams[idName] = this.id;
+        }
+        return this.$$stateParams;
+      }
+    };
+  }]);
 });
 angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
 .controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
@@ -126,6 +140,31 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       };
       scope.openDrawer = function () {
         $rootScope.drawerOpen = true;
+      };
+    }
+  };
+})
+.directive('uiSref', function ($compile) {
+  return {
+    restrict: 'A',
+    priority: 1000,
+    compile: function () {
+      return {
+        pre: function (scope, element, attrs) {
+          var obj = false, newState = attrs.uiSref;
+          try {
+            obj = scope.$eval(attrs.uiSref);
+          } catch (e) { return; }
+          if (obj && angular.isFunction(obj.stateName)) {
+            newState = obj.stateName();
+          } else if (obj && angular.isString(obj.stateName)) {
+            newState = obj.stateName;
+          }
+          if (obj && angular.isFunction(obj.stateParams)) {
+            newState = newState + '('+JSON.stringify(obj.stateParams())+')';
+          }
+          attrs.uiSref = newState;
+        }
       };
     }
   };
