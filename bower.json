@@ -9,6 +9,7 @@
     "angular-ui-utils": "~0.1",
     "angular-touch": " ~1.2",
     "ngPlayerHater": "0.0.7",
-    "angulartics": "~0.12"
+    "angulartics": "~0.12",
+    "angular-sanitize": "~1.2"
   }
 }
