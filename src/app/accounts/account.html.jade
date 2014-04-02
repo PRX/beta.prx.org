@@ -1,0 +1,8 @@
+article.account
+  #hero
+    prx-img(src="account.current.imageUrl")
+    h1(ng-bind="account.current.name")
+    .bio(ng-bind-html="account.current.description")
+  section
+    h2 Recent Stories
+    prx-story(ng-repeat="story in account.recentStories" story="story")

@@ -1,21 +1,24 @@
-section.player
-  .category audio story
-  .toggle-button(ng-class="{loading: story.loading(), play: story.paused(), pause: !story.paused()}", ng-click="story.togglePlay()", analytics-on="click", analytics-event="play")
-  h1 {{story.title}}
-  h4 by <strong>{{account.name}}</strong>
-  h4 Length: {{story.length * 1000 | timeCode: 'short' }}
-ul.actions(ng-flag="lovesharebuy")
-  li.love.fa.fa-heart Love
-  li.share.fa.fa-share Share
-  li.buy.fa.fa-shopping-cart
-    | Buy
-    span.fa.fa-sort-asc.more
-section.body
-  article.details
+article.story
+  #hero
+    .category audio story
+    button(ng-class="{loading: story.current.loading(), play: story.current.paused(), pause: !story.current.paused()}", ng-click="story.current.togglePlay()", analytics-on="click", analytics-event="play")
+    h1 {{story.current.title}}
+    address.author
+      | by #{''}
+      a(rel="author" ui-sref="story.account") {{story.account.name}}
+    span.duration
+      | Length: #{''}
+      time(datetime="P{{story.length}}S") {{story.current.length * 1000 | timeCode: 'short' }}
+    ul.actions(ng-flag="lovesharebuy")
+      li.love.fa.fa-heart Love
+      li.share.fa.fa-share Share
+      li.buy.fa.fa-shopping-cart
+        | Buy
+        span.fa.fa-sort-asc.more
+  section.details
+    h2 Details
     p
-      | {{story.shortDescription}} #{''}
-      a.unbreakable(ui-sref=".details" ng-if="story.description") (View Full Description)
-  article.account
-    prx-img(src="account.imageUrl")
-    h2(ng-bind="account.name")
-    .location(ng-bind="account.address")
+      | {{story.current.shortDescription}} #{''}
+      a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
+  aside
+    prx-account(account="story.account")

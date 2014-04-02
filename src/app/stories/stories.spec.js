@@ -5,9 +5,9 @@ describe('prx.stories', function () {
     it ('attaches the story and accounts injected to $scope', inject(function ($controller) {
       var sigil = 'sigil';
       var scope = {};
-      $controller('StoryCtrl', {story: sigil, account: sigil, $scope: scope});
-      expect(scope.story).toBe(sigil);
-      expect(scope.account).toBe(sigil);
+      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, $scope: scope});
+      expect(controller.current).toBe(sigil);
+      expect(controller.account).toBe(sigil);
     }));
 
     it ('starts playback of the story if autoPlay is requested', inject(function ($controller) {
@@ -20,15 +20,15 @@ describe('prx.stories', function () {
   describe ('StoryDetailCtrl', function () {
     it ('attaches the story injected to $scope', inject(function ($controller) {
       var foo = 'asd', scope = {};
-      $controller('StoryDetailCtrl', {story: foo, $scope: scope});
-      expect(scope.story).toBe(foo);
+      var ctrl = $controller('StoryDetailCtrl', {story: foo, $scope: scope});
+      expect(ctrl.current).toBe(foo);
     }));
   });
 
   describe ('story state', function () {
     var state, $injector, ngHal;
     beforeEach(inject(function ($state, _$injector_, _ngHal_) {
-      state = $state.get('story');
+      state = $state.get('story.show');
       $injector = _$injector_;
       ngHal = _ngHal_;
     }));

@@ -1,0 +1,62 @@
+article.account {
+  background: offwhite;
+
+  #hero {
+    background-color: white;
+
+    .img {
+      border-radius: 50px;
+      width: 70px;
+      height: 70px;
+      border: 2px solid light-grey;
+      float: left;
+      margin: 10px;
+    }
+    h1 {
+      padding-top: 15px;
+      padding-bottom: 5px;
+      background-color: offwhite;
+    }
+
+    &:after {
+      content: ' ';
+      display: block;
+      clear: both;
+    }
+
+    .bio {
+      clear: both;
+      padding: 10px;
+    }
+  }
+
+  & > section {
+    border-top: none;
+    & > h2 {
+      border-bottom: 1px solid black;
+      margin-bottom: 10px;
+      line-height: 1.2em;
+    }
+  }
+
+}
+
+section.account {
+  .img {
+    float: left;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid lightest-grey;
+    margin-right: 15px;
+    margin-bottom: 12px;
+  }
+  h2 {
+    line-height: 70px;
+  }
+  .path, .location {
+    font-size: 12px;
+    clear: both;
+    margin-bottom: 8px;
+  }
+}

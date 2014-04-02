@@ -1,0 +1,87 @@
+article.story {
+  #hero {
+    padding: 10px;
+    color: white;
+    font-weight: lighter;
+    font-size: 12px;
+    background-image: url('/assets/images/tl_blue_mics.png');
+
+    a {
+      color: white;
+      font-weight: normal;
+    }
+
+    .category {
+      position: relative;
+      z-index: 10;
+      color: lightest-grey;
+      text-transform: uppercase;
+      font-size: 11px;
+      line-height: 10px;
+      margin-left: 81px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+    }
+
+    h1 {
+      color: white;
+      position: relative;
+      z-index: 10;
+      font-weight: 300;
+      height: 80px;
+      padding-bottom: 5px;
+      overflow: hidden;
+    }
+
+    button {
+      @extend $player-button;
+      border: none;
+      float: left;
+      margin-right: 10px;
+      margin-top: 5px;
+    }
+
+    address {
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+
+  section.details {
+    h2 { display: none; }
+  }
+}
+
+section.story {
+  position: relative;
+  font-size: 10px;
+
+  & > a {
+    float: left;
+    .img {
+      width: 70px;
+      height: 70px;
+      margin-right: 10px;
+    }
+  }
+
+  h3 {
+    line-height: 18px;
+    font-size: 16px;
+    padding-top: 12px;
+    height: 54px;
+    overflow: hidden;
+  }
+
+  .category {
+    position: absolute;
+    color: light-grey;
+    font-size: 8px;
+    line-height: 10px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    top: 0px;
+    left: 80px;
+  }
+}

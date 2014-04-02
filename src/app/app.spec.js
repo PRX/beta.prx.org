@@ -10,32 +10,32 @@ describe('prx', function () {
     }));
 
     it ('attaches a player', function () {
-      expect($scope.player).toBeDefined();
+      expect(ctrl.player).toBeDefined();
     });
 
     it ('hides the modal by default', function () {
-      expect($scope.$apply('modal.visible')).toBeFalsy();
+      expect(ctrl.modalVisible).toBeFalsy();
     });
 
     it ('quickly shows the modal if loading directly to one', function () {
       $scope.$emit('$stateChangeStart', {data: {modal: true}}, {}, {abstract: true});
-      expect($scope.$apply('modal.visible')).toBeTruthy();
+      expect(ctrl.modalVisible).toBeTruthy();
     });
 
     it ('does not quickly show the modal if coming from another state', function () {
       $scope.$emit('$stateChangeStart', {data: {modal: true}}, {}, {abstract: false});
-      expect($scope.$apply('modal.visible')).toBeFalsy();
+      expect(ctrl.modalVisible).toBeFalsy();
     });
 
     it ('shows the modal if we have moved to a modal state', function () {
       $scope.$emit('$stateChangeSuccess', {data: {modal: true}});
-      expect($scope.$apply('modal.visible')).toBeTruthy();
+      expect(ctrl.modalVisible).toBeTruthy();
     });
 
     it ('hides the modal if we have moved to a non-modal state', function () {
-      $scope.modal.visible = true;
+      ctrl.modalVisible = true;
       $scope.$emit('$stateChangeSuccess', {});
-      expect($scope.$apply('modal.visible')).toBeFalsy();
+      expect(ctrl.modalVisible).toBeFalsy();
     });
   });
 
