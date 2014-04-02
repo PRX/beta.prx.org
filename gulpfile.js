@@ -30,6 +30,9 @@ var rework = require('gulp-rework');
 var moveMe = require('rework-move-media');
 var imgmin = require('gulp-imagemin');
 var jshint = require('jshint').JSHINT;
+var Notify = require('node-notifier');
+var instWd = require('gulp-protractor').webdriver_update;
+var prtrct = require('gulp-protractor').protractor;
 var feats  = require('./lib/gulp-featureflags');
 
 var buildDir = c.buildDir;
@@ -44,6 +47,8 @@ var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
 var featsDev = cwd + '/config/flags.dev.json';
 var featDist = cwd + '/config/flags.release.json';
+
+var notifier = new Notify({});
 
 function bStyl() {
   return gulp.src(c.app.stylus)
@@ -296,6 +301,7 @@ gulp.on('err', function (e) {
     gutil.log("Failure. Terminating.");
     process.exit(1);
   } else {
+    notifier.notify({message: "Error in " + e.err.plugin + ": " + e.message }, function (e, t) { });
     gutil.log(gutil.colors.red("Error in build. Continuing execution for `watch` task."));
     console.log('');
     gutil.beep();
@@ -334,6 +340,14 @@ gulp.task('coveralls', ['checkCoverage'], function (done) {
   function log (data) {
     gutil.log(data.toString().replace(/^\n|\n$/g, ''));
   }
+});
+
+gulp.task('installWebdriver', instWd);
+
+gulp.task('protractor', ['installWebdriver', 'compile', 'compileServer'], function () {
+  return gulp.src(c.e2eSpecs)
+  .pipe(prtrct({configFile: c.protractorCfg, baseUrl: 'http://localhost:8080'}))
+  .on('error', function (e) { throw e; });
 });
 
 gulp.task('ci', ['checkCoverage', 'coveralls']);
