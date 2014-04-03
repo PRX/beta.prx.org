@@ -34,7 +34,11 @@ angular.module('prx.accounts', ['ui.router', 'angular-hal'])
       resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
       resolved.address = resolved.follow('prx:address');
     }
-  ]);
+  ]).mixin('http://meta.prx.org/model/address', {
+    toString: function () {
+      return this.city + ', ' + this.state;
+    }
+  });
 })
 .directive('limitToHtml', function ($timeout) {
   function removeEmptyTrailers (element) {
