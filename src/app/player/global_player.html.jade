@@ -1,0 +1,12 @@
+.persistent-player(ng-class="{show: !!app.player.nowPlaying}")
+  .scrubber-track
+    .scrubber(ng-style="{width: app.player.nowPlaying.position / app.player.nowPlaying.story.length / 10 + '%'}")
+  button.toggle-button(ng-class="{loading: app.player.nowPlaying.story.loading(), play: app.player.nowPlaying.paused, pause: !app.player.nowPlaying.paused}", ng-click="app.player.togglePlayback()")
+    small {{app.player.nowPlaying.position | timeCode }}
+  prx-img.thumb(src="app.player.nowPlaying.story.imageUrl")
+  .about
+    .title {{app.player.nowPlaying.story.title}}
+    .byline by {{app.player.nowPlaying.account.name}}
+  ul.actions(ng-flag="lovesharebuy")
+    li.share
+    li.love

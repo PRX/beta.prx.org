@@ -1,11 +1,17 @@
 angular.module('prx.player', ['ngPlayerHater'])
-.filter('timeCode', function () {
+.directive('prxGlobalPlayer', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'player/global_player.html'
+  };
+}).filter('timeCode', function () {
   var zero = timeCode(0);
 
   function dd(num) {
     if (num < 10) {
       return '0' + num;
-    } 
+    }
     return num;
   }
 
