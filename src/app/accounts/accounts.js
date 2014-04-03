@@ -54,6 +54,10 @@ angular.module('prx.accounts', ['ui.router', 'angular-hal'])
     }
   }
 
+  function isTextNode(node) {
+    return (node.nodeType || node[0] && node[0].nodeType) === 3;
+  }
+
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -67,7 +71,7 @@ angular.module('prx.accounts', ['ui.router', 'angular-hal'])
               while (lettersToRemove > 0) {
                 lastNode = element;
                 while (lastNode.text().length > lettersToRemove) {
-                  if (lastNode.length == 1 && lastNode[0].nodeType == 3) {
+                  if (lastNode.length == 1 && isTextNode(lastNode)) {
                     break;
                   } else {
                     lastNode = lastNode.contents();
@@ -75,7 +79,7 @@ angular.module('prx.accounts', ['ui.router', 'angular-hal'])
                   }
                 }
                 var txt = lastNode.text();
-                if (lastNode[0].nodeType == 3 && (txt.length - 15) > lettersToRemove) {
+                if (isTextNode(lastNode) && (txt.length - 15) > lettersToRemove) {
                   lastNode.text(txt.substr(0, txt.length - lettersToRemove));
                   lettersToRemove = 0;
                 } else {
