@@ -1,7 +1,7 @@
 .persistent-player(ng-class="{show: !!app.player.nowPlaying}")
   .scrubber-track
     .scrubber(ng-style="{width: app.player.nowPlaying.position / app.player.nowPlaying.story.length / 10 + '%'}")
-  button.toggle-button(ng-class="{loading: app.player.nowPlaying.story.loading(), play: app.player.nowPlaying.paused, pause: !app.player.nowPlaying.paused}", ng-click="app.player.togglePlayback()")
+  prx-player-button(sound="app.player.nowPlaying")
     small {{app.player.nowPlaying.position | timeCode }}
   prx-img.thumb(src="app.player.nowPlaying.story.imageUrl")
   .about

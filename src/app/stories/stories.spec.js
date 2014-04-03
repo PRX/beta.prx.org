@@ -1,4 +1,4 @@
-describe('prx.stories', function () {
+xdescribe('prx.stories', function () {
   beforeEach(module('prx.stories', 'angular-hal-mock'));
 
   describe ('StoryCtrl', function () {

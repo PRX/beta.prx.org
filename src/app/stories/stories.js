@@ -21,6 +21,15 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
       }],
       account: ['story', function (story) {
         return story.follow('prx:account');
+      }],
+      audioUrls: ['story', function (story) {
+        return story.follow('prx:audio').then(function (files) {
+          var result = [];
+          angular.forEach(files, function (file) {
+            result.push(file.links('enclosure').url());
+          });
+          return result;
+        });
       }]
     }
   })
@@ -54,44 +63,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', 'playerHater', function (resolved, playerHater) {
     resolved.$audioFiles = resolved.follow('prx:audio');
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
-    return {
-      sound: function () {
-        if (typeof this.$sound === 'undefined') {
-          var audioFiles = [];
-          angular.forEach(this.$audioFiles, function (audioFile) {
-            audioFiles.push({url: audioFile.links('enclosure').url()});
-          });
-
-          this.$sound = playerHater.newSong.apply(playerHater, audioFiles);
-          this.$sound.story = this;
-          this.$sound.account = this.$account;
-        }
-        return this.$sound;
-      },
-      play: function () {
-        if (this.sound() == playerHater.nowPlaying) {
-          playerHater.resume();
-        } else {
-          playerHater.play(this.sound());
-        }
-      },
-      pause: function () {
-        playerHater.pause(this.sound());
-      },
-      togglePlay: function () {
-        if (this.paused()) {
-          this.play();
-        } else {
-          this.pause();
-        }
-      },
-      paused: function () {
-        return (typeof this.$sound === 'undefined' || this.$sound.paused);
-      },
-      loading: function () {
-        return typeof this.$sound !== 'undefined' && !this.$sound.paused && isNaN(this.$sound.position);
-      }
-    };
+    return { };
   }])
   .mixin('http://meta.prx.org/model/story', ['$sce', function ($sce) {
     return function (story) {
@@ -110,9 +82,14 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
     scope: {story: '='}
   };
 })
-.controller('StoryCtrl', function (story, account, $stateParams) {
+.controller('StoryCtrl', function (story, account, audioUrls, prxSoundFactory, $stateParams) {
   this.current = story;
   this.account = account;
+  this.getSound = prxSoundFactory({
+    story: story,
+    producer: account,
+    audioFiles: audioUrls
+  });
   if ($stateParams.autoPlay) {
     story.play();
   }
