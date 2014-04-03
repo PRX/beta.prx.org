@@ -17,7 +17,6 @@
   },
   "test": {
     "js": [
-      "vendor/angular/angular.js",
       "src/common/angular-hal-mock.js",
       "vendor/angular-mocks/angular-mocks.js"
     ]
@@ -42,9 +41,7 @@
       "vendor/angular-touch/angular-touch.min.js",
       "vendor/angular-sanitize/angular-sanitize.min.js"
     ],
-    "css": [
-      "vendor/angular/angular-csp.css"
-    ],
+    "css": [],
     "assets": [
       "vendor/soundmanager/swf/soundmanager2_flash9.swf"
     ]
