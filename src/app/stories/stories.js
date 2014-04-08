@@ -100,12 +100,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
   }])
   .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
     resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
-  }])
-  .mixin('http://meta.prx.org/model/address', {
-    toString: function () {
-      return this.city + ', ' + this.state;
-    }
-  });
+  }]);
 })
 .directive('prxStory', function () {
   return {

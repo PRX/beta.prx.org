@@ -33,6 +33,8 @@ var jshint = require('jshint').JSHINT;
 var Notify = require('node-notifier');
 var instWd = require('gulp-protractor').webdriver_update;
 var prtrct = require('gulp-protractor').protractor;
+var order  = require('gulp-order');
+var gzip   = require('gulp-gzip');
 var feats  = require('./lib/gulp-featureflags');
 
 var buildDir = c.buildDir;
@@ -139,7 +141,7 @@ gulp.task('jshint', function () {
 });
 
 gulp.task('css', ['assets'], function () {
-  return es.concat(gulp.src(c.vendor.css), bStyl())
+  return bStyl()
   .pipe(concat(fileName + '.css'))
   .pipe(gulp.dest(buildDir + '/assets/'));
 });
@@ -152,6 +154,7 @@ gulp.task('specs', ['templates', 'buildJs'], function (cb) {
   }
 
   return gulp.src(specJs, {read: false})
+    .pipe(order(['**/angular?(.*).js', '**/*.js']))
     .pipe(karma(karmaCfg)).on('error', cb);
 });
 
@@ -217,7 +220,9 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
     gulp.src(c.app.js.concat(buildDir + '/app/templates.js'))
       .pipe(ngmin())
       .pipe(feats(featDist, {strict: true, default: false}))
-  ).pipe(concat(fileName+'.js'))
+  )
+  .pipe(order(['**/angular?(.min).js', '*']))
+  .pipe(concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
   .pipe(uglify({preserveComments: 'some', outSourceMap: true}))
   .pipe(rename(function (path) {
@@ -229,8 +234,8 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
 });
 
 gulp.task('distAssets', ['css', 'assets'], function () {
-  return gulp.src(buildDir + '/assets/**/*')
-    .pipe(gulp.dest(complDir + '/assets/'));
+  return gulp.src([buildDir + '/assets/**/*.*'])
+    .pipe(gulp.dest(complDir + '/assets'));
 });
 
 gulp.task('distHtml', function () {
@@ -246,12 +251,31 @@ gulp.task('distHtml', function () {
 
 gulp.task('testDist', function () {
   var karmaCfg = {configFile: c.karmaCfg, action: 'run', reporters: 'dots', browsers:['PhantomJS']};
-  return gulp.src(c.test.js.concat(complDir+"/**/*.js", c.app.specs), {read: false})
+  return gulp.src([complDir+"/**/*.min.js"].concat(c.test.js, c.app.specs), {read: false})
     .pipe(karma(karmaCfg));
 });
 
+gulp.task('cacheBust', function (done) {
+  var cachebust = new require('gulp-cachebust')();
+  gulp.src(complDir + '/assets/**/*.*')
+    .pipe(cachebust.resources())
+    .pipe(gulp.dest(complDir + '/assets'))
+    .on('end', function () {
+      gulp.src(complDir + '/*.html')
+      .pipe(cachebust.references())
+      .pipe(gulp.dest(complDir))
+      .on('end', done);
+    });
+});
+
+gulp.task('compressDist', function () {
+  return gulp.src(complDir + "/**/*.*")
+  .pipe(gzip())
+  .pipe(gulp.dest(complDir));
+});
+
 gulp.task('compile', function (cb) {
-  runSeq('clean', 'dist', 'testDist', cb);
+  runSeq('clean', 'dist', 'testDist', 'cacheBust', 'compressDist', cb);
 });
 
 gulp.task('compileServer', function () {
@@ -289,6 +313,7 @@ gulp.task('watch', ['build_'], function (cb) {
   });
 
   gulp.src(specJs, {read: false})
+    .pipe(order(['**/angular?(.*).js', '**/*.js']))
     .pipe(karma({configFile: c.karmaCfg, action: 'watch'}));
 
   gulp.watch(allAppJs.concat(featsDev), ['buildJs']);
