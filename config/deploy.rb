@@ -3,7 +3,7 @@ lock '3.1.0'
 
 set :application, 'prx.org-frontend'
 set :repo_url, 'git://github.com/PRX/PRX.org-frontend.git'
-set :linked_dirs, %w{node_modules vendor}
+set :linked_dirs, %w{node_modules}
 set :default_env, { path: "/opt/node/current/bin:$PATH" }
 
 namespace :deploy do
