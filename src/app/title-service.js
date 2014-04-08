@@ -6,7 +6,8 @@ angular.module('prx.title', ['ui.router'])
     setPrefix: setPrefix,
     toString: toString
   };
-  $rootScope.$on('$stateChangeSuccess', function () {
+
+  function setTitle () {
     var titles = [], cState = $state.$current;
     while (cState) {
       if (cState.self.title) {
@@ -22,7 +23,9 @@ angular.module('prx.title', ['ui.router'])
     titleService.parts.length = titleService.prefix ? 1 : 0;
     [].push.apply(titleService.parts, titles);
     titleService.string = titleService.parts.join(' » ');
-  });
+  }
+
+  $rootScope.$on('$stateChangeSuccess', setTitle);
 
   return titleService;
 

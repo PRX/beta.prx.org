@@ -18,6 +18,7 @@ angular.module('prx', ['ngAnimate',
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider, ngHalProvider) {
   $analyticsProvider.firstPageview(false);
+  $analyticsProvider.virtualPageviews(false);
   $urlRouterProvider.when('/', '/stories/73865');
   $stateProvider.state('not_found', {
     url: '/not_found',
@@ -39,6 +40,11 @@ angular.module('prx', ['ngAnimate',
       }
     };
   }]);
+}).run(function ($rootScope, $location, $analytics, $timeout) {
+  $rootScope.$on('$stateChangeSuccess', function () {
+    var url = $analytics.settings.pageTracking.basePath + $location.url();
+    $timeout(function () {  $analytics.pageTrack(url); });
+  });
 });
 angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
 .controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
