@@ -1,4 +1,4 @@
-angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx.url-translate', 'prx.accounts'])
+angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate', 'prx.accounts'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -26,7 +26,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
         return story.follow('prx:audio').then(function (files) {
           var result = [];
           angular.forEach(files, function (file) {
-            result.push(file.links('enclosure').url());
+            result.push({id: file.id, url: file.links('enclosure').url()});
           });
           return result;
         });
@@ -60,18 +60,8 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
   urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
 
   ngHalProvider.setRootUrl(FEAT.apiServer)
-  .mixin('http://meta.prx.org/model/story/*any', ['resolved', 'playerHater', function (resolved, playerHater) {
-    resolved.$audioFiles = resolved.follow('prx:audio');
+  .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
-    return { };
-  }])
-  .mixin('http://meta.prx.org/model/story', ['$sce', function ($sce) {
-    return function (story) {
-      story.description = $sce.trustAsHtml(story.description);
-    };
-  }])
-  .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
-    resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
   }]);
 })
 .directive('prxStory', function () {
@@ -82,7 +72,8 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
     scope: {story: '='}
   };
 })
-.controller('StoryCtrl', function (story, account, audioUrls, prxSoundFactory, $stateParams) {
+.controller('StoryCtrl', function (story, account, audioUrls,
+  prxSoundFactory, $stateParams, prxPlayer) {
   this.current = story;
   this.account = account;
   this.getSound = prxSoundFactory({
@@ -91,7 +82,7 @@ angular.module('prx.stories', ['ui.router', 'angular-hal', 'ngPlayerHater', 'prx
     audioFiles: audioUrls
   });
   if ($stateParams.autoPlay) {
-    story.play();
+    prxPlayer.play(this.getSound());
   }
 })
 .controller('StoryDetailCtrl', function (story) {

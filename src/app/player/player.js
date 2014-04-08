@@ -1,21 +1,9 @@
-angular.module('prx.player', ['ngPlayerHater'])
-.directive('prxGlobalPlayer', function () {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'player/global_player.html'
-  };
-})
-.factory('prxSoundFactory', function (playerHater) {
+angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
+.factory('prxSoundFactory', function (smSound) {
   return function (options) {
     return function getSound () {
       if (!getSound.sound) {
-        var specs = [];
-        angular.forEach(options.audioFiles, function (fileUrl) {
-          specs.push({url: fileUrl});
-        });
-
-        getSound.sound = sound = playerHater.newSong.apply(playerHater, specs);
+        getSound.sound = sound = smSound.createList(options.audioFiles);
         sound.producer = options.producer;
         sound.story = options.story;
       }
@@ -23,53 +11,139 @@ angular.module('prx.player', ['ngPlayerHater'])
     };
   };
 })
+.service('prxPlayer', function ($analytics) {
+  return {
+    $lastHeartbeat: 0,
+    play: function (sound) {
+      if (this.nowPlaying != sound) {
+        this.stop();
+        this.nowPlaying = sound;
+        $analytics.eventTrack('Play', {
+          category: 'Audio Player',
+          label: this.nowPlaying.story.id
+        });
+        return sound.play();
+      } else if (this.nowPlaying.paused) {
+        this.resume();
+      }
+    },
+    sendHeartbeat: function (force) {
+      if (this.nowPlaying) {
+        var position = Math.round(this.nowPlaying.position / 1000);
+        if (force || (position - this.$lastHeartbeat) >= 15) {
+          var seconds = position - this.$lastHeartbeat;
+          $analytics.eventTrack('Listen', {
+            category: 'Audio Player',
+            label: this.nowPlaying.story.id,
+            pieceId: this.nowPlaying.story.id,
+            audioFileId: this.nowPlaying.id,
+            value: seconds,
+            duration: seconds,
+            startedAt: this.$lastHeartbeat
+          });
+          this.$lastHeartbeat = position;
+        }
+      }
+    },
+    pause: function () {
+      if (!this.nowPlaying.paused) {
+        $analytics.eventTrack('Pause', {
+          category: 'Audio Player',
+          label: this.nowPlaying.story.id
+        });
+        this.sendHeartbeat(true);
+        return this.nowPlaying.pause();
+      }
+    },
+    resume: function () {
+      if (this.nowPlaying) {
+        $analytics.eventTrack('Resume', {
+          category: 'Audio Player',
+          label: this.nowPlaying.story.id
+        });
+        this.nowPlaying.resume();
+      }
+    },
+    progress: function () {
+      if (!this.nowPlaying) {
+        return 0;
+      }
+      this.sendHeartbeat();
+      return Math.round(this.nowPlaying.position /
+        this.nowPlaying.story.length) / 10 + '%';
+    },
+    stop: function () {
+      if (this.nowPlaying) {
+        $analytics.eventTrack('Stop', {
+          category: 'Audio Player',
+          label: this.nowPlaying.story.id
+        });
+        this.nowPlaying.stop();
+      }
+    }
+  };
+})
+.directive('prxGlobalPlayer', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    controller: 'GlobalPlayerCtrl',
+    controllerAs: 'player',
+    templateUrl: 'player/global_player.html'
+  };
+})
 .directive('prxPlayerButton', function ($controller) {
   return {
     restrict: 'E',
     replace: true,
+    scope: true,
     templateUrl: 'player/button.html',
     link: function (scope, element, attrs) {
-      var sound = scope.$eval(attrs.sound);
-      function soundFactory () { return soundFactory.sound; }
-      if (!angular.isFunction(sound)) {
-        soundFactory.sound = sound;
-        sound = soundFactory;
-      }
+      var soundFactory = function soundFactory () {
+        if (!soundFactory.sound) {
+          soundFactory.sound = soundFactory.factory;
+        }
+        while(angular.isFunction(soundFactory.sound)) {
+          soundFactory.sound = soundFactory.sound();
+        }
+        return soundFactory.sound;
+      };
 
-      scope.player = $controller('PlayerCtrl', {
-        $scope: scope,
-        soundFactory: sound
+      scope.$parent.$watch(attrs.sound, function (sound) {
+        while (true) {
+          if (angular.isFunction(sound)) {
+            if (sound.sound) {
+              sound = sound.sound;
+            } else {
+              soundFactory.sound = undefined;
+              soundFactory.factory = sound;
+              break;
+            }
+          } else {
+            soundFactory.sound = sound;
+            break;
+          }
+        }
       });
 
-      element.data('$ngControllerController', scope.player);
+      scope.player = $controller('PlayerButtonCtrl', {
+        $scope: scope,
+        soundFactory: soundFactory
+      });
+
+      element.data('$prxPlayerButtonController', scope.player);
     }
   };
 })
-.controller('PlayerCtrl', function (soundFactory, playerHater, $analytics) {
+.controller('PlayerButtonCtrl', function (soundFactory, prxPlayer) {
   this.pause = function () {
-    if (soundFactory.sound) {
-      $analytics.eventTrack('Pause', {
-        category: 'Audio Player',
-        label: soundFactory().story.id
-      });
-      playerHater.pause(soundFactory.sound);
+    if (soundFactory.sound && prxPlayer.nowPlaying == soundFactory()) {
+      prxPlayer.pause(soundFactory());
     }
   };
 
   this.play = function () {
-    if (playerHater.nowPlaying == soundFactory()) {
-      $analytics.eventTrack('Resume', {
-        category: 'Audio Player',
-        label: soundFactory().story.id
-      });
-      playerHater.resume();
-    } else {
-      $analytics.eventTrack('Play', {
-        category: 'Audio Player',
-        label: soundFactory().story.id
-      });
-      playerHater.play(soundFactory());
-    }
+    prxPlayer.play(soundFactory());
   };
 
   this.toggle  = function () {
@@ -81,7 +155,7 @@ angular.module('prx.player', ['ngPlayerHater'])
   };
 
   this.loading = function () {
-    return !this.paused() && isNaN(soundFactory().position);
+    return prxPlayer.nowPlaying == soundFactory.sound && soundFactory.sound.loading;
   };
 
   this.paused  = function () {
@@ -121,4 +195,7 @@ angular.module('prx.player', ['ngPlayerHater'])
   }
 
   return timeCode;
+})
+.controller('GlobalPlayerCtrl', function (prxPlayer) {
+  this.global = prxPlayer;
 });
