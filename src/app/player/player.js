@@ -155,7 +155,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
   };
 
   this.loading = function () {
-    return prxPlayer.nowPlaying == soundFactory.sound && soundFactory.sound.loading;
+    return soundFactory.sound && soundFactory.sound.loading;
   };
 
   this.paused  = function () {
