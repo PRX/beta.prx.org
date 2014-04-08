@@ -154,6 +154,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     }
   };
 
+
   this.loading = function () {
     return soundFactory.sound && soundFactory.sound.loading;
   };

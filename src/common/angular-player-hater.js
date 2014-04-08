@@ -96,11 +96,16 @@
     Sound.prototype.error   = false;
     Sound.prototype.paused  = true;
 
-    var proxies = ('destruct load mute pause play resume setPan setPosition ' +
-    'setVolume stop toogleMute togglePause unload unmute').split(' ');
+    var proxies = ('destruct load mute pause resume setPan setPosition ' +
+    'setVolume stop toogleMute play togglePause unload unmute').split(' ');
     angular.forEach(proxies, function (proxy) {
       Sound.prototype[proxy] = makePromisedProxy(proxy);
     });
+    var play = makePromisedProxy('play');
+    Sound.prototype.play = function () {
+      this.loading = true;
+      play.apply(this, [].slice.call(arguments));
+    };
 
     function SoundList (urls, options) {
       this.id = id++;
@@ -129,6 +134,7 @@
       });
       this.$behind  = 0;
       this.$current = firstSound;
+      angular.extend(self, this.$current);
     }
 
     angular.forEach(proxies, function (proxy) {
