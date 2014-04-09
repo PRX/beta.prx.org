@@ -20,6 +20,7 @@ article.story {
       line-height: 10px;
       margin-left: 81px;
       font-weight: 600;
+      white-space: nowrap;
       letter-spacing: 0.07em;
     }
 
@@ -44,6 +45,7 @@ article.story {
     address {
       display: inline-block;
       margin-right: 10px;
+      white-space: nowrap;
     }
   }
 
@@ -69,8 +71,10 @@ section.story {
     line-height: 18px;
     font-size: 16px;
     padding-top: 12px;
-    height: 54px;
+    height: 60px;
     overflow: hidden;
+    margin-bottom: -4px;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0));
   }
 
   .category {
@@ -81,6 +85,7 @@ section.story {
     font-weight: 600;
     letter-spacing: 0.07em;
     text-transform: uppercase;
+    white-space: nowrap;
     top: 0px;
     left: 80px;
   }
