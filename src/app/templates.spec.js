@@ -16,17 +16,24 @@ describe('templates', function () {
   }));
 
   beforeEach(inject(function ($state, $rootScope, _$compile_) {
-    var fakeState = $state.get('fakeState');
-    fakeState.parent = fakeState;
-    $state.$current = fakeState;
 
+    //Set up an endless tree of states
+    $state.go('fakeState');
+    $state.$current.parent = $state.$current;
+    
     $scope = $rootScope.$new();
     $compile = _$compile_;
   }));
 
   it ('can compile all templates', inject(function ($templateCache) {
+
     angular.forEach($templateCache.toTest, function (uri) {
-      $compile($templateCache.get(uri))($scope);
+      try {
+        $compile($templateCache.get(uri))($scope);
+      } catch (e) {
+        expect(uri + " compiles").toBe(true);
+        throw e;
+      }
     });
   }));
 });

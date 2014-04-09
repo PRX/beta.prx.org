@@ -14,15 +14,13 @@ angular.module('prx', ['ngAnimate',
   'angulartics.google.analytics',
   'angulartics.prx.count',
   'prx.appCtrl',
+  'prx.errors',
+  'prx.modal',
   'prx.title'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider, ngHalProvider) {
   $analyticsProvider.firstPageview(false);
   $urlRouterProvider.when('/', '/stories/73865');
-  $stateProvider.state('not_found', {
-    url: '/not_found',
-    template: '<h1>404 - Not Found</h1>'
-  });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
   ngHalProvider.mixin('http://meta.prx.org/model/:type/*splat', ['type', function (type) {
@@ -44,14 +42,8 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
 .controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
   var app = this;
   this.player = playerHater;
-  this.modalVisible = false;
-  $scope.$on('$stateChangeStart', function (event, state, params, from) {
-    if (from.abstract) {
-      app.modalVisible = !!(state.data || {}).modal;
-    }
-  });
-  $scope.$on('$stateChangeSuccess', function (event, state) {
-    app.modalVisible = !!(state.data || {}).modal;
+
+  $scope.$on('$stateChangeSuccess', function () {
     app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
   });
 })
