@@ -66,7 +66,7 @@ describe('prx.modal', function () {
       instrumentableState.views['modal@'].template = undefined;
       instrumentableState.views['modal@'].templateUrl = function (params) {
         return '/' + params.hokey + '.html';
-      }
+      };
       $scope.$broadcast('$stateChangeStart', instrumentableState, {}, {});
       expect(instrumentableState.views['modal@'].templateUrl).not.toBeDefined();
       $injector.invoke(instrumentableState.views['modal@'].templateProvider, null, {$stateParams: {hokey: 'foo'}}).then(function (result) {
@@ -139,7 +139,7 @@ describe('prx.modal', function () {
 
   describe ('directive', function () {
     it ('compiles', inject(function ($compile) {
-      $compile('<prx-modal></prx-modal>')
+      $compile('<prx-modal></prx-modal>');
     }));
   });
 });
