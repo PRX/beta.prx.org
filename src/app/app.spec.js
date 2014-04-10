@@ -31,7 +31,7 @@ describe('prx', function () {
 
   describe ('route mixin', function () {
     var thing;
-    beforeEach(module('prx', 'angular-hal-mock'));
+    beforeEach(module('prx.modelConfig', 'angular-hal-mock'));
 
     it('sets a correct stateName and stateParams by default', inject(function (ngHal) {
       var anything = ngHal.mock('http://meta.prx.org/model/anything', {id: 'asdf'});
