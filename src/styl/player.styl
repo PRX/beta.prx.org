@@ -26,11 +26,9 @@ $player-button {
   height: 70px;
   background-position: center center;
   background-repeat: no-repeat;
+  image: '/assets/images/bt_pause.png' auto 25px;
   &.play {
     image: '/assets/images/bt_play.png' auto 25px;
-  }
-  &.pause {
-    image: '/assets/images/bt_pause.png' auto 25px;
   }
   &.loading {
     image: none;
@@ -101,16 +99,8 @@ $player-button {
     margin: 0;
     flex: none;
     background-color: transparent;
-
-    small {
-      absolute: bottom left;
-      width: 65px;
-      font-size: 11px;
-      line-height: 14px;
-      font-weight: 300;
-      color: darkest-blue;
-    }
   }
+
   .thumb {
     margin: 5px 10px;
     width: 55px;
@@ -126,13 +116,26 @@ $player-button {
     height: 100%;
     font-size: 11px;
     line-height: 15px;
-    color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     .byline {
       font-weight: 300;
     }
+
+    a {
+      color: white;
+    }
+  }
+
+  .timecode {
+    absolute: bottom left;
+    width: 65px;
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 300;
+    color: darkest-blue;
+    text-align: center;
   }
 
   .actions {

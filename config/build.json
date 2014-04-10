@@ -6,7 +6,8 @@
       "src/**/*.js",
       "!src/**/*.spec.js",
       "!src/assets/**/*.js",
-      "!src/common/angular-hal-mock.js"
+      "!src/common/angular-hal-mock.js",
+      "!src/common/sound-manager-mock.js"
     ],
     "specs":  [ "src/**/*.spec.js", "!src/**/*.e2e.spec.js" ],
     "html":   [ "src/index.html" ],
@@ -18,13 +19,13 @@
   "test": {
     "js": [
       "src/common/angular-hal-mock.js",
-      "vendor/angular-mocks/angular-mocks.js"
+      "vendor/angular-mocks/angular-mocks.js",
+      "src/common/sound-manager-mock.js"
     ]
   },
   "vendor": {
     "js": [
       "vendor/angular-ui-router/release/angular-ui-router.js",
-      "vendor/ngPlayerHater/ng-player-hater.js",
       "vendor/soundmanager/script/soundmanager2-nodebug-jsmin.js",
       "vendor/angulartics/src/angulartics.js",
       "vendor/angulartics/src/angulartics-ga.js"

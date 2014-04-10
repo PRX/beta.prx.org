@@ -20,7 +20,7 @@
   <div ng-show="app.modalVisible" class="modalContainer">
     <div ui-view="modal" class="modal"></div>
   </div>
-  <main ui-view>
+  <main ui-view autoscroll="true">
     <prx-loading-bar></prx-loading-bar>
   </main>
   <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a>
