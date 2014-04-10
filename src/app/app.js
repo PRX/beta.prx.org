@@ -16,13 +16,18 @@ angular.module('prx', ['ngAnimate',
   'prx.appCtrl',
   'prx.errors',
   'prx.modal',
+  'prx.modelConfig',
   'prx.title'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
-  $analyticsProvider, $stateProvider, ngHalProvider) {
+  $analyticsProvider, $stateProvider) {
   $analyticsProvider.firstPageview(false);
+  $analyticsProvider.virtualPageviews(false);
   $urlRouterProvider.when('/', '/stories/73865');
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
+});
+angular.module('prx.modelConfig', ['angular-hal'])
+.config(function (ngHalProvider) {
   ngHalProvider.mixin('http://meta.prx.org/model/:type/*splat', ['type', function (type) {
     var stateName = type+'.show';
     var idName = type + 'Id';
@@ -36,12 +41,20 @@ angular.module('prx', ['ngAnimate',
         return this.$$stateParams;
       }
     };
+  }])
+  .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
+    resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
   }]);
+}).run(function ($rootScope, $location, $analytics, $timeout) {
+  $rootScope.$on('$stateChangeSuccess', function () {
+    var url = $analytics.settings.pageTracking.basePath + $location.url();
+    $timeout(function () {  $analytics.pageTrack(url); });
+  });
 });
 angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
-.controller('appCtrl', function ($scope, $location, playerHater, urlTranslate) {
+.controller('appCtrl', function ($scope, $location, prxPlayer, urlTranslate) {
   var app = this;
-  this.player = playerHater;
+  this.player = prxPlayer;
 
   $scope.$on('$stateChangeSuccess', function () {
     app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
@@ -53,7 +66,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       time = Date.parse(time);
     }
     var diff = Math.floor(new Date() - time);
-    var seconds = diff / 1000;
+    var seconds = Math.round(diff / 1000);
     var minutes = seconds / 60;
     var hours = minutes / 60;
     var days = hours / 24;
@@ -115,49 +128,30 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
     }
   };
 })
-.directive('prxActionButtons', function ($window) {
-  return {
-    restrict: 'E',
-    link: function (scope, el, attrs) {
-      scope.items = [];
-    },
-    template: "<nav><a ng-repeat='item in items' ui-sref='{{item.href}}'>{{item.text}}</a></nav>"
-  };
-})
-.directive('prxDrawerButton', function ($rootScope) {
-  return {
-    restrict: 'E',
-    template: '<a class="drawer" ng-click="openDrawer()"></a>',
-    link: function (scope) {
-      $rootScope.closeDrawer = function () {
-        $rootScope.drawerOpen = false;
-      };
-      scope.openDrawer = function () {
-        $rootScope.drawerOpen = true;
-      };
-    }
-  };
-})
-.directive('uiSref', function ($compile) {
+.directive('uiSref', function () {
   return {
     restrict: 'A',
     priority: 1000,
-    compile: function () {
+    compile: function (tElem, tAttrs) {
       return {
         pre: function (scope, element, attrs) {
-          var obj = false, newState = attrs.uiSref;
+          var obj, newState = attrs.uiSref;
           try {
-            obj = scope.$eval(attrs.uiSref);
-          } catch (e) { return; }
-          if (obj && angular.isFunction(obj.stateName)) {
-            newState = obj.stateName();
-          } else if (obj && angular.isString(obj.stateName)) {
-            newState = obj.stateName;
+            obj = scope.$eval(newState);
+          } catch (e) {
+            return;
           }
-          if (obj && angular.isFunction(obj.stateParams)) {
-            newState = newState + '('+JSON.stringify(obj.stateParams())+')';
+          if (obj) {
+            if (angular.isFunction(obj.stateName)) {
+              newState = obj.stateName();
+            } else if (angular.isString(obj.stateName)) {
+              newState = obj.stateName;
+            }
+            if (angular.isFunction(obj.stateParams)) {
+              newState = newState + '('+JSON.stringify(obj.stateParams())+')';
+            }
+            attrs.uiSref = newState;
           }
-          attrs.uiSref = newState;
         }
       };
     }

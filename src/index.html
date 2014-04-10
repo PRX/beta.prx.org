@@ -18,7 +18,7 @@
     <prx-action-buttons></prx-action-buttons>
   </header>
   <prx-modal></prx-modal>
-  <main ui-view>
+  <main ui-view autoscroll="true">
     <prx-loading-bar></prx-loading-bar>
   </main>
   <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a>
@@ -30,6 +30,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-164824-46', 'prx.org');
+  ga('require', 'linkid', 'linkid.js');
   ga('require', 'displayfeatures');
 </script><% scripts.forEach(function(file) { %>
 <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>

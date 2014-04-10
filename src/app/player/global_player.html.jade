@@ -1,12 +1,13 @@
-.persistent-player(ng-class="{show: !!app.player.nowPlaying}")
+.persistent-player(ng-class="{show: !!player.global.nowPlaying}")
   .scrubber-track
-    .scrubber(ng-style="{width: app.player.nowPlaying.position / app.player.nowPlaying.story.length / 10 + '%'}")
-  button.toggle-button(ng-class="{loading: app.player.nowPlaying.story.loading(), play: app.player.nowPlaying.paused, pause: !app.player.nowPlaying.paused}", ng-click="app.player.togglePlayback()")
-    small {{app.player.nowPlaying.position | timeCode }}
-  prx-img.thumb(src="app.player.nowPlaying.story.imageUrl")
-  .about
-    .title {{app.player.nowPlaying.story.title}}
-    .byline by {{app.player.nowPlaying.account.name}}
+    .scrubber(ng-style="{width: player.global.progress() }")
+  prx-player-button(sound="player.global.nowPlaying")
+  a(ui-sref="player.global.nowPlaying.story", ng-if="player.global.nowPlaying")
+    prx-img.thumb(src="player.global.nowPlaying.story.imageUrl")
+  .timecode {{player.global.nowPlaying.position | timeCode }}
+  .about(ng-if="player.global.nowPlaying")
+    a.title(ui-sref="player.global.nowPlaying.story", ui-sref-active="current") {{player.global.nowPlaying.story.title}}
+    a.byline(ui-sref="player.global.nowPlaying.producer", ui-sref-active="current") by {{player.global.nowPlaying.producer.name}}
   ul.actions(ng-flag="lovesharebuy")
     li.share
     li.love

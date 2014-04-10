@@ -1,7 +1,7 @@
 article.story
   #hero
     .category audio story
-    button(ng-class="{loading: story.current.loading(), play: story.current.paused(), pause: !story.current.paused()}", ng-click="story.current.togglePlay()", analytics-on="click", analytics-event="play")
+    prx-player-button(sound="story.getSound")
     h1 {{story.current.title}}
     address.author
       | by #{''}

@@ -1,5 +1,5 @@
-angular.module('prx.accounts', ['ui.router', 'angular-hal'])
-.config(function ($stateProvider, ngHalProvider, urlTranslateProvider) {
+angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
+.config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('account', {
     abstract: true,
     resolve: {}
@@ -63,7 +63,7 @@ angular.module('prx.accounts', ['ui.router', 'angular-hal'])
     link: function (scope, element, attrs) {
       var altering = false;
       function notAltering () { altering = false; }
-      scope.$watch(element.html, function () {
+      scope.$watch(function () { return element.html(); }, function () {
         if (!altering) {
           altering = true;
           if (element.text().length > attrs.limitToHtml) {
