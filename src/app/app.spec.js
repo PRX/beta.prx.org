@@ -12,31 +12,6 @@ describe('prx', function () {
     it ('attaches a player', function () {
       expect(ctrl.player).toBeDefined();
     });
-
-    it ('hides the modal by default', function () {
-      expect(ctrl.modalVisible).toBeFalsy();
-    });
-
-    it ('quickly shows the modal if loading directly to one', function () {
-      $scope.$emit('$stateChangeStart', {data: {modal: true}}, {}, {abstract: true});
-      expect(ctrl.modalVisible).toBeTruthy();
-    });
-
-    it ('does not quickly show the modal if coming from another state', function () {
-      $scope.$emit('$stateChangeStart', {data: {modal: true}}, {}, {abstract: false});
-      expect(ctrl.modalVisible).toBeFalsy();
-    });
-
-    it ('shows the modal if we have moved to a modal state', function () {
-      $scope.$emit('$stateChangeSuccess', {data: {modal: true}});
-      expect(ctrl.modalVisible).toBeTruthy();
-    });
-
-    it ('hides the modal if we have moved to a non-modal state', function () {
-      ctrl.modalVisible = true;
-      $scope.$emit('$stateChangeSuccess', {});
-      expect(ctrl.modalVisible).toBeFalsy();
-    });
   });
 
   describe('prxImg directive', function () {
@@ -56,7 +31,7 @@ describe('prx', function () {
 
   describe ('route mixin', function () {
     var thing;
-    beforeEach(module('prx', 'angular-hal-mock'));
+    beforeEach(module('prx.modelConfig', 'angular-hal-mock'));
 
     it('sets a correct stateName and stateParams by default', inject(function (ngHal) {
       var anything = ngHal.mock('http://meta.prx.org/model/anything', {id: 'asdf'});

@@ -1,0 +1,29 @@
+div.error.modal
+  a.dismiss(ng-show="error.canGoBack()" ng-click="error.goBack()")
+  h1(ng-bind="error.headline()")
+  article
+    p(ng-bind="error.message()")
+    p(ng-if="error.canRetry() && !error.canGoBack()")
+      | If you'd like, you can #{''}
+      a(ng-click="error.retry()") try again
+      | .
+    p(ng-if="error.canGoBack() && !error.canRetry()")
+      | If you'd like, you can #{''}
+      a(ng-click="error.goBack()") go back and try something else
+      | .
+    p(ng-if="error.canGoBack() && error.canRetry()")
+      | If you'd like, you can #{''}
+      a(ng-click="error.goBack()") go back
+      |  or #{''}
+      a(ng-click="error.tryAgain()") try again
+      | .
+    p(ng-if="!(error.canGoBack() || error.canRetry())")
+      | If you'd like, you can #{''}
+      a(href='/') visit the home page
+      |  and try something else.
+  article.debug(ng-show="error.debuggable()")
+    p
+      | Some information about the error
+      | is included below for the
+      | purposes of debugging.
+    pre(ng-bind="error.object() | json")

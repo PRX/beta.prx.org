@@ -8,6 +8,7 @@ $_scrollbar_base {
   ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
     display:block;
     height:0;
+    width: 0;
     background-color:transparent;
   }
 }
@@ -17,6 +18,10 @@ scrollbar(track-color=scrollbar-track-color, thumb-color=scrollbar-thumb-color) 
 
   ::-webkit-scrollbar-track-piece {
     background-color: track-color;
+  }
+
+  ::-webkit-scrollbar-corner {
+    display: none;
   }
 
   ::-webkit-scrollbar-thumb:vertical, ::-webkit-scrollbar-thumb:horizontal {

@@ -17,9 +17,7 @@
     <h1><a>PRX</a></h1>
     <prx-action-buttons></prx-action-buttons>
   </header>
-  <div ng-show="app.modalVisible" class="modalContainer">
-    <div ui-view="modal" class="modal"></div>
-  </div>
+  <prx-modal></prx-modal>
   <main ui-view autoscroll="true">
     <prx-loading-bar></prx-loading-bar>
   </main>

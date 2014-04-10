@@ -14,6 +14,8 @@ angular.module('prx', ['ngAnimate',
   'angulartics.google.analytics',
   'angulartics.prx.count',
   'prx.appCtrl',
+  'prx.errors',
+  'prx.modal',
   'prx.modelConfig',
   'prx.title'])
 .config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
@@ -21,12 +23,13 @@ angular.module('prx', ['ngAnimate',
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
   $urlRouterProvider.when('/', '/stories/73865');
-  $stateProvider.state('not_found', {
-    url: '/not_found',
-    template: '<h1>404 - Not Found</h1>'
-  });
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
+}).run(function ($rootScope, $location, $analytics, $timeout) {
+  $rootScope.$on('$stateChangeSuccess', function () {
+    var url = $analytics.settings.pageTracking.basePath + $location.url();
+    $timeout(function () {  $analytics.pageTrack(url); });
+  });
 });
 angular.module('prx.modelConfig', ['angular-hal'])
 .config(function (ngHalProvider) {
@@ -47,24 +50,13 @@ angular.module('prx.modelConfig', ['angular-hal'])
   .mixin('http://meta.prx.org/model/image/*splat', ['resolved', function (resolved) {
     resolved.enclosureUrl = resolved.call('link', 'enclosure').call('url');
   }]);
-}).run(function ($rootScope, $location, $analytics, $timeout) {
-  $rootScope.$on('$stateChangeSuccess', function () {
-    var url = $analytics.settings.pageTracking.basePath + $location.url();
-    $timeout(function () {  $analytics.pageTrack(url); });
-  });
 });
 angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
 .controller('appCtrl', function ($scope, $location, prxPlayer, urlTranslate) {
   var app = this;
   this.player = prxPlayer;
-  this.modalVisible = false;
-  $scope.$on('$stateChangeStart', function (event, state, params, from) {
-    if (from.abstract) {
-      app.modalVisible = !!(state.data || {}).modal;
-    }
-  });
-  $scope.$on('$stateChangeSuccess', function (event, state) {
-    app.modalVisible = !!(state.data || {}).modal;
+
+  $scope.$on('$stateChangeSuccess', function () {
     app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
   });
 })
