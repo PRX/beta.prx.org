@@ -27,9 +27,54 @@ body.with-player {
   a.full-site {
     bottom: 75px;
   }
-  main {
+  main, .modal {
     padding-bottom: 75px;
   }
+}
+
+.apps {
+  background-color: offwhite;
+  text-align: center;
+  border-radius: 3px;
+  box-shadow: 0 0 2px black;
+  margin: 10px 0;
+  padding: 25px;
+
+  a.logo {
+    display: block;
+    content: '';
+    width: 175px;
+    height: 150px;
+    margin: 0 auto;
+    background: url('/assets/images/remix.png') center no-repeat;
+    background-size: 175px;
+  }
+
+  p {
+    color: dark-grey;
+  }
+
+  a.app-store, a.google-play {
+    width: 114px;
+    height: 40px;
+    background-size: 114px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: inline-block;
+    margin: 0px 10px;
+  }
+
+  a.app-store {
+    background-image: url('/assets/images/app_store.png');
+  }
+  a.google-play {
+    background-image: url('/assets/images/google_play.png');
+  }
+
+  a.website {
+    display: block;
+  }
+
 }
 
 //

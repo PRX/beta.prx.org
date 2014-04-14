@@ -17,12 +17,12 @@ angular.module('prx', ['ngAnimate',
   'prx.errors',
   'prx.modal',
   'prx.modelConfig',
+  'ngMobile',
   'prx.title'])
-.config(function ($locationProvider, $urlRouterProvider, ngFlagProvider,
+.config(function ($locationProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
-  $urlRouterProvider.when('/', '/stories/73865');
   $locationProvider.html5Mode(true);
   ngFlagProvider.flags(FEAT.JSON);
 }).run(function ($rootScope, $location, $analytics, $timeout) {
