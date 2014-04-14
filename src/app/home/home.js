@@ -5,9 +5,9 @@ angular.module('prx.home', ['ui.router'])
   }
 
   $stateProvider.state('home', {
-    url: '/'
+    url: ''
   }).state('home.comingSoon', {
-    url: 'nxt',
+    url: '/nxt',
     views: {
       'modal@': {
         templateUrl: 'home/construction_modal.html'
