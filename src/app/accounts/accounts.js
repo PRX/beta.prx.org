@@ -5,6 +5,9 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
     resolve: {}
   }).state('account.show', {
     url: '/accounts/:accountId',
+    title: ['account', function (account) {
+      return ["Accounts", account.name];
+    }],
     views: {
       '@': {
         templateUrl: "accounts/account.html",
@@ -41,12 +44,29 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
   });
 })
 .directive('limitToHtml', function ($timeout) {
+  function findChild (element) {
+    var children = element.contents();
+    if (children.length) {
+      return findChild(children.eq(children.length - 1));
+    } else {
+      return element;
+    }
+  }
+
   function removeEmptyTrailers (element) {
     var children = element.contents(), lastChild;
     if (children.length) {
       lastChild = children.eq(children.length - 1);
       if (lastChild.text().length) {
         removeEmptyTrailers(lastChild);
+        if (isTextNode(lastChild)) {
+          while(/\s/.test(lastChild.text()[lastChild.length-1])) {
+            lastChild.text(lastChild.text().substr(0, lastChild.text().length-1));
+          }
+          if (lastChild.text() === '') {
+            lastChild.remove();
+          }
+        }
       } else {
         lastChild.remove();
         removeEmptyTrailers(element);
@@ -80,7 +100,13 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
                 }
                 var txt = lastNode.text();
                 if (isTextNode(lastNode) && (txt.length - 15) > lettersToRemove) {
-                  lastNode.text(txt.substr(0, txt.length - lettersToRemove));
+                  txt = txt.substr(0, txt.length - lettersToRemove + 1);
+                  if (txt[txt.length - 1] == ' ') {
+                    lastNode.text(txt.substr(0, txt.length - 1));
+                  } else {
+                    txt = txt.split(' ');
+                    lastNode.text(txt.slice(0, txt.length - 1).join(' '));
+                  }
                   lettersToRemove = 0;
                 } else {
                   lettersToRemove -= txt.length;
@@ -88,6 +114,8 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
                 }
               }
               removeEmptyTrailers(element);
+              lastNode = findChild(element);
+              lastNode.text(lastNode.text() + ' ...');
               scope[attrs.htmlLimited] = true;
             } else {
               scope[attrs.htmlLimited] = false;
