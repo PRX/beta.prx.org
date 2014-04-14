@@ -95,22 +95,19 @@ angular.module('prxNavigation', ['ui.router'])
           topScope.hide = false;
           topScope.finishedResolutions = 0;
           topScope.totalResolutions = route._loadingResolutions;
-          $timeout(function () {
-            topScope.finishedResolutions += 1;
-            topScope.reset = false;
-          }, 1);
+          $timeout(function () { topScope.reset = false; }, 10);
         });
 
         topScope.$on('$stateChangeSuccess', function () {
-
+          topScope.finishedResolutions = topScope.totalResolutions;
           $timeout(function () {
             topScope.hide = true;
             renderDone();
           }, 10);
         });
 
-        topScope.$on('$stateChangeError', function (event, toState, stateParams, url, fromState, error) {
-          console.error(error);
+        topScope.$on('$stateChangeError', function () {
+          topScope.finishedResolutions = topScope.totalResolutions;
           $timeout(function () {
             topScope.hide = true;
             renderDone();

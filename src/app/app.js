@@ -110,20 +110,14 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
     restrict: 'E',
     replace: true,
     scope: { src: '=' },
-    template: "<div class='img' ng-class='{loaded:loaded}'><img><div></div></div>",
+    template: "<div class='img'><img></div>",
     link: function (scope, element) {
-      var imgTag = element.children().eq(0);
-      var holder = element.children().eq(1);
-      imgTag.on('load', function () {
-        holder.css('background-image', 'url('+imgTag.attr('src')+')');
-        $timeout(function () {
-          scope.loaded = true;
-        }, 60); // Trying to make sure that it is in the buffer.
+      var img = element.children();
+      img.on('load', function () {
+        element.css({'background-image': 'url('+img.attr('src')+')', 'background-size': 'cover'});
       });
       scope.$watch('src', function (src) {
-        holder.css('background-image', null);
-        scope.loaded = false;
-        imgTag.attr('src', src);
+        img.attr('src', src);
       });
     }
   };

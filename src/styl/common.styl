@@ -16,22 +16,12 @@ article > section + section, article > section + aside {
 
 // prx-img directive
 .img {
-  position: relative;
-  overflow: hidden;
-  background-color: lightest-grey;
-  div {
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0;
-  }
+  background: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=") center no-repeat;
+  background-size: 1000px;
+  transform: translate3d(0,0,0);
+  transition: background-image 0.1s 0.2s;
   img {
     display: none;
-  }
-  &.loaded div {
-    opacity: 1;
-    transition: opacity 0.2s;
   }
 }
 
