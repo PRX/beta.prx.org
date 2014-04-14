@@ -92,7 +92,7 @@ describe('accounts', function () {
       expect(element.html()).toEqual('\
       <h1>This is longer than 100 letters.</h1>\
       <h1>This is longer than 100 letters.</h1>\
-      <h1>This is longer than 100 letters.</h1>'.replace(/      /g, ''));
+      <h1>This is longer than 100 letters. ...</h1>'.replace(/      /g, ''));
       $scope.content = $sce.trustAsHtml('\
       <div><p>This is longer than 100 letters. \
       This is longer than 100 letters. \
@@ -102,7 +102,7 @@ describe('accounts', function () {
       This is longer than 100 letters.</p></div>'.replace(/      /g,''));
       $scope.$digest();
       $scope.$digest();
-      expect(element.html()).toEqual('<div><p>This is longer than 100 letters. This is longer than 100 letters. This is longer than 100 letters.</p> </div>');
+      expect(element.html()).toEqual('<div><p>This is longer than 100 letters. This is longer than 100 letters. This is longer than 100 letters. ...</p></div>');
     });
   });
 });

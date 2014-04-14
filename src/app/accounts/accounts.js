@@ -59,6 +59,14 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
       lastChild = children.eq(children.length - 1);
       if (lastChild.text().length) {
         removeEmptyTrailers(lastChild);
+        if (isTextNode(lastChild)) {
+          while(/\s/.test(lastChild.text()[lastChild.length-1])) {
+            lastChild.text(lastChild.text().substr(0, lastChild.text().length-1));
+          }
+          if (lastChild.text() === '') {
+            lastChild.remove();
+          }
+        }
       } else {
         lastChild.remove();
         removeEmptyTrailers(element);
