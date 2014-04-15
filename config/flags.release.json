@@ -3,5 +3,6 @@
   "showMenu" : false,
   "lovesharebuy": false,
   "COUNT_HOST": "https://count.prx.org",
-  "LISTEN_LATER": false
+  "LISTEN_LATER": false,
+  "HOME_PAGE": false
 }
