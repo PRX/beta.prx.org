@@ -2,12 +2,11 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
 .config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('account', {
     abstract: true,
+    title: 'Accounts',
     resolve: {}
   }).state('account.show', {
     url: '/accounts/:accountId',
-    title: ['account', function (account) {
-      return ["Accounts", account.name];
-    }],
+    title: ['account', function (account) { return account.toString() + "’s Stories"; }],
     views: {
       '@': {
         templateUrl: "accounts/account.html",
@@ -32,12 +31,14 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
     }
   });
 
-  ngHalProvider.mixin('http://meta.prx.org/model/account/:type/*splat', ['type', 'resolved', '$sce',
-    function (type, resolved, $sce) {
+  ngHalProvider.mixin('http://meta.prx.org/model/account/:type/*splat', ['resolved',
+    function (resolved) {
       resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
       resolved.address = resolved.follow('prx:address');
     }
-  ]).mixin('http://meta.prx.org/model/address', {
+  ]).mixin('http://meta.prx.org/model/account/*any', {
+    toString: function () { return this.name; }
+  }).mixin('http://meta.prx.org/model/address', {
     toString: function () {
       return this.city + ', ' + this.state;
     }

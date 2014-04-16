@@ -18,7 +18,7 @@ angular.module('prx', ['ngAnimate',
   'prx.modal',
   'prx.modelConfig',
   'ngMobile',
-  'prx.title'])
+  'prx.breadcrumbs'])
 .config(function ($locationProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider) {
   $analyticsProvider.firstPageview(false);
