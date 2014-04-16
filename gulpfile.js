@@ -4,6 +4,8 @@ var pkg = require('./package.json');
 var spawn  = require('child_process').spawn;
 var fs     = require('fs');
 
+var server;
+
 var gulp   = require('gulp');
 var es     = require('event-stream');
 var through= require('through2');
@@ -275,19 +277,22 @@ gulp.task('compressDist', function () {
 });
 
 gulp.task('compile', function (cb) {
-  runSeq('clean', 'dist', 'testDist', 'cacheBust', 'compressDist', cb);
+  runSeq('dist', 'testDist', 'cacheBust', 'compressDist', cb);
 });
 
 gulp.task('compileServer', function () {
-  require(cwd+'/'+c.app.server).listen(process.env.PORT||8080, complDir);
+  if (server) {
+    server.close();
+  }
+  server = require(cwd+'/'+c.app.server).listen(process.env.PORT||8080, complDir);
 });
 
 gulp.task('build_', function (cb) {
   runSeq('clean', ['templates', 'buildJs', 'css', 'assets'], 'html', cb);
 });
 
-gulp.task('watch', ['build_'], function (cb) {
-  var server = require(cwd+'/'+c.app.server)
+gulp.task('watch', ['build_', 'installWebdriver'], function (cb) {
+  server = require(cwd+'/'+c.app.server)
     .listen(process.env.PORT || 8080, buildDir);
   gutil.log("Listening on port " + process.env.PORT || 8080);
 
@@ -311,6 +316,8 @@ gulp.task('watch', ['build_'], function (cb) {
       gulp.run('html');
     }
   });
+
+  gulp.watch(c.e2eSpecs, ['runProtractor']);
 
   gulp.src(specJs, {read: false})
     .pipe(order(['**/angular?(.*).js', '**/*.js']))
@@ -342,7 +349,7 @@ gulp.task('checkCoverage', ['specs'], function () {
     }));
 });
 
-gulp.task('coveralls', ['checkCoverage'], function (done) {
+gulp.task('coveralls', ['checkCoverage', 'protractor'], function (done) {
   var ps = spawn(cwd+'/node_modules/coveralls/bin/coveralls.js');
   var coverageDir = cwd + '/coverage/';
   fs.readdir(coverageDir, pickFolder);
@@ -367,12 +374,25 @@ gulp.task('coveralls', ['checkCoverage'], function (done) {
   }
 });
 
-gulp.task('installWebdriver', instWd);
-
-gulp.task('protractor', ['installWebdriver', 'compile', 'compileServer'], function () {
-  return gulp.src(c.e2eSpecs)
-  .pipe(prtrct({configFile: c.protractorCfg, baseUrl: 'http://localhost:8080'}))
-  .on('error', function (e) { throw e; });
+gulp.task('installWebdriver', function (cb) {
+  if (process.env['TRAVIS']) {
+    cb();
+  } else {
+    return instWd(cb);
+  }
 });
 
-gulp.task('ci', ['checkCoverage', 'coveralls']);
+gulp.task('protractor', ['installWebdriver', 'compile', 'compileServer'], function (cb) {
+  return gulp.src(c.e2eSpecs)
+  .pipe(prtrct({configFile: c.protractorCfg}))
+  .on('error', function (e) { cb(e); this.emit('end'); })
+  .on('end', function () { server.close(); });
+});
+
+gulp.task('runProtractor', function () {
+  return gulp.src(c.e2eSpecs)
+  .pipe(prtrct({configFile: c.protractorCfg, baseUrl: 'http://localhost:8080'}))
+  .on('error', function (e) { this.emit('end', new gutil.PluginError('gulp-jshint', e)); });
+});
+
+gulp.task('ci', ['coveralls']);
