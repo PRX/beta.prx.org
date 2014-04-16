@@ -39,7 +39,8 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
             audioFileId: this.nowPlaying.id,
             value: seconds,
             duration: seconds,
-            startedAt: this.$lastHeartbeat
+            startedAt: this.$lastHeartbeat,
+            noninteraction: true
           });
           this.$lastHeartbeat = position;
         }
@@ -78,6 +79,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
           category: 'Audio Player',
           label: this.nowPlaying.story.id
         });
+        this.sendHeartbeat(true);
         this.nowPlaying.stop();
       }
     }
