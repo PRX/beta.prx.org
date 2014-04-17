@@ -1,6 +1,6 @@
-angular.module('prx-experiments', [])
+angular.module('prx.experiments', [])
 .provider('prxperiment', function () {
-  var config = {}, http, q;
+  var config = {}, http, q, $injector;
   var Provider = {
     base: function (base) {
       config.base = base;
@@ -10,17 +10,24 @@ angular.module('prx-experiments', [])
       config.clientId = clientId;
       return Provider;
     },
-    '$get': ['$http', '$q', function ($http, $q) {
-      return new Experiment($http, $q, config);
+    '$get': ['$http', '$q', '$injector',
+      function ($http, $q, $injector_) {
+        $injector = $injector_;
+        return new Experiment($http, $q, config);
     }]
   };
-  
+
 
   function Experiment ($http, $q, config) {
     http = $http;
     q = $q;
     this.base = config.base;
-    this.clientId = config.clientId;
+    if (angular.isArray(config.clientId) ||
+      angular.isFunction(config.clientId)) {
+      config.clientId = $injector.invoke(config.clientId);
+    }
+
+    this.clientId = $q.when(config.clientId);
     this.forces = {};
     this.active = {};
   }
@@ -45,7 +52,7 @@ angular.module('prx-experiments', [])
   function ParticipationPromise (base, alternatives, promise) {
     var self = this;
     this.alternatives = alternatives;
-    this.then        = promise.then(function (response) {
+    this.then         = promise.then(function (response) {
       return self.resolved = new Participation(base, response.data);
     }).then;
     this.alternative = this.then(function (p) { return p.alternative; });
@@ -97,21 +104,35 @@ angular.module('prx-experiments', [])
   };
 
   Experiment.prototype.participate = function (experiment, alternatives) {
-    var query = [this.base, '/participate?experiment=', experiment, '&client_id=', this.clientId];
-    angular.forEach(alternatives, function (alt) {
-      query.push('&alternatives=', alt);
+    var self = this, httpPromise = this.clientId.then(function (clientId) {
+      var query = [self.base, '/participate?experiment=', experiment, '&client_id=', clientId];
+      angular.forEach(alternatives, function (alt) {
+        query.push('&alternatives=', alt);
+      });
+
+      if (typeof self.forces[experiment] !== 'undefined' && alternatives.indexOf(self.forces[experiment]) !== -1) {
+        query.push('&force=', self.forces[experiment]);
+      }
+
+      return http.get(query.join(''));
     });
-    if (typeof this.forces[experiment] !== 'undefined' && alternatives.indexOf(this.forces[experiment]) !== -1) {
-      query.push('&force=', this.forces[experiment]);
-    }
+
     this.active[experiment] = this.active[experiment] || [];
-    var promise = new ParticipationPromise(this.base, alternatives, http.get(query.join('')));
+    var promise = new ParticipationPromise(this.base, alternatives, httpPromise);
     this.active[experiment].push(promise);
     return promise;
   };
 
   Experiment.prototype.run = function (experiment, alternatives) {
     return this.participate(experiment, alternatives);
+  };
+
+  Experiment.prototype.get = function (experiment) {
+    if (this.active[experiment] &&
+      this.active[experiment].length &&
+      this.active[experiment][0].resolved) {
+        return this.active[experiment][0].resolved;
+    }
   };
 
   return Provider;
@@ -127,4 +148,30 @@ angular.module('prx-experiments', [])
       }
     });
   });
+})
+.directive('prxpConvert', function ($timeout) {
+  return {
+    restrict: 'A',
+    link: function (scope, elem, attr) {
+      var converted = false;
+      elem.bind('click', convert);
+
+      function convert () {
+        if (!converted) {
+          converted = true;
+          scope.$eval(attr.prxpConvert).convert();
+
+          // For some reason, if we mess with the
+          // event handlers in this cycle, the browser
+          // will block the rest from executing.
+          // So, we wait before unbinding this one.
+          $timeout(unbind);
+        }
+      }
+
+      function unbind() {
+        elem.unbind('click', convert);
+      }
+    }
+  };
 });

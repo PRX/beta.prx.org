@@ -1,7 +1,7 @@
 article.story
-  #hero
+  #hero(ng-class="story.cover.choice")
     .category audio story
-    prx-player-button(sound="story.getSound")
+    prx-player-button(sound="story.getSound", prxp-convert="story.cover")
     h1 {{story.current.title}}
     address.author
       | by #{''}

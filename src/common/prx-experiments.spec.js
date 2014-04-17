@@ -67,7 +67,7 @@ describe('prxp', function () {
   }
 
 
-  beforeEach(module('prx-experiments', function (prxperimentProvider) {
+  beforeEach(module('prx.experiments', function (prxperimentProvider) {
     prxperimentProvider.clientId('fooBar').base('');
   }));
 
