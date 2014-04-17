@@ -1,7 +1,7 @@
 angular.module('prx.modal', ['prx.errors', 'ui.router'])
 .run(function ($rootScope, prxModal) {
   var modalKey = 'modal@';
-  var DISMISS_LINK = "<a class='dismiss' ui-sref='^'></a>";
+  var DISMISS_LINK = "<a class='dismiss' dismiss-modal></a>";
 
   $rootScope.$on('$stateChangeStart', function (_, state, params, from) {
     if (state.views && state.views[modalKey] &&
@@ -35,6 +35,18 @@ angular.module('prx.modal', ['prx.errors', 'ui.router'])
   $rootScope.$on('$stateChangeSuccess', function (event, state) {
     prxModal.visible = !!(state.data || {}).modal;
   });
+})
+.directive('dismissModal', function ($state) {
+  return {
+    restrict: 'A',
+    replace: true,
+    template: "<a ng-show='dismissable' ui-sref='^'></a>",
+    link: function (scope) {
+      if ($state.href('^')) {
+        scope.dismissable = true;
+      }
+    }
+  };
 })
 .directive('prxModal', function () {
   return {

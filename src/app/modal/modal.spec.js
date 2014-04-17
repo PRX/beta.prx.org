@@ -2,10 +2,16 @@ describe('prx.modal', function () {
   beforeEach(module('prx.modal'));
 
   describe('state instrumentation', function () {
-    var $scope, instrumentableState;
+    var $scope, instrumentableState, $state, $compile;
 
-    beforeEach(inject(function ($rootScope) {
+    beforeEach(module(function ($provide) {
+      $provide.value('$state', jasmine.createSpyObj('$state', ['href']));
+    }));
+
+    beforeEach(inject(function ($rootScope, _$state_, _$compile_) {
       $scope = $rootScope;
+      $state = _$state_;
+      $compile = _$compile_;
       instrumentableState = {
         views: {
           'modal@': {
@@ -27,7 +33,8 @@ describe('prx.modal', function () {
 
     function getLink(data) {
       var div = angular.element('<div></div>');
-      div.html(data);
+      $compile(div.html(data))($scope);
+      $scope.$digest();
       return div.children().eq(0);
     }
 
@@ -36,6 +43,20 @@ describe('prx.modal', function () {
       var link = getLink(instrumentableState.views['modal@'].template);
       expect(link.attr('ui-sref')).toEqual('^');
       expect(link.hasClass('dismiss')).toBe(true);
+    });
+
+    it ('hides the prefixed link when undismissable', function () {
+      $state.href.and.returnValue(undefined);
+      $scope.$broadcast('$stateChangeStart', instrumentableState, {}, {});
+      var link = getLink(instrumentableState.views['modal@'].template);
+      expect(link.hasClass('ng-hide')).toBe(true);
+    });
+
+    it ('shows the prefixed link when dismissable', function () {
+      $state.href.and.returnValue('/');
+      $scope.$broadcast('$stateChangeStart', instrumentableState, {}, {});
+      var link = getLink(instrumentableState.views['modal@'].template);
+      expect(link.hasClass('ng-hide')).toBe(false);
     });
 
     it ('does nothing when there is nothing to be done', function () {
