@@ -261,7 +261,7 @@ gulp.task('cacheBust', function (done) {
     .pipe(cachebust.resources())
     .pipe(gulp.dest(complDir + '/assets'))
     .on('end', function () {
-      gulp.src(complDir + '/*.html')
+      gulp.src(complDir + '/**/*.{html,css}')
       .pipe(cachebust.references())
       .pipe(gulp.dest(complDir))
       .on('end', done);
