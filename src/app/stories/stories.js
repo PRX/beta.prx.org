@@ -1,4 +1,4 @@
-angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate', 'prx.accounts'])
+angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate', 'prx.accounts', 'prx.experiments'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -29,6 +29,9 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
           });
           return result;
         });
+      }],
+      coverExperiment: ['prxperiment', function (prxperiment) {
+        return prxperiment.participate('storyCover', ['blueMics', 'matt']);
       }]
     }
   })
@@ -73,9 +76,10 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   };
 })
 .controller('StoryCtrl', function (story, account, audioUrls,
-  prxSoundFactory, $stateParams, prxPlayer) {
+  prxSoundFactory, $stateParams, prxPlayer, prxperiment) {
   this.current = story;
   this.account = account;
+  this.cover = prxperiment.get('storyCover');
   this.getSound = prxSoundFactory({
     story: story,
     producer: account,

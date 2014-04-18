@@ -10,6 +10,7 @@ angular.module('prx', ['ngAnimate',
   'templates',
   'prx.player',
   'ngFlag',
+  'prx.experiments',
   'angulartics',
   'angulartics.google.analytics',
   'angulartics.prx.count',
@@ -20,10 +21,20 @@ angular.module('prx', ['ngAnimate',
   'ngMobile',
   'prx.breadcrumbs'])
 .config(function ($locationProvider, ngFlagProvider,
-  $analyticsProvider, $stateProvider) {
+  $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
   $locationProvider.html5Mode(true);
+  prxperimentProvider.base('https://x.prx.org')
+  .clientId(['$q', '$window', function ($q, $window) {
+    if (angular.isDefined($window.ga)) {
+      var deferred = $q.defer();
+      $window.ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
+      return deferred.promise;
+    } else {
+      return 'tests';
+    }
+  }]);
   ngFlagProvider.flags(FEAT.JSON);
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
