@@ -5,7 +5,6 @@ angular.module('prx.home', ['ui.router'])
   }
 
   $stateProvider.state('home', {
-    url: '^/'
   }).state('home.comingSoon', {
     url: '^/nxt',
     views: {
