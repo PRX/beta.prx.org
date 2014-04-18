@@ -1,4 +1,4 @@
-angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
+angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-translate'])
 .config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('account', {
     abstract: true,
@@ -19,6 +19,9 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
       }],
       recentStories: ['account', function (account) {
         return account.follow('prx:stories').follow('prx:items');
+      }],
+      translateUrl: ['account', 'urlTranslate', function (account, urlTranslate) {
+        urlTranslate.addTranslation('/accounts/'+account.id, account.oldPath());
       }]
     }
   }).state('account.show.details', {
@@ -35,6 +38,14 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig'])
     function (resolved) {
       resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
       resolved.address = resolved.follow('prx:address');
+      if (type == 'individual') {
+        type = 'user';
+      }
+      return {
+        oldPath: function () {
+          return ['', type, this.path].join('/');
+        }
+      };
     }
   ]).mixin('http://meta.prx.org/model/account/*any', {
     toString: function () { return this.name; }

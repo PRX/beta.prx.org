@@ -6,10 +6,14 @@ angular.module('prx.url-translate', ['angular-hal'])
   function getTranslator(UriMatcher, UriTemplate) {
     var compiledMappings = [];
     angular.forEach(mappings, function (mapping) {
-      compiledMappings.push([new UriMatcher(mapping[0]),
-        UriTemplate.parse(mapping[1])]);
+      addTranslation(mapping[0], mapping[1]);
     });
-    return function (uri) {
+
+    translate.addTranslation = addTranslation;
+    
+    return translate;
+
+    function translate (uri) {
       var found = false, result = uri;
       angular.forEach(compiledMappings, function (mapping) {
         if (!found && mapping[0].test(uri)) {
@@ -18,7 +22,11 @@ angular.module('prx.url-translate', ['angular-hal'])
         }
       });
       return result;
-    };
+    }
+
+    function addTranslation (from, to) {
+      compiledMappings.push([new UriMatcher(from), UriTemplate.parse(to)]);
+    }
   }
 
   var urlTranslateProvider = {
