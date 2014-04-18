@@ -26,10 +26,10 @@ angular.module('prx', ['ngAnimate',
   $analyticsProvider.virtualPageviews(false);
   $locationProvider.html5Mode(true);
   prxperimentProvider.base('https://x.prx.org')
-  .clientId(['$q', function ($q) {
-    if (angular.isDefined(window.ga)) {
+  .clientId(['$q', '$window', function ($q, $window) {
+    if (angular.isDefined($window.ga)) {
       var deferred = $q.defer();
-      ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
+      $window.ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
       return deferred.promise;
     } else {
       return 'tests';
