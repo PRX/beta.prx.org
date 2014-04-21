@@ -34,8 +34,8 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     }
   });
 
-  ngHalProvider.mixin('http://meta.prx.org/model/account/:type/*splat', ['resolved',
-    function (resolved) {
+  ngHalProvider.mixin('http://meta.prx.org/model/account/:type/*splat', ['resolved', 'type',
+    function (resolved, type) {
       resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
       resolved.address = resolved.follow('prx:address');
       if (type == 'individual') {
