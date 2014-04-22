@@ -6,7 +6,7 @@ describe('accounts', function () {
     });
 
     it ('links to the desktop version using the user short url', function () {
-      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/user/jeffreybcohen');
+      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/user/jeffreybcohen?m=false');
     });
   });
 
@@ -17,7 +17,7 @@ describe('accounts', function () {
     });
 
     it ('links to the desktop version using the group short url', function () {
-      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/group/SO');
+      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/group/SO?m=false');
     });
   });
 
@@ -27,7 +27,7 @@ describe('accounts', function () {
     });
 
     it ('links to the desktop version using the station short url', function () {
-      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/station/wbur');
+      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/station/wbur?m=false');
     });
   });
 });

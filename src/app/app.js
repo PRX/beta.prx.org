@@ -68,7 +68,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
   this.player = prxPlayer;
 
   $scope.$on('$stateChangeSuccess', function () {
-    app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path());
+    app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path()) + "?m=false";
   });
 })
 .filter('timeAgo', function () {
