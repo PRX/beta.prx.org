@@ -120,15 +120,27 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
   return {
     restrict: 'E',
     replace: true,
-    scope: { src: '=' },
-    template: "<div class='img'><img></div>",
+    scope: {
+      src: '=',
+      defaultClass: '@',
+      default: '@'
+    },
+    template: "<div class='img' ng-class='classes'><img></div>",
     link: function (scope, element) {
       var img = element.children();
+      scope.classes = [];
+
       img.on('load', function () {
         element.css({'background-image': 'url('+img.attr('src')+')', 'background-size': 'cover'});
       });
       scope.$watch('src', function (src) {
-        img.attr('src', src);
+        if (src || scope.default) {
+          img.attr('src', src || scope.default);
+          scope.classes.length = 0;
+        } else {
+          img.removeAttr('src');
+          scope.classes.splice(0, 1, scope.defaultClass);
+        }
       });
     }
   };

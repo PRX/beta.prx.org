@@ -9,7 +9,7 @@
       "!src/common/angular-hal-mock.js",
       "!src/common/sound-manager-mock.js"
     ],
-    "specs":  [ "src/**/*.spec.js", "!src/**/*.e2e.spec.js" ],
+    "specs":  [ "src/**/*.spec.js" ],
     "html":   [ "src/index.html" ],
     "stylus": [ "src/styl/main.styl" ],
     "jade":   [ "src/**/*.html.jade" ],
@@ -21,6 +21,9 @@
       "src/common/angular-hal-mock.js",
       "vendor/angular-mocks/angular-mocks.js",
       "src/common/sound-manager-mock.js"
+    ],
+    "assets": [
+      "src/assets/**/*"
     ]
   },
   "vendor": {

@@ -18,7 +18,7 @@ var stylus = require('gulp-stylus');
 var concat = require('gulp-concat');
 var templt = require('gulp-template');
 var walk   = require('walk');
-var karma  = require('gulp-karma');
+var karma  = require('gulp-karma')({configFile: c.karmaCfg});
 var newer  = require('gulp-newer');
 var runSeq = require('run-sequence');
 var ngmin  = require('gulp-ngmin');
@@ -45,7 +45,6 @@ var cwd      = __dirname;
 var src      = cwd + '/src';
 var hintCfg  = c.jsHintCfg;
 var fileName = pkg.name + "-" + pkg.version;
-var specJs   = c.test.js.concat(buildDir+"/**/*.js", c.app.specs);
 var vBuildJs = c.vendor.buildJs.concat(c.vendor.js);
 var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
@@ -148,16 +147,12 @@ gulp.task('css', ['assets'], function () {
   .pipe(gulp.dest(buildDir + '/assets/'));
 });
 
-gulp.task('specs', ['templates', 'buildJs'], function (cb) {
-  var karmaCfg = {configFile: c.karmaCfg, action: 'run'};
-
+gulp.task('specs', ['templates', 'buildJs'], function () {
+  var cfg = {};
   if (process.env.TRAVIS) {
-    karmaCfg.browsers = ['PhantomJS', 'Firefox'];
+    cfg.browsers = ['PhantomJS', 'Firefox'];
   }
-
-  return gulp.src(specJs, {read: false})
-    .pipe(order(['**/angular?(.*).js', '**/*.js']))
-    .pipe(karma(karmaCfg)).on('error', cb);
+  return karma.once(cfg);
 });
 
 gulp.task('buildJs', ['jshint'], function () {
@@ -204,6 +199,7 @@ gulp.task('templates', function () {
     .pipe(jade());
   return es.merge(
       compiled.pipe(map(function(code) { return code; }))
+      .pipe(newer(buildDir))
       .pipe(gulp.dest(buildDir)),
       compiled.pipe(aTempl('templates.js', {standalone: true}))
         .pipe(gulp.dest(buildDir + '/app'))
@@ -252,9 +248,18 @@ gulp.task('distHtml', function () {
 });
 
 gulp.task('testDist', function () {
-  var karmaCfg = {configFile: c.karmaCfg, action: 'run', reporters: 'dots', browsers:['PhantomJS']};
-  return gulp.src([complDir+"/**/*.min.js"].concat(c.test.js, c.app.specs), {read: false})
-    .pipe(karma(karmaCfg));
+  return karma.once({
+    files: [complDir+"/**/*.min.js"].concat(
+      c.test.js, c.app.specs,
+      c.test.assets.map(function (pattern) {
+        return {
+          pattern: pattern, watched: true, included: false, served: true
+        };
+      })
+    ),
+    browsers: ['PhantomJS'],
+    reporters: ['dots']
+  });
 });
 
 gulp.task('cacheBust', function (done) {
@@ -319,9 +324,8 @@ gulp.task('watch', ['build_', 'installWebdriver'], function (cb) {
 
   gulp.watch(c.e2eSpecs, ['runProtractor']);
 
-  gulp.src(specJs, {read: false})
-    .pipe(order(['**/angular?(.*).js', '**/*.js']))
-    .pipe(karma({configFile: c.karmaCfg, action: 'watch'}));
+
+  karma.start({ autoWatch: true });
 
   gulp.watch(allAppJs.concat(featsDev), ['buildJs']);
 });

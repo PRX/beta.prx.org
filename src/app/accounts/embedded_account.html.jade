@@ -1,6 +1,6 @@
 section.account
   a(ui-sref="account")
-    prx-img(src="account.imageUrl")
+    prx-img(src="account.imageUrl", default-class="default")
   h2
     a(ui-sref="account") {{account.name}}
   .location(ng-bind="account.address")
