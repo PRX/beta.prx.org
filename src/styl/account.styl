@@ -1,18 +1,25 @@
+.account {
+  .img {
+    border: 2px solid light-grey;
+    background-color: lightest-grey;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    float: left;
+    margin: 10px;
+
+    &.default {
+      image: '/assets/images/anonymous.png' 70px;
+    }
+  }
+}
+
 article.account {
   background: offwhite;
 
   #hero {
     background-color: white;
 
-    .img {
-      border-radius: 50px;
-      width: 70px;
-      height: 70px;
-      border: 2px solid light-grey;
-      background-color: lightest-grey;
-      float: left;
-      margin: 10px;
-    }
     h1 {
       padding-top: 15px;
       padding-bottom: 5px;
@@ -47,17 +54,14 @@ article.account {
 
 section.account {
   .img {
-    float: left;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    border: 3px solid lightest-grey;
     margin-right: 15px;
     margin-bottom: 12px;
   }
+
   h2 {
     line-height: 70px;
   }
+
   .path, .location {
     font-size: 12px;
     clear: both;

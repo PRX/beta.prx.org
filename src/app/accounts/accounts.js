@@ -3,7 +3,6 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
   $stateProvider.state('account', {
     abstract: true,
     title: 'Accounts',
-    resolve: {}
   }).state('account.show', {
     url: '/accounts/:accountId',
     title: ['account', function (account) { return account.toString() + "’s Stories"; }],
@@ -36,7 +35,7 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
 
   ngHalProvider.mixin('http://meta.prx.org/model/account/:type/*splat', ['resolved', 'type',
     function (resolved, type) {
-      resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl');
+      resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
       resolved.address = resolved.follow('prx:address');
       if (type == 'individual') {
         type = 'user';

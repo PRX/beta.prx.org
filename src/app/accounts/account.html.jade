@@ -1,6 +1,6 @@
 article.account
   #hero
-    prx-img(src="account.current.imageUrl")
+    prx-img(src="account.current.imageUrl", default-class="default")
     h1(ng-bind="account.current.name")
     .bio
       div(ng-bind-html="account.current.description", limit-to-html="250", html-limited="wasShortened")
