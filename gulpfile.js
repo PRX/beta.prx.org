@@ -198,7 +198,9 @@ gulp.task('templates', function () {
     .pipe(newer(buildDir + '/templates-app.js'))
     .pipe(jade());
   return es.merge(
-      compiled.pipe(newer(buildDir)).pipe(gulp.dest(buildDir)),
+      compiled.pipe(map(function(code) { return code; }))
+      .pipe(newer(buildDir))
+      .pipe(gulp.dest(buildDir)),
       compiled.pipe(aTempl('templates.js', {standalone: true}))
         .pipe(gulp.dest(buildDir + '/app'))
     );
