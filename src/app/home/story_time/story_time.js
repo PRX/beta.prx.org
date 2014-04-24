@@ -12,11 +12,6 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate'])
       }
     }
   }).state('home.storyTime.error', {
-    resolve: {
-      message: ['$stateParams', function ($stateParams) {
-        return $stateParams.message;
-      }]
-    },
     params: ['message'],
     views: {
       'modal@': {
@@ -40,8 +35,8 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate'])
       return $q.reject("An unknown error has occurred. Try again later.");
     });
   };
-}).controller('StoryTimeErrorCtrl', function (message) {
-  this.message = message;
+}).controller('StoryTimeErrorCtrl', function ($stateParams) {
+  this.message = $stateParams.message;
 }).controller('StoryTimeFormCtrl', function (MailChimp, $state, $timeout) {
   var self = this;
 
