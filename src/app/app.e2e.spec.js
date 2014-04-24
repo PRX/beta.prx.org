@@ -1,3 +1,12 @@
+beforeEach(function () {
+  browser.addMockModule('noAnimate', function () {
+    angular.module('noAnimate', ['ngAnimate'])
+    .run(function ($animate) {
+      $animate.enabled(false);
+    });
+  });
+});
+
 describe('application', function () {
   describe('home page', function () {
     beforeEach(function () {
