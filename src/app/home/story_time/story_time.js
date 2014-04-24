@@ -27,7 +27,7 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate'])
   });
 }).service('MailChimp', function ($http, $q) {
   this.subscribe = function (email) {
-    return $http.jsonp("http://prx.us3.list-manage.com/subscribe/post-json?u=b030d898f636b90f47f8cd820&id=31613e47c3&c=JSON_CALLBACK", {
+    return $http.jsonp("https://prx.us3.list-manage.com/subscribe/post-json?u=b030d898f636b90f47f8cd820&id=31613e47c3&c=JSON_CALLBACK", {
       params: {EMAIL: email},
       responseType: 'json'
     }).then(function (response) {
