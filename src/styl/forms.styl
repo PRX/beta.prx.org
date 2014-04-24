@@ -1,0 +1,40 @@
+input, button, label {
+  font-size: 100%;
+  outline: none;
+  padding: 10px;
+}
+
+input {
+  border: 1px solid lightest-grey;
+  background-color: offwhite;
+}
+
+form {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+label {
+  flex: 0 1 100%;
+  padding: 0px;
+  margin-bottom: 3px;
+  margin-left: 1px;
+}
+
+input {
+  flex: 1 1 215px;
+}
+
+button {
+  button-blue();
+  border: 1px solid transparent;
+  flex: 0.5 1 auto;
+
+  &[disabled] {
+    transition: background-color 0.2s, color 0.2s;
+    background-color: dark-blue;
+    color: light-blue;
+  }
+}
