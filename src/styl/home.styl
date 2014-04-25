@@ -26,8 +26,21 @@ article.story-time {
     }
   }
 
+  section.greeting {
+    .img {
+      @extend .account .img;
+      image: '/assets/images/audrey.png' 70px;
+      margin-bottom: 45px;
+    }
+    // font-size: 0.9em;
+    font-style: italic;
+  }
+
+  section.disclaimer {
+    color: light-grey;
+  }
+
   form {
-    margin-top: 15px;
     &.ng-leave {
       transition: transform 0.5s, opacity 0.2s;
       position: absolute;
@@ -55,5 +68,13 @@ article.story-time {
         opacity: 1;
       }
     }
+  }
+}
+
+section.story-time-cta {
+  a {
+    button-blue();
+    padding: 10px;
+    width: 100%;
   }
 }

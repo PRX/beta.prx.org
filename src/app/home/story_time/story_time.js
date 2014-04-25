@@ -1,4 +1,4 @@
-angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate'])
+angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'prx.experiments'])
 .config(function ($stateProvider, urlTranslateProvider) {
   urlTranslateProvider.translate('/storytime', '/');
 
@@ -37,10 +37,11 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate'])
   };
 }).controller('StoryTimeErrorCtrl', function ($stateParams) {
   this.message = $stateParams.message;
-}).controller('StoryTimeFormCtrl', function (MailChimp, $state, $timeout) {
+}).controller('StoryTimeFormCtrl', function (MailChimp, $state, prxperiment) {
   var self = this;
 
   this.subscribe = function () {
+    prxperiment.tryConvert('storyTimeCta');
     this.submitting = true;
     MailChimp.subscribe(this.email).then(function (message) {
       self.message = message;
@@ -51,4 +52,16 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate'])
       self.submitting = false;
     });
   };
+}).directive('storytimeCta', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'home/story_time/cta.html',
+    controller: 'StoryTimeCtaCtrl as storyTime'
+  };
+}).controller('StoryTimeCtaCtrl', function (prxperiment) {
+  var self = this;
+  prxperiment.run('storyTimeCta', ['free', 'more']).then(function (exp) {
+    self.text = {free: 'Get Free Stories', more: 'More Stories Like This'}[exp.choice];
+  });
 });

@@ -9,7 +9,7 @@ describe ('story time', function () {
           } else {
             return $q.when("yeah");
           }
-        }
+        };
       });
     });
 

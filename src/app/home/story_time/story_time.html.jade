@@ -2,13 +2,21 @@ article.story-time
   #hero
     h1 Storytime
     h2 A weekly newsletter from PRX
-  section
+  section.greeting
+    prx-img
     p
-      | We won't share your email address. You will receive a weekly
-      | newsletter from PRX.org. Each week you'll get stories handpicked by PRX staff.
+      | Hey - I'm Audrey and I'm a podcast expert. Just kidding, that's not a real thing.
+      | I do know a lot about what's good in the world of audio stories though, and I'll
+      | be picking "must-listens" for you each week.
+  section.subscribe
     form(name="subscribe", ng-submit="storyTime.subscribe()", ng-if="!storyTime.subscribed", novalidate)
       label(for="email")
         | Email Address
       input(name="email", ng-model="storyTime.email", type="email", placeholder="Enter your Email Address", ng-disabled="storyTime.submitting", required)
       button(type="submit", ng-disabled="storyTime.submitting || !subscribe.$valid") {{ storyTime.submitting ? 'Subscribing...' : 'Join mailing list' }}
     p.subscribed(ng-if="storyTime.subscribed") {{storyTime.message}}
+  aside
+    section.disclaimer
+      p
+        | We won't share your email address. You will receive a weekly
+        | newsletter from PRX.org. Each week you'll get stories handpicked by PRX staff.

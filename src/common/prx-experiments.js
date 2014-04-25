@@ -33,7 +33,9 @@ angular.module('prx.experiments', [])
   }
 
   Experiment.prototype.flushActive = function () {
-    this.active = {};
+    angular.forEach(this.active, function (exp) {
+      exp.unforce();
+    });
   };
 
   Experiment.prototype.flushForces = function () {
@@ -41,12 +43,16 @@ angular.module('prx.experiments', [])
   };
 
   Experiment.prototype.addForce = function (key, value) {
-    if (typeof this.active[key] != 'undefined' && this.active[key].length) {
-      angular.forEach(this.active[key], function (pp) {
-        pp.set(value);
-      });
+    if (this.active[key]) {
+      this.active[key].set(value);
     }
     this.forces[key] = value;
+  };
+
+  Experiment.prototype.tryConvert = function (key) {
+    if (this.active[key]) {
+      this.active[key].convert();
+    }
   };
 
   function ParticipationPromise (base, alternatives, promise) {
@@ -80,6 +86,17 @@ angular.module('prx.experiments', [])
     }
   };
 
+  ParticipationPromise.prototype.unforce = function () {
+    if (typeof this.resolved !== 'undefined') {
+      this.resolved.unforce();
+    } else {
+      this.then = this.then(function (p) {
+        p.unforce();
+        return p;
+      }).then;
+    }
+  };
+
   function Participation (base, data) {
     this.base        = base;
     this.experiment  = data.experiment.name;
@@ -89,8 +106,14 @@ angular.module('prx.experiments', [])
   }
 
   Participation.prototype.set = function (value) {
+    this.overridden  = this.choice;
     this.alternative = value;
     this.choice      = this.alternative;
+  };
+
+  Participation.prototype.unforce = function () {
+    this.choice = this.overridden || this.choice;
+    this.alternative = this.choice;
   };
 
   Participation.prototype.convert = function (kpi) {
@@ -104,6 +127,10 @@ angular.module('prx.experiments', [])
   };
 
   Experiment.prototype.participate = function (experiment, alternatives) {
+    if (this.active[experiment]) {
+      return this.active[experiment];
+    }
+
     var self = this, httpPromise = this.clientId.then(function (clientId) {
       var query = [self.base, '/participate?experiment=', experiment, '&client_id=', clientId];
       angular.forEach(alternatives, function (alt) {
@@ -117,9 +144,8 @@ angular.module('prx.experiments', [])
       return http.get(query.join(''));
     });
 
-    this.active[experiment] = this.active[experiment] || [];
     var promise = new ParticipationPromise(this.base, alternatives, httpPromise);
-    this.active[experiment].push(promise);
+    this.active[experiment] = promise;
     return promise;
   };
 
@@ -129,9 +155,8 @@ angular.module('prx.experiments', [])
 
   Experiment.prototype.get = function (experiment) {
     if (this.active[experiment] &&
-      this.active[experiment].length &&
-      this.active[experiment][0].resolved) {
-        return this.active[experiment][0].resolved;
+      this.active[experiment].resolved) {
+        return this.active[experiment].resolved;
     }
   };
 
