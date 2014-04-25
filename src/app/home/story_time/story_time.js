@@ -1,4 +1,4 @@
-angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'prx.experiments'])
+angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'prx.experiments', 'angulartics'])
 .config(function ($stateProvider, urlTranslateProvider) {
   urlTranslateProvider.translate('/storytime', '/');
 
