@@ -20,12 +20,47 @@ describe('prx', function () {
     beforeEach(inject(function (_$compile_, $rootScope) {
       $compile = _$compile_;
       $scope = $rootScope.$new();
-      element = $compile(angular.element('<prx-img src="src"></prx-img>'))($scope);
     }));
 
-    it ('has the img class', function () {
-      $scope.src = 1;
-      expect(element.hasClass('img')).toBeTruthy();
+    describe ('with no defaults', function () {
+      beforeEach(function () {
+        element = $compile(angular.element('<prx-img src="src"></prx-img>'))($scope);
+      });
+
+      it ('has the img class', function () {
+        $scope.src = 1;
+        expect(element.hasClass('img')).toBeTruthy();
+      });
+    });
+
+    describe ('with default-class', function () {
+      beforeEach(function () {
+        element = element = $compile(angular.element('<prx-img src="src" default-class="default"></prx-img>'))($scope);
+      });
+
+      it ('adds a default-class class if src is falsy', function () {
+        $scope.src = false;
+        $scope.$digest();
+        expect(element.hasClass('default')).toBeTruthy();
+      });
+
+      it ('removes default-class class if src is present', function () {
+        $scope.src = "assets/images/boston.png";
+        $scope.$digest();
+        expect(element.hasClass('default')).toBeFalsy();
+      });
+    });
+
+    describe ('with default src', function () {
+      beforeEach(function () {
+        element = element = $compile(angular.element('<prx-img src="src" default="assets/images/boston.png"></prx-img>'))($scope);
+      });
+
+      it ('sets src to the default value', function () {
+        $scope.src = false;
+        $scope.$digest();
+        expect(element.find('img').attr('src')).toEqual('assets/images/boston.png');
+      });
     });
   });
 

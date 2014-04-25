@@ -1,8 +1,22 @@
+var appCfg = require(__dirname + '/build.json');
+
 module.exports = function ( config ) {
   config.set({
     basePath: '../',
-    files: [ 'public/**/*.js', 'src/common/angular-hal-mock.js' ],
-    exclude: [ 'public/assets/**/*.js' ],
+    files: [appCfg.buildDir+"/**/angular.js"].concat(
+      appCfg.test.js,
+      appCfg.buildDir + '/**/*.js',
+      appCfg.app.specs,
+      appCfg.test.assets.map(function (pattern) {
+        return {
+          pattern: pattern, watched: true, included: false, served: true
+        };
+      })
+    ),
+    proxies: {
+      '/assets': '/base/src/assets'
+    },
+    exclude: [ 'public/assets/**/*.js', '**/*.e2e.spec.js' ],
     frameworks: [ 'jasmine' ],
     plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coverage' ],
     preprocessors: { '*/{app,common}/**/!(*.spec).js': ['coverage'] },
@@ -15,8 +29,6 @@ module.exports = function ( config ) {
         {type: 'text-summary'}
       ]
     },
-    port: 9018,
-    runnerPort: 9100,
     urlRoot: '/',
     autoWatch: false,
     browsers: ['Chrome']
