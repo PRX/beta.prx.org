@@ -8,7 +8,9 @@ exports.config = {
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 30000
-  }
+  },
+
+  specs: [ '../src/**/*.e2e.spec.js' ]
 };
 
 if (process.env['TRAVIS']) {
@@ -16,5 +18,5 @@ if (process.env['TRAVIS']) {
   exports.config.sauceKey  = process.env['SAUCE_ACCESS_KEY'];
   exports.config.capabilities['tunnel-identifier'] = process.env['TRAVIS_JOB_NUMBER'];
 } else {
-  exports.config.seleniumServerJar = '../node_modules/protractor/selenium/selenium-server-standalone-2.40.0.jar';
+  exports.config.seleniumServerJar = '/usr/local/lib/node_modules/protractor/selenium/selenium-server-standalone-2.41.0.jar';
 }
