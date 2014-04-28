@@ -20,7 +20,8 @@
   },
   "scripts": {
     "install": "bower install || bower install || bower install",
-    "test": "gulp ci"
+    "test": "gulp ci",
+    "devServer": "npm install --quiet && apiServer=https://hal.prx.org/api/v1 gulp"
   },
   "devDependencies": {
     "karma-coverage": "~0.2.0",
