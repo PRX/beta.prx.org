@@ -1,17 +1,41 @@
+html {
+  background: darkest-grey;
+}
+
+body, header {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 main {
   padding-top: action-bar-height;
 }
 
-section {
+aside > section, #main > section {
   clear: both;
+  overflow: hidden;
+  padding: 13px;
+
+  section {
+    padding: 0;
+  }
+
+  & > h2, & > h3, & > section {
+    margin-top: 10px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 }
 
-article > section, article > aside > section {
-  padding: 15px;
+#main, #asides {
+  & > section + section, & > aside > section + section {
+    border-top: 1px solid offwhite;
+  }
 }
 
-article > section + section, article > section + aside {
-  border-top: 1px solid lightest-grey;
+#asides {
+  border-top: 1px solid offwhite;
 }
 
 // prx-img directive
@@ -36,5 +60,103 @@ a.full-site {
     background-color: blue;
     color: white;
     border-color: darker-blue;
+  }
+}
+
+article {
+
+  #hero {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    .container {
+      padding: 0;
+      margin: 10px 13px;
+      flex: 1;
+      h1, h2, h3 {
+        margin-top: 0;
+      }
+    }
+  }
+
+  #content {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
+    margin-bottom: 13px;
+    max-width: 1040px;
+  }
+
+  #main {
+    display: flex;
+    flex-flow: row wrap;
+    min-width: 300px;
+    flex: 0 0 100%;
+
+    section {
+      flex: 1 auto;
+    }
+  }
+
+  #asides {
+    min-width: 300px;
+    flex: 0 0 100%;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  body {
+      background: offwhite;
+  }
+
+  section {
+    padding: 20px 15px;
+  }
+
+  article {
+
+    #hero {
+      .container {
+        margin: 15px 20px;
+        max-width: 1000px;
+      }
+    }
+
+    #content {
+      padding: 0 20px;
+      margin: 30px auto;
+    }
+
+    #asides {
+      border-top: none;
+      order: 1;
+      flex: 1 1 1px;
+      max-width: 335px;
+      margin-right: 20px;
+
+      aside {
+        background-color: #fff;
+      }
+    }
+
+    #main {
+      order: 2;
+      flex: 3 1 1px;
+      align-self: stretch;
+      align-content: flex-start;
+      background-color: #fff;
+    }
+
+    #asides {
+      aside {
+        margin-top: 20px;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
   }
 }

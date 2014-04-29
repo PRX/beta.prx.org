@@ -1,10 +1,13 @@
 article.account
   #hero
-    prx-img(src="account.current.imageUrl", default-class="default")
-    h1(ng-bind="account.current.name")
-    .bio
-      div(ng-bind-html="account.current.description", limit-to-html="250", html-limited="wasShortened")
-      a.full(ui-sref=".details", ng-if="wasShortened") (View Full Profile)
-  section
-    h2 Recent Stories
-    prx-story(ng-repeat="story in account.recentStories" story="story")
+    .container
+      prx-img(src="account.current.imageUrl", default-class="default")
+      h1(ng-bind="account.current.name")
+      .bio
+        div(ng-bind-html="account.current.description", limit-to-html="250", html-limited="wasShortened")
+        a.full(ui-sref=".details", ng-if="wasShortened") (View Full Profile)
+  #content
+    #main
+      section
+        h2 Recent Stories
+        prx-story(ng-repeat="story in account.recentStories" story="story")

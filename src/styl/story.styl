@@ -1,6 +1,5 @@
 article.story {
   #hero {
-    padding: 10px;
     color: white;
     font-weight: lighter;
     font-size: 12px;
@@ -64,14 +63,21 @@ article.story {
     }
   }
 
-  section.details {
-    h2 { display: none; }
+  section.details h2 {
+    display: none;
+  }
+
+  @media screen and (min-width: 700px) {
+    section.details h2 {
+      display: block;
+    }
   }
 }
 
 section.story {
   position: relative;
   font-size: 10px;
+  height: 70px;
 
   & > a {
     float: left;
@@ -85,9 +91,9 @@ section.story {
   h3 {
     line-height: 18px;
     font-size: 16px;
-    padding-top: 12px;
-    height: 60px;
+    height: 55px;
     overflow: hidden;
+    padding-top: 10px;
     margin-bottom: -4px;
     -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0));
   }

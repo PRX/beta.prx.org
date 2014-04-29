@@ -1,26 +1,40 @@
 article.story
   #hero(ng-class="story.cover.choice")
-    .category audio story
-    prx-player-button(sound="story.getSound", prxp-convert="story.cover")
-    h1 {{story.current.title}}
-    address.author
-      | by #{''}
-      a(rel="author" ui-sref="story.account") {{story.account.name}}
-    span.duration
-      | Length: #{''}
-      time(datetime="P{{story.length}}S") {{story.current.length * 1000 | timeCode: 'short' }}
-    ul.actions(ng-flag="lovesharebuy")
-      li.love.fa.fa-heart Love
-      li.share.fa.fa-share Share
-      li.buy.fa.fa-shopping-cart
-        | Buy
-        span.fa.fa-sort-asc.more
-  section.details
-    h2 Details
-    p
-      | {{story.current.shortDescription}} #{''}
-      a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
-  aside
-    storytime-cta
-  aside
-    prx-account(account="story.account")
+    .container
+      .category audio story
+      prx-player-button(sound="story.getSound", prxp-convert="story.cover")
+      h1 {{story.current.title}}
+      address.author
+        | by #{''}
+        a(rel="author" ui-sref="story.account") {{story.account.name}}
+      span.duration
+        | Length: #{''}
+        time(datetime="P{{story.length}}S") {{story.current.length * 1000 | timeCode: 'short' }}
+      ul.actions(ng-flag="lovesharebuy")
+        li.love.fa.fa-heart Love
+        li.share.fa.fa-share Share
+        li.buy.fa.fa-shopping-cart
+          | Buy
+          span.fa.fa-sort-asc.more
+  #content
+    #main
+      section.details
+        h2 Details
+        p
+          | {{story.current.shortDescription}} #{''}
+          a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
+      prx-account(account="story.account")
+      prx-account(account="story.account")
+    #asides
+      aside
+        prx-account(account="story.account")
+        section
+          h3 Related Stories
+          prx-story(story="story.current")
+          prx-story(story="story.current")
+      aside
+        storytime-cta
+      aside
+        section
+          h3 Listeners Also Listened To
+          prx-story(story="story.current")
