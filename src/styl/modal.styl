@@ -18,6 +18,21 @@
     height: 500px;
     margin-top: -250px;
     margin-left: -250px;
+
+    .modal {
+      padding-bottom: 0!important;
+    }
+
+    &.ng-hide-add {
+      transition: transform 0.2s, opacity 0.1s 0.1s;
+      display:block!important;
+      transform-origin: right top;
+
+      &.ng-hide-add-active {
+        transform: scale(0.25, 0.25);
+        opacity: 0;
+      }
+    }
   }
 
   .modal {
