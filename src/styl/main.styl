@@ -15,14 +15,15 @@
 @import "home.styl";
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
 
-html {
-  height: 100%;
-}
 
-body {
+body.loaded {
+  height: unset;
   min-height: 100%;
   padding-bottom: 50px;
   position: relative;
+  .full-site, main {
+    display: block!important;
+  }
 }
 
 body.with-player {

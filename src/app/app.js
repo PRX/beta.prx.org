@@ -68,6 +68,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
   this.player = prxPlayer;
 
   $scope.$on('$stateChangeSuccess', function () {
+    app.loaded = true;
     app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path()) + "?m=false";
   });
 })
