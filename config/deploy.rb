@@ -1,5 +1,4 @@
-# config valid only for Capistrano 3.1
-lock '3.1.0'
+lock '~> 3.1'
 
 set :application, 'prx.org-frontend'
 set :repo_url, 'git://github.com/PRX/PRX.org-frontend.git'
@@ -12,7 +11,7 @@ namespace :deploy do
     on roles(:web) do
       within release_path do
         execute :npm, 'install'
-        execute :gulp, 'compile'
+        execute :npm, 'run-script compile'
       end
     end
   end

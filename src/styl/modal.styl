@@ -9,6 +9,32 @@
   overflow-x: hidden;
   padding: 25px;
 
+  @media screen and (min-width: 600px) and (min-height: 600px) {
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    width: 500px;
+    height: 500px;
+    margin-top: -250px;
+    margin-left: -250px;
+
+    .modal {
+      padding-bottom: 0!important;
+    }
+
+    &.ng-hide-add {
+      transition: transform 0.2s, opacity 0.1s 0.1s;
+      display:block!important;
+      transform-origin: right top;
+
+      &.ng-hide-add-active {
+        transform: scale(0.25, 0.25);
+        opacity: 0;
+      }
+    }
+  }
+
   .modal {
     absolute: top 25px left 25px;
     bottom: 25px; right 25px;
@@ -39,7 +65,7 @@
     overflow-y: auto;
     flex-shrink: 100;
     padding-right: 4px;
-    
+
     img {
       max-width: 100%;
     }

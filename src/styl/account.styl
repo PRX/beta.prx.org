@@ -1,5 +1,5 @@
 .account {
-  .img {
+  #hero .img, & > a .img {
     border: 2px solid light-grey;
     background-color: lightest-grey;
     border-radius: 50%;
@@ -7,6 +7,8 @@
     height: 70px;
     float: left;
     margin: 10px;
+    position: relative;
+    z-index: 5;
 
     &.default {
       image: '/assets/images/anonymous.png' 70px;
@@ -18,23 +20,32 @@ article.account {
   background: offwhite;
 
   #hero {
-    background-color: white;
+    .container {
+      background: none;
+      padding: 0;
 
-    h1 {
-      padding-top: 15px;
-      padding-bottom: 5px;
-      background-color: offwhite;
+      @media multi-column {
+        padding: 15px 20px;
+      }
     }
 
-    &:after {
-      content: ' ';
-      display: block;
-      clear: both;
+    h1 {
+      line-height: 60px;
+
+      &:after {
+        content: ' ';
+        display: block;
+        width: 100%;
+        height: 45px;
+        margin: -10px 0;
+        background: white;
+      }
     }
 
     .bio {
       clear: both;
-      padding: 10px;
+      background-color: white;
+      padding: 15px;
       a:last-child {
         font-weight: bold;
       }
@@ -53,18 +64,41 @@ article.account {
 }
 
 section.account {
+  min-width: 250px;
+
   .img {
-    margin-right: 15px;
-    margin-bottom: 12px;
+    margin: 0px 10px 10px 0px;
   }
 
   h2 {
     line-height: 70px;
+    margin-top: 0px !important;
   }
 
   .path, .location {
     font-size: 12px;
     clear: both;
     margin-bottom: 8px;
+    margin-left: 10px;
+  }
+}
+
+aside > section.account:first-child {
+  @media multi-column {
+    .img {
+      margin-top: -13px;
+    }
+
+    h2 {
+      margin: -20px !important;
+      height: 45px;
+      line-height: 45px;
+      font-size: 18px;
+      background-color: offwhite;
+      align: bottom;
+      a {
+        color: dark-grey;
+      }
+    }
   }
 }

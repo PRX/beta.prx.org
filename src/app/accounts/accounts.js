@@ -145,6 +145,44 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     replace: true
   };
 })
+.directive('prxAccountRecentStories', function ($timeout) {
+  return {
+    restrict: 'E',
+    scope: {
+      account: '=',
+      limit: '=',
+      skip: '='
+    },
+    templateUrl: 'accounts/recent_stories.html',
+    replace: true,
+    link: function (scope) {
+      $timeout(function () {
+        if (!angular.isDefined(scope.loading)) {
+          scope.loading = true;
+        }
+      }, 500);
+      scope.account.follow('prx:stories').follow('prx:items').then(function (items) {
+        scope.loading = false;
+        scope.filteredStories = scope.$eval('stories | skip: skip | limitTo: (limit || 5)', {stories: items});
+      });
+    }
+  };
+})
+.filter('skip', function () {
+  var result = [];
+  return function (elems, skip) {
+    if (skip) {
+      result.length = 0;
+      angular.forEach(elems, function (elem) {
+        if (elem.id != skip.id) {
+          result.push(elem);
+        }
+      });
+      return result;
+    }
+    return elems;
+  };
+})
 .controller('AccountCtrl', function (account, recentStories) {
   this.current = account;
   this.recentStories = recentStories;

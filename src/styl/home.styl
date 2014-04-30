@@ -28,9 +28,13 @@ article.story-time {
 
   section.greeting {
     .img {
-      @extend .account .img;
+      float: left;
+      border: 2px solid grey;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
       image: '/assets/images/audrey.png' 70px;
-      margin-bottom: 45px;
+      margin: 0 10px 50px 0;
     }
     // font-size: 0.9em;
     font-style: italic;
@@ -72,6 +76,7 @@ article.story-time {
 }
 
 section.story-time-cta {
+  padding: 0;
   a {
     button-blue();
     padding: 10px;
