@@ -11,7 +11,9 @@ namespace :deploy do
     on roles(:web) do
       within release_path do
         execute :npm, 'install'
-        execute :npm, 'run-script compile'
+        with application_version: fetch(:current_revision) do
+          execute :npm, 'run-script compile'
+        end
       end
     end
   end
