@@ -90,7 +90,7 @@ describe('accounts', function () {
     }));
 
     it ('compiles', function () {
-      $scope.account = ngHal.mock('http://meta.prx.org/model/account')
+      $scope.account = ngHal.mock('http://meta.prx.org/model/account');
       $scope.$digest();
       expect(element).toBeDefined();
     });
