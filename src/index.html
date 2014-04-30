@@ -63,8 +63,10 @@
 <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
 <script>(function(d,l,r,s,h,e,n){e = d.getElementsByTagName('script')[0];
   window.addEventListener('load', function () {
-    <% styles.forEach(function(file) { %>n=d.createElement(l),n[r]=s,n[h]='<%= file %>';
-    e.parentNode.insertBefore(n,e);<% }); %>
+    setTimeout(function () {
+      <% styles.forEach(function(file) { %>n=d.createElement(l),n[r]=s,n[h]='<%= file %>';
+      e.parentNode.insertBefore(n,e);<% }); %>
+    }, 1);
   });
 })(document, 'link', 'rel', 'stylesheet', 'href');
 </script>
