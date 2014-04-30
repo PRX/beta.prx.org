@@ -15,6 +15,27 @@
       background-size: auto 20px; background-position: center center; background-repeat: no-repeat;
     }
     header .loading { position: fixed; z-index: 10; height: 3px }
+    @keyframes spinner-outside {
+      0% {
+        transform: rotate(0deg);
+        animation-timing-function: linear;
+      }
+      100% {
+        transform: rotate(1080deg);
+        animation-timing-function: linear;
+      }
+    }
+
+    @keyframes spinner-inside {
+      0% {
+        transform: rotate(0deg);
+        animation-timing-function: linear;
+      }
+      100% {
+        transform: rotate(720deg);
+        animation-timing-function: linear;
+      }
+    }
   </style>
 </head>
 <body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying, loaded: app.loaded}">
@@ -40,6 +61,12 @@
   ga('require', 'displayfeatures');
 </script><% } scripts.forEach(function(file) { %>
 <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
+<script>(function(d,l,r,s,h,e,n){e = d.getElementsByTagName('script')[0];
+  window.addEventListener('load', function () {
+    <% styles.forEach(function(file) { %>n=d.createElement(l),n[r]=s,n[h]='<%= file %>';
+    e.parentNode.insertBefore(n,e);<% }); %>
+  });
+})(document, 'link', 'rel', 'stylesheet', 'href');
+</script>
 </body>
 </html>
-<% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
