@@ -23,18 +23,8 @@ article.story
         p
           | {{story.current.shortDescription}} #{''}
           a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
-      prx-account(account="story.account")
-      prx-account(account="story.account")
+      storytime-cta
     #asides
       aside
         prx-account(account="story.account")
-        section
-          h3 Related Stories
-          prx-story(story="story.current")
-          prx-story(story="story.current")
-      aside
-        storytime-cta
-      aside
-        section
-          h3 Listeners Also Listened To
-          prx-story(story="story.current")
+        prx-account-recent-stories(account="story.account", limit="3", skip="story.current")

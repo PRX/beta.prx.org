@@ -11,40 +11,187 @@ main {
   padding-top: action-bar-height;
 }
 
+body {
+  @media multi-column {
+    background: offwhite;
+  }
+}
+
+// prx-img directive
+// used for scaling using the `background-size: cover` system and to fade in
+// once the image has loaded to avoid fax-machine style rendering.
+.img {
+  // We set the background image to a transparent gif to allow
+  // a css-transition-based fade-in of the image whenever it is set.
+  background: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=") center no-repeat;
+
+  // And add a noop-transform to force a hardware layer where possible
+  transform: translate3d(0,0,0);
+  transition: background-image 0.1s 0.2s;
+
+  // the img tag is there to give us an onload event,
+  // but is not used for display
+  img {
+    display: none;
+  }
+}
+
+.loading-spinner {
+  position: relative;
+  loading-indicator();
+  height: 35px;
+  background-color: lightest-grey;
+  border-radius: 50%;
+  width: 35px;
+  margin: 10px auto;
+}
+
+// top-level sections (either top-level because they are in the main content
+// area or they are singly nested within an aside) are padded.
 aside > section, #main > section {
-  clear: both;
-  overflow: hidden;
   padding: 13px;
 
-  section {
-    padding: 0;
+  @media multi-column {
+    padding: 20px 15px;
   }
 
+
+  // The first header
+  // or section within a section is flush with the top, but the rest have a margin
+  // above to separate them from the previous element.
   & > h2, & > h3, & > section {
     margin-top: 10px;
     &:first-child {
       margin-top: 0;
     }
   }
-}
 
-#main, #asides {
-  & > section + section, & > aside > section + section {
+  // Top level sections immediately following another top level section are
+  // separated with a thin border.
+  & + section {
     border-top: 1px solid offwhite;
   }
 }
 
+// Separate the asides from the main content with the same border as above.
 #asides {
   border-top: 1px solid offwhite;
+
+  // unless we're in multi-column mode.
+  @media multi-column {
+    border-top: none;
+  }
 }
 
-// prx-img directive
-.img {
-  background: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=") center no-repeat;
-  transform: translate3d(0,0,0);
-  transition: background-image 0.1s 0.2s;
-  img {
-    display: none;
+#hero {
+  .container {
+    padding: 10px 13px;
+  }
+
+  @media multi-column {
+    display: flex;
+    justify-content: center;
+
+    .container {
+      flex: 1;
+      padding: 15px 20px;
+      max-width: 1040px;
+    }
+  }
+}
+
+// the stuff below the hero/header
+#content {
+  margin-bottom: 13px;
+
+  @media multi-column {
+    // we're (ab)using padding to give us the minimum distance from the sides
+    // of the browser window here because margin is being used to center
+    padding: 0 20px;
+    margin: 30px auto;
+
+    // as a result of our abuse of padding, we actually want a 1000px wide block
+    // with 20px of space on either side.
+    max-width: 1040px;
+
+    // and we flow the content inside it, mostly so we can have factored sizing
+    // and reordering.
+    display: flex;
+    flex-flow: row wrap;
+
+    // stick blocks to the top of the container
+    align-content: flex-start;
+  }
+}
+
+// flow the sections within primary blobs of content.
+#main, aside {
+  display: flex;
+  flex-wrap: wrap;
+  & > section {
+    flex: 1 auto;
+
+    &.ng-leave {
+      transition: all 0.2s;
+      transform-origin: center top;
+
+      &.ng-leave-active {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+    }
+  }
+}
+
+// This is the main column
+#main {
+  min-width: 300px;
+
+  @media multi-column {
+    // Move it after the asides
+    order: 2;
+
+    // let it stretch to fill the area to a factor of 5
+    flex: 5 5 0px;
+
+    // stretch to be as tall as the sidebar if the sidebar is naturally taller
+    align-self: stretch;
+
+    // stick sections to the top of the block if this has been stretched to
+    // match the height of the sidebar
+    align-content: flex-start;
+
+    background-color: white;
+  }
+}
+
+#asides {
+  min-width: 250px;
+
+  @media multi-column {
+    // move it before the main column
+    order: 1;
+
+    // allow it to stretch horizontally by a factor of 2
+    flex: 2 2 0px;
+
+    // spacing between the main content and the sidebar. Put on the sidebar
+    // as some pages have only main content.
+    margin-right: 20px;
+
+    // each block of sidebar content is a white box with 20px above
+    aside {
+      margin-top: 20px;
+
+      section {
+        background-color: white;
+      }
+
+      // except the first one, which has no space above
+      &:first-child {
+        margin-top: 0;
+      }
+    }
   }
 }
 
@@ -60,103 +207,5 @@ a.full-site {
     background-color: blue;
     color: white;
     border-color: darker-blue;
-  }
-}
-
-article {
-
-  #hero {
-    flex: 0 0 100%;
-    display: flex;
-    justify-content: center;
-    .container {
-      padding: 0;
-      margin: 10px 13px;
-      flex: 1;
-      h1, h2, h3 {
-        margin-top: 0;
-      }
-    }
-  }
-
-  #content {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    align-items: flex-start;
-    align-content: flex-start;
-    margin-bottom: 13px;
-    max-width: 1040px;
-  }
-
-  #main {
-    display: flex;
-    flex-flow: row wrap;
-    min-width: 300px;
-    flex: 0 0 100%;
-
-    section {
-      flex: 1 auto;
-    }
-  }
-
-  #asides {
-    min-width: 300px;
-    flex: 0 0 100%;
-  }
-}
-
-@media screen and (min-width: 700px) {
-  body {
-      background: offwhite;
-  }
-
-  section {
-    padding: 20px 15px;
-  }
-
-  article {
-
-    #hero {
-      .container {
-        margin: 15px 20px;
-        max-width: 1000px;
-      }
-    }
-
-    #content {
-      padding: 0 20px;
-      margin: 30px auto;
-    }
-
-    #asides {
-      border-top: none;
-      order: 1;
-      flex: 1 1 1px;
-      max-width: 335px;
-      margin-right: 20px;
-
-      aside {
-        background-color: #fff;
-      }
-    }
-
-    #main {
-      order: 2;
-      flex: 3 1 1px;
-      align-self: stretch;
-      align-content: flex-start;
-      background-color: #fff;
-    }
-
-    #asides {
-      aside {
-        margin-top: 20px;
-
-        &:first-child {
-          margin-top: 0;
-        }
-      }
-    }
   }
 }

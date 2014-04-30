@@ -20,6 +20,32 @@
   }
 }
 
+loading-indicator() {
+  &:before {
+    content: '';
+    absolute: top 50% right 50%;
+    width: 25px; height: 25px;
+    margin: -12.5px -12.5px 0;
+    image: '/assets/images/bt_loading_outer.png' auto 25px;
+    animation-name: spinner-outside;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+  }
+  &:after {
+    content: '';
+    absolute: top 50% right 50%;
+    width: 17px; height: 17px;
+    margin: -8.5px -8.5px 0;
+    image: '/assets/images/bt_loading_inner.png' auto 17px;
+    animation-name: spinner-inside;
+    animation-duration: 3s;
+    animation-direction: reverse;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+  }
+}
+
 $player-button {
   button-orange();
   width: 70px;
@@ -32,29 +58,7 @@ $player-button {
   }
   &.loading {
     background-image: none;
-    &:before {
-      content: '';
-      absolute: top 50% right 50%;
-      width: 25px; height: 25px;
-      margin: -12.5px -12.5px 0;
-      image: '/assets/images/bt_loading_outer.png' auto 25px;
-      animation-name: spinner-outside;
-      animation-duration: 3s;
-      animation-iteration-count: infinite;
-      animation-play-state: running;
-    }
-    &:after {
-      content: '';
-      absolute: top 50% right 50%;
-      width: 17px; height: 17px;
-      margin: -8.5px -8.5px 0;
-      image: '/assets/images/bt_loading_inner.png' auto 17px;
-      animation-name: spinner-inside;
-      animation-duration: 3s;
-      animation-direction: reverse;
-      animation-iteration-count: infinite;
-      animation-play-state: running;
-    }
+    loading-indicator();
   }
 }
 

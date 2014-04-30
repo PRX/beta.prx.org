@@ -22,7 +22,11 @@ article.account {
   #hero {
     .container {
       background: none;
-      margin: 0;
+      padding: 0;
+
+      @media multi-column {
+        padding: 15px 20px;
+      }
     }
 
     h1 {
@@ -80,7 +84,7 @@ section.account {
 }
 
 aside > section.account:first-child {
-  @media screen and (min-width: 700px) {
+  @media multi-column {
     .img {
       margin-top: -13px;
     }
