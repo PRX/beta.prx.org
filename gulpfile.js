@@ -244,6 +244,7 @@ gulp.task('distHtml', function () {
   };
   return gulp.src(c.app.html)
     .pipe(templt(ctx))
+    .pipe(feats(featDist, {strict: true, default: false}))
     .pipe(gulp.dest(complDir));
 });
 
