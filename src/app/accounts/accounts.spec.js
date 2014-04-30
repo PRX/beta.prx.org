@@ -62,6 +62,41 @@ describe('accounts', function () {
     });
   });
 
+  describe ('skip filter', function () {
+    var $filter;
+    beforeEach(inject(function(_$filter_) {
+      $filter = _$filter_;
+    }));
+
+    it ('removes matching elements', function () {
+      expect($filter('skip')([{id:1},{id:2}], {id:2})).toEqual([{id:1}]);
+    });
+
+    it ('is a noop when passed nothing', function () {
+      expect($filter('skip')([{id:1}])).toEqual([{id:1}]);
+    });
+  });
+
+  describe('accountRecentStories directive', function () {
+    var $compile, $scope, element, ngHal;
+
+    beforeEach(module('templates'));
+
+    beforeEach(inject(function (_$compile_, $rootScope, _ngHal_) {
+      $compile = _$compile_;
+      $scope = $rootScope.$new();
+      ngHal = _ngHal_;
+      element = $compile('<prx-account-recent-stories account="account"></prx-account-recent-stories>')($scope);
+    }));
+
+    it ('compiles', function () {
+      $scope.account = ngHal.mock('http://meta.prx.org/model/account')
+      $scope.$digest();
+      expect(element).toBeDefined();
+    });
+
+  });
+
   describe('limitToHtml directive', function () {
     var $compile, $scope, element, $sce, $timeout;
     beforeEach(inject(function (_$compile_, $rootScope, _$sce_, _$timeout_) {
