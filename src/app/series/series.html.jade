@@ -1,7 +1,13 @@
 section.body
   .series
-
+    prx-img.seriesImg(src="series.imageUrl")
     .subtitle
         .label produced by:
+        {{series.account.name}}
+    .subtitle
+        .label seasons
+    .subtitle
+        .label episodes
+        {{series.story_count}}
     div(ng-repeat="story in stories")
         p {{story.title}}
