@@ -35,6 +35,14 @@ angular.module('prx', ['ngAnimate',
       return 'tests';
     }
   }]);
+  // $stateProvider.state('', {
+  //   views: {
+  //     'modal': {
+  //       templateUrl: 'modal/modal.html',
+  //       controller: 'ModalCtrl as modal'
+  //     }
+  //   }
+  // })
   ngFlagProvider.flags(FEAT.JSON);
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
@@ -178,5 +186,11 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
   return {
     restrict: 'E',
     templateUrl: 'drawer.html'
+  };
+})
+.directive('prxPrerendered', function () {
+  return {
+    restrict: 'C',
+    terminal: true
   };
 });

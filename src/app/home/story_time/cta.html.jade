@@ -1,2 +1,3 @@
-section.story-time-cta
-  a(ui-sref="home.storyTime", ng-show="storyTime.text") {{storyTime.text}}
+section.story-time-cta(ng-show="storyTime.text")
+  a(ui-sref="home.storyTime") {{storyTime.text|| "&nbsp;"}}
+    span.loading-spinner(ng-show="!storyTime.text")

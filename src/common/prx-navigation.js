@@ -7,7 +7,9 @@ angular.module('prxNavigation', ['ui.router'])
   }
   function renderDone() {
     if (typeof window.callPhantom !== 'undefined') {
-      $timeout(window.callPhantom, 1);
+      angular.element(window.document.getElementsByTagName('main')).children().addClass('prx-prerendered');
+      angular.element(window.document.querySelectorAll('[ui-view]')).children().addClass('prx-prerendered');
+      $timeout(window.callPhantom, 10);
     }
   }
 

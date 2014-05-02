@@ -51,7 +51,6 @@ angular.module('prx.modal', ['prx.errors', 'ui.router'])
 .directive('prxModal', function () {
   return {
     restrict: 'E',
-    replace: true,
     controller: 'ModalCtrl',
     controllerAs: 'modal',
     templateUrl: 'modal/modal.html'
