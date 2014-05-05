@@ -34,7 +34,7 @@ angular.module('prx', ['ngAnimate',
     } else {
       return 'tests';
     }
-  }]);
+  }]).enabled(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration');
   ngFlagProvider.flags(FEAT.JSON);
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
