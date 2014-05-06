@@ -156,7 +156,6 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     }
   };
 
-
   this.loading = function () {
     return soundFactory.sound && soundFactory.sound.loading;
   };
@@ -191,7 +190,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     seconds = ~~(time % 60);
 
     if (fmt == 'long' || hours) {
-      return [dd(hours), ":", dd(minutes), ":", dd(seconds)].join('');
+      return [hours, ":", dd(minutes), ":", dd(seconds)].join('');
     } else {
       return [minutes, ":", dd(seconds)].join('');
     }
