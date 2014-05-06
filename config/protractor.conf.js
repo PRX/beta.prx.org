@@ -30,11 +30,11 @@ if (process.env['TRAVIS']) {
     'browserName': 'internet explorer',
     'version': '9'
   }, {
-    "browser": "safari",
-    "browser-version": "7"
+    "browserName": "safari",
+    "version": "7"
   }, {
-    "browser": "safari",
-    "browser-version": "6"
+    "browserName": "safari",
+    "version": "6"
   }];
 
   for(var i=0; i<exports.config.multiCapabilities.length; i++) {
