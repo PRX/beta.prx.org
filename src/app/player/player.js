@@ -1,14 +1,19 @@
 angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
 .factory('prxSoundFactory', function (smSound) {
   return function (options) {
-    return function getSound () {
+    getSound.story = options && options.story;
+    getSound.producer = options && options.producer;
+
+    return getSound;
+
+    function getSound () {
       if (!getSound.sound) {
         getSound.sound = sound = smSound.createList(options.audioFiles);
         sound.producer = options.producer;
         sound.story = options.story;
       }
       return getSound.sound;
-    };
+    }
   };
 })
 .service('prxPlayer', function ($analytics) {
@@ -94,58 +99,53 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     templateUrl: 'player/global_player.html'
   };
 })
-.directive('prxPlayer', function () {
+.directive('prxPlayer', function ($controller) {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: 'player/player.html',
-    scope: {'sound':'='}
-  };
-})
-.directive('prxPlayerButton', function ($controller) {
-  return {
-    restrict: 'E',
-    replace: true,
     scope: true,
-    templateUrl: 'player/button.html',
     link: function (scope, element, attrs) {
       var soundFactory = function soundFactory () {
         if (!soundFactory.sound) {
           soundFactory.sound = soundFactory.factory;
         }
-        while(angular.isFunction(soundFactory.sound)) {
+        if(angular.isFunction(soundFactory.sound)) {
           soundFactory.sound = soundFactory.sound();
         }
         return soundFactory.sound;
       };
 
       scope.$parent.$watch(attrs.sound, function (sound) {
-        while (true) {
-          if (angular.isFunction(sound)) {
-            if (sound.sound) {
-              sound = sound.sound;
-            } else {
-              soundFactory.sound = undefined;
-              soundFactory.factory = sound;
-              break;
-            }
+        if (angular.isFunction(sound)) {
+          if (sound.sound) {
+            soundFactory.sound = sound.sound;
           } else {
-            soundFactory.sound = sound;
-            break;
+            soundFactory.sound = undefined;
+            soundFactory.factory = sound;
           }
+        } else {
+          soundFactory.sound = sound;
         }
       });
 
-      scope.player = $controller('PlayerButtonCtrl', {
+      scope.player = $controller('PlayerCtrl', {
         $scope: scope,
         soundFactory: soundFactory
       });
 
-      element.data('$prxPlayerButtonController', scope.player);
+      element.data('$prxPlayerController', scope.player);
     }
   };
 })
-.controller('PlayerButtonCtrl', function (soundFactory, prxPlayer) {
+.directive('prxPlayerButton', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'player/button.html'
+  };
+})
+.controller('PlayerCtrl', function (soundFactory, prxPlayer) {
   this.pause = function () {
     if (soundFactory.sound && prxPlayer.nowPlaying == soundFactory()) {
       prxPlayer.pause(soundFactory());
@@ -170,6 +170,51 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
 
   this.paused  = function () {
     return !soundFactory.sound || soundFactory().paused;
+  };
+
+  this.active = function () {
+    return soundFactory.sound &&
+    (!soundFactory().paused || soundFactory().position > 0);
+  };
+
+  this.position = function () {
+    return (soundFactory.sound && soundFactory().position) || 0;
+  };
+
+  this.progress = function () {
+    return Math.round(this.position() /
+      this.duration()) / 10 + '%';
+  };
+
+  this.duration = function () {
+    return this.story() && this.story().length;
+  };
+
+  this.scrub = function (percent) {
+    soundFactory().setPosition(this.duration() * percent * 10);
+  };
+
+  this.story = function () {
+    return soundFactory.sound ? soundFactory().story : soundFactory.story;
+  };
+})
+.directive('prxPlayerScrubber', function () {
+  return {
+    restrict: 'A',
+    scope: {'prxPlayerScrubber': '&'},
+    link: function (scope, elem, attrs) {
+      elem.bind('click', click);
+
+      elem.children().css('pointer-events', 'none');
+
+      scope.$on('$destroy', function () {
+        elem.unbind('click', click);
+      });
+
+      function click (event) {
+        scope.prxPlayerScrubber({percentage: event.offsetX * 100 / event.target.offsetWidth});
+      }
+    }
   };
 })
 .filter('timeCode', function () {
