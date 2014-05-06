@@ -183,7 +183,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
 
   this.progress = function () {
     return Math.round(this.position() /
-      this.duration()) / 10 + '%';
+      this.duration()) / 10;
   };
 
   this.duration = function () {

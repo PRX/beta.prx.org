@@ -70,9 +70,7 @@ $player-button {
     flex: 0 auto;
   }
   .track {
-
     display: none;
-
     @media tall-screen {
       display: flex;
       flex: 1;
@@ -80,20 +78,32 @@ $player-button {
       &.active {
         .scrubber {
           display: block;
+          position: relative;
           border-right: 1px solid lightest-grey;
+          span {
+            absolute: top right;
+            padding: 0 3px 0 5px;
+          }
         }
         .inverse {
           border-left: 1px solid lightest-grey;
           position: relative;
+          span {
+            display: block;
+            absolute: top left;
+            padding: 0 5px 0 3px;
+          }
         }
         span {
-          absolute: top left;
           background: lightest-grey;
           color: dark-blue;
           font-weight: 500;
           font-size: 13px;
-          padding: 0 5px 0 3px;
-          display: block;
+        }
+
+        &.flip {
+          .inverse span { display: none; }
+          .scrubber span { display: block; }
         }
       }
       .scrubber {
