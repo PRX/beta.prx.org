@@ -21,25 +21,26 @@ if (process.env['TRAVIS']) {
   }, {
     'browserName': 'chrome'
   }, {
-    'browserName': 'android',
-    'version': '4.3',
-    'device-orientation': 'portrait'
-  }, {
-    'browserName': 'android',
-    'version': '4.3',
-    'deviceName': 'Google Nexus 7 HD Emulator',
-  }, {
     'browserName': 'internet explorer',
     'version': '11'
   }, {
     'browserName': 'internet explorer',
     'version': '10'
+  }, {
+    'browserName': 'internet explorer',
+    'version': '9'
+  }, {
+    "browser": "safari",
+    "browser-version": "7"
+  }, {
+    "browser": "safari",
+    "browser-version": "6"
   }];
 
   for(var i=0; i<exports.config.multiCapabilities.length; i++) {
     exports.config.multiCapabilities[i]['tunnel-identifier'] = process.env['TRAVIS_JOB_NUMBER'];
   }
-  
+
 } else {
   exports.config.seleniumServerJar = '/usr/local/lib/node_modules/protractor/selenium/selenium-server-standalone-2.41.0.jar';
 }
