@@ -1,6 +1,6 @@
 .player
   prx-player-button(sound="sound")
-  .track(prx-player-scrubber="player.scrub(percentage)")
+  .track(prx-player-scrubber="player.scrub(percentage)", ng-class="{active: player.active()}")
     .scrubber(ng-style="{width: player.progress()}")
     .inverse
       span(ng-bind="player.position() | timeCode")

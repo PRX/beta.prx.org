@@ -77,16 +77,15 @@ $player-button {
       display: flex;
       flex: 1;
 
-      .scrubber {
-        flex: 0 auto;
-        background-color: rgba(lightest-grey, 0.6);
-        border-right: 1px solid lightest-grey;
-      }
-      .inverse {
-        flex: 1;
-        border-left: 1px solid lightest-grey;
-        background-color: rgba(darkest-blue, 0.6);
-        position: relative;
+      &.active {
+        .scrubber {
+          display: block;
+          border-right: 1px solid lightest-grey;
+        }
+        .inverse {
+          border-left: 1px solid lightest-grey;
+          position: relative;
+        }
         span {
           absolute: top left;
           background: lightest-grey;
@@ -94,7 +93,20 @@ $player-button {
           font-weight: 500;
           font-size: 13px;
           padding: 0 5px 0 3px;
+          display: block;
         }
+      }
+      .scrubber {
+        display: none;
+        flex: 0 auto;
+        background-color: rgba(lightest-grey, 0.6);
+      }
+      .inverse {
+        flex: 1;
+        background-color: rgba(darkest-blue, 0.6);
+      }
+      span {
+        display: none;
       }
     }
   }
