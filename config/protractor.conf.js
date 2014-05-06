@@ -27,9 +27,6 @@ if (process.env['TRAVIS']) {
     'browserName': 'internet explorer',
     'version': '10'
   }, {
-    'browserName': 'internet explorer',
-    'version': '9'
-  }, {
     "browserName": "safari",
     "version": "7"
   }, {
