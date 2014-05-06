@@ -62,6 +62,44 @@ $player-button {
   }
 }
 
+.player {
+  display: flex;
+
+  button {
+    @extend $player-button;
+    flex: 0 auto;
+  }
+  .track {
+
+    display: none;
+
+    @media tall-screen {
+      display: flex;
+      flex: 1;
+
+      .scrubber {
+        flex: 0 auto;
+        background-color: rgba(lightest-grey, 0.6);
+        border-right: 1px solid lightest-grey;
+      }
+      .inverse {
+        flex: 1;
+        border-left: 1px solid lightest-grey;
+        background-color: rgba(darkest-blue, 0.6);
+        position: relative;
+        span {
+          absolute: top left;
+          background: lightest-grey;
+          color: dark-blue;
+          font-weight: 500;
+          font-size: 13px;
+          padding: 0 5px 0 3px;
+        }
+      }
+    }
+  }
+}
+
 .persistent-player {
   display: none;
   flex-direction: row;

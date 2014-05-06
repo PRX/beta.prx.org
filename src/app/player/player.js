@@ -94,6 +94,14 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     templateUrl: 'player/global_player.html'
   };
 })
+.directive('prxPlayer', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'player/player.html',
+    scope: {'sound':'='}
+  };
+})
 .directive('prxPlayerButton', function ($controller) {
   return {
     restrict: 'E',
