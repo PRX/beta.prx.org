@@ -116,6 +116,12 @@
       });
     };
 
+    var setPosition = makePromisedProxy('setPosition');
+    Sound.prototype.setPosition = function (position) {
+      this.position = position;
+      return setPosition.apply(this, arguments);
+    };
+
     function SoundList (urls, options) {
       var firstSound, opts = (options || {}),
         subOpts = angular.copy(opts), self = this;
@@ -153,65 +159,76 @@
 
     angular.forEach(proxies, function (proxy) {
       SoundList.prototype[proxy] = function () {
-        console.log("ATTEMPTING TO CALL " + proxy + ' on ', this.$current);
         return this.$current[proxy].apply(this.$current, [].slice.call(arguments));
       };
     });
 
     SoundList.prototype.setPosition = function (position) {
-      var sound, tmp, available;
-      if (this.position > position) {
-        if (this.$behind < position) {
-          return this.$current.setPosition(position - this.$behind);
-        } else {
-          sound = this.$first;
-          available = sound.duration;
+      if (this.$behind < position && this.$behind + this.$current.duration >= position) {
+        return this.$current.setPosition(position - this.$behind);
+      } else if (this.position < position) { // we're seeking to the future
+        return this.$searchSeek(position);
+      } else { // start our search at the beginning
 
-          while (position > available) {
-            sound = sound.$next;
-            available += sound.duration;
-          }
-          tmp = this.$current;
-          this.$current = sound;
-          tmp.pause();
-          tmp.setPosition(0);
-          this.$behind = available - sound.duration;
-          this.$current.setPosition(position - this.$behind).then(function (r) {
-            return sound.play().then(function () {
-              return r;
-            });
-          });
-        }
-      } else {
-        if (this.$behind + this.$current.duration >= position) {
-          return this.$current.setPosition(position - this.$behind);
-        } else {
-          return this.$searchSeek(position);
-        }
+        return this.$searchSeek(position, this.$first, 0);
       }
     };
 
+
+    /**
+     * A recursive search forward through the playlist to find out
+     * which sound contains the timecode requested and where in the sound it
+     * occurs.
+     *
+     * This method is called by `setPosition(int position)` after it has been
+     * determined that a simple seek within the active sound is not possible.
+     *
+     * Parameters:
+     *   position (int): the position to seek to, in msec.
+     *   sound (sound, optional): the sound to start the search from. Defaults
+     *     to the currently active sound.
+     *   behind: (int, optional): the number of `msec` that all sounds prior to the
+     *     passed sound consume. Should be passed when sound is. Defaults to the
+     *     running total we have calculated for the currently active sound.
+     *
+     * Returns a promise which resolves to the sound.
+     **/
     SoundList.prototype.$searchSeek = function (position, sound, behind) {
-      var self = this;
       sound = sound || this.$current;
-      behind = behind || this.$behind;
+      behind = angular.isDefined(behind) ? behind : this.$behind;
+
+      // We set $current to an empty object so that continued changes
+      // do not impact the playlist (i.e. state changing from playing to paused,
+      // or no longer being in the 'loading' state.)
+      var tmp = this.$current; this.$current = {};
+      tmp.pause(); tmp.setPosition(0);
+
+      this.loading = this.playing; // don't show a loading indicator for paused sounds.
+
+      return this.$searchSeek_(position, sound, behind);
+    };
+
+    // The recursive bit of the $searchSeek method - does not include
+    // setup.
+    SoundList.prototype.$searchSeek_ = function (position, sound, behind) {
       if (sound.duration + behind < position) {
-        this.loading = true;
-        this.$current = {};
-        sound.pause();
-        sound.setPosition(0);
-        return sound.$next.load().then(function () {
-          return self.$searchSeek(position, sound.$next, behind + sound.duration);
-        });
-      } else {
-        return sound.setPosition(position - behind).then(function (r) {
-          self.$current = sound;
-          self.loading = false;
-          self.$behind = behind;
-          return sound.play().then(function () {
-            return r;
-          });
-        });
+        var recurse = angular.bind(this, this.$searchSeek_, position, sound.$next, behind + sound.duration);
+        if (sound.$next.duration) { // Already loaded, or pre-populated.
+          return recurse();
+        } else { // Need to load the sound in order to know its duration.
+          return sound.$next.load().then(recurse);
+        }
+      } else { // base case, we found the right sound!
+        return sound.setPosition(position - behind).then(angular.bind(this, function (s) {
+          this.$current = sound;
+          this.$behind = behind;
+
+          if (!this.paused) { // If we were not paused before, resume playback.
+            return sound.play();
+          } else {
+            return s;
+          }
+        }));
       }
     };
 

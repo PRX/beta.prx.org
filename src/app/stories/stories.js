@@ -25,7 +25,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story.follow('prx:audio').then(function (files) {
           var result = [];
           angular.forEach(files, function (file) {
-            result.push({id: file.id, url: file.links('enclosure').url()});
+            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
           });
           return result;
         });
