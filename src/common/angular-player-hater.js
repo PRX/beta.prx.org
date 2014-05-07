@@ -131,6 +131,7 @@
             if (angular.isDefined(sound)) {
               self.$behind += self.$current.duration;
               self.$current = sound;
+              this.unload();
               sound.play();
             } else {
               self.$behind = 0;
@@ -169,7 +170,6 @@
       } else if (this.position < position) { // we're seeking to the future
         return this.$searchSeek(position);
       } else { // start our search at the beginning
-
         return this.$searchSeek(position, this.$first, 0);
       }
     };
@@ -200,8 +200,7 @@
       // We set $current to an empty object so that continued changes
       // do not impact the playlist (i.e. state changing from playing to paused,
       // or no longer being in the 'loading' state.)
-      var tmp = this.$current; this.$current = {};
-      tmp.pause(); tmp.setPosition(0);
+      var tmp = this.$current; this.$current = {}; tmp.unload();
 
       this.loading = this.playing; // don't show a loading indicator for paused sounds.
 
@@ -213,6 +212,7 @@
     SoundList.prototype.$searchSeek_ = function (position, sound, behind) {
       if (sound.duration + behind < position) {
         var recurse = angular.bind(this, this.$searchSeek_, position, sound.$next, behind + sound.duration);
+        sound.unload();
         if (sound.$next.duration) { // Already loaded, or pre-populated.
           return recurse();
         } else { // Need to load the sound in order to know its duration.
