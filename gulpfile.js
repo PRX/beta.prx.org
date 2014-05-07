@@ -147,7 +147,7 @@ gulp.task('css', ['assets'], function () {
   .pipe(gulp.dest(buildDir + '/assets/'));
 });
 
-gulp.task('specs', ['templates', 'buildJs'], function () {
+gulp.task('specs', ['templates', 'buildJs', 'helperJs'], function () {
   var cfg = {};
   if (process.env.TRAVIS) {
     cfg.browsers = ['PhantomJS', 'Firefox'];
@@ -161,6 +161,28 @@ gulp.task('buildJs', ['jshint'], function () {
     , gulp.src(vBuildJs, {base: cwd}))
     .pipe(newer(buildDir))
     .pipe(gulp.dest(buildDir));
+});
+
+gulp.task('helperJs', function () {
+  var path = c.test.helper.dst.split('/');
+  var name = path.splice(path.length-1, 1)[0];
+  path = path.join('/');
+
+  return gulp.src(c.test.helper.src)
+    .pipe(feats(featsDev, {strict: false, default: true}))
+    .pipe(rename(name))
+    .pipe(gulp.dest(path));
+});
+
+gulp.task('helperJsDist', function () {
+  var path = c.test.helper.dst.split('/');
+  var name = '.release' + path.splice(path.length-1, 1)[0];
+  path = path.join('/');
+
+  return gulp.src(c.test.helper.src)
+    .pipe(feats(featDist, {strict: true, default: false}))
+    .pipe(rename(name))
+    .pipe(gulp.dest(path));
 });
 
 gulp.task('js', ['specs', 'buildJs']);
@@ -248,10 +270,11 @@ gulp.task('distHtml', function () {
     .pipe(gulp.dest(complDir));
 });
 
-gulp.task('testDist', function () {
+gulp.task('testDist', ['helperJsDist'], function () {
   return karma.once({
     files: [complDir+"/**/*.min.js"].concat(
-      c.test.js, c.app.specs,
+      c.test.helper.dst.split('/').slice(0, -1).join('/') + '/.release' +
+      c.test.helper.dst.split('/').slice(-1), c.test.js, c.app.specs,
       c.test.assets.map(function (pattern) {
         return {
           pattern: pattern, watched: true, included: false, served: true
@@ -297,7 +320,7 @@ gulp.task('build_', function (cb) {
   runSeq('clean', ['templates', 'buildJs', 'css', 'assets'], 'html', cb);
 });
 
-gulp.task('watch', ['build_', 'installWebdriver'], function (cb) {
+gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
   server = require(cwd+'/'+c.app.server)
     .listen(process.env.PORT || 8080, buildDir);
   gutil.log("Listening on port " + process.env.PORT || 8080);
@@ -328,7 +351,7 @@ gulp.task('watch', ['build_', 'installWebdriver'], function (cb) {
 
   karma.start({ autoWatch: true });
 
-  gulp.watch(allAppJs.concat(featsDev), ['buildJs']);
+  gulp.watch(allAppJs.concat(featsDev), ['buildJs', 'helperJs']);
 });
 
 gulp.task('default', ['watch']);
