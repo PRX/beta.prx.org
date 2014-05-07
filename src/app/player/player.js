@@ -8,7 +8,13 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
 
     function getSound () {
       if (!getSound.sound) {
-        getSound.sound = sound = smSound.createList(options.audioFiles);
+        getSound.sound = sound = smSound.createList(options.audioFiles, {
+          onfinish: function () {
+            if (angular.isFunction(sound.onfinish)) {
+              sound.onfinish();
+            }
+          }
+        });
         sound.producer = options.producer;
         sound.story = options.story;
       }
@@ -23,6 +29,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
       if (this.nowPlaying != sound) {
         this.stop();
         this.nowPlaying = sound;
+        this.nowPlaying.onfinish = angular.bind(this, this.stop);
         $analytics.eventTrack('Play', {
           category: 'Audio Player',
           label: this.nowPlaying.story.id
@@ -80,12 +87,14 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     },
     stop: function () {
       if (this.nowPlaying) {
+        this.nowPlaying.onfinish = undefined;
         $analytics.eventTrack('Stop', {
           category: 'Audio Player',
           label: this.nowPlaying.story.id
         });
         this.sendHeartbeat(true);
         this.nowPlaying.stop();
+        this.nowPlaying = undefined;
       }
     }
   };
@@ -191,6 +200,9 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
   };
 
   this.scrub = function (percent) {
+    if (prxPlayer.nowPlaying == soundFactory.sound) {
+      prxPlayer.sendHeartbeat(true);
+    }
     soundFactory().setPosition(this.duration() * percent * 10);
   };
 
