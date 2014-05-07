@@ -4,6 +4,6 @@
   "lovesharebuy": false,
   "COUNT_HOST": "http://localhost",
   "LISTEN_LATER": true,
-  "HOME_PAGE": true,
+  "HOME_PAGE": false,
   "APPLICATION_VERSION": "development"
 }
