@@ -1,0 +1,4 @@
+section.pick-list(ng-if="loading || filteredPicks.length")
+  h3(ng-bind="picklist.title")
+  prx-pick(ng-repeat="pick in filteredPicks" pick="pick")
+  .loading-spinner(ng-show="loading")
