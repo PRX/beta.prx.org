@@ -8,5 +8,6 @@ describe('prx.home', function () {
       $rootScope.$broadcast('$stateChangeStart', {name: 'home'});
       expect($state.go).toHaveBeenCalled();
     }));
-  }  
+  }
+
 });

@@ -4,6 +4,7 @@
   "lovesharebuy": false,
   "COUNT_HOST": "http://localhost",
   "LISTEN_LATER": true,
-  "HOME_PAGE": false,
-  "APPLICATION_VERSION": "development"
+  "HOME_PAGE": true,
+  "APPLICATION_VERSION": "development",
+  "home_pick_list_id": "30783"
 }
