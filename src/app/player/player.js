@@ -1,4 +1,38 @@
-angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
+angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
+.run(function (Bus, $analytics) {
+  Bus.on('audioPlayer.stop', function () {
+    $analytics.eventTrack('Stop', {
+      category: 'Audio Player',
+      label: this.story.id
+    });
+  }).on('audioPlayer.resume', function () {
+    $analytics.eventTrack('Resume', {
+      category: 'Audio Player',
+      label: this.story.id
+    });
+  }).on('audioPlayer.pause', function () {
+    $analytics.eventTrack('Pause', {
+      category: 'Audio Player',
+      label: this.story.id
+    });
+  }).on('audioPlayer.play', function () {
+    $analytics.eventTrack('Play', {
+      category: 'Audio Player',
+      label: this.story.id
+    });
+  }).on('audioPlayer.listen', function (audioFile, duration, startTime) {
+    $analytics.eventTrack('Listen', {
+      category: 'Audio Player',
+      label: this.story.id,
+      pieceId: this.story.id,
+      audioFileId: audioFile.id,
+      value: duration,
+      duration: duration,
+      startedAt: startTime,
+      noninteraction: true
+    });
+  });
+})
 .factory('prxSoundFactory', function (smSound) {
   function SoundFactory (options) {
     getSound.story = options && options.story;
@@ -51,7 +85,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
 
   return SoundFactory;
 })
-.service('prxPlayer', function ($analytics) {
+.service('prxPlayer', function (Bus) {
   return {
     $lastHeartbeat: 0,
     play: function (sound) {
@@ -59,10 +93,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
         this.stop();
         this.nowPlaying = sound;
         this.nowPlaying.onfinish = angular.bind(this, this.stop);
-        $analytics.eventTrack('Play', {
-          category: 'Audio Player',
-          label: this.nowPlaying.story.id
-        });
+        Bus.emit('audioPlayer.play', this.nowPlaying);
         return sound.play();
       } else if (this.nowPlaying.paused) {
         this.resume();
@@ -73,36 +104,21 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
         var position = Math.round(this.nowPlaying.position / 1000);
         if (force || (position - this.$lastHeartbeat) >= 15) {
           var seconds = position - this.$lastHeartbeat;
-          $analytics.eventTrack('Listen', {
-            category: 'Audio Player',
-            label: this.nowPlaying.story.id,
-            pieceId: this.nowPlaying.story.id,
-            audioFileId: this.nowPlaying.id,
-            value: seconds,
-            duration: seconds,
-            startedAt: this.$lastHeartbeat,
-            noninteraction: true
-          });
+          Bus.emit('audioPlayer.listen', this.nowPlaying, seconds, this.$lastHeartbeat);
           this.$lastHeartbeat = position;
         }
       }
     },
     pause: function () {
       if (!this.nowPlaying.paused) {
-        $analytics.eventTrack('Pause', {
-          category: 'Audio Player',
-          label: this.nowPlaying.story.id
-        });
+        Bus.emit('audioPlayer.pause', this.nowPlaying);
         this.sendHeartbeat(true);
         return this.nowPlaying.pause();
       }
     },
     resume: function () {
       if (this.nowPlaying) {
-        $analytics.eventTrack('Resume', {
-          category: 'Audio Player',
-          label: this.nowPlaying.story.id
-        });
+        Bus.emit('audioPlayer.resume', this.nowPlaying);
         this.nowPlaying.resume();
       }
     },
@@ -117,12 +133,9 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
     stop: function () {
       if (this.nowPlaying) {
         this.nowPlaying.onfinish = undefined;
-        $analytics.eventTrack('Stop', {
-          category: 'Audio Player',
-          label: this.nowPlaying.story.id
-        });
         this.sendHeartbeat(true);
         this.nowPlaying.stop();
+        Bus.emit('audioPlayer.stop', this.nowPlaying);
         this.nowPlaying = undefined;
       }
     }
