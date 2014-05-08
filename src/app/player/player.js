@@ -1,28 +1,30 @@
 angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 .run(function (Bus, $analytics) {
+  var category = 'Audio Player';
+
   Bus.on('audioPlayer.stop', function () {
     $analytics.eventTrack('Stop', {
-      category: 'Audio Player',
+      category: category,
       label: this.story.id
     });
   }).on('audioPlayer.resume', function () {
     $analytics.eventTrack('Resume', {
-      category: 'Audio Player',
+      category: category,
       label: this.story.id
     });
   }).on('audioPlayer.pause', function () {
     $analytics.eventTrack('Pause', {
-      category: 'Audio Player',
+      category: category,
       label: this.story.id
     });
   }).on('audioPlayer.play', function () {
     $analytics.eventTrack('Play', {
-      category: 'Audio Player',
+      category: category,
       label: this.story.id
     });
   }).on('audioPlayer.listen', function (audioFile, duration, startTime) {
     $analytics.eventTrack('Listen', {
-      category: 'Audio Player',
+      category: category,
       label: this.story.id,
       pieceId: this.story.id,
       audioFileId: audioFile.id,
