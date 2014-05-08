@@ -80,14 +80,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   this.current = story;
   this.account = account;
   this.cover = prxperiment.get('storyCover');
-  this.getSound = prxSoundFactory({
-    story: story,
-    producer: account,
-    audioFiles: audioUrls
-  });
-  if ($stateParams.autoPlay) {
-    prxPlayer.play(this.getSound());
-  }
+  this.sound = prxSoundFactory({ story: story, producer: account,
+    audioFiles: audioUrls });
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;

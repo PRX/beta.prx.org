@@ -50,25 +50,24 @@ describe('prx.player', function () {
     });
 
     describe ('PlayerCtrl', function () {
-      var ctrl, soundFactory, prxPlayer;
+      var ctrl, sound, prxPlayer;
 
       beforeEach(inject(function (_prxPlayer_) {
-        soundFactory = function () {
-          return soundFactory.sound;
-        };
+        sound = {};
         prxPlayer = _prxPlayer_;
 
-        ctrl = $controller('PlayerCtrl', {soundFactory: soundFactory});
+        ctrl = $controller('PlayerCtrl');
+        ctrl.setSound(sound);
       }));
 
 
       it ('pauses if appropriate', function () {
         spyOn(prxPlayer, 'pause');
-        soundFactory.sound = "asd";
-        prxPlayer.nowPlaying = soundFactory.sound;
+
+        prxPlayer.nowPlaying = sound;
 
         ctrl.pause();
-        expect(prxPlayer.pause.calls.mostRecent().args[0]).toEqual("asd");
+        expect(prxPlayer.pause).toHaveBeenCalled();
       });
 
       it ('does not pause if it isnt playing', function () {
@@ -79,15 +78,14 @@ describe('prx.player', function () {
       });
 
       it ('plays', function () {
-        soundFactory.sound = "ASD";
         spyOn(prxPlayer, 'play');
 
         ctrl.play();
-        expect(prxPlayer.play.calls.mostRecent().args[0]).toBe(soundFactory.sound);
+        expect(prxPlayer.play.calls.mostRecent().args[0]).toBe(sound);
       });
 
       it ('toggles by playing if paused', function () {
-        ctrl.paused = function ()  { return true; };
+        sound.paused = true;
 
         spyOn(ctrl, 'play');
         ctrl.toggle();
@@ -102,43 +100,22 @@ describe('prx.player', function () {
         expect(ctrl.pause).toHaveBeenCalled();
       });
 
-      it ('is loading if the sound is loading', function () {
-        soundFactory.sound = {loading: true};
-
-        expect(ctrl.loading()).toBe(true);
-      });
-
-      it ('is paused if the sound is paused', function () {
-        soundFactory.sound = {paused: true};
-
-        expect(ctrl.paused()).toBe(true);
-      });
-
       it ('is active if the sound is not paused', function () {
-        soundFactory.sound = {paused: false};
+        sound.paused = false;
 
         expect(ctrl.active()).toBe(true);
       });
 
       it ('is active if the sound is not at the beginning', function () {
-        soundFactory.sound = {paused: true, position: 10};
+        sound.paused = true;
+        sound.position = 10;
 
         expect(ctrl.active()).toBe(true);
-      });
-
-      it ('matches the position to a loaded sound', function () {
-        soundFactory.sound = {position: 1337};
-
-        expect(ctrl.position()).toBe(1337);
-      });
-
-      it ('returns 0 if the sound is not loaded', function () {
-        expect(ctrl.position()).toBe(0);
       });
     });
   });
 
-  describe('soundFactory', function () {
+  xdescribe('soundFactory', function () {
     var soundFactory, smSound;
     beforeEach(inject(function (_smSound_, _prxSoundFactory_) {
       soundFactory = _prxSoundFactory_;

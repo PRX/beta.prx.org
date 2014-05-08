@@ -141,7 +141,7 @@
 
       this.segments = [];
 
-      angular.forEach(urls.reverse(), function (url) {
+      angular.forEach((urls || []).reverse(), function (url) {
         (function (sound) {
           subOpts.onfinish = function () {
             if (angular.isDefined(sound)) {

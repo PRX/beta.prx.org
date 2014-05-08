@@ -35,53 +35,18 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 })
 .factory('prxSoundFactory', function (smSound) {
   function SoundFactory (options) {
-    getSound.story = options && options.story;
-    getSound.producer = options && options.producer;
-
-    return getSound;
-
-    function getSound () {
-      if (!getSound.sound) {
-        getSound.sound = sound = smSound.createList(options.audioFiles, {
-          onfinish: function () {
-            if (angular.isFunction(sound.onfinish)) {
-              sound.onfinish();
-            }
-          }
-        });
-        sound.producer = options.producer;
-        sound.story = options.story;
-      }
-      return getSound.sound;
-    }
-  }
-
-  SoundFactory.wrap = function () {
-    function soundFactory () {
-      if (!soundFactory.sound) {
-        soundFactory.sound = soundFactory.factory;
-      }
-      if(angular.isFunction(soundFactory.sound)) {
-        soundFactory.sound = soundFactory.sound();
-      }
-      return soundFactory.sound;
-    }
-
-    soundFactory.set = function (sound) {
-      if (angular.isFunction(sound)) {
-        if (sound.sound) {
-          soundFactory.sound = sound.sound;
-        } else {
-          soundFactory.sound = undefined;
-          soundFactory.factory = sound;
+    var sound = smSound.createList(options.audioFiles, {
+      onfinish: function () {
+        if (angular.isFunction(sound.onfinish)) {
+          sound.onfinish();
         }
-      } else {
-        soundFactory.sound = sound;
       }
-    };
+    });
+    sound.producer = options.producer;
+    sound.story = options.story;
 
-    return soundFactory;
-  };
+    return sound;
+  }
 
   return SoundFactory;
 })
@@ -89,14 +54,14 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   return {
     $lastHeartbeat: 0,
     play: function (sound) {
-      if (this.nowPlaying != sound) {
+      if (!sound || this.nowPlaying == sound && this.nowPlaying.paused) {
+        return this.resume();
+      } else if (this.nowPlaying != sound) {
         this.stop();
         this.nowPlaying = sound;
         this.nowPlaying.onfinish = angular.bind(this, this.stop);
         Bus.emit('audioPlayer.play', this.nowPlaying);
         return sound.play();
-      } else if (this.nowPlaying.paused) {
-        this.resume();
       }
     },
     sendHeartbeat: function (force) {
@@ -135,6 +100,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         this.nowPlaying.onfinish = undefined;
         this.sendHeartbeat(true);
         this.nowPlaying.stop();
+        this.$lastHeartbeat = 0;
         Bus.emit('audioPlayer.stop', this.nowPlaying);
         this.nowPlaying = undefined;
       }
@@ -155,18 +121,10 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     restrict: 'E',
     replace: true,
     templateUrl: 'player/player.html',
-    scope: true,
-    link: function (scope, element, attrs) {
-      var factory = prxSoundFactory.wrap();
-
-      scope.$parent.$watch(attrs.sound, angular.bind(factory, factory.set));
-
-      scope.player = $controller('PlayerCtrl', {
-        $scope: scope,
-        soundFactory: factory
-      });
-
-      element.data('$prxPlayerController', scope.player);
+    controller: 'PlayerCtrl',
+    controllerAs: 'player',
+    link: function (scope, elem, attrs, ctrl) {
+      scope.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
     }
   };
 })
@@ -179,94 +137,59 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     templateUrl: 'player/button.html',
     link: function (scope, elem, attrs, ctrl) {
       if (!ctrl) {
-        var factory = prxSoundFactory.wrap();
-        scope.$parent.$watch(attrs.sound, angular.bind(factory, factory.set));
-
-        scope.player = $controller('PlayerCtrl', {
-          $scope: scope,
-          soundFactory: factory
-        });
-      } else {
-        scope.player = ctrl;
+        ctrl = $controller('PlayerCtrl', {$scope: scope});
+        scope.$parent.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
       }
+      scope.player = ctrl;
     }
   };
 })
-.controller('PlayerCtrl', function (soundFactory, prxPlayer) {
+.controller('PlayerCtrl', function (prxPlayer) {
+  this.setSound = function (newSound) {
+    this.sound = newSound;
+  };
+
   this.pause = function () {
-    if (soundFactory.sound && prxPlayer.nowPlaying == soundFactory()) {
-      prxPlayer.pause(soundFactory());
+    if (this.sound == prxPlayer.nowPlaying) {
+      prxPlayer.pause();
     }
   };
 
   this.play = function () {
-    prxPlayer.play(soundFactory());
+    prxPlayer.play(this.sound);
   };
 
-  this.toggle  = function () {
-    if (this.paused()) {
+  this.toggle = function () {
+    if (this.sound && this.sound.paused) {
       this.play();
     } else {
       this.pause();
     }
   };
 
-  this.loading = function () {
-    return soundFactory.sound && soundFactory.sound.loading;
-  };
-
-  this.paused  = function () {
-    return !soundFactory.sound || soundFactory().paused;
-  };
-
   this.active = function () {
-    return soundFactory.sound &&
-    (!soundFactory().paused || soundFactory().position > 0);
-  };
-
-  this.position = function () {
-    return (soundFactory.sound && soundFactory().position) || 0;
+    return this.sound && (!this.sound.paused || this.sound.position > 0);
   };
 
   this.progress = function () {
-    return Math.round(this.position() /
+
+    return this.sound && Math.round((this.sound.position || 0) /
       this.duration()) / 10;
   };
 
   this.duration = function () {
-    return this.story() && this.story().length;
+    return (this.sound && this.sound.story.length) || 1;
   };
 
-  this.scrub = function (percent) {
+  this.scrubToPercent = function (percent) {
     return this.setPosition(this.duration() * percent * 10);
   };
 
-  this.story = function () {
-    return soundFactory.sound ? soundFactory().story : soundFactory.story;
-  };
-
-  this.segmented = function () {
-    return soundFactory.sound && soundFactory().length > 1;
-  };
-
-  this.segments = function () {
-    return soundFactory().segments;
-  };
-
   this.setPosition = function (position) {
-    if (prxPlayer.nowPlaying == soundFactory.sound) {
+    if (prxPlayer.nowPlaying == this.sound) {
       prxPlayer.sendHeartbeat(true);
     }
-    soundFactory().setPosition(position);
-  };
-
-  this.goToSegment = function (index, event) {
-    event.stopPropagation();
-    var sum = 0;
-    angular.forEach(this.segments().slice(0, index), function (duration) {
-      sum += duration;
-    });
-    return this.setPosition(sum);
+    this.sound.setPosition(position);
   };
 })
 .directive('prxPlayerScrubber', function () {
