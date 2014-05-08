@@ -93,7 +93,6 @@
 
     Sound.prototype.playing = false;
     Sound.prototype.loading = false;
-    Sound.prototype.paused  = false;
     Sound.prototype.error   = false;
     Sound.prototype.paused  = true;
 
@@ -113,6 +112,17 @@
       var self = this;
       return load.apply(this, arguments).then(function () {
         return self.$lp || self.$ld.promise;
+      });
+    };
+
+    var unload = makePromisedProxy('unload');
+    Sound.prototype.unload = function () {
+      var self = this;
+      return unload.apply(this, arguments).then(function (s) {
+        self.playing = false;
+        self.loading = false;
+        self.error   = false;
+        self.paused  = true;
       });
     };
 
@@ -136,6 +146,7 @@
             } else {
               self.$behind = 0;
               self.$current = self.$first;
+              self.$current.setPosition(0);
               angular.extend(self, self.$first);
               if (opts.onfinish) {
                 opts.onfinish.call(this);
@@ -151,6 +162,7 @@
           };
           firstSound = new Sound(url, angular.copy(subOpts));
           firstSound.$next = sound;
+          firstSound.$digest = subOpts.onchange;
         })(firstSound);
       });
       this.$behind  = 0;
@@ -164,9 +176,16 @@
       };
     });
 
+    SoundList.prototype.playing = false;
+    SoundList.prototype.loading = false;
+    SoundList.prototype.error   = false;
+    SoundList.prototype.paused  = true;
+
     SoundList.prototype.setPosition = function (position) {
       if (this.$behind < position && this.$behind + this.$current.duration >= position) {
-        return this.$current.setPosition(position - this.$behind);
+        var result = this.$current.setPosition(position - this.$behind);
+        this.$current.$digest();
+        return result;
       } else if (this.position < position) { // we're seeking to the future
         return this.$searchSeek(position);
       } else { // start our search at the beginning
@@ -202,7 +221,7 @@
       // or no longer being in the 'loading' state.)
       var tmp = this.$current; this.$current = {}; tmp.unload();
 
-      this.loading = this.playing; // don't show a loading indicator for paused sounds.
+      this.loading = !this.paused; // don't show a loading indicator for paused sounds.
 
       return this.$searchSeek_(position, sound, behind);
     };
@@ -219,16 +238,16 @@
           return sound.$next.load().then(recurse);
         }
       } else { // base case, we found the right sound!
-        return sound.setPosition(position - behind).then(angular.bind(this, function (s) {
-          this.$current = sound;
-          this.$behind = behind;
+        var setReturn = sound.setPosition(position - behind);
+        this.$current = sound;
+        this.$behind = behind;
 
-          if (!this.paused) { // If we were not paused before, resume playback.
-            return sound.play();
-          } else {
-            return s;
-          }
-        }));
+        if (!this.paused) { // If we were not paused before, resume playback.
+          return sound.play();
+        } else {
+          sound.$digest();
+          return setReturn;
+        }
       }
     };
 
