@@ -118,7 +118,10 @@
     var unload = makePromisedProxy('unload');
     Sound.prototype.unload = function () {
       var self = this;
+      self.$lp = undefined;
       return unload.apply(this, arguments).then(function (s) {
+        self.$lp = undefined;
+        self.$ld = $q.defer();
         self.playing = false;
         self.loading = false;
         self.error   = false;
@@ -190,9 +193,7 @@
     SoundList.prototype.paused  = true;
 
     SoundList.prototype.setPosition = function (position) {
-      console.log("SETTING POSITION", position);
       if (Math.round(this.$behind / 1000) <= Math.round(position / 1000) && this.$behind + this.$current.duration > position) {
-        console.log("SETTING DIRECTLY WITHIN SOUND", Math.max(position - this.$behind, 0));
         var result = this.$current.setPosition(Math.max(position - this.$behind, 0));
         this.$current.$digest();
         return result;
@@ -223,7 +224,6 @@
      * Returns a promise which resolves to the sound.
      **/
     SoundList.prototype.$searchSeek = function (position, sound, behind) {
-      console.log("RESORTING TO A SEEK");
       sound = sound || this.$current;
       behind = angular.isDefined(behind) ? behind : this.$behind;
 
@@ -256,9 +256,14 @@
         if (!this.paused) { // If we were not paused before, resume playback.
           return sound.play();
         } else {
-          sound.load();
           sound.$digest();
-          return setReturn;
+          return setReturn.then(function (s) {
+            return sound.play().then(function () {
+              sound.pause();
+              sound.$digest();
+              return s;
+            });
+          });
         }
       }
     };

@@ -56,7 +56,7 @@ $player-button {
   &.play {
     image: '/assets/images/bt_play.png' auto 25px;
   }
-  &.loading {
+  &.loading:not(.play) {
     background-image: none;
     loading-indicator();
   }
