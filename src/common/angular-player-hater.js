@@ -147,6 +147,7 @@
             if (angular.isDefined(sound)) {
               self.$behind += self.$current.duration;
               self.$current = sound;
+              this.setPosition(0);
               this.unload();
               sound.play();
             } else {
@@ -230,7 +231,7 @@
       // We set $current to an empty object so that continued changes
       // do not impact the playlist (i.e. state changing from playing to paused,
       // or no longer being in the 'loading' state.)
-      var tmp = this.$current; this.$current = {}; tmp.unload();
+      var tmp = this.$current; this.$current = {}; tmp.setPosition(0); tmp.unload();
 
       this.loading = !this.paused; // don't show a loading indicator for paused sounds.
 
