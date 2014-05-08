@@ -245,6 +245,7 @@
         if (!this.paused) { // If we were not paused before, resume playback.
           return sound.play();
         } else {
+          sound.load();
           sound.$digest();
           return setReturn;
         }
