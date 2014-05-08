@@ -5,3 +5,6 @@
       span(ng-bind="player.position() | timeCode")
     .inverse
       span(ng-bind="player.position() | timeCode")
+    ul(ng-if="player.segmented()")
+      li(ng-repeat="segment in player.segments() track by $index", ng-style='{width: segment / player.duration() / 10 + "%"}')
+        a(ng-click="player.goToSegment($index, $event)")

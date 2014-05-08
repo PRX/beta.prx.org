@@ -135,6 +135,9 @@
     function SoundList (urls, options) {
       var firstSound, opts = (options || {}),
         subOpts = angular.copy(opts), self = this;
+
+      this.segments = [];
+
       angular.forEach(urls.reverse(), function (url) {
         (function (sound) {
           subOpts.onfinish = function () {
@@ -160,13 +163,18 @@
               self.position = (self.position || 0) + self.$behind;
             }
           };
+
           firstSound = new Sound(url, angular.copy(subOpts));
           firstSound.$next = sound;
           firstSound.$digest = subOpts.onchange;
+          self.segments.unshift(firstSound.duration);
+
         })(firstSound);
       });
       this.$behind  = 0;
       this.$current = this.$first = firstSound;
+
+      this.length = urls.length;
       angular.extend(self, this.$current);
     }
 
@@ -182,8 +190,10 @@
     SoundList.prototype.paused  = true;
 
     SoundList.prototype.setPosition = function (position) {
-      if (this.$behind < position && this.$behind + this.$current.duration >= position) {
-        var result = this.$current.setPosition(position - this.$behind);
+      console.log("SETTING POSITION", position);
+      if (Math.round(this.$behind / 1000) <= Math.round(position / 1000) && this.$behind + this.$current.duration > position) {
+        console.log("SETTING DIRECTLY WITHIN SOUND", Math.max(position - this.$behind, 0));
+        var result = this.$current.setPosition(Math.max(position - this.$behind, 0));
         this.$current.$digest();
         return result;
       } else if (this.position < position) { // we're seeking to the future
@@ -213,6 +223,7 @@
      * Returns a promise which resolves to the sound.
      **/
     SoundList.prototype.$searchSeek = function (position, sound, behind) {
+      console.log("RESORTING TO A SEEK");
       sound = sound || this.$current;
       behind = angular.isDefined(behind) ? behind : this.$behind;
 
@@ -229,16 +240,16 @@
     // The recursive bit of the $searchSeek method - does not include
     // setup.
     SoundList.prototype.$searchSeek_ = function (position, sound, behind) {
-      if (sound.duration + behind < position) {
+      if (Math.round(sound.duration / 1000) + Math.round(behind / 1000) <= Math.round(position / 1000)) {
         var recurse = angular.bind(this, this.$searchSeek_, position, sound.$next, behind + sound.duration);
-        sound.unload();
+        sound.setPosition(0); sound.unload();
         if (sound.$next.duration) { // Already loaded, or pre-populated.
           return recurse();
         } else { // Need to load the sound in order to know its duration.
           return sound.$next.load().then(recurse);
         }
       } else { // base case, we found the right sound!
-        var setReturn = sound.setPosition(position - behind);
+        var setReturn = sound.setPosition(Math.max(position - behind, 0));
         this.$current = sound;
         this.$behind = behind;
 

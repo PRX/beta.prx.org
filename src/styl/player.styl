@@ -71,6 +71,7 @@ $player-button {
   }
   .track {
     display: none;
+    position: relative;
     @media tall-screen {
       display: flex;
       flex: 1;
@@ -117,6 +118,29 @@ $player-button {
       }
       span {
         display: none;
+      }
+      ul {
+        absolute: bottom right; left: 0;
+        height: 20px;
+        display: block;
+        width: 100%;
+        li {
+          pointer-events: none;
+          display: inline-block;
+          height: 100%;
+          &:first-child a {
+            display: none;
+          }
+          a {
+            pointer-events: all;
+            line-height: 20px;
+            color: #fff;
+            margin-left: -2.5px;
+            &:before {
+              content: '•';
+            }
+          }
+        }
       }
     }
   }

@@ -200,14 +200,35 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics'])
   };
 
   this.scrub = function (percent) {
-    if (prxPlayer.nowPlaying == soundFactory.sound) {
-      prxPlayer.sendHeartbeat(true);
-    }
-    soundFactory().setPosition(this.duration() * percent * 10);
+    return this.setPosition(this.duration() * percent * 10);
   };
 
   this.story = function () {
     return soundFactory.sound ? soundFactory().story : soundFactory.story;
+  };
+
+  this.segmented = function () {
+    return soundFactory.sound && soundFactory().length > 1;
+  };
+
+  this.segments = function () {
+    return soundFactory().segments;
+  };
+
+  this.setPosition = function (position) {
+    if (prxPlayer.nowPlaying == soundFactory.sound) {
+      prxPlayer.sendHeartbeat(true);
+    }
+    soundFactory().setPosition(position);
+  };
+
+  this.goToSegment = function (index, event) {
+    event.stopPropagation();
+    var sum = 0;
+    angular.forEach(this.segments().slice(0, index), function (duration) {
+      sum += duration;
+    });
+    return this.setPosition(sum);
   };
 })
 .directive('prxPlayerScrubber', function () {
