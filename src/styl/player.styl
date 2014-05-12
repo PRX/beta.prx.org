@@ -100,6 +100,7 @@ $player-button {
           color: dark-blue;
           font-weight: 500;
           font-size: 13px;
+          z-index: 10;
         }
 
         &.flip {
@@ -111,6 +112,9 @@ $player-button {
         display: none;
         flex: 0 auto;
         background-color: rgba(lightest-grey, 0.6);
+        ol.waveform li .indicator {
+          background-color: lightest-grey;
+        }
       }
       .inverse {
         flex: 1;
@@ -119,10 +123,29 @@ $player-button {
       span {
         display: none;
       }
+
+      ol.waveform {
+        absolute: top 9px right -3px; left: 0;
+        height: 53px;
+        overflow: hidden;
+
+        li {
+          pointer-events: none;
+          display: inline-block;
+          margin: 0 1px;
+          width: 3px;
+          position: relative;
+          height: 100%;
+          .indicator {
+            absolute: bottom left; right: 0;
+            background-color: rgba(darkest-blue, 0.6);
+          }
+        }
+      }
+
       ul {
         absolute: bottom right; left: 0;
         height: 20px;
-        display: block;
         width: 100%;
         li {
           pointer-events: none;

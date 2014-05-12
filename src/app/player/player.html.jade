@@ -1,10 +1,13 @@
 .player
   prx-player-button(sound="sound")
   .track(prx-player-scrubber="player.scrubToPercent(percentage)", ng-class="{active: player.active(), flip: player.progress() > 75}")
+    prx-player-waveform(sound="player.sound")
     .scrubber(ng-style="{width: player.progress() + '%'}")
       span(ng-bind="player.sound.position | timeCode")
+      prx-player-waveform(sound="player.sound")
     .inverse
       span(ng-bind="player.sound.position | timeCode")
+
     ul(ng-if="player.sound.length > 1")
       li(ng-repeat="segment in player.sound.segments track by $index", ng-style='{width: segment / player.duration() / 10 + "%"}')
         a(ng-click="player.goToSegment($index, $event)")

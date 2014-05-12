@@ -249,4 +249,30 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 })
 .controller('GlobalPlayerCtrl', function (prxPlayer) {
   this.global = prxPlayer;
+})
+.directive('prxPlayerWaveform', function () {
+  return {
+    restrict: 'E',
+    scope: true,
+    templateUrl: 'player/waveform.html',
+    replace: true,
+    link: function (scope, elem, attrs) {
+      scope.waveform = {};
+
+      scope.$watch(attrs.sound, function (sound) {
+        if (sound && !sound.$waveform) {
+          var count = Math.round(elem[0].offsetWidth / 5);
+
+          sound.$waveform = [];
+
+          for (var i=0; i < count; i++) {
+            sound.$waveform.push(Math.sin(i) * 33 + 66);
+          }
+        }
+
+        scope.waveform.datapoints = sound && sound.$waveform;
+      });
+
+    }
+  };
 });
