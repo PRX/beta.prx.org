@@ -11,8 +11,5 @@
     "ngPlayerHater": "0.0.7",
     "angulartics": "~0.12",
     "angular-sanitize": "~1.2"
-  },
-  "resolutions": {
-    "angular": "~1.2"
   }
 }
