@@ -1,4 +1,4 @@
-angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.pick_list'])
+angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.picks'])
 .config(function ($stateProvider, $urlRouterProvider) {
 
   /* istanbul ignore if */
@@ -7,7 +7,7 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.pick_list'])
   }
 
   $stateProvider.state('home', {
-    url: ('/'),
+    url: '/',
     title: 'Home',
     views: {
       '@': {
@@ -17,7 +17,7 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.pick_list'])
     },
     resolve: {
       picklist: ['ngHal', function (ngHal) {
-        return ngHal.followOne('prx:pick-list', {id: FEAT.home_pick_list_id}).then(function(picklist) {
+        return ngHal.follow('prx:pick-list', {id: FEAT.home_pick_list_id}).then(function(picklist) {
           picklist.title = "PRX Picks";
           return picklist;
         });

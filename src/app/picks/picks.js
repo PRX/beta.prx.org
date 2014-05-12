@@ -1,4 +1,10 @@
-angular.module('prx.pick_list', ['prx.stories'])
+angular.module('prx.picks', ['prx.stories'])
+.config(function (ngHalProvider) {
+  ngHalProvider.mixin('http://meta.prx.org/model/pick/*any', ['resolved', function (resolved) {
+    resolved.story = resolved.follow('prx:story');
+    resolved.account = resolved.follow('prx:account');
+  }]);
+})
 
 .directive('prxPickList', function ($timeout, ngHal) {
   return {
@@ -6,7 +12,7 @@ angular.module('prx.pick_list', ['prx.stories'])
     scope: {
       picklist: '='
     },
-    templateUrl: 'picks/pick_list.html',
+    templateUrl: 'picks/picks.html',
     replace: true,
     link: function (scope) {
       $timeout(function () {
@@ -28,24 +34,9 @@ angular.module('prx.pick_list', ['prx.stories'])
     restrict: 'E',
     replace: true,
     templateUrl: 'picks/embedded_pick.html',
-    scope: {pick: '='},
-    link: function (scope) {
-      scope.pick.follow('prx:story').then(function(story) {
-        scope.story = story;
-      });
-      scope.pick.follow('prx:account').then(function(account) {
-        scope.account = account;
-      });
-    }
+    scope: {pick: '='}
   };
 })
-.directive('prxCurator', function () {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'picks/curator.html',
-    scope: {account: '='}
-  };
-})
+
 ;
 
