@@ -14,10 +14,12 @@ angular.module('prx.pick_list', ['prx.stories'])
           scope.loading = true;
         }
       }, 500);
-      scope.picklist.follow('prx:picks').follow('prx:items').then(function (picks) {
-        scope.loading = false;
-        scope.filteredPicks = scope.$eval('picks | limitTo: (limit || 5)', {picks: picks});
-      });
+      if (angular.isDefined(scope.picklist)) {
+        scope.picklist.follow('prx:picks').follow('prx:items').then(function (picks) {
+          scope.loading = false;
+          scope.filteredPicks = scope.$eval('picks | limitTo: (limit || 5)', {picks: picks});
+        });
+      }
     }
   };
 })
