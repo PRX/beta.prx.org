@@ -1,0 +1,11 @@
+section
+  .pick(ng-if="pick")
+    prx-story(story="pick.story", title="{{pick.editors_title}}")
+    .curation
+      .curator
+        prx-img(src="pick.account.imageUrl", default="assets/images/audrey.png")
+        .name
+          small {{pick.account.name}}
+      p
+        small(ng-bind="pick.comment")
+  .loading-spinner(ng-show="loading")

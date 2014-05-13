@@ -72,11 +72,14 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     restrict: 'E',
     replace: true,
     templateUrl: 'stories/embedded_story.html',
-    scope: {story: '='}
+    scope: {
+      story: '=',
+      title: '@'
+    }
   };
 })
 .controller('StoryCtrl', function (story, account, audioUrls,
-  prxSoundFactory, $stateParams, prxPlayer, prxperiment) {
+  prxSoundFactory, $stateParams, prxPlayer, prxperiment,ngHal) {
   this.current = story;
   this.account = account;
   this.cover = prxperiment.get('storyCover');

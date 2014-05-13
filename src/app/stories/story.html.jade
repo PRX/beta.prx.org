@@ -24,6 +24,9 @@ article.story
           | {{story.current.shortDescription}} #{''}
           a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
       storytime-cta
+      section.suggested
+        h2 Suggested Story
+        prx-suggested-pick(story="story.current")
     #asides
       aside
         prx-account(account="story.account")
