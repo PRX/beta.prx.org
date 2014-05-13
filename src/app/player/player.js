@@ -265,7 +265,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       }
 
       function generateWaveform () {
-        var count = Math.ceil(elem[0].offsetWidth / 5);
+        var count = Math.floor(elem[0].offsetWidth / 5) + 3;
 
         elem[0].width = elem[0].offsetWidth * 2;
         elem[0].height = elem[0].offsetHeight * 2;
@@ -300,10 +300,14 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
             i += perBar;
           }
 
+        while (points.length < count) {
+          points.push(points[points.length-1]);
+        }
+
         angular.forEach(points, function (point, index) {
           ctx.beginPath();
-          ctx.moveTo(10 * index + 10, elem[0].height);
-          ctx.lineTo(10 * index + 10, (100-point) / 100 * elem[0].height);
+          ctx.moveTo(10 * index + 5, elem[0].height);
+          ctx.lineTo(10 * index + 5, (100-point) / 100 * elem[0].height);
           ctx.stroke();
         });
 
