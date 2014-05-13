@@ -115,39 +115,13 @@ describe('prx.player', function () {
     });
   });
 
-  xdescribe('soundFactory', function () {
-    var soundFactory, smSound;
-    beforeEach(inject(function (_smSound_, _prxSoundFactory_) {
-      soundFactory = _prxSoundFactory_;
-      smSound = _smSound_;
+  describe('prxPlayerWaveform', function () {
+    beforeEach(module('templates'));
+    it ('compiles', inject(function ($compile, $rootScope) {
+      var elem = $compile('<prx-player-waveform></prx-player-waveform>')($rootScope);
+      $rootScope.$digest();
+      expect(elem).toBeDefined();
     }));
-
-    it ('returns a function', function () {
-      expect(angular.isFunction(soundFactory())).toBe(true);
-    });
-
-    it ('calls smSound.createList with passed audio files', function () {
-      spyOn(smSound, 'createList').and.callThrough();
-      soundFactory({audioFiles: [1]})();
-      expect(smSound.createList.calls.mostRecent().args[0]).toEqual([1]);
-    });
-
-    it ('sets story from options', function () {
-      spyOn(smSound, 'createList').and.returnValue({});
-      var sound = soundFactory({story: 'sigil'})();
-      expect(sound.story).toEqual('sigil');
-    });
-
-    it ('sets sound when memoized', function () {
-      var factory = soundFactory({audioFiles: []}), sound = factory();
-      expect(factory.sound).toBe(sound);
-    });
-
-    it ('returns whatever is memoized', function () {
-      var factory = soundFactory({audioFiles: []});
-      factory.sound = "sigil";
-      expect(factory()).toEqual('sigil');
-    });
   });
 
   describe ('prxPlayer', function () {
@@ -164,7 +138,7 @@ describe('prx.player', function () {
     beforeEach(inject(function (_prxPlayer_, _$analytics_) {
       prxPlayer = _prxPlayer_;
       $analytics = _$analytics_;
-      sound = jasmine.createSpyObj('sound', ['play', 'pause', 'resume']);
+      sound = jasmine.createSpyObj('sound', ['play', 'pause', 'resume', 'stop']);
       sound.story = {id: 1};
     }));
 
@@ -257,6 +231,14 @@ describe('prx.player', function () {
         prxPlayer.resume();
         expect(eventTracked('Resume')).toBe(false);
         expect(sound.resume).not.toHaveBeenCalled();
+      });
+    });
+
+    describe ('#stop', function () {
+      it ('tracks the event', function () {
+        prxPlayer.nowPlaying = sound;
+        prxPlayer.stop();
+        expect(eventTracked('Stop')).toBe(true);
       });
     });
 

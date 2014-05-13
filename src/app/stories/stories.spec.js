@@ -18,6 +18,18 @@ describe('prx.stories', function () {
       mock.transform();
       expect(mock.imageUrl).toEqual(null);
     });
+
+    it ('correctly copies the length property to duration', function () {
+      mock.length = 1234;
+      mock.transform();
+      expect(mock.duration).toBe(1234);
+      expect(mock.length).not.toBeDefined();
+    });
+
+    it ('returns title for toString()', function () {
+      mock.title = 'asdf';
+      expect(mock.toString()).toEqual('asdf');
+    });
   });
 
   describe ('StoryCtrl', function () {
@@ -75,6 +87,10 @@ describe('prx.stories', function () {
       expect($injector.invoke(state.resolve.audioUrls, null, {
         story: story
       }).get(1).get('url')).toResolveTo('file2.mp3');
+    });
+
+    it ('sets the title appropriately', function () {
+      expect($injector.invoke(state.title, null, {story: "story", account: "account"})).toEqual("story by account");
     });
   });
 });

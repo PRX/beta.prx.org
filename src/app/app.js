@@ -173,10 +173,4 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       };
     }
   };
-})
-.directive('prxDrawer', function () {
-  return {
-    restrict: 'E',
-    templateUrl: 'drawer.html'
-  };
 });
