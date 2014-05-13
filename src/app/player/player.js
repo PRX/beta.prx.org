@@ -269,16 +269,13 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 
         elem[0].width = elem[0].offsetWidth * 2;
         elem[0].height = elem[0].offsetHeight * 2;
-
-        ctx.strokeStyle = (function () {
-          var y;
-          if (elem[0].currentStyle) {
-            y = elem[0].currentStyle['border-color'];
-          } else if (window.getComputedStyle) {
-            y = document.defaultView.getComputedStyle(elem[0], null).getPropertyValue('border-color');
-          }
-          return y;
-        })();
+        if (elem[0].currentStyle) {
+          ctx.strokeStyle = elem[0].currentStyle['border-color'];
+        } else if (window.getComputedStyle) {
+          ctx.strokeStyle = document.defaultView.getComputedStyle(elem[0], null)
+            .getPropertyValue('border-color');
+        }
+        
         ctx.lineWidth = 6;
 
         var points = [];
