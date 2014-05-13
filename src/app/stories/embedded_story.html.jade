@@ -4,4 +4,4 @@ section.story
     prx-img(src="story.imageUrl")
   h3
     a(ui-sref="story") {{story.title}}
-  time(datetime="P{{story.length}}S") {{story.length * 1000 | timeCode }}
+  time(datetime="P{{story.duration}}S") {{story.duration * 1000 | timeCode }}

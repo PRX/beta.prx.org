@@ -95,7 +95,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       }
       this.sendHeartbeat();
       return Math.round(this.nowPlaying.position /
-        this.nowPlaying.story.length) / 10 + '%';
+        this.nowPlaying.story.duration) / 10 + '%';
     },
     stop: function () {
       if (this.nowPlaying) {
@@ -174,13 +174,12 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   };
 
   this.progress = function () {
-
     return this.sound && Math.round((this.sound.position || 0) /
       this.duration()) / 10;
   };
 
   this.duration = function () {
-    return (this.sound && this.sound.story.length) || 1;
+    return (this.sound && this.sound.story.duration) || 1;
   };
 
   this.scrubToPercent = function (percent) {
@@ -250,29 +249,86 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 .controller('GlobalPlayerCtrl', function (prxPlayer) {
   this.global = prxPlayer;
 })
-.directive('prxPlayerWaveform', function () {
+.directive('prxPlayerWaveform', function ($window, $timeout) {
   return {
     restrict: 'E',
     scope: true,
     templateUrl: 'player/waveform.html',
     replace: true,
     link: function (scope, elem, attrs) {
-      scope.waveform = {};
+      var active = false, currentSound, timeout, ctx = elem[0].getContext('2d');
+
+      function scheduleWaveform () {
+        if (!angular.isDefined(timeout)) {
+          timeout = $timeout(generateWaveform, 500);
+        }
+      }
+
+      function generateWaveform () {
+        var count = Math.ceil(elem[0].offsetWidth / 5);
+
+        elem[0].width = elem[0].offsetWidth * 2;
+        elem[0].height = elem[0].offsetHeight * 2;
+
+        ctx.strokeStyle = (function () {
+          var y;
+          if (elem[0].currentStyle) {
+            y = elem[0].currentStyle['border-color'];
+          } else if (window.getComputedStyle) {
+            y = document.defaultView.getComputedStyle(elem[0], null).getPropertyValue('border-color');
+          }
+          return y;
+        })();
+        ctx.lineWidth = 6;
+
+        var points = [];
+
+          var perBar = currentSound.$waveform.length / count;
+          var i = 0, chunk, x, start, end, offset;
+          while (i < currentSound.$waveform.length) {
+            offset = (i - ~~i);
+            start = Math.floor(i);
+            end = start + Math.max(perBar, 1) + 1;
+            chunk = currentSound.$waveform.slice(start, end);
+            x = chunk[0] * (1 - offset) + chunk[chunk.length-1] * offset;
+
+            for(var z = 1; z < chunk.length - 1; z++) {
+              x += chunk[z];
+            }
+
+            points.push(x / (chunk.length - 1));
+            i += perBar;
+          }
+
+        angular.forEach(points, function (point, index) {
+          ctx.beginPath();
+          ctx.moveTo(10 * index + 10, elem[0].height);
+          ctx.lineTo(10 * index + 10, (100-point) / 100 * elem[0].height);
+          ctx.stroke();
+        });
+
+        timeout = undefined;
+      }
 
       scope.$watch(attrs.sound, function (sound) {
+        currentSound = sound;
         if (sound && !sound.$waveform) {
-          var count = Math.round(elem[0].offsetWidth / 5);
-
           sound.$waveform = [];
 
-          for (var i=0; i < count; i++) {
+          for (var i=0; i < 4 * Math.PI; i+= 0.25) {
             sound.$waveform.push(Math.sin(i) * 33 + 66);
           }
         }
-
-        scope.waveform.datapoints = sound && sound.$waveform;
+        if (!active) {
+          active = true;
+          scheduleWaveform();
+          angular.element($window).on('resize', scheduleWaveform);
+        }
       });
 
+      scope.$on('$destroy', function () {
+        angular.element($window).off('resize', scheduleWaveform);
+      });
     }
   };
 });

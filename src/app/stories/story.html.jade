@@ -12,7 +12,7 @@ article.story
             a(rel="author" ui-sref="story.account") {{story.account.name}}
           span.duration
             | Length: #{''}
-            time(datetime="P{{story.length}}S") {{story.current.length * 1000 | timeCode: 'short' }}
+            time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
       ul.actions(ng-flag="lovesharebuy")
         li.love.fa.fa-heart Love
         li.share.fa.fa-share Share

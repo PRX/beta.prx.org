@@ -63,6 +63,13 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
+    return function (story) {
+      if (angular.isDefined(story.length)) {
+        story.duration = story.length;
+        story.length = undefined;
+        return story;
+      }
+    };
   }]).mixin('http://meta.prx.org/model/story/*any', {
     toString: function () { return this.title; }
   });

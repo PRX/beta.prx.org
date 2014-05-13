@@ -78,20 +78,17 @@ $player-button {
 
       &.active {
         .scrubber {
-          display: block;
-          position: relative;
           border-right: 1px solid lightest-grey;
           span {
-            absolute: top right;
+            float: right;
             padding: 0 3px 0 5px;
           }
         }
         .inverse {
           border-left: 1px solid lightest-grey;
-          position: relative;
           span {
-            display: block;
-            absolute: top left;
+            float: left;
+            visibility: visible;
             padding: 0 5px 0 3px;
           }
         }
@@ -104,47 +101,41 @@ $player-button {
         }
 
         &.flip {
-          .inverse span { display: none; }
-          .scrubber span { display: block; }
+          .inverse span { visibility: hidden; }
+          .scrubber span { visibility: visible; }
         }
       }
       .scrubber {
-        display: none;
         flex: 0 auto;
+        overflow: hidden;
+        -webkit-mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC');
         background-color: rgba(lightest-grey, 0.6);
-        ol.waveform li .indicator {
-          background-color: lightest-grey;
+        .waveform {
+          border-color: lightest-grey;
         }
       }
       .inverse {
         flex: 1;
+        position: relative;
+        z-index: 10;
         background-color: rgba(darkest-blue, 0.6);
       }
       span {
-        display: none;
+        visibility: hidden;
+        position: relative;
+        z-index: 10;
       }
 
-      ol.waveform {
+      .waveform {
         absolute: top 9px right -3px; left: 0;
         height: 53px;
-        overflow: hidden;
-
-        li {
-          pointer-events: none;
-          display: inline-block;
-          margin: 0 1px;
-          width: 3px;
-          position: relative;
-          height: 100%;
-          .indicator {
-            absolute: bottom left; right: 0;
-            background-color: rgba(darkest-blue, 0.6);
-          }
-        }
+        width: 100%;
+        border-color: rgba(darkest-blue, 0.6);
       }
 
       ul {
         absolute: bottom right; left: 0;
+        z-index: 11;
         height: 20px;
         width: 100%;
         li {
