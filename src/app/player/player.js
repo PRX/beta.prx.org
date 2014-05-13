@@ -265,7 +265,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       }
 
       function generateWaveform () {
-        var count = Math.floor(elem[0].offsetWidth / 5) + 3;
+        var count = Math.floor(elem[0].offsetWidth / 5);
 
         elem[0].width = elem[0].offsetWidth * 2;
         elem[0].height = elem[0].offsetHeight * 2;
@@ -282,27 +282,20 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         ctx.lineWidth = 6;
 
         var points = [];
+        var perBar = (currentSound.$waveform.length - 1) / count;
+        var i = perBar / 2, x, start;
 
-          var perBar = currentSound.$waveform.length / count;
-          var i = 0, chunk, x, start, end, offset;
-          while (i < currentSound.$waveform.length) {
-            offset = (i - ~~i);
-            start = Math.floor(i);
-            end = start + Math.max(perBar, 1) + 1;
-            chunk = currentSound.$waveform.slice(start, end);
-            x = chunk[0] * (1 - offset) + chunk[chunk.length-1] * offset;
-
-            for(var z = 1; z < chunk.length - 1; z++) {
-              x += chunk[z];
-            }
-
-            points.push(x / (chunk.length - 1));
-            i += perBar;
+        do {
+          start = Math.min(i, currentSound.$waveform.length - 1);
+          if (start == ~~start) {
+            points.push(currentSound.$waveform[start]);
+          } else if (start < currentSound.$waveform.length - 1) {
+            x = start - ~~start;
+            points.push(currentSound.$waveform[~~start] * (1 - x) + currentSound.$waveform[~~start+1] * (x));
           }
 
-        while (points.length < count) {
-          points.push(points[points.length-1]);
-        }
+          i += perBar;
+        } while (i <= currentSound.$waveform.length - 1);
 
         angular.forEach(points, function (point, index) {
           ctx.beginPath();
@@ -319,8 +312,8 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         if (sound && !sound.$waveform) {
           sound.$waveform = [];
 
-          for (var i=0; i < 4 * Math.PI; i+= 0.25) {
-            sound.$waveform.push(Math.sin(i) * 33 + 66);
+          for (var i=0; i < 15; i+= 0.3) {
+            sound.$waveform.push(Math.sin(i) * 49 + 51);
           }
         }
         if (!active) {
