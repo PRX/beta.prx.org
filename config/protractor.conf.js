@@ -17,8 +17,7 @@ if (process.env['TRAVIS']) {
   exports.config.sauceUser = process.env['SAUCE_USERNAME'];
   exports.config.sauceKey  = process.env['SAUCE_ACCESS_KEY'];
   exports.config.multiCapabilities =  [{
-    'browserName': 'internet explorer',
-    'version': '11'
+    'browserName': 'firefox'
   }];
 
   for(var i=0; i<exports.config.multiCapabilities.length; i++) {
