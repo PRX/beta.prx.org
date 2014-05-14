@@ -48,10 +48,10 @@ Deployment is handled through Capistrano. If you have access to commit directly 
 
 ```shell
 cap production deploy # deploys to m.prx.org, *always* from master
-cap staging deploy # deploys to m-staging.prx.org, allows specifying the branch
+cap staging deploy    # deploys to m-staging.prx.org, allows specifying the branch
 ```
 
-If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, email chris.
+If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let chris know.
 
 ##### Master is Always Deployable
 We're able to make very little ceremony out of deploying because master is always deployable (and, in fact, will likely be automatically deployed in the future). We maintain this state of affairs by ensuring that our code is well-tested ([automatically](#testing), with help from [Travis CI](#Travis-CI)) and by following a code review process that uses Github Pull Requests to ensure that at least two people have looked at each set of changes.
@@ -67,22 +67,91 @@ File               | Description
 `build.json`         | Most of the details about which files are used by which build target
 `deploy.rb`          | Used by Capistrano for deployment
 `flags.*.json`       | `build` and `compile` time flags which are automatically inserted into the code. Useful for situations where it is important to optimize varying behavior out before deploying.
-`karma.conf.js      | Used by `karma` to run unit tests.
+`karma.conf.js`      | Used by `karma` to run unit tests.
 `protractor.conf.js` | Used by `protractor` to run end to end tests.
 
 #### `src/`
-Home for application files.
+Application code lives under the `src/` directory. In practice, only assets that
+will be a part of the final deployed bundle and their supporting tests live under
+`src/`. Files that primarily relate to building or serving the application bundle
+ go in [`lib/`](#lib).
 
-##### `src/app`
+##### `src/app/`
+Application specific javascript, jade, and tests live in the `src/app/` directory,
+separated into modules. Modules usually consist of, at a minimum, a folder with
+the a file of the same name with `.js` at the end. For example:
+
+```shell
+src/app/
+└── accounts
+    └── accounts.js
+```
+
+###### Javascript Files
+Each javascript file, by convention, maps to a single Angular.js module. The
+module's name follows the convention of joining the directory trees, the filename
+(unless it is the main file, sharing the name of the folder), and a prefix of `prx`
+with dots (`.`). Thus, the following modules can be defined in the associated file:
+
+Module                 | File
+---------------------: | :----------
+prx.accounts           | src/app/accounts/accounts.js
+prx.accounts.stats     | src/app/accounts/stats/stats.js
+prx.accounts.history   | src/app/accounts/history.js
+
+Note that `prx.accounts.stat` could be defined in either `src/app/accounts/stats.js`
+or in `src/app/accounts/stats/stats.js`. The latter is usually preferred if the
+module in question is not self-contained to the single javascript file. It is not
+permissible for both `src/app/module/foo.js` (the file) and `src/app/module/foo/`
+(the directory) to exist.
+
+In the event that a javascript module is not specific to the application, it should
+be put in the [`src/common`](#srccommon).
+
+###### Spec Files
+Each javascript file should be accompanied by a spec file. The spec files live in
+the same directory as the javascript file they are paired with, and have the same
+filename with the extension prefix `.spec`. Thus, the specs for `src/app/accounts/accounts.js`
+would be in a file called `src/app/accounts/accounts.spec.js`.
+
+These spec files should be used as unit tests for the Angular.JS files they accompany.
+The only modules that should be required by the specs are the module under test and
+mock-specific modules (such as `ngHalMock`, although it is likely that these will be)
+included globally in a future revision, making their inclusion redundant. This forces
+the modules to operate as truly complete definitions by declaring their dependencies
+correctly.
+
+Make sure you do your best to write tests for all of the behavior you're defining!
+
+###### E2E Specs
+
+    Note: while currently optional, this is likely to become mandatory in the
+    future. Make sure you are familiar with the workings of E2E specs.
+
+Modules may optionally include End to Engd specs, which are executed in the context
+of a browser with the live backend. Files with the extension `.e2e.spec.js` will
+be run in this way.
+
+###### Templates
+Templates are used for reusable snippets of HTML. JADE is used as an alternative
+to writing HTML. Templates can be saved in a module with the extension `.html.jade`.
+
+When referencing the templates in your javascript, the `app/` is dropped.
+
+##### `src/common/`
+Non-application-specific javascript is stored in `src/common/`. As a rule, any
+javascript that is a candidate for extraction as a module or use in other projects
+should be put in this directory. If the module is application specific (a good red
+flag is dependencies on other modules) it should instead go to [`src/app/`](#srcapp).
+
+As with application javascript files, specs live alongside their implementation
+in this folder - again, with the extension `.spec.js`.
+
+
+##### `src/stylus/`
 *coming soon*
 
-##### `src/common`
-*coming soon*
-
-##### `src/stylus`
-*coming soon*
-
-##### `src/assets`
+##### `src/assets/`
 *coming soon*
 
 #### `public/` and `bin/`
