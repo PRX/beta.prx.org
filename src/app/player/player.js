@@ -314,19 +314,19 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         animated = ~~new Date();
         animate();
         function animate() {
-          var time = Math.pow(Math.min((~~new Date() - animated) / 200, 1) - 1, 3) + 1;
+          var time = Math.pow(Math.min((~~new Date() - animated) / 500, 1) - 1, 3) + 1;
           ctx.clearRect(0, 0, width, height);
           angular.forEach(points, function (point, index) {
             ctx.beginPath();
             ctx.moveTo(10 * index + 5, height);
-            ctx.lineTo(10 * index + 5, Math.max(100 - point * time, 1) / 100 * height);
+            ctx.lineTo(10 * index + 5, Math.max(100 - point * time + (point * index/points.length * (1 - Math.pow(time, 3))), 1) / 100 * height);
             ctx.stroke();
           });
           if (time < 1) {
             window.requestAnimationFrame(animate);
           }
         }
-        return $timeout(angular.noop, 210);
+        return $timeout(angular.noop, 510);
       }
 
       scope.$watch(attrs.sound, function (sound) {
