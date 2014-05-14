@@ -329,6 +329,7 @@ gulp.task('watch', ['build_', 'installWebdriver'], function (cb) {
   karma.start({ autoWatch: true });
 
   gulp.watch(allAppJs.concat(featsDev), ['buildJs']);
+  gulp.watch("src/**/*.js", ['buildJs']);
 });
 
 gulp.task('default', ['watch']);
