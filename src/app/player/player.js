@@ -294,7 +294,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
           i += perBar;
         } while (i <= currentSound.$waveform.length - 1);
 
-        if (!animated) {
+        if (!animated && window.requestAnimationFrame) {
           animateIn(points, ctx, elem[0].height, elem[0].width).then(function () {
             timeout = undefined;
           });
