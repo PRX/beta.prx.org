@@ -133,7 +133,7 @@ describe('prx.player', function () {
     describe ('prxPlayerWaveform', function () {
       it ('compiles', inject(function ($window, $timeout) {
         var elem = $compile('<prx-player-waveform sound="sound"></prx-player-waveform>')($rootScope);
-        $rootScope.sound = {}
+        $rootScope.sound = {};
         $rootScope.$digest();
         angular.element($window).triggerHandler('resize');
         $timeout.flush();
