@@ -266,46 +266,47 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 
       function generateWaveform () {
         var count = Math.floor(elem[0].offsetWidth / 5);
-
-        elem[0].width = elem[0].offsetWidth * 2;
-        elem[0].height = elem[0].offsetHeight * 2;
-        if (elem[0].currentStyle) {
-          ctx.strokeStyle = elem[0].currentStyle['border-color'];
-        } else if (window.getComputedStyle) {
-          var style = window.getComputedStyle(elem[0], null);
-          ctx.strokeStyle = style.getPropertyValue('border-color') || style.getPropertyValue('borderRightColor');
-        }
-
-        ctx.lineWidth = 6;
-
-        var points = [];
-        var perBar = (currentSound.$waveform.length - 1) / count;
-        var i = perBar / 2, x, start;
-
-        do {
-          start = Math.min(i, currentSound.$waveform.length - 1);
-          if (start == ~~start) {
-            points.push(currentSound.$waveform[start]);
-          } else if (start < currentSound.$waveform.length - 1) {
-            x = start - ~~start;
-            points.push(currentSound.$waveform[~~start] * (1 - x) + currentSound.$waveform[~~start+1] * (x));
+        if (count || !animated) {
+          elem[0].width = elem[0].offsetWidth * 2;
+          elem[0].height = elem[0].offsetHeight * 2;
+          if (elem[0].currentStyle) {
+            ctx.strokeStyle = elem[0].currentStyle['border-color'];
+          } else if (window.getComputedStyle) {
+            var style = window.getComputedStyle(elem[0], null);
+            ctx.strokeStyle = style.getPropertyValue('border-color') || style.getPropertyValue('borderRightColor');
           }
 
-          i += perBar;
-        } while (i <= currentSound.$waveform.length - 1);
+          ctx.lineWidth = 6;
 
-        if (!animated && window.requestAnimationFrame) {
-          animateIn(points, ctx, elem[0].height, elem[0].width).then(function () {
+          var points = [];
+          var perBar = (currentSound.$waveform.length - 1) / count;
+          var i = perBar / 2, x, start;
+
+          do {
+            start = Math.min(i, currentSound.$waveform.length - 1);
+            if (start == ~~start) {
+              points.push(currentSound.$waveform[start]);
+            } else if (start < currentSound.$waveform.length - 1) {
+              x = start - ~~start;
+              points.push(currentSound.$waveform[~~start] * (1 - x) + currentSound.$waveform[~~start+1] * (x));
+            }
+
+            i += perBar;
+          } while (i <= currentSound.$waveform.length - 1);
+
+          if (!animated && window.requestAnimationFrame) {
+            animateIn(points, ctx, elem[0].height, elem[0].width).then(function () {
+              timeout = undefined;
+            });
+          } else {
+            angular.forEach(points, function (point, index) {
+              ctx.beginPath();
+              ctx.moveTo(10 * index + 5, elem[0].height);
+              ctx.lineTo(10 * index + 5, (100-point) / 100 * elem[0].height);
+              ctx.stroke();
+            });
             timeout = undefined;
-          });
-        } else {
-          angular.forEach(points, function (point, index) {
-            ctx.beginPath();
-            ctx.moveTo(10 * index + 5, elem[0].height);
-            ctx.lineTo(10 * index + 5, (100-point) / 100 * elem[0].height);
-            ctx.stroke();
-          });
-          timeout = undefined;
+          }
         }
       }
 
