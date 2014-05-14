@@ -29,13 +29,6 @@ describe('soundManager', function () {
     windowSm = globalSoundManager;
   }));
 
-  // function soundManagerLoaded () {
-  //   inject(function ($timeout) {
-  //     globalSoundManager.setup.calls.mostRecent().args[0].onready();
-  //     $timeout.flush();
-  //   });
-  // }
-
   it('defines soundManager2 for injection', function () {
     expect(soundManager).toBeDefined();
   });
@@ -110,8 +103,6 @@ describe('soundManager', function () {
                      'setVolume stop toogleMute togglePause unload unmute').split(' ');
     var smSoundSpy, smSound;
 
-    // beforeEach(module('ngPlayerHater'));
-
     beforeEach(inject(function (globalSoundManager, _smSound_) {
       smSound = _smSound_;
       smSoundSpy = jasmine.createSpyObj('sound', soundMethods);
@@ -127,6 +118,11 @@ describe('soundManager', function () {
       expect(function() {
         smSound.create();
       }).toThrow();
+    });
+
+    it ('accepts an object with the url property', function () {
+      var sound = smSound.create({url: '/asd.mp3', name: 123});
+      expect(sound.name).toBe(123);
     });
 
     describe('newly created', function () {

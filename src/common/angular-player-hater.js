@@ -70,8 +70,8 @@
   }
   module.provider('soundManager', soundManager2Provider);
 
-  SoundFactory.$inject = ['soundManager', '$timeout'];
-  function SoundFactory(soundManager, $timeout) {
+  SoundFactory.$inject = ['soundManager', '$timeout', '$q'];
+  function SoundFactory(soundManager, $timeout, $q) {
     var id = 0;
 
     function Sound(url, options) {
@@ -88,11 +88,11 @@
       this.id3 = {};
       this.id = id++;
       this.sound = soundManager.createSound(options);
+      this.$ld = $q.defer();
     }
 
     Sound.prototype.playing = false;
     Sound.prototype.loading = false;
-    Sound.prototype.paused  = false;
     Sound.prototype.error   = false;
     Sound.prototype.paused  = true;
 
@@ -104,22 +104,60 @@
     var play = makePromisedProxy('play');
     Sound.prototype.play = function () {
       this.loading = true;
-      play.apply(this, [].slice.call(arguments));
+      return play.apply(this, [].slice.call(arguments));
+    };
+
+    var load = makePromisedProxy('load');
+    Sound.prototype.load = function () {
+      var self = this;
+      return load.apply(this, arguments).then(function () {
+        return self.$lp || self.$ld.promise;
+      });
+    };
+
+    var unload = makePromisedProxy('unload');
+    Sound.prototype.unload = function () {
+      var self = this;
+      self.$lp = undefined;
+      return unload.apply(this, arguments).then(function (s) {
+        self.$lp = undefined;
+        self.$ld = $q.defer();
+        self.playing = false;
+        self.loading = false;
+        self.error   = false;
+        self.paused  = true;
+      });
+    };
+
+    var setPosition = makePromisedProxy('setPosition');
+    Sound.prototype.setPosition = function (position) {
+      this.position = position;
+      return setPosition.apply(this, arguments);
     };
 
     function SoundList (urls, options) {
-      this.id = id++;
       var firstSound, opts = (options || {}),
         subOpts = angular.copy(opts), self = this;
-      angular.forEach(urls.reverse(), function (url) {
+
+      this.segments = [];
+
+      angular.forEach((urls || []).reverse(), function (url) {
         (function (sound) {
           subOpts.onfinish = function () {
             if (angular.isDefined(sound)) {
               self.$behind += self.$current.duration;
               self.$current = sound;
+              this.setPosition(0);
+              this.unload();
               sound.play();
-            } else if (opts.onfinish) {
-              opts.onfinish.call(this);
+            } else {
+              self.$behind = 0;
+              self.$current = self.$first;
+              self.$current.setPosition(0);
+              angular.extend(self, self.$first);
+              if (opts.onfinish) {
+                opts.onfinish.call(this);
+              }
             }
           };
           subOpts.onchange = function () {
@@ -129,26 +167,114 @@
               self.position = (self.position || 0) + self.$behind;
             }
           };
+
           firstSound = new Sound(url, angular.copy(subOpts));
+          firstSound.$next = sound;
+          firstSound.$digest = subOpts.onchange;
+          self.segments.unshift(firstSound.duration);
+
         })(firstSound);
       });
       this.$behind  = 0;
-      this.$current = firstSound;
+      this.$current = this.$first = firstSound;
+
+      this.length = urls.length;
       angular.extend(self, this.$current);
     }
 
     angular.forEach(proxies, function (proxy) {
       SoundList.prototype[proxy] = function () {
-        this.$current[proxy].apply(this.$current, [].slice.call(arguments));
+        return this.$current[proxy].apply(this.$current, [].slice.call(arguments));
       };
     });
 
+    SoundList.prototype.playing = false;
+    SoundList.prototype.loading = false;
+    SoundList.prototype.error   = false;
+    SoundList.prototype.paused  = true;
+
+    SoundList.prototype.setPosition = function (position) {
+      if (Math.round(this.$behind / 1000) <= Math.round(position / 1000) && this.$behind + this.$current.duration > position) {
+        var result = this.$current.setPosition(Math.max(position - this.$behind, 0));
+        this.$current.$digest();
+        return result;
+      } else if (this.position < position) { // we're seeking to the future
+        return this.$searchSeek(position);
+      } else { // start our search at the beginning
+        return this.$searchSeek(position, this.$first, 0);
+      }
+    };
+
+
+    /**
+     * A recursive search forward through the playlist to find out
+     * which sound contains the timecode requested and where in the sound it
+     * occurs.
+     *
+     * This method is called by `setPosition(int position)` after it has been
+     * determined that a simple seek within the active sound is not possible.
+     *
+     * Parameters:
+     *   position (int): the position to seek to, in msec.
+     *   sound (sound, optional): the sound to start the search from. Defaults
+     *     to the currently active sound.
+     *   behind: (int, optional): the number of `msec` that all sounds prior to the
+     *     passed sound consume. Should be passed when sound is. Defaults to the
+     *     running total we have calculated for the currently active sound.
+     *
+     * Returns a promise which resolves to the sound.
+     **/
+    SoundList.prototype.$searchSeek = function (position, sound, behind) {
+      sound = sound || this.$current;
+      behind = angular.isDefined(behind) ? behind : this.$behind;
+
+      // We set $current to an empty object so that continued changes
+      // do not impact the playlist (i.e. state changing from playing to paused,
+      // or no longer being in the 'loading' state.)
+      var tmp = this.$current; this.$current = {}; tmp.setPosition(0); tmp.unload();
+
+      this.loading = !this.paused; // don't show a loading indicator for paused sounds.
+
+      return this.$searchSeek_(position, sound, behind);
+    };
+
+    // The recursive bit of the $searchSeek method - does not include
+    // setup.
+    SoundList.prototype.$searchSeek_ = function (position, sound, behind) {
+      if (Math.round(sound.duration / 1000) + Math.round(behind / 1000) <= Math.round(position / 1000)) {
+        var recurse = angular.bind(this, this.$searchSeek_, position, sound.$next, behind + sound.duration);
+        sound.setPosition(0); sound.unload();
+        if (sound.$next.duration) { // Already loaded, or pre-populated.
+          return recurse();
+        } else { // Need to load the sound in order to know its duration.
+          return sound.$next.load().then(recurse);
+        }
+      } else { // base case, we found the right sound!
+        var setReturn = sound.setPosition(Math.max(position - behind, 0));
+        this.$current = sound;
+        this.$behind = behind;
+
+        if (!this.paused) { // If we were not paused before, resume playback.
+          return sound.play();
+        } else {
+          sound.$digest();
+          return setReturn.then(function (s) {
+            return sound.play().then(function () {
+              sound.pause();
+              sound.$digest();
+              return s;
+            });
+          });
+        }
+      }
+    };
+
     return {
-      create: function (url) {
-        return new Sound(url);
+      create: function (url, options) {
+        return new Sound(url, options);
       },
-      createList: function (urls) {
-        return new SoundList(urls);
+      createList: function (urls, options) {
+        return new SoundList(urls, options);
       }
     };
 
@@ -174,6 +300,12 @@
             sound.error    = false;
             sound.duration = this.duration;
           }
+
+          if (this.readyState > 1 && !sound.$lp) {
+            sound.$lp = sound.$ld.promise;
+            sound.$ld.resolve(sound);
+          }
+
           onchange.call(sound);
         }),
         onpause: asyncDigest(function () {
@@ -197,7 +329,8 @@
           sound.duration = this.durationEstimate;
           onchange.call(sound);
         }),
-        whileplaying: asyncDigest(function (){
+        whileplaying: asyncDigest(function () {
+          sound.loading = false;
           sound.position = this.position;
           onchange.call(sound);
         })

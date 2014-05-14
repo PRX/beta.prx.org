@@ -10,6 +10,26 @@ describe('accounts', function () {
       expect(account.imageUrl).toEqual('image.png');
       expect(account.address.toString()).toEqual("Springfield, ST");
     }));
+
+    it ('can get the old path for group accounts', inject(function (ngHal) {
+      var account = ngHal.mock('http://meta.prx.org/model/account/group', {path: 'test'});
+      expect(account.oldPath()).toEqual('/group/test');
+    }));
+
+    it ('can get the old path for station accounts', inject(function (ngHal) {
+      var account = ngHal.mock('http://meta.prx.org/model/account/station', {path: 'test'});
+      expect(account.oldPath()).toEqual('/station/test');
+    }));
+
+    it ('can get the old path for individual accounts', inject(function (ngHal) {
+      var account = ngHal.mock('http://meta.prx.org/model/account/individual', {path: 'test'});
+      expect(account.oldPath()).toEqual('/user/test');
+    }));
+
+    it ('returns account name for toString', inject(function (ngHal) {
+      var account = ngHal.mock('http://meta.prx.org/model/account/test', {name: 'asd'});
+      expect(account.toString()).toEqual('asd');
+    }));
   });
 
   describe('AccountCtrl', function () {
@@ -60,6 +80,19 @@ describe('accounts', function () {
       expect(spy).toHaveBeenCalled();
       expect(spy2).toHaveBeenCalled();
     });
+
+    it ('sets title appropriately', function () {
+      expect($injector.invoke(state.title, null, {account: "test"})).toEqual('test’s Stories');
+    });
+
+    it ('adds a translation for the loaded account', inject(function (urlTranslate) {
+      spyOn(urlTranslate, 'addTranslation');
+      $injector.invoke(state.resolve.translateUrl, null, {account: {
+        id: 212,
+        oldPath: function () { return "asd"; }
+      }});
+      expect(urlTranslate.addTranslation.calls.mostRecent().args).toEqual(['/accounts/212', 'asd']);
+    }));
   });
 
   describe ('skip filter', function () {

@@ -18,18 +18,30 @@ describe('prx.stories', function () {
       mock.transform();
       expect(mock.imageUrl).toEqual(null);
     });
+
+    it ('correctly copies the length property to duration', function () {
+      mock.length = 1234;
+      mock.transform();
+      expect(mock.duration).toBe(1234);
+      expect(mock.length).not.toBeDefined();
+    });
+
+    it ('returns title for toString()', function () {
+      mock.title = 'asdf';
+      expect(mock.toString()).toEqual('asdf');
+    });
   });
 
   describe ('StoryCtrl', function () {
     it ('attaches the story and accounts injected to $scope', inject(function ($controller) {
       var sigil = 'sigil';
       var scope = {};
-      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, audioUrls: sigil, $scope: scope});
+      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, audioUrls: [sigil], $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.account).toBe(sigil);
     }));
 
-    it ('starts playback of the story if autoPlay is requested', inject(function ($controller) {
+    xit ('starts playback of the story if autoPlay is requested', inject(function ($controller) {
       var player = jasmine.createSpyObj('player', ['play']);
       $controller('StoryCtrl', {story: 'sigil', prxPlayer: player, account: {}, $stateParams: {autoPlay: true}, $scope: {}, audioUrls: []});
       expect(player.play).toHaveBeenCalled();
@@ -75,6 +87,10 @@ describe('prx.stories', function () {
       expect($injector.invoke(state.resolve.audioUrls, null, {
         story: story
       }).get(1).get('url')).toResolveTo('file2.mp3');
+    });
+
+    it ('sets the title appropriately', function () {
+      expect($injector.invoke(state.title, null, {story: "story", account: "account"})).toEqual("story by account");
     });
   });
 });

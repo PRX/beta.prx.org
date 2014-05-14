@@ -131,12 +131,14 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       scope.classes = [];
 
       img.on('load', function () {
-        element.css({'background-image': 'url('+img.attr('src')+')', 'background-size': 'cover'});
+        scope.classes = [];
+        scope.$digest();
+        element.css({'background-image': 'url('+img.attr('src')+')', 'background-size': 'cover', 'background-repeat': 'no-repeat'});
       });
       scope.$watch('src', function (src) {
         if (src || scope.default) {
           img.attr('src', src || scope.default);
-          scope.classes.length = 0;
+          scope.classes = ['loading'];
         } else {
           img.removeAttr('src');
           scope.classes.splice(0, 1, scope.defaultClass);
@@ -172,11 +174,5 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
         }
       };
     }
-  };
-})
-.directive('prxDrawer', function () {
-  return {
-    restrict: 'E',
-    templateUrl: 'drawer.html'
   };
 });

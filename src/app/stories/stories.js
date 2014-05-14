@@ -25,7 +25,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story.follow('prx:audio').then(function (files) {
           var result = [];
           angular.forEach(files, function (file) {
-            result.push({id: file.id, url: file.links('enclosure').url()});
+            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
           });
           return result;
         });
@@ -63,6 +63,13 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
+    return function (story) {
+      if (angular.isDefined(story.length)) {
+        story.duration = story.length;
+        story.length = undefined;
+        return story;
+      }
+    };
   }]).mixin('http://meta.prx.org/model/story/*any', {
     toString: function () { return this.title; }
   });
@@ -80,14 +87,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   this.current = story;
   this.account = account;
   this.cover = prxperiment.get('storyCover');
-  this.getSound = prxSoundFactory({
-    story: story,
-    producer: account,
-    audioFiles: audioUrls
-  });
-  if ($stateParams.autoPlay) {
-    prxPlayer.play(this.getSound());
-  }
+  this.sound = prxSoundFactory({ story: story, producer: account,
+    audioFiles: audioUrls });
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;

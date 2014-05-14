@@ -9,11 +9,21 @@ body, header {
 
 main {
   padding-top: action-bar-height;
+  @media tall-screen {
+    padding-top: tall-action-bar-height;
+  }
 }
 
 body {
   @media multi-column {
     background: offwhite;
+  }
+}
+
+.media {
+  .img {
+    float: left;
+    margin-right: 10px;
   }
 }
 
@@ -23,11 +33,13 @@ body {
 .img {
   // We set the background image to a transparent gif to allow
   // a css-transition-based fade-in of the image whenever it is set.
-  background: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=") center no-repeat;
+  background-image: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=");
+  background-position: center center;
+  background-repeat: no-repeat;
 
   // And add a noop-transform to force a hardware layer where possible
   transform: translate3d(0,0,0);
-  transition: background-image 0.1s 0.2s;
+  transition: background-image 0.2s 0.1s;
 
   // the img tag is there to give us an onload event,
   // but is not used for display
@@ -49,7 +61,7 @@ body {
 // top-level sections (either top-level because they are in the main content
 // area or they are singly nested within an aside) are padded.
 aside > section, #main > section {
-  padding: 13px;
+  padding: tiny-horizontal-padding;
 
   @media multi-column {
     padding: 20px 15px;
@@ -85,18 +97,19 @@ aside > section, #main > section {
 
 #hero {
   .container {
-    padding: 10px 13px;
+    padding: 10px tiny-horizontal-padding;
   }
 
   @media multi-column {
-    display: flex;
-    justify-content: center;
-
     .container {
-      flex: 1;
-      padding: 15px 20px;
-      max-width: 1040px;
+      margin: 0 auto;
+      padding: 15px horizontal-padding;
+      max-width: max-content-width + 2 * horizontal-padding;
     }
+  }
+
+  @media tall-screen {
+    padding: 25px 0;
   }
 }
 
@@ -107,12 +120,12 @@ aside > section, #main > section {
   @media multi-column {
     // we're (ab)using padding to give us the minimum distance from the sides
     // of the browser window here because margin is being used to center
-    padding: 0 20px;
+    padding: 0 horizontal-padding;
     margin: 30px auto;
 
     // as a result of our abuse of padding, we actually want a 1000px wide block
     // with 20px of space on either side.
-    max-width: 1040px;
+    max-width: max-content-width + 2 * horizontal-padding;
 
     // and we flow the content inside it, mostly so we can have factored sizing
     // and reordering.
@@ -177,11 +190,11 @@ aside > section, #main > section {
 
     // spacing between the main content and the sidebar. Put on the sidebar
     // as some pages have only main content.
-    margin-right: 20px;
+    margin-right: section-spacing;
 
     // each block of sidebar content is a white box with 20px above
     aside {
-      margin-top: 20px;
+      margin-top: section-spacing;
 
       section {
         background-color: white;

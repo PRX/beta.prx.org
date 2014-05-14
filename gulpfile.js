@@ -351,7 +351,9 @@ gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
 
   karma.start({ autoWatch: true });
 
+
   gulp.watch(allAppJs.concat(featsDev), ['buildJs', 'helperJs']);
+  gulp.watch("src/**/*.js", ['buildJs', 'helperJs']);
 });
 
 gulp.task('default', ['watch']);
