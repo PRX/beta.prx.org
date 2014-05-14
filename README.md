@@ -41,7 +41,7 @@ This project should be well unit tested. There are (fairly low) code coverage re
 End to End tests are useful but because they are coupled to both the frontend and backend simultaneously they can largely be ignored for the time being. A solution is being devised that will more fully work to continuously integrate this process.
 
 ##### Travis CI
-Tests are automatically run by Travis CI in several circumstances. Generally, this is used to ensure that `master` always passes (see *Master is Always Deployable*, below) and for visibility into test statuses on Pull Requests.
+Tests are automatically run by Travis CI in several circumstances. Generally, this is used to ensure that `master` always passes (see [*Master is Always Deployable*](#master-is-always-deployable), below) and for visibility into test statuses on Pull Requests.
 
 #### Deploying
 Deployment is handled through Capistrano. If you have access to commit directly to this repo, you probably have deploy permissions as well. If you don't, you will likely need to customize the deployment scripts anyway, so it will not be addressed in detail here. The basics are these:
@@ -54,7 +54,7 @@ cap staging deploy # deploys to m-staging.prx.org, allows specifying the branch
 If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, email chris.
 
 ##### Master is Always Deployable
-We're able to make very little ceremony out of deploying because master is always deployable (and, in fact, will likely be automatically deployed in the future). We maintain this state of affairs by ensuring that our code is well-tested (automatically, with help from Travis CI) and by following a code review process that uses Github Pull Requests to ensure that at least two people have looked at each set of changes.
+We're able to make very little ceremony out of deploying because master is always deployable (and, in fact, will likely be automatically deployed in the future). We maintain this state of affairs by ensuring that our code is well-tested ([automatically](#testing), with help from [Travis CI](#Travis-CI)) and by following a code review process that uses Github Pull Requests to ensure that at least two people have looked at each set of changes.
 
 ### Project Layout
 The project is broken into several directories. Everything that is automatically generated as part of the build process (mentioned above) is ignored by git and therefore never checked into source control. For this reason, I will refer to directories that are not visible in the Github source tree, but will be automatically generated as part of the `npm install` or `npm run-script devServer` processes.
@@ -64,11 +64,11 @@ All configuration details are stored in this folder, including
 
 File               | Description
 -----------------: | :--------------------------------
-build.json         | Most of the details about which files are used by which build target
-deploy.rb          | Used by Capistrano for deployment
-flags.*.json       | `build` and `compile` time flags which are automatically inserted into the code. Useful for situations where it is important to optimize varying behavior out before deploying.
-karma.conf.js      | Used by `karma` to run unit tests.
-protractor.conf.js | Used by `protractor` to run end to end tests.
+`build.json`         | Most of the details about which files are used by which build target
+`deploy.rb`          | Used by Capistrano for deployment
+`flags.*.json`       | `build` and `compile` time flags which are automatically inserted into the code. Useful for situations where it is important to optimize varying behavior out before deploying.
+`karma.conf.js      | Used by `karma` to run unit tests.
+`protractor.conf.js` | Used by `protractor` to run end to end tests.
 
 #### `src/`
 Home for application files.
