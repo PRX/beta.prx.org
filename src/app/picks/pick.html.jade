@@ -1,5 +1,5 @@
-section
-  .pick(ng-if="pick")
+.pick-holder(ng-class="{loading: loading}")
+  .pick(ng-if="!loading")
     prx-story(story="pick.story", title="{{pick.editors_title}}")
     .curation
       .curator

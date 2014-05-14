@@ -1,4 +1,4 @@
-angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate', 'prx.accounts', 'prx.experiments'])
+angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate', 'prx.accounts', 'prx.experiments', 'prx.picks'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -79,7 +79,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   };
 })
 .controller('StoryCtrl', function (story, account, audioUrls,
-  prxSoundFactory, $stateParams, prxPlayer, prxperiment,ngHal) {
+  prxSoundFactory, $stateParams, prxPlayer, prxperiment, prxPicks) {
   this.current = story;
   this.account = account;
   this.cover = prxperiment.get('storyCover');
@@ -91,6 +91,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   if ($stateParams.autoPlay) {
     prxPlayer.play(this.getSound());
   }
+
+  this.suggested = prxPicks.suggestedPick(this.current);
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;

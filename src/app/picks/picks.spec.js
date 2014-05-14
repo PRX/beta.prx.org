@@ -90,6 +90,117 @@ describe('prx.picks', function () {
       expect(element).toBeDefined();
     });
 
+    it ('sets loading to false when pick is an object', function() {
+      element = $compile('<prx-pick pick="pick"></prx-pick>')($scope);
+      $scope.$digest();
+      expect(element.isolateScope().loading).toBe(false);
+    });
+
+    it ('sets loading to true when pick is a promise', inject(function($q) {
+      $scope.pick = $q.defer().promise;
+      element = $compile('<prx-pick pick="pick"></prx-pick>')($scope);
+      $scope.$digest();
+      expect(element.isolateScope().loading).toBe(true);
+    }));
+
+  });
+
+  describe('prxPicks service', function() {
+    var ngHal, prxPicks, scope;
+
+    beforeEach(inject(function (_ngHal_, _prxPicks_, $rootScope) {
+      ngHal = _ngHal_;
+      prxPicks = _prxPicks_;
+      scope = $rootScope.$new();
+    }));
+
+    it ('returns the suggested picks without network request when already set', function() {
+      prxPicks.suggestedPicks = [];
+      prxPicks.usedPicks = [];
+      var spy = ngHal.stubFollow('prx:pick-list');
+      prxPicks.suggestedPick();
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it ('gets a suggested pick list when a pick is requested and the list is not yet set', function() {
+      var picklist = ngHal.mock('http://meta.prx.org/model/pick_list');
+      var picks = ngHal.mock('http://meta.prx.org/model/picks');
+      var items = [{id: 1}];
+      var picklistSpy = ngHal.stubFollow('prx:pick-list', picklist);
+      var picksSpy = picklist.stubFollow('prx:picks', picks);
+      var itemsSpy = picks.stubFollow('prx:items', items);
+      prxPicks.suggestedPick();
+      expect(picklistSpy).toHaveBeenCalled();
+      expect(prxPicks.suggestedPicks).toBeDefined();
+      expect(prxPicks.usedPicks).toBeDefined();
+    });
+
+    it ('excludes the passed in story from the set of possible picks', function() {
+      var sigil = 'sigil';
+      prxPicks.suggestedPicks = [{id: 1, story: {id: sigil}}];
+      prxPicks.usedPicks = [];
+      var pick = 'foo';
+      prxPicks.suggestedPick({id: sigil}).then(function(p) {
+        pick = p;
+      });
+      scope.$digest();
+      expect(pick).toBe(null);
+    });
+
+    it ('returns a promise for a pick from the set of possible picks when there is a non-excluded one', function() {
+      var suggested = {id: 3, story: {id: 1}};
+      var excluded = {id: 4, story: {id: 2}};
+      prxPicks.suggestedPicks = [suggested, excluded];
+      prxPicks.usedPicks = [];
+      var pick = 'foo';
+      prxPicks.suggestedPick(excluded.story).then(function(p) {
+        pick = p;
+      });
+      scope.$digest();
+      expect(pick).toBe(suggested);
+    });
+
+    it ('returns a promise for a pick when no excluded story is provided', function() {
+      var suggested = {id: 2, story: {id: 1}};
+      prxPicks.suggestedPicks = [suggested];
+      prxPicks.usedPicks = [];
+      var pick = 'foo';
+      prxPicks.suggestedPick().then(function(p) {
+        pick = p;
+      });
+      scope.$digest();
+      expect(pick).toBe(suggested);
+    });
+
+    it ('does not return the same pick twice in a session while others are available', function() {
+      prxPicks.suggestedPicks = [{id: 1, story: {id: 2}}, {id: 3, story: {id: 4}}, {id: 5, story: {id: 6}}];
+      prxPicks.usedPicks = [];
+      var p1, p2, p3;
+      prxPicks.suggestedPick().then(function(p) { p1 = p; });
+      scope.$digest();
+      prxPicks.suggestedPick().then(function(p) { p2 = p; });
+      scope.$digest();
+      prxPicks.suggestedPick().then(function(p) { p3 = p; });
+      scope.$digest();
+      expect(p1).not.toBe(p2);
+      expect(p1).not.toBe(p3);
+      expect(p2).not.toBe(p3);
+    });
+
+    it ('resets the suggested pick list when it is empty', function() {
+      prxPicks.suggestedPicks = [{id: 1, story: {id: 2}}, {id: 3, story: {id: 4}}];
+      prxPicks.usedPicks = [];
+      var p1, p2, p3;
+      prxPicks.suggestedPick().then(function(p) { p1 = p; });
+      scope.$digest();
+      prxPicks.suggestedPick().then(function(p) { p2 = p; });
+      scope.$digest();
+      prxPicks.suggestedPick().then(function(p) { p3 = p; });
+      scope.$digest();
+      expect(p3).not.toBe(null);
+      expect(p3).toBeDefined();
+    });
+
   });
 
 });

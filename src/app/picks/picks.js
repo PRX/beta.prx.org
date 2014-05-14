@@ -29,7 +29,7 @@ angular.module('prx.picks', ['prx.stories'])
     }
   };
 })
-.directive('prxPick', function ($timeout, ngHal) {
+.directive('prxPick', function ($timeout, $q) {
   return {
     restrict: 'E',
     replace: true,
@@ -38,51 +38,68 @@ angular.module('prx.picks', ['prx.stories'])
       pick: '='
     },
     link: function (scope) {
-      $timeout(function () {
-        if (!angular.isDefined(scope.loading)) {
-          scope.loading = true;
-        }
-      }, 500);
-      if (angular.isDefined(scope.pick)) {
+      scope.loading = true;
+      $q.when(scope.pick).then(function(pick) {
         scope.loading = false;
-      }
-    }
-  };
-})
-.directive('prxSuggestedPick', function($timeout, ngHal) {
-  return {
-    restrict: 'E',
-    replace: true,
-    templateUrl: 'picks/pick.html',
-    scope: {
-      story: '='
-    },
-    link: function (scope) {
-      $timeout(function () {
-        if (!angular.isDefined(scope.loading)) {
-          scope.loading = true;
-        }
-      }, 500);
-      ngHal.follow('prx:pick-list', {id: FEAT.home_pick_list_id}).follow('prx:picks').follow('prx:items').then(function (picks) {
-        if (angular.isDefined(scope.story)) {
-          var storyIndex = -1;
-          angular.forEach(picks, function(pick, idx) {
-            if (pick.story.id == scope.story.id) { storyIndex = idx; }
-          });
-          if (storyIndex > -1) {
-            console.log("removing story at index " + storyIndex);
-            picks.splice(storyIndex, 1);
-          }
-        }
-        if (picks.length > 0) {
-          scope.loading = false;
-          var index = Math.floor(Math.random() * picks.length);
-          scope.pick = picks[index];
-        }
+        scope.pick = pick;
       });
     }
   };
 })
+.service('prxPicks', function(ngHal, $q) {
 
+  var self = this;
+  var getSuggestedPicks = function () {
+    if (self.suggestedPicks) {
+      return $q.when(self.suggestedPicks);
+    }
+    return ngHal.follow('prx:pick-list', {id: FEAT.home_pick_list_id}).follow('prx:picks').follow('prx:items').then(function (items) {
+      self.suggestedPicks = items;
+      self.usedPicks = [];
+      return self.suggestedPicks;
+    });
+  };
+
+  var excludeStory = function(exclude) {
+    return getSuggestedPicks().then(function(suggestedPicks) {
+      if (angular.isDefined(exclude)) {
+        var result = [];
+        result.length = 0;
+        angular.forEach(suggestedPicks, function (elem) {
+          if (elem.story.id != exclude.id) {
+            result.push(elem);
+          }
+        });
+        return result;
+      }
+      return suggestedPicks;
+    });
+  };
+
+  var recordPick = function(suggested) {
+    var index = -1;
+    angular.forEach(self.suggestedPicks, function(pick, idx) {
+      if (pick.id == suggested.id) { index = idx; }
+    });
+    self.suggestedPicks.splice(index, 1);
+    self.usedPicks.push(suggested);
+    if (self.suggestedPicks.length === 0) {
+      self.suggestedPicks = self.usedPicks;
+      self.usedPicks = [];
+    }
+  };
+
+  this.suggestedPick = function(exclude) {
+    return excludeStory(exclude).then(function(picks) {
+      if (picks.length === 0) {
+        return null;
+      }
+      var suggested = picks[Math.floor(Math.random() * picks.length)];
+      recordPick(suggested);
+      return suggested;
+    });
+  };
+
+})
 ;
 
