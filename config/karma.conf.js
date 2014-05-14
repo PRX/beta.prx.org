@@ -5,6 +5,7 @@ module.exports = function ( config ) {
     basePath: '../',
     files: [appCfg.buildDir+"/**/angular.js"].concat(
       appCfg.test.js,
+      appCfg.test.helper.dst,
       appCfg.buildDir + '/**/*.js',
       appCfg.app.specs,
       appCfg.test.assets.map(function (pattern) {

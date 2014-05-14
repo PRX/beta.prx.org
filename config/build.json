@@ -7,7 +7,8 @@
       "!src/**/*.spec.js",
       "!src/assets/**/*.js",
       "!src/common/angular-hal-mock.js",
-      "!src/common/sound-manager-mock.js"
+      "!src/common/sound-manager-mock.js",
+      "!src/common/spec-helper.js"
     ],
     "specs":  [ "src/**/*.spec.js" ],
     "html":   [ "src/index.html" ],
@@ -24,7 +25,11 @@
     ],
     "assets": [
       "src/assets/**/*"
-    ]
+    ],
+    "helper": {
+      "src": "src/common/spec-helper.js",
+      "dst": "src/common/.helper.spec.js"
+    }
   },
   "vendor": {
     "js": [
