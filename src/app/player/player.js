@@ -307,6 +307,8 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
             });
             timeout = undefined;
           }
+        } else {
+          timeout = undefined;
         }
       }
 
