@@ -314,15 +314,15 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         animated = ~~new Date();
         animate();
         function animate() {
-          var factor = Math.min((~~(new Date()) - animated) / 200, 1);
+          var time = Math.pow(Math.min((~~new Date() - animated) / 200, 1) - 1, 3) + 1;
           ctx.clearRect(0, 0, width, height);
           angular.forEach(points, function (point, index) {
             ctx.beginPath();
             ctx.moveTo(10 * index + 5, height);
-            ctx.lineTo(10 * index + 5, Math.max(100-point * factor, 1) / 100 * height);
+            ctx.lineTo(10 * index + 5, Math.max(100 - point * time, 1) / 100 * height);
             ctx.stroke();
           });
-          if (factor < 1) {
+          if (time < 1) {
             window.requestAnimationFrame(animate);
           }
         }
