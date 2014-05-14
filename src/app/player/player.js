@@ -272,8 +272,8 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         if (elem[0].currentStyle) {
           ctx.strokeStyle = elem[0].currentStyle['border-color'];
         } else if (window.getComputedStyle) {
-          ctx.strokeStyle = document.defaultView.getComputedStyle(elem[0], null)
-            .getPropertyValue('border-color');
+          var style = window.getComputedStyle(elem[0], null);
+          ctx.strokeStyle = style.getPropertyValue('border-color') || style.getPropertyValue('borderRightColor');
         }
 
         ctx.lineWidth = 6;
