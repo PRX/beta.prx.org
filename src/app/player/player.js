@@ -207,7 +207,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       });
 
       function click (event) {
-        scope.prxPlayerScrubber({percentage: event.offsetX * 100 / event.target.offsetWidth});
+        scope.prxPlayerScrubber({percentage: (event.offsetX || event.layerX) * 100 / event.target.offsetWidth});
       }
     }
   };
@@ -273,7 +273,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
             ctx.strokeStyle = elem[0].currentStyle['border-color'];
           } else if (window.getComputedStyle) {
             var style = window.getComputedStyle(elem[0], null);
-            ctx.strokeStyle = style.getPropertyValue('border-color') || style.getPropertyValue('borderRightColor');
+            ctx.strokeStyle = style['borderRightColor'] || style.getPropertyValue('border-color');
           }
 
           ctx.lineWidth = 6;
