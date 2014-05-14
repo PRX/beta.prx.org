@@ -256,10 +256,10 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     templateUrl: 'player/waveform.html',
     replace: true,
     link: function (scope, elem, attrs) {
-      var active = false, currentSound, timeout, ctx = elem[0].getContext('2d');
+      var active = false, animated = false, currentSound, timeout, ctx = elem[0].getContext('2d');
 
       function scheduleWaveform () {
-        if (!angular.isDefined(timeout)) {
+        if (!timeout) {
           timeout = $timeout(generateWaveform, 500);
         }
       }
@@ -275,7 +275,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
           ctx.strokeStyle = document.defaultView.getComputedStyle(elem[0], null)
             .getPropertyValue('border-color');
         }
-        
+
         ctx.lineWidth = 6;
 
         var points = [];
@@ -294,14 +294,38 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
           i += perBar;
         } while (i <= currentSound.$waveform.length - 1);
 
-        angular.forEach(points, function (point, index) {
-          ctx.beginPath();
-          ctx.moveTo(10 * index + 5, elem[0].height);
-          ctx.lineTo(10 * index + 5, (100-point) / 100 * elem[0].height);
-          ctx.stroke();
-        });
+        if (!animated) {
+          animateIn(points, ctx, elem[0].height, elem[0].width).then(function () {
+            timeout = undefined;
+          });
+        } else {
+          angular.forEach(points, function (point, index) {
+            ctx.beginPath();
+            ctx.moveTo(10 * index + 5, elem[0].height);
+            ctx.lineTo(10 * index + 5, (100-point) / 100 * elem[0].height);
+            ctx.stroke();
+          });
+          timeout = undefined;
+        }
+      }
 
-        timeout = undefined;
+      function animateIn(points, ctx, height, width) {
+        animated = ~~new Date();
+        animate();
+        function animate() {
+          var factor = Math.min((~~(new Date()) - animated) / 200, 1);
+          ctx.clearRect(0, 0, width, height);
+          angular.forEach(points, function (point, index) {
+            ctx.beginPath();
+            ctx.moveTo(10 * index + 5, height);
+            ctx.lineTo(10 * index + 5, Math.max(100-point * factor, 1) / 100 * height);
+            ctx.stroke();
+          });
+          if (factor < 1) {
+            window.requestAnimationFrame(animate);
+          }
+        }
+        return $timeout(angular.noop, 210);
       }
 
       scope.$watch(attrs.sound, function (sound) {
