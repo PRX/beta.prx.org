@@ -33,11 +33,13 @@ body {
 .img {
   // We set the background image to a transparent gif to allow
   // a css-transition-based fade-in of the image whenever it is set.
-  background: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=") center no-repeat;
+  background-image: url("data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=");
+  background-position: center center;
+  background-repeat: no-repeat;
 
   // And add a noop-transform to force a hardware layer where possible
   transform: translate3d(0,0,0);
-  transition: background-image 0.2s;
+  transition: background-image 0.2s 0.1s;
 
   // the img tag is there to give us an onload event,
   // but is not used for display
