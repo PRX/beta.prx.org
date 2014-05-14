@@ -112,16 +112,70 @@ describe('prx.player', function () {
 
         expect(ctrl.active()).toBe(true);
       });
+
+      it ('calculates progress', function () {
+        sound.story = {duration: 10000};
+        sound.position = 1000000;
+
+        expect(ctrl.progress()).toBe(10);
+      });
     });
   });
 
-  describe('prxPlayerWaveform', function () {
+  describe('directives', function () {
+    var $compile, $rootScope;
     beforeEach(module('templates'));
-    it ('compiles', inject(function ($compile, $rootScope) {
-      var elem = $compile('<prx-player-waveform></prx-player-waveform>')($rootScope);
-      $rootScope.$digest();
-      expect(elem).toBeDefined();
+    beforeEach(inject(function (_$compile_, _$rootScope_) {
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
     }));
+
+    describe ('prxPlayerWaveform', function () {
+      it ('compiles', inject(function ($window, $timeout) {
+        var elem = $compile('<prx-player-waveform sound="sound"></prx-player-waveform>')($rootScope);
+        $rootScope.sound = {}
+        $rootScope.$digest();
+        angular.element($window).triggerHandler('resize');
+        $timeout.flush();
+        angular.element($window).triggerHandler('resize');
+        $timeout.flush();
+        expect(elem).toBeDefined();
+      }));
+    });
+
+    describe ('prxPlayer', function () {
+      var elem;
+      beforeEach(function () {
+        elem = $compile('<prx-player sound="sound"></prx-player>')($rootScope);
+        $rootScope.$digest();
+      });
+
+      it('compiles', function () {
+        expect(elem).toBeDefined();
+      });
+
+      it ('calls setSound on controller where appropriate', function () {
+        $rootScope.sound = {id: 123, story: {}};
+        $rootScope.$digest();
+        expect($rootScope.player.sound.id).toBe(123);
+      });
+    });
+
+    describe ('prxGlobalPlayer', function () {
+      it ('compiles', function () {
+        var elem = $compile('<prx-global-player></prx-global-player>')($rootScope);
+        expect(elem).toBeDefined();
+      });
+    });
+
+    describe ('prxPlayerButton', function () {
+      it ('compiles', function () {
+        var elem = $compile('<prx-player-button></prx-player-button>')($rootScope);
+        $rootScope.$digest();
+        expect(elem).toBeDefined();
+      });
+    });
+
   });
 
   describe ('prxPlayer', function () {
@@ -242,5 +296,36 @@ describe('prx.player', function () {
       });
     });
 
+  });
+
+  describe ('soundFactory', function () {
+    var prxSoundFactory;
+    beforeEach(inject(function (_prxSoundFactory_) {
+      prxSoundFactory = _prxSoundFactory_;
+    }));
+
+    it ('makes a sound', function () {
+      expect(prxSoundFactory({audioFiles:['/123.mp3']}).play).toBeDefined();
+    });
+
+    it ('sets the producer', function () {
+      expect(prxSoundFactory({audioFiles: [], producer: 123}).producer).toBe(123);
+    });
+
+    it ('sets the story', function () {
+      expect(prxSoundFactory({audioFiles: [], story: 123}).story).toBe(123);
+    });
+
+    it ('calls the onFinish on the sound object when the sound is finished', inject(function (smSound) {
+      spyOn(smSound, 'createList').and.returnValue({});
+      sound = prxSoundFactory({audioFiles: []});
+      var triggerFinish = smSound.createList.calls.mostRecent().args[1].onfinish;
+
+      triggerFinish();
+      sound.onfinish = jasmine.createSpy('spy');
+      expect(sound.onfinish).not.toHaveBeenCalled();
+      triggerFinish();
+      expect(sound.onfinish).toHaveBeenCalled();
+    }));
   });
 });
