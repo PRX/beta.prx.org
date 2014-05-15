@@ -35,15 +35,22 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     });
   });
 })
-.factory('prxSoundFactory', function (smSound) {
+.factory('prxSoundFactory', function (smSound, prxPlayer) {
   function SoundFactory (options) {
-    var sound = smSound.createList(options.audioFiles, {
-      onfinish: function () {
-        if (angular.isFunction(sound.onfinish)) {
-          sound.onfinish();
+    var sound;
+
+    if (prxPlayer.nowPlaying && options.story.id == prxPlayer.nowPlaying.story.id) {
+      sound = prxPlayer.nowPlaying;
+    } else {
+      sound = smSound.createList(options.audioFiles, {
+        onfinish: function () {
+          if (angular.isFunction(sound.onfinish)) {
+            sound.onfinish();
+          }
         }
-      }
-    });
+      });
+    }
+
     sound.producer = options.producer;
     sound.story = options.story;
 
