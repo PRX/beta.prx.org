@@ -222,3 +222,17 @@ a.full-site {
     border-color: darker-blue;
   }
 }
+
+a.more {
+  position: relative;
+  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+
+  &:after {
+    position: absolute;
+    right: -12px;
+    content: '»'
+  }
+}
