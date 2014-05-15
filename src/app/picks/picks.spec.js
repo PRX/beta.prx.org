@@ -106,39 +106,34 @@ describe('prx.picks', function () {
   });
 
   describe('prxPicks service', function() {
-    var ngHal, prxPicks, scope;
+    var ngHal, prxPicks, scope, $q_;
+    var picklist, picks, picklistStub, picksStub;
 
-    beforeEach(inject(function (_ngHal_, _prxPicks_, $rootScope) {
+    beforeEach(inject(function (_ngHal_, _prxPicks_, $rootScope, _$q_) {
       ngHal = _ngHal_;
       prxPicks = _prxPicks_;
       scope = $rootScope.$new();
+      $q = _$q_;
+      picklist = ngHal.mock('http://meta.prx.org/model/pick_list');
+      picks = ngHal.mock('http://meta.prx.org/model/picks');
+      picklistStub = ngHal.stubFollow('prx:pick-list', picklist);
+      picksStub = picklist.stubFollow('prx:picks', picks);
     }));
 
-    it ('returns the suggested picks without network request when already set', function() {
-      prxPicks.suggestedPicks = [];
-      prxPicks.usedPicks = [];
-      var spy = ngHal.stubFollow('prx:pick-list');
+    it ('returns the suggested pick without network request when already set', function() {
+      var items = [];
+      var itemsStub = picks.stubFollow('prx:items', items);
       prxPicks.suggestedPick();
-      expect(spy).not.toHaveBeenCalled();
-    });
-
-    it ('gets a suggested pick list when a pick is requested and the list is not yet set', function() {
-      var picklist = ngHal.mock('http://meta.prx.org/model/pick_list');
-      var picks = ngHal.mock('http://meta.prx.org/model/picks');
-      var items = [{id: 1}];
-      var picklistSpy = ngHal.stubFollow('prx:pick-list', picklist);
-      var picksSpy = picklist.stubFollow('prx:picks', picks);
-      var itemsSpy = picks.stubFollow('prx:items', items);
+      scope.$digest();
       prxPicks.suggestedPick();
-      expect(picklistSpy).toHaveBeenCalled();
-      expect(prxPicks.suggestedPicks).toBeDefined();
-      expect(prxPicks.usedPicks).toBeDefined();
+      scope.$digest();
+      expect(picklistStub.calls.count()).toBe(1);
     });
 
     it ('excludes the passed in story from the set of possible picks', function() {
       var sigil = 'sigil';
-      prxPicks.suggestedPicks = [{id: 1, story: {id: sigil}}];
-      prxPicks.usedPicks = [];
+      var items = [{id: 1, story: {id: sigil}}];
+      var itemsStub = picks.stubFollow('prx:items', items);
       var pick = 'foo';
       prxPicks.suggestedPick({id: sigil}).then(function(p) {
         pick = p;
@@ -150,8 +145,8 @@ describe('prx.picks', function () {
     it ('returns a promise for a pick from the set of possible picks when there is a non-excluded one', function() {
       var suggested = {id: 3, story: {id: 1}};
       var excluded = {id: 4, story: {id: 2}};
-      prxPicks.suggestedPicks = [suggested, excluded];
-      prxPicks.usedPicks = [];
+      var items = [suggested, excluded];
+      var itemsStub = picks.stubFollow('prx:items', items);
       var pick = 'foo';
       prxPicks.suggestedPick(excluded.story).then(function(p) {
         pick = p;
@@ -162,8 +157,8 @@ describe('prx.picks', function () {
 
     it ('returns a promise for a pick when no excluded story is provided', function() {
       var suggested = {id: 2, story: {id: 1}};
-      prxPicks.suggestedPicks = [suggested];
-      prxPicks.usedPicks = [];
+      var items = [suggested];
+      var itemsStub = picks.stubFollow('prx:items', items);
       var pick = 'foo';
       prxPicks.suggestedPick().then(function(p) {
         pick = p;
@@ -173,8 +168,8 @@ describe('prx.picks', function () {
     });
 
     it ('does not return the same pick twice in a session while others are available', function() {
-      prxPicks.suggestedPicks = [{id: 1, story: {id: 2}}, {id: 3, story: {id: 4}}, {id: 5, story: {id: 6}}];
-      prxPicks.usedPicks = [];
+      var items = [{id: 1, story: {id: 2}}, {id: 3, story: {id: 4}}, {id: 5, story: {id: 6}}];
+      var itemsStub = picks.stubFollow('prx:items', items);
       var p1, p2, p3;
       prxPicks.suggestedPick().then(function(p) { p1 = p; });
       scope.$digest();
@@ -188,8 +183,8 @@ describe('prx.picks', function () {
     });
 
     it ('resets the suggested pick list when it is empty', function() {
-      prxPicks.suggestedPicks = [{id: 1, story: {id: 2}}, {id: 3, story: {id: 4}}];
-      prxPicks.usedPicks = [];
+      var items = [{id: 1, story: {id: 2}}, {id: 3, story: {id: 4}}];
+      var itemsStub = picks.stubFollow('prx:items', items);
       var p1, p2, p3;
       prxPicks.suggestedPick().then(function(p) { p1 = p; });
       scope.$digest();

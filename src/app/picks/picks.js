@@ -48,20 +48,17 @@ angular.module('prx.picks', ['prx.stories'])
 })
 .service('prxPicks', function(ngHal, $q) {
 
-  var self = this;
-  var getSuggestedPicks = function () {
-    if (self.suggestedPicks) {
-      return $q.when(self.suggestedPicks);
+  this.usedPicks = [];
+  this.getSuggestedPicks = function () {
+    if (!this.suggestedPicks) {
+      this.suggestedPicks = ngHal.follow('prx:pick-list', {id: FEAT.home_pick_list_id}).follow('prx:picks').follow('prx:items');
     }
-    return ngHal.follow('prx:pick-list', {id: FEAT.home_pick_list_id}).follow('prx:picks').follow('prx:items').then(function (items) {
-      self.suggestedPicks = items;
-      self.usedPicks = [];
-      return self.suggestedPicks;
-    });
+    return this.suggestedPicks;
   };
 
-  var excludeStory = function(exclude) {
-    return getSuggestedPicks().then(function(suggestedPicks) {
+  this.excludeStory = function(exclude) {
+    var self = this;
+    return this.getSuggestedPicks().then(function(suggestedPicks) {
       if (angular.isDefined(exclude)) {
         var result = [];
         result.length = 0;
@@ -76,26 +73,31 @@ angular.module('prx.picks', ['prx.stories'])
     });
   };
 
-  var recordPick = function(suggested) {
+  this.recordPick = function(suggested) {
     var index = -1;
-    angular.forEach(self.suggestedPicks, function(pick, idx) {
-      if (pick.id == suggested.id) { index = idx; }
+    var self = this;
+    self.getSuggestedPicks().then(function(suggestedPicks) {
+      angular.forEach(suggestedPicks, function(pick, idx) {
+        if (pick.id == suggested.id) { index = idx; }
+      });
+      suggestedPicks.splice(index, 1);
+      self.usedPicks.push(suggested);
+      if (suggestedPicks.length === 0) {
+        suggestedPicks = self.usedPicks;
+        self.usedPicks = [];
+      }
+      self.suggestedPicks = $q.when(suggestedPicks);
     });
-    self.suggestedPicks.splice(index, 1);
-    self.usedPicks.push(suggested);
-    if (self.suggestedPicks.length === 0) {
-      self.suggestedPicks = self.usedPicks;
-      self.usedPicks = [];
-    }
   };
 
   this.suggestedPick = function(exclude) {
-    return excludeStory(exclude).then(function(picks) {
+    var self = this;
+    return self.excludeStory(exclude).then(function(picks) {
       if (picks.length === 0) {
         return null;
       }
       var suggested = picks[Math.floor(Math.random() * picks.length)];
-      recordPick(suggested);
+      self.recordPick(suggested);
       return suggested;
     });
   };
