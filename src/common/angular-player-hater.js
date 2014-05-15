@@ -87,7 +87,12 @@
       options.url = url;
       this.id3 = {};
       this.id = id++;
-      this.sound = soundManager.createSound(options);
+      this.sound = function () {
+        if (!this.$sound) {
+          this.$sound = soundManager.createSound(options);
+        }
+        return this.$sound;
+      };
       this.$ld = $q.defer();
     }
 
@@ -101,13 +106,14 @@
     angular.forEach(proxies, function (proxy) {
       Sound.prototype[proxy] = makePromisedProxy(proxy);
     });
-    var play = makePromisedProxy('play');
+
+    var play = Sound.prototype.play;
     Sound.prototype.play = function () {
       this.loading = true;
       return play.apply(this, [].slice.call(arguments));
     };
 
-    var load = makePromisedProxy('load');
+    var load = Sound.prototype.load;
     Sound.prototype.load = function () {
       var self = this;
       return load.apply(this, arguments).then(function () {
@@ -115,24 +121,45 @@
       });
     };
 
-    var unload = makePromisedProxy('unload');
+    var unload = Sound.prototype.destruct;
     Sound.prototype.unload = function () {
-      var self = this;
-      self.$lp = undefined;
-      return unload.apply(this, arguments).then(function (s) {
-        self.$lp = undefined;
-        self.$ld = $q.defer();
-        self.playing = false;
-        self.loading = false;
-        self.error   = false;
-        self.paused  = true;
-      });
+      this.$lp = undefined;
+      this.$ld = $q.defer();
+      this.playing = false;
+      this.loading = false;
+      this.error   = false;
+      this.paused  = true;
+      if (this.$sound) {
+        var self = this;
+        return unload.apply(this, arguments).then(function () {
+          self.$sound = undefined;
+        });
+      }
+      return $q.when();
     };
 
-    var setPosition = makePromisedProxy('setPosition');
+    var setPosition = Sound.prototype.setPosition;
     Sound.prototype.setPosition = function (position) {
       this.position = position;
-      return setPosition.apply(this, arguments);
+      var self = this;
+      if (this.$sound) {
+        this.$sound = this.$sound.then(function (sound) {
+          return sound.setPosition(position);
+        });
+        return this.$sound;
+      } else {
+        var origSound = this.sound;
+        this.sound = function () {
+          return origSound.call(this).then(function (sound) {
+            self.sound = origSound;
+            return setPosition.call(self, position).then(function () {
+              return sound;
+            });
+          });
+        };
+        return $q.when();
+      }
+
     };
 
     function SoundList (urls, options) {
@@ -242,12 +269,12 @@
     // setup.
     SoundList.prototype.$searchSeek_ = function (position, sound, behind) {
       if (Math.round(sound.duration / 1000) + Math.round(behind / 1000) <= Math.round(position / 1000)) {
-        var recurse = angular.bind(this, this.$searchSeek_, position, sound.$next, behind + sound.duration);
+        var recur = angular.bind(this, this.$searchSeek_, position, sound.$next, behind + sound.duration);
         sound.setPosition(0); sound.unload();
         if (sound.$next.duration) { // Already loaded, or pre-populated.
-          return recurse();
+          return recur();
         } else { // Need to load the sound in order to know its duration.
-          return sound.$next.load().then(recurse);
+          return sound.$next.load().then(recur);
         }
       } else { // base case, we found the right sound!
         var setReturn = sound.setPosition(Math.max(position - behind, 0));
@@ -258,13 +285,7 @@
           return sound.play();
         } else {
           sound.$digest();
-          return setReturn.then(function (s) {
-            return sound.play().then(function () {
-              sound.pause();
-              sound.$digest();
-              return s;
-            });
-          });
+          return setReturn;
         }
       }
     };
@@ -289,6 +310,7 @@
       onchange = onchange || angular.noop;
       return {
         onload: asyncDigest(function () {
+          /* istanbul ignore else */
           if (this.readyState === 1) {
             sound.loading  = true;
             sound.error    = false;
@@ -340,7 +362,7 @@
     function makePromisedProxy (property) {
       return function () {
         var args = [].slice.call(arguments);
-        return this.sound.then(function (sound) {
+        return this.sound().then(function (sound) {
           return sound[property].apply(sound, args);
         });
       };
