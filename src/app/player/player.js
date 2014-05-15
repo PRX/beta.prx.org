@@ -122,9 +122,8 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: 'player/player.html',
-    controller: 'PlayerCtrl',
-    controllerAs: 'player',
+    templateUrl: 'player/player.directive.html',
+    controller: 'PlayerCtrl as player',
     link: function (scope, elem, attrs, ctrl) {
       scope.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
     }
@@ -249,24 +248,47 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 .controller('GlobalPlayerCtrl', function (prxPlayer) {
   this.global = prxPlayer;
 })
-.directive('prxPlayerWaveform', function ($window, $timeout) {
+.directive('waveform', function ($window, $timeout) {
   return {
-    restrict: 'E',
-    scope: true,
-    templateUrl: 'player/waveform.html',
-    replace: true,
-    link: function (scope, elem, attrs) {
-      var active = false, animated = false, currentSound, timeout, ctx = elem[0].getContext('2d');
+    restrict: 'C',
+    require: '^prxPlayer',
+    link: function (scope, elem, attrs, ctrl) {
+      var animated = false,
+          _window = angular.element($window),
+          timeout,
+          ctx = elem[0].getContext('2d');
+
+      _window.on('resize', scheduleWaveform);
+      scope.$on('$destroy', angular.bind(_window, _window.off, 'resize', scheduleWaveform));
+
+      var setSound = ctrl.setSound;
+      ctrl.setSound = function (sound) {
+        setSound.call(ctrl, sound);
+        if (sound && !sound.$waveform) {
+          sound.$waveform = [];
+
+          for (var i=0; i < 15; i+= 0.3) {
+            sound.$waveform.push(Math.sin(i) * 49 + 51);
+          }
+        }
+        scheduleWaveform();
+      };
 
       function scheduleWaveform () {
-        if (!timeout) {
-          timeout = $timeout(generateWaveform, 500);
+        // If the user is continuously resizing,
+        // we basically avoid redrawing until they have
+        // stopped for at least 300ms
+        if (timeout) {
+          $timeout.cancel(timeout);
         }
+        timeout = $timeout(generateWaveform, 300);
       }
 
       function generateWaveform () {
-        var count = Math.floor(elem[0].offsetWidth / 5);
-        if (count || !animated) {
+        var count = Math.floor(elem[0].offsetWidth / 5),
+          waveform = ctrl.sound && ctrl.sound.$waveform;
+        /* istanbul ignore if: Count will always be 0 in testing (the window does not exist)*/
+        if (count && waveform) {
           elem[0].width = elem[0].offsetWidth * 2;
           elem[0].height = elem[0].offsetHeight * 2;
           if (elem[0].currentStyle) {
@@ -279,20 +301,20 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
           ctx.lineWidth = 6;
 
           var points = [];
-          var perBar = (currentSound.$waveform.length - 1) / count;
+          var perBar = (waveform.length - 1) / count;
           var i = perBar / 2, x, start;
 
           do {
-            start = Math.min(i, currentSound.$waveform.length - 1);
+            start = Math.min(i, waveform.length - 1);
             if (start == ~~start) {
-              points.push(currentSound.$waveform[start]);
-            } else if (start < currentSound.$waveform.length - 1) {
+              points.push(waveform[start]);
+            } else if (start < waveform.length - 1) {
               x = start - ~~start;
-              points.push(currentSound.$waveform[~~start] * (1 - x) + currentSound.$waveform[~~start+1] * (x));
+              points.push(waveform[~~start] * (1 - x) + waveform[~~start+1] * (x));
             }
 
             i += perBar;
-          } while (i <= currentSound.$waveform.length - 1);
+          } while (i <= waveform.length - 1);
 
           if (!animated && window.requestAnimationFrame) {
             animateIn(points, ctx, elem[0].height, elem[0].width).then(function () {
@@ -312,6 +334,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         }
       }
 
+      /* istanbul ignore next: Purely display logic */
       function animateIn(points, ctx, height, width) {
         animated = ~~new Date();
         animate();
@@ -330,26 +353,6 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         }
         return $timeout(angular.noop, 510);
       }
-
-      scope.$watch(attrs.sound, function (sound) {
-        currentSound = sound;
-        if (sound && !sound.$waveform) {
-          sound.$waveform = [];
-
-          for (var i=0; i < 15; i+= 0.3) {
-            sound.$waveform.push(Math.sin(i) * 49 + 51);
-          }
-        }
-        if (!active) {
-          active = true;
-          scheduleWaveform();
-          angular.element($window).on('resize', scheduleWaveform);
-        }
-      });
-
-      scope.$on('$destroy', function () {
-        angular.element($window).off('resize', scheduleWaveform);
-      });
     }
   };
 });

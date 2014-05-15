@@ -130,19 +130,6 @@ describe('prx.player', function () {
       $rootScope = _$rootScope_;
     }));
 
-    describe ('prxPlayerWaveform', function () {
-      it ('compiles', inject(function ($window, $timeout) {
-        var elem = $compile('<prx-player-waveform sound="sound"></prx-player-waveform>')($rootScope);
-        $rootScope.sound = {};
-        $rootScope.$digest();
-        angular.element($window).triggerHandler('resize');
-        $timeout.flush();
-        angular.element($window).triggerHandler('resize');
-        $timeout.flush();
-        expect(elem).toBeDefined();
-      }));
-    });
-
     describe ('prxPlayer', function () {
       var elem;
       beforeEach(function () {
@@ -165,6 +152,7 @@ describe('prx.player', function () {
       it ('compiles', function () {
         var elem = $compile('<prx-global-player></prx-global-player>')($rootScope);
         expect(elem).toBeDefined();
+
       });
     });
 

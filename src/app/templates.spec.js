@@ -8,7 +8,9 @@ describe('templates', function () {
       var put = $delegate.put;
       $delegate.toTest = [];
       $delegate.put = function (uri) {
-        this.toTest.push(uri);
+        if (!/\.directive\.html$/.test(uri)) {
+          this.toTest.push(uri);
+        }
         return put.apply(this, [].slice.call(arguments));
       };
       return $delegate;
@@ -20,7 +22,7 @@ describe('templates', function () {
     //Set up an endless tree of states
     $state.go('fakeState');
     $state.$current.parent = $state.$current;
-    
+
     $scope = $rootScope.$new();
     $compile = _$compile_;
   }));
