@@ -292,6 +292,11 @@ describe('prx.player', function () {
       prxSoundFactory = _prxSoundFactory_;
     }));
 
+    it ('returns the existing sound if appropriate', inject(function (prxPlayer) {
+      prxPlayer.nowPlaying = {story:{id:123}};
+      expect(prxSoundFactory({story:{id:123}})).toBe(prxPlayer.nowPlaying);
+    }));
+
     it ('makes a sound', function () {
       expect(prxSoundFactory({audioFiles:['/123.mp3']}).play).toBeDefined();
     });
