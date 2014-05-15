@@ -1,10 +1,10 @@
 .player
   prx-player-button(sound="sound")
   .track(prx-player-scrubber="player.scrubToPercent(percentage)", ng-class="{active: player.active(), flip: player.progress() > 75}")
-    prx-player-waveform(sound="player.sound")
+    canvas.waveform
     .scrubber(ng-style="{width: player.progress() + '%'}")
       span(ng-bind="player.sound.position | timeCode")
-      prx-player-waveform(sound="player.sound")
+      canvas.waveform
     .inverse
       span(ng-bind="player.sound.position | timeCode")
 
