@@ -262,13 +262,16 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     link: function (scope, elem, attrs, ctrl) {
       var animated = false,
           _window = angular.element($window),
-          timeout,
+          timeout, setSound = ctrl.setSound,
           ctx = elem[0].getContext('2d');
 
       _window.on('resize', scheduleWaveform);
-      scope.$on('$destroy', angular.bind(_window, _window.off, 'resize', scheduleWaveform));
 
-      var setSound = ctrl.setSound;
+      scope.$on('$destroy', function() {
+        ctrl.setSound = setSound;
+        _window.off('resize', scheduleWaveform);
+      });
+
       ctrl.setSound = function (sound) {
         setSound.call(ctrl, sound);
         if (sound && !sound.$waveform) {
