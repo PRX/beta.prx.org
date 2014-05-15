@@ -64,9 +64,6 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'angular
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: 'home/story_time/cta.html',
-    controller: 'StoryTimeCtaCtrl as storyTime'
+    template: '<section class="story-time-cta"><a ui-sref="home.storyTime">Get Free Stories</a></section>'
   };
-}).controller('StoryTimeCtaCtrl', function () {
-  this.text = "Get Free Stories";
 });
