@@ -40,5 +40,11 @@ describe ('angulartics prx count', function () {
       expect(args.action).toEqual('name');
       expect(JSON.parse(args.action_value).foo).toEqual('bar');
     });
+
+    it ('processes the action into a count style action', function () {
+      $analytics.eventTrack('Listen to the Radio', {foo: 'bar'});
+      getArgs();
+      expect(args.action).toEqual('listen');
+    });
   });
 });
