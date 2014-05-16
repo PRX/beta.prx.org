@@ -45,7 +45,6 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     }
   })
   .state('story.show.content_advisory', {
-    url: '/content_advisory',
     views: {
       'modal@': {
         controller: 'StoryDetailCtrl as story',
