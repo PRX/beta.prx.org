@@ -50,7 +50,7 @@ article.story {
 
     .media {
 
-      ul {
+      ul.metadata {
         margin-top: 15px;
         display: inline-block;
 
@@ -74,6 +74,97 @@ article.story {
       a.content_advisory {
         display:none;
       }
+    }
+
+    ul.actions {
+      flex: none;
+      order: 1;
+      line-height: 30px;
+      margin-top: 20px;
+
+      li.share {
+        background-color: blue;
+        display: inline-block;
+
+        span {
+          width: 60px;
+          display: inline-block;
+          text-align: center;
+          position: relative;
+          margin-left: 30px;
+          margin-right: 6px;
+
+          &:before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background: url('/assets/images/share.png') no-repeat;
+            background-size: 15px 15px;
+            position: absolute;
+            left: -23px;
+            top: 7px;
+          }
+        }
+
+        ul.paths {
+          display: inline-block;
+          position: relative;
+          margin-left: 6px;
+          padding: 0 0 0 6px;
+          background: dark-blue;
+
+          &:before {
+            width: 0;
+            height: 0;
+            line-height: 0;
+            border-right: 6px solid dark-blue;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 9px
+            left: -6px;
+          }
+
+          li {
+            button-blue-inverse();
+            width: 30px;
+            height: 30px;
+            margin-bottom: -10px;
+
+            &.twitter, &.facebook, &.google {
+
+              &:before {
+                content: '';
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                background-size: 15px 15px;
+                pointer-events: none;
+                top: 7px;
+                left: 7px;
+              }
+            }
+
+            &.twitter::before {
+              background: url('/assets/images/twitter.png') no-repeat;
+              background-size: 15px 15px;
+            }
+
+            &.facebook::before {
+              background: url('/assets/images/facebook.png') no-repeat;
+              background-size: 15px 15px;
+            }
+
+            &.google::before {
+              background: url('/assets/images/googleplus.png') no-repeat;
+              background-size: 15px 15px;
+            }
+          }
+        }
+      }
+
     }
 
     @media tall-screen {
@@ -100,7 +191,7 @@ article.story {
       .media {
         flex: 0 100%;
 
-        ul {
+        ul.metadata {
           li {
             font-size: 14px;
           }
