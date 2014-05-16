@@ -43,7 +43,17 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         templateUrl: 'stories/detail_modal.html'
       }
     }
-  });
+  })
+  .state('story.show.content_advisory', {
+    views: {
+      'modal@': {
+        controller: 'StoryDetailCtrl as story',
+        templateUrl: 'stories/content_advisory_modal.html'
+      }
+    }
+
+  })
+  ;
 
   /* istanbul ignore else */
   if (FEAT.LISTEN_LATER) {
