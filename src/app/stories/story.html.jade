@@ -10,9 +10,10 @@ article.story
           address.author
             | by #{''}
             a(rel="author" ui-sref="story.account") {{story.account.name}}
-          span.duration
+          span.duration.last
             | Length: #{''}
             time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
+          a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
       ul.actions(ng-flag="lovesharebuy")
         li.love.fa.fa-heart Love
         li.share.fa.fa-share Share
