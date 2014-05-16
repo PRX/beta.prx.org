@@ -7,12 +7,13 @@ article.story
         .content
           .category audio story
           h1 {{story.current.title}}
-          address.author
-            | by #{''}
-            a(rel="author" ui-sref="story.account") {{story.account.name}}
-          span.duration.last
-            | Length: #{''}
-            time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
+          ul
+            li
+              | by #{''}
+              a(rel="author" ui-sref="story.account") {{story.account.name}}
+            li.duration
+              | Length: #{''}
+              time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
       ul.actions(ng-flag="lovesharebuy")
         li.love.fa.fa-heart Love

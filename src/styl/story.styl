@@ -49,20 +49,25 @@ article.story {
     }
 
     .media {
-      address, span {
-        margin-top: 15px;
-        white-space: nowrap;
-        font-size: 12px;
-        display: inline-block;
-        margin-right: 10px;
-        line-height: 10px;
-        padding-right: 10px;
-        border-right: 1px solid lightest-grey;
-        margin-bottom: 10px;
 
-        &.last {
-          border-right: none;
-          padding-right: 0;
+      ul {
+        margin-top: 15px;
+        display: inline-block;
+
+        li {
+          white-space: nowrap;
+          font-size: 12px;
+          display: inline-block;
+          margin-right: 10px;
+          line-height: 10px;
+          padding-right: 10px;
+          border-right: 1px solid lightest-grey;
+          margin-bottom: 10px;
+
+          &:last-of-type {
+            border-right: none;
+            padding-right: 0;
+          }
         }
       }
 
