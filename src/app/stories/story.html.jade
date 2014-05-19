@@ -16,17 +16,7 @@ article.story
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
-      ul.actions
-        li(ng-flag="lovesharebuy").love Like
-        li.share
-          span Share
-          ul.paths
-            li.twitter
-            li.facebook
-            li.google
-        li(ng-flag="lovesharebuy").buy
-          | Buy
-          span.fa.fa-sort-asc.more
+      prx-social-actions(text="story.current.title")
   #content
     #main
       section.details

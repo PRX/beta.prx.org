@@ -1,0 +1,13 @@
+ul.actions
+  li(ng-flag="lovesharebuy").love Like
+  li.share
+    span Share
+    ul.paths
+      li.twitter
+        a(ng-href="https://twitter.com/share?url={{$location.absUrl()}}&via=prx&text={{text}}")
+      li.facebook
+        a(ng-href="https://www.facebook.com/sharer/sharer.php?u={{$location.absUrl()}}")
+      li.google
+        a(ng-href="https://plus.google.com/share?url={{$location.absUrl()}}")
+  li(ng-flag="lovesharebuy").buy
+    | Buy

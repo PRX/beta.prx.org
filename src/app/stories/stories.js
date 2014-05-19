@@ -102,4 +102,18 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
-});
+})
+.directive('prxSocialActions', function($location) {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'stories/social_actions.html',
+    scope: {
+      text: '='
+    },
+    link: function (scope, elem, attrs, ctrl) {
+      scope.$location = $location;
+    }
+  };
+})
+;
