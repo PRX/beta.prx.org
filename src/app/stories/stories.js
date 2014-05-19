@@ -81,7 +81,10 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
       }
     };
   }]).mixin('http://meta.prx.org/model/story/*any', {
-    toString: function () { return this.title; }
+    toString: function () { return this.title; },
+    stateParams: function () {
+      return { storyId: this.id, s: null };
+    }
   });
 })
 .directive('prxStory', function () {
