@@ -162,7 +162,6 @@ $player-button {
 
 .persistent-player {
   display: none;
-  flex-direction: row;
   height: 67px;
   fixed: bottom left; right: 0px;
   z-index: 1000;
@@ -170,14 +169,37 @@ $player-button {
   max-width: 450px;
   margin: 0 auto 0 0;
 
-  &:before {
-    content: '';
-    background-color: orange;
-    absolute: bottom left;
-    width: 65px; height: 65px;
-    background-position: bottom left;
-    background-repeat: no-repeat;
-    image: '/assets/images/player_bars.png' 65px;
+
+  .player-main {
+    display: flex;
+    flex-direction: row;
+    absolute: top 2px left;
+    right: 0; bottom: 0;
+
+    &.finish-slide {
+      transition: transform 0.1s;
+    }
+
+    &:before {
+      content: '';
+      background-color: orange;
+      absolute: bottom left;
+      width: 65px; height: 65px;
+      background-position: bottom left;
+      background-repeat: no-repeat;
+      image: '/assets/images/player_bars.png' 65px;
+      transition: opacity 0.2s;
+    }
+
+    &.sliding {
+      button {
+        opacity: 0;
+      }
+
+      &:before {
+        opacity: 0;
+      }
+    }
   }
 
   background: darkest-blue;
@@ -192,6 +214,7 @@ $player-button {
       background-color: dark-orange;
     }
   }
+
   button {
     border: none;
     @extend $player-button;
@@ -202,6 +225,7 @@ $player-button {
     margin: 0;
     flex: none;
     background-color: transparent;
+    transition: opacity 0.2s;
   }
 
   .thumb {
@@ -279,5 +303,5 @@ $player-button {
 }
 
 .persistent-player.show, .persistent-player.show-add {
-  display: flex;
+  display: block;
 }

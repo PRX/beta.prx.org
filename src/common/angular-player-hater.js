@@ -159,9 +159,8 @@
         };
         return $q.when();
       }
-
     };
-
+    
     function SoundList (urls, options) {
       var firstSound, opts = (options || {}),
         subOpts = angular.copy(opts), self = this;

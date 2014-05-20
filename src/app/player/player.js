@@ -132,6 +132,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       if (this.nowPlaying) {
         this.nowPlaying.onfinish = undefined;
         this.sendHeartbeat(true);
+        this.nowPlaying.pause();
         this.nowPlaying.stop();
         this.$lastHeartbeat = 0;
         Bus.emit('audioPlayer.stop', this.nowPlaying);
@@ -291,6 +292,152 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 })
 .controller('GlobalPlayerCtrl', function (prxPlayer) {
   this.global = prxPlayer;
+})
+.directive('swipableAs', function ($swipe, $q, $compile, $timeout) {
+  return {
+    restrict: 'A',
+    compile: function (tElem) {
+      var l = tElem.clone().removeAttr('swipable-as');
+      var template = $compile(l);
+      return function (scope, element, attrs) {
+        scope.$watch(attrs.swipable, function (value) {
+          scope[attrs.swipableAs] = value;
+        });
+        var startPos, nextElem, nextScope, prevScope, prevElem, nextAvail = true, prevAvail = false;
+        nextScope = scope.$new();
+        prevScope = scope.$new();
+        scope.$watch(attrs.swipableNext, function (next) {
+          $q.when(next).then(function (obj) {
+            if (obj) {
+              nextAvail = true;
+              nextScope[attrs.swipableAs] = obj;
+            } else {
+              nextAvail = false;
+            }
+          }, function () {
+            nextAvail = false;
+          });
+        });
+
+        scope.$watch(attrs.swipablePrevious, function (prev) {
+          $q.when(prev).then(function (obj) {
+            if (obj) {
+              prevAvail = true;
+              prevScope[attrs.swipableAs] = obj;
+            } else {
+              prevAvail = false;
+            }
+          }, function () {
+            prevAvail = false;
+          });
+        });
+
+        $swipe.bind(element, {
+          start: function (p) {
+            element.removeClass('finish-slide');
+            startPos = p;
+            template(nextScope, function (clone) {
+              nextElem = clone;
+              nextElem.css('-webkit-transform', 'translateX(' + element[0].offsetWidth + 'px)');
+              nextElem.addClass('sliding');
+              nextElem.removeClass('finish-slide');
+            });
+            template(prevScope, function (clone) {
+              prevElem = clone;
+              prevElem.addClass('sliding');
+              prevElem.removeClass('finish-slide');
+              prevElem.css('-webkit-transform', 'translateX(-' + prevElem[0].offsetWidth + 'px)');
+            });
+          },
+          move: function (p) {
+            var offset = p.x - startPos.x;
+            if (nextAvail && offset < 0 ) {
+              var nextOffset = element[0].offsetWidth + offset;
+              prevElem.remove();
+              element.css({'-webkit-transform': 'translateX('+offset+'px)'});
+              nextElem.css({'-webkit-transform': 'translateX('+nextOffset+'px)'});
+              element.after(nextElem);
+              if (nextOffset < 100) {
+                nextElem.removeClass('sliding');
+              } else {
+                nextElem.addClass('sliding');
+              }
+            } else if (prevAvail && offset > 0 ) {
+              var prevOffset = offset - prevElem[0].offsetWidth;
+              nextElem.remove();
+              prevElem.css({'-webkit-transform': 'translateX(' + prevOffset + 'px)'});
+              element.css({'-webkit-transform': 'translateX('+offset+'px)'});
+              element.after(prevElem);
+              if (prevOffset > -25) {
+                prevElem.removeClass('sliding');
+              } else {
+                prevElem.addClass('sliding');
+              }
+            } else {
+              nextElem.remove();
+              prevElem.remove();
+              element.css({'-webkit-transform': null});
+              element.removeClass('sliding');
+              return;
+            }
+
+            if (Math.abs(offset) <= 25) {
+              element.removeClass('sliding');
+            } else {
+              element.addClass('sliding');
+            }
+          },
+          end: function (p) {
+            element.addClass('finish-slide');
+            if (nextAvail && startPos.x - p.x >= element[0].offsetWidth / 2) {
+              nextElem.addClass('finish-slide');
+              nextElem.css('-webkit-transform', null);
+              element.css('-webkit-transform', 'translateX(-'+element[0].offsetWidth+'px)');
+              var params = {};
+              params[attrs.swipableAs] = nextScope[attrs.swipableAs];
+              nextAvail = false;
+              scope.$eval(attrs.onSwipeNext, params);
+              $timeout(function () {
+                nextElem.removeClass('sliding');
+                element.removeClass('sliding');
+                element.removeClass('finish-slide');
+                element.css('-webkit-transform', null);
+                nextElem.remove();
+                prevElem.remove();
+              }, 200);
+            } else if (prevAvail && p.x - startPos.x >= element[0].offsetWidth / 2) {
+              prevElem.addClass('finish-slide');
+              prevElem.css('-webkit-transform', null);
+              element.css('-webkit-transform', 'translateX('+prevElem[0].offsetWidth+'px)');
+              var paramss = {};
+              paramss[attrs.swipableAs] = prevScope[attrs.swipableAs];
+              prevAvail = false;
+              scope.$eval(attrs.onSwipeNext, paramss);
+              $timeout(function () {
+                prevElem.removeClass('sliding');
+                element.removeClass('sliding');
+                element.removeClass('finish-slide');
+                element.css('-webkit-transform', null);
+                nextElem.remove();
+                prevElem.remove();
+              }, 200);
+            } else {
+              element.css('-webkit-transform', null);
+              element.removeClass('sliding');
+              nextElem.remove();
+              prevElem.remove();
+            }
+          },
+          cancel: function () {
+            element.css('-webkit-transform', null);
+            nextElem.remove();
+            prevElem.remove();
+            element.removeClass('sliding');
+          }
+        }, 'touch');
+      };
+    }
+  };
 })
 .directive('waveform', function ($window, $timeout) {
   return {

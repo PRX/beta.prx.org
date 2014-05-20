@@ -134,25 +134,29 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       } else {
         return this.context.post(this.link('create').href(), this)
           .then(function (response) {
-            var protowithlinks = self;
-            while (protowithlinks !== Object.prototype &&
-              !protowithlinks.hasOwnProperty('link')) {
-              protowithlinks = Object.getPrototypeOf(protowithlinks);
-            }
             self.context.origin = response.config.url;
-            protowithlinks.link = halLinkCollection(response.data._links,
-              self.context);
-            angular.forEach(response.data, function (value, key) {
-              if (key != '_links' && key  != '_embedded') {
-                self[key] = angular.copy(value);
-              }
-            });
-            return self;
+            return self.$$update(response.data);
           });
       }
     },
     url: function url () {
       return this.link('self').href();
+    },
+    $$update: function (doc, uris) {
+      var protowithlinks = this;
+      while (protowithlinks !== Object.prototype &&
+        !protowithlinks.hasOwnProperty('link')) {
+        protowithlinks = Object.getPrototypeOf(protowithlinks);
+      }
+      protowithlinks.link = protowithlinks.links = halLinkCollection(doc._links,
+        this.context);
+
+      angular.forEach(doc, function (value, key) {
+        if (key != '_links' && key  != '_embedded') {
+          this[key] = angular.copy(value);
+        }
+      }, this);
+      return this;
     }
   };
 
@@ -434,7 +438,8 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   return Promise;
 })
 .provider('ngHal', function () {
-  var $q, halLinkCollection, DocumentPromise, Document, UriMatcher;
+  var $q, $cacheFactory, cacheId = 0, halLinkCollection, DocumentPromise,
+    Document, UriMatcher;
 
   /**
    * ResolutionDependencyHolder
@@ -555,6 +560,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       var obj = Object.create(this);
       Context.call(obj, this,
         arguments.length ? this.relativePath(origin) : this.origin);
+      obj.cache = this.cache;
       return obj;
     },
     disableTransforms: false,
@@ -612,7 +618,17 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         url = url || selfLink.href();
         uris = [].concat(uris, selfLink.profile());
       }
-      return this.makeConstructor(uris)(doc, url);
+      if (url) {
+        var x;
+        if (x = this.cache.get(url)) {
+          return x.then(function (d) {
+            return d.$$update(doc);
+          });
+        }
+        return this.cache.put(url, this.makeConstructor(uris)(doc, url));
+      } else {
+        return this.makeConstructor(uris)(doc, url);
+      }
     },
     // A function which generates an object with the
     // prototype chain consisting of Document at the root
@@ -700,6 +716,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         angular.forEach(this.mixins, function (mixin) {
           this.ctx.mixin(mixin[0], mixin[1]);
         }, this);
+        this.ctx.cache = $cacheFactory('ngHal/' + cacheId++, {number: 1000});
         var self = this, p = new DocumentPromise(this.ctx.get(this.ctx.origin),
           ['root'], this.ctx);
         p.context = function (context) {
@@ -727,7 +744,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   rootProvider.$get = getNgHal;
   getNgHal.$inject = ['$cacheFactory', 'halDocument', 'halDocumentPromise', 'halLinkCollection', '$http', '$injector', '$q', 'halUriMatcher'];
-  function getNgHal ($cacheFactory, halDocument, halDocumentPromise, hll, $http, $injector, _$q_, halUriMatcher) {
+  function getNgHal (_$cacheFactory_, halDocument, halDocumentPromise, hll, $http, $injector, _$q_, halUriMatcher) {
     rootProvider.disableTransforms = function () {
       Context.prototype.disableTransforms = true;
     };
@@ -738,7 +755,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     rootProvider.generateConstructor = angular.bind(rootContext, rootContext.makeConstructor);
     rootContext.http = $http;
     rootContext.injector = $injector;
+    $cacheFactory = _$cacheFactory_;
     $q = _$q_;
+
     return this.get();
   }
 

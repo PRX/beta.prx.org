@@ -1,13 +1,16 @@
 .persistent-player(ng-class="{show: !!player.global.nowPlaying}")
   .scrubber-track
     .scrubber(ng-style="{width: player.global.progress() }")
-  prx-player-button(sound="player.global.nowPlaying")
-  a(ui-sref="player.global.nowPlaying.story", ng-if="player.global.nowPlaying")
-    prx-img.thumb(src="player.global.nowPlaying.story.imageUrl")
-  .timecode {{player.global.nowPlaying.position | timeCode }}
-  .about(ng-if="player.global.nowPlaying")
-    a.title(ui-sref="player.global.nowPlaying.story", ui-sref-active="current") {{player.global.nowPlaying.story.title}}
-    a.byline(ui-sref="player.global.nowPlaying.producer", ui-sref-active="current") by {{player.global.nowPlaying.producer.name}}
-  ul.actions(ng-flag="lovesharebuy")
-    li.share
-    li.love
+  .player-main(swipable-as="playing", swipable-next="playing.next()",
+    swipable-previous="playing.previous()", swipable="player.global.nowPlaying",
+    on-swipe-next="player.global.play(playing)")
+    prx-player-button(sound="playing")
+    a(ui-sref="playing.story")
+      prx-img.thumb(src="playing.story.imageUrl")
+    .timecode {{playing.position | timeCode }}
+    .about
+      a.title(ui-sref="playing.story", ui-sref-active="current") {{playing.story.title}}
+      a.byline(ui-sref="playing.producer", ui-sref-active="current") by {{playing.producer.name}}
+    ul.actions(ng-flag="lovesharebuy")
+      li.share
+      li.love
