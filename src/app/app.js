@@ -125,23 +125,24 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       defaultClass: '@',
       default: '@'
     },
-    template: "<div class='img' ng-class='classes'><img></div>",
+    template: "<div class='img'><img></div>",
     link: function (scope, element) {
       var img = element.children();
-      scope.classes = [];
 
       img.on('load', function () {
-        scope.classes = [];
-        scope.$digest();
+        element.removeClass('loading');
+        element.removeClass(scope.defaultClass);
         element.css({'background-image': 'url('+img.attr('src')+')', 'background-size': 'cover', 'background-repeat': 'no-repeat'});
       });
       scope.$watch('src', function (src) {
         if (src || scope.default) {
           img.attr('src', src || scope.default);
-          scope.classes = ['loading'];
+          element.addClass('loading');
+          element.removeClass(scope.defaultClass);
         } else {
           img.removeAttr('src');
-          scope.classes.splice(0, 1, scope.defaultClass);
+          element.removeClass('loading');
+          element.addClass(scope.defaultClass);
         }
       });
     }
@@ -151,7 +152,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
   return {
     restrict: 'A',
     priority: 1000,
-    compile: function (tElem, tAttrs) {
+    compile: function (tElem) {
       return {
         pre: function (scope, element, attrs) {
           var obj, newState = attrs.uiSref, lastScope;
@@ -176,6 +177,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
                 lastScope.$destroy();
               }
               lastScope = scope.$new();
+              element.unbind("click");
               $compile(element)(lastScope);
             });
           }

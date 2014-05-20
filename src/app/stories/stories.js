@@ -76,19 +76,24 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story;
       }
     };
-  }]).mixin('http://meta.prx.org/model/story/*any', {
-    toString: function () { return this.title; },
-    toSoundParams: function () {
-      var self = this;
-      return this.follow('prx:audio').then(function (files) {
-        var result = [];
-        angular.forEach(files, function (file) {
-          result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
+  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', function (prxPlayer) {
+    return {
+      toString: function () { return this.title; },
+      toSoundParams: function () {
+        var self = this;
+        return this.follow('prx:audio').then(function (files) {
+          var result = [];
+          angular.forEach(files, function (file) {
+            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
+          });
+          return { audioFiles: result, story: self };
         });
-        return { audioFiles: result, story: self };
-      });
-    }
-  });
+      },
+      playing: function () {
+        return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
+      }
+    };
+  }]);
 })
 .directive('prxStory', function () {
   return {

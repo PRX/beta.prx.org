@@ -166,10 +166,23 @@ section.story {
       height: 70px;
       margin-right: 10px;
       background-color: lightest-grey;
+      position: relative;
 
       &.default {
         background-image: url('/assets/images/loading.png');
         background-repeat: repeat;
+      }
+
+      &:before {
+        absolute: bottom left;
+        width: 25px;
+        height: 25px;
+        background: rgba(orange, 0.9) url('/assets/images/bt_play.png') center center / 12px no-repeat;
+        content: '';
+      }
+
+      &.playing:before {
+        background-image: url('/assets/images/bt_pause.png');
       }
     }
   }
