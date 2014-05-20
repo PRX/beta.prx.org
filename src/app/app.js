@@ -147,29 +147,37 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
     }
   };
 })
-.directive('uiSref', function () {
+.directive('uiSref', function ($compile) {
   return {
     restrict: 'A',
     priority: 1000,
     compile: function (tElem, tAttrs) {
       return {
         pre: function (scope, element, attrs) {
-          var obj, newState = attrs.uiSref;
+          var obj, newState = attrs.uiSref, lastScope;
           try {
             obj = scope.$eval(newState);
           } catch (e) {
             return;
           }
           if (obj) {
-            if (angular.isFunction(obj.stateName)) {
-              newState = obj.stateName();
-            } else if (angular.isString(obj.stateName)) {
-              newState = obj.stateName;
-            }
-            if (angular.isFunction(obj.stateParams)) {
-              newState = newState + '('+JSON.stringify(obj.stateParams())+')';
-            }
-            attrs.uiSref = newState;
+            scope.$watch(newState, function (obj) {
+              if (angular.isFunction(obj.stateName)) {
+                newState = obj.stateName();
+              } else if (angular.isString(obj.stateName)) {
+                newState = obj.stateName;
+              }
+              if (angular.isFunction(obj.stateParams)) {
+                newState = newState + '('+JSON.stringify(obj.stateParams())+')';
+              }
+              attrs.uiSref = newState;
+              element.attr('ui-sref', newState);
+              if (lastScope) {
+                lastScope.$destroy();
+              }
+              lastScope = scope.$new();
+              $compile(element)(lastScope);
+            });
           }
         }
       };

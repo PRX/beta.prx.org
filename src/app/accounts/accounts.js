@@ -46,9 +46,43 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
         }
       };
     }
-  ]).mixin('http://meta.prx.org/model/account/*any', {
-    toString: function () { return this.name; }
-  }).mixin('http://meta.prx.org/model/address', {
+  ]).mixin('http://meta.prx.org/model/account/*any', ['$q', function ($q) {
+    return  {
+      toString: function () { return this.name; },
+      getStories: function () {
+        return this.follow('prx:stories').follow('prx:items');
+      },
+      generatePlaylist: function (list) {
+        var skip = [], self = this;
+
+        return $q.all([this.getStories(), addToSkipList(list)]).then(function (data) {
+          var stories = data[0];
+
+          for (var i=0; i<stories.length; i++) {
+            if (skip.indexOf(stories[i].id) === -1 && stories[i].duration) {
+              return stories[i].toSoundParams().then(found);
+            }
+          }
+
+          return $q.reject();
+        });
+
+        function addToSkipList (list) {
+          skip.push(list.story.id);
+          if (list.previous) {
+            return list.previous().then(addToSkipList);
+          }
+        }
+
+        function found (sfParams) {
+          return angular.extend({}, sfParams, {
+            producer: self,
+            next: angular.bind(self, self.generatePlaylist)
+          });
+        }
+      }
+    };
+  }]).mixin('http://meta.prx.org/model/address', {
     toString: function () {
       return this.city + ', ' + this.state;
     }

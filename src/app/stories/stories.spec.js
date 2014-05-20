@@ -80,7 +80,7 @@ describe('prx.stories', function () {
     }));
 
     it ('gets the audioUrls based on the story', function () {
-      var story = ngHal.mock(),
+      var story = ngHal.mock('http://meta.prx.org/model/story'),
         file1 = ngHal.mockEnclosure('file1.mp3'),
         file2 = ngHal.mockEnclosure('file2.mp3');
       story.stubFollow('prx:audio', [file1, file2]);
