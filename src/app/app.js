@@ -125,51 +125,61 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       defaultClass: '@',
       default: '@'
     },
-    template: "<div class='img' ng-class='classes'><img></div>",
+    template: "<div class='img'><img></div>",
     link: function (scope, element) {
       var img = element.children();
-      scope.classes = [];
 
       img.on('load', function () {
-        scope.classes = [];
-        scope.$digest();
+        element.removeClass('loading');
+        element.removeClass(scope.defaultClass);
         element.css({'background-image': 'url('+img.attr('src')+')', 'background-size': 'cover', 'background-repeat': 'no-repeat'});
       });
       scope.$watch('src', function (src) {
         if (src || scope.default) {
           img.attr('src', src || scope.default);
-          scope.classes = ['loading'];
+          element.addClass('loading');
+          element.removeClass(scope.defaultClass);
         } else {
           img.removeAttr('src');
-          scope.classes.splice(0, 1, scope.defaultClass);
+          element.removeClass('loading');
+          element.addClass(scope.defaultClass);
         }
       });
     }
   };
 })
-.directive('uiSref', function () {
+.directive('uiSref', function ($compile) {
   return {
     restrict: 'A',
     priority: 1000,
-    compile: function (tElem, tAttrs) {
+    compile: function (tElem) {
       return {
         pre: function (scope, element, attrs) {
-          var obj, newState = attrs.uiSref;
+          var obj, newState = attrs.uiSref, lastScope;
           try {
             obj = scope.$eval(newState);
           } catch (e) {
             return;
           }
           if (obj) {
-            if (angular.isFunction(obj.stateName)) {
-              newState = obj.stateName();
-            } else if (angular.isString(obj.stateName)) {
-              newState = obj.stateName;
-            }
-            if (angular.isFunction(obj.stateParams)) {
-              newState = newState + '('+JSON.stringify(obj.stateParams())+')';
-            }
-            attrs.uiSref = newState;
+            scope.$watch(newState, function (obj) {
+              if (angular.isFunction(obj.stateName)) {
+                newState = obj.stateName();
+              } else if (angular.isString(obj.stateName)) {
+                newState = obj.stateName;
+              }
+              if (angular.isFunction(obj.stateParams)) {
+                newState = newState + '('+JSON.stringify(obj.stateParams())+')';
+              }
+              attrs.uiSref = newState;
+              element.attr('ui-sref', newState);
+              if (lastScope) {
+                lastScope.$destroy();
+              }
+              lastScope = scope.$new();
+              element.unbind("click");
+              $compile(element)(lastScope);
+            });
           }
         }
       };

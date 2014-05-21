@@ -181,6 +181,7 @@
               self.$behind = 0;
               self.$current = self.$first;
               self.$current.setPosition(0);
+              self.$current.paused = true;
               angular.extend(self, self.$first);
               if (opts.onfinish) {
                 opts.onfinish.call(this);

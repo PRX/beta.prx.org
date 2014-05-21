@@ -171,6 +171,7 @@ gulp.task('helperJs', function () {
   return gulp.src(c.test.helper.src)
     .pipe(feats(featsDev, {strict: false, default: true}))
     .pipe(rename(name))
+    .pipe(newer(path))
     .pipe(gulp.dest(path));
 });
 

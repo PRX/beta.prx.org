@@ -320,5 +320,22 @@ describe('prx.player', function () {
       triggerFinish();
       expect(sound.onfinish).toHaveBeenCalled();
     }));
+
+    describe ('generative playlists', function () {
+      it ('can accept a method to lazily calculate the next item', function () {
+        sound = prxSoundFactory({audioFiles: [], next: function (sound) { return {audioFiles: ['asd.mp3']}; }});
+        expect(sound.next()).toBeDefined();
+      });
+
+      it ('automatically sets previous on the sound that is calulated by next()', function () {
+        sound = prxSoundFactory({audioFiles: [], next: function (sound) { return {audioFiles: []}; }});
+        expect(sound.next().then(function (d) { return d.previous(); })).toResolveTo(sound);
+      });
+
+      it ('does not set a next method when no such thing is provided', function () {
+        sound = prxSoundFactory({audioFiles: []});
+        expect(sound.next).not.toBeDefined();
+      });
+    });
   });
 });

@@ -22,12 +22,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story.follow('prx:account');
       }],
       audioUrls: ['story', function (story) {
-        return story.follow('prx:audio').then(function (files) {
-          var result = [];
-          angular.forEach(files, function (file) {
-            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
-          });
-          return result;
+        return story.toSoundParams().then(function (sfParams) {
+          return sfParams.audioFiles;
         });
       }],
       coverExperiment: ['prxperiment', function (prxperiment) {
@@ -80,12 +76,27 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story;
       }
     };
-  }]).mixin('http://meta.prx.org/model/story/*any', {
-    toString: function () { return this.title; },
-    stateParams: function () {
-      return { storyId: this.id, s: null };
-    }
-  });
+  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', function (prxPlayer) {
+    return {
+      toString: function () { return this.title; },
+      stateParams: function () {
+        return { storyId: this.id, s: null };
+      },
+      toSoundParams: function () {
+        var self = this;
+        return this.follow('prx:audio').then(function (files) {
+          var result = [];
+          angular.forEach(files, function (file) {
+            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
+          });
+          return { audioFiles: result, story: self };
+        });
+      },
+      playing: function () {
+        return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
+      }
+    };
+  }]);
 })
 .directive('prxStory', function () {
   return {
@@ -101,7 +112,10 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   this.account = account;
   this.cover = prxperiment.get('storyCover');
   this.sound = prxSoundFactory({ story: story, producer: account,
-    audioFiles: audioUrls });
+    audioFiles: audioUrls, next: function (sound) {
+      return account.generatePlaylist(sound);
+    }
+  });
   if ($stateParams.s !== null) {
     this.sound.setPosition($stateParams.s * 1000);
     prxPlayer.play(this.sound);

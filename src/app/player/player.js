@@ -8,22 +8,22 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       label: this.story.id
     });
   }).on('audioPlayer.resume', function () {
-    $analytics.eventTrack('Resume', {
+    $analytics.eventTrack(this.previous ? 'Resume Radio' : 'Resume', {
       category: category,
       label: this.story.id
     });
   }).on('audioPlayer.pause', function () {
-    $analytics.eventTrack('Pause', {
+    $analytics.eventTrack(this.previous ? 'Pause Radio' : 'Pause', {
       category: category,
       label: this.story.id
     });
   }).on('audioPlayer.play', function () {
-    $analytics.eventTrack('Play', {
+    $analytics.eventTrack(this.previous ? 'Play Radio' : 'Play', {
       category: category,
       label: this.story.id
     });
   }).on('audioPlayer.listen', function (audioFile, duration, startTime) {
-    $analytics.eventTrack('Listen', {
+    $analytics.eventTrack(this.previous ? 'Listen Radio' : 'Listen', {
       category: category,
       label: this.story.id,
       pieceId: this.story.id,
@@ -35,8 +35,8 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     });
   });
 })
-.factory('prxSoundFactory', function (smSound, prxPlayer) {
-  function SoundFactory (options) {
+.factory('prxSoundFactory', function (smSound, prxPlayer, $q) {
+  function soundFactory (options) {
     var sound;
 
     if (prxPlayer.nowPlaying && options.story.id == prxPlayer.nowPlaying.story.id) {
@@ -53,11 +53,31 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 
     sound.producer = options.producer;
     sound.story = options.story;
+    sound.next = options.next ? mkNextFun(options.next) : undefined;
 
     return sound;
   }
 
-  return SoundFactory;
+  return soundFactory;
+
+  function mkNextFun(calculator) {
+    var calculated;
+    if (!angular.isFunction(calculator)) {
+      var opts = calculator;
+      calculator = angular.bind(undefined, angular.identity, opts);
+    }
+    return function () {
+      if (!calculated) {
+        var previous = angular.bind(undefined, angular.identity, $q.when(this));
+        calculated = $q.when(calculator(this)).then(function (data) {
+          data = soundFactory(data);
+          data.previous = previous;
+          return data;
+        });
+      }
+      return calculated;
+    };
+  }
 })
 .service('prxPlayer', function (Bus) {
   return {
@@ -68,7 +88,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       } else if (this.nowPlaying != sound) {
         this.stop();
         this.nowPlaying = sound;
-        this.nowPlaying.onfinish = angular.bind(this, this.stop);
+        this.nowPlaying.onfinish = angular.bind(this, this.finish);
         Bus.emit('audioPlayer.play', this.nowPlaying);
         return sound.play();
       }
@@ -101,8 +121,12 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         return 0;
       }
       this.sendHeartbeat();
-      return Math.round(this.nowPlaying.position /
-        this.nowPlaying.story.duration) / 10 + '%';
+      var percent = Math.round(this.nowPlaying.position /
+        this.nowPlaying.story.duration) / 10;
+      if (percent > 90 && this.nowPlaying.next) {
+        this.nowPlaying.next();
+      }
+      return percent + '%';
     },
     stop: function () {
       if (this.nowPlaying) {
@@ -112,6 +136,19 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         this.$lastHeartbeat = 0;
         Bus.emit('audioPlayer.stop', this.nowPlaying);
         this.nowPlaying = undefined;
+      }
+    },
+    finish: function () {
+      if (this.nowPlaying.next) {
+        var self = this;
+        this.nowPlaying.next().then(function (nxt) {
+          self.stop();
+          self.play(nxt);
+        }, function () {
+          self.stop();
+        });
+      } else {
+        this.stop();
       }
     }
   };
