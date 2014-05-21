@@ -76,44 +76,58 @@ article.story {
       }
     }
 
-    ul.actions {
-      flex: none;
+    menu.share {
+      height: 30px;
+      display: inline-block;
       order: 1;
-      line-height: 30px;
-      margin-top: 20px;
+      background-color: blue;
 
-      li.share {
-        background-color: blue;
+      > .label {
         display: inline-block;
+        margin: 0;
+        padding: 0 5px 0 0;
+        border: 0;
+        vertical-align: top;
+        line-height: 30px;
 
-        span {
-          width: 60px;
+         &:before {
+          content: '';
           display: inline-block;
-          text-align: center;
-          position: relative;
-          margin-left: 30px;
-          margin-right: 6px;
+          width: 16px;
+          height: 16px;
+          margin: 7px;
+          image: '/assets/images/share.png' 15px;
+          background-size: 15px;
+          background-repeat: no-repeat;
+        }
+      }
 
-          &:before {
-            content: '';
-            width: 30px;
-            height: 30px;
-            background: url('/assets/images/share.png') no-repeat;
-            background-size: 15px 15px;
-            position: absolute;
-            left: -23px;
-            top: 7px;
-          }
+      > a {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: dark-blue;
+        background-size: 15px;
+        background-repeat: no-repeat;
+        background-position: center;
+
+        &.twitter {
+          image: '/assets/images/twitter.png';
         }
 
-        ul.paths {
-          display: inline-block;
-          position: relative;
-          margin-left: 6px;
-          padding: 0 0 0 6px;
-          background: dark-blue;
+        &.facebook {
+          image: '/assets/images/facebook.png';
+        }
 
-          &:before {
+        &.google {
+          image: '/assets/images/googleplus.png';
+        }
+
+        &:first-of-type {
+          position: relative;
+          margin-left: 8px;
+
+           &:before {
             width: 0;
             height: 0;
             line-height: 0;
@@ -124,53 +138,81 @@ article.story {
             display: inline-block;
             position: absolute;
             top: 9px
-            left: -6px;
-          }
-
-          li {
-            button-blue-inverse();
-            width: 30px;
-            height: 30px;
-            margin-bottom: -10px;
-
-            &.twitter, &.facebook, &.google {
-
-              &:before {
-                content: '';
-                position: absolute;
-                width: 18px;
-                height: 18px;
-                background-size: 15px 15px;
-                pointer-events: none;
-                top: 7px;
-                left: 7px;
-              }
-
-              a {
-                height: 100%;
-                width: 100%;
-                display: block;
-              }
-            }
-
-            &.twitter::before {
-              background: url('/assets/images/twitter.png') no-repeat;
-              background-size: 15px 15px;
-            }
-
-            &.facebook::before {
-              background: url('/assets/images/facebook.png') no-repeat;
-              background-size: 15px 15px;
-            }
-
-            &.google::before {
-              background: url('/assets/images/googleplus.png') no-repeat;
-              background-size: 15px 15px;
-            }
+            left: -5px;
           }
         }
       }
+    }
 
+    ul.actions {
+      flex: none;
+      order: 1;
+      margin-top: 20px;
+
+      li.share {
+        background-color: blue;
+        display: inline-block;
+        line-height: 0;
+
+        &:before {
+          content: '';
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          margin: 7px;
+          image: '/assets/images/share.png' 15px;
+          background-size: 15px;
+        }
+
+        >.label {
+          display: inline-block;
+        }
+
+      /*
+
+        &:before {
+          width: 0;
+          height: 0;
+          line-height: 0;
+          border-right: 6px solid dark-blue;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          content: '';
+          display: inline-block;
+          position: absolute;
+          top: 9px
+          left: -6px;
+        } */
+
+
+        a {
+          display: inline-block;
+          width: 30px;
+          height: 30px;
+          background-color: dark-blue;
+
+          &:before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+            background-size: 16px;
+          }
+
+          &.twitter:before {
+            image: '/assets/images/twitter.png';
+          }
+
+          &.facebook:before {
+            image: '/assets/images/facebook.png';
+          }
+
+          &.google:before {
+            image: '/assets/images/googleplus.png';
+          }
+        }
+      }
     }
 
     @media tall-screen {
