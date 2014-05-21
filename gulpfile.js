@@ -396,7 +396,7 @@ gulp.task('coveralls', ['checkCoverage', 'protractor'], function (done) {
   }
 
   function pipeFile (err, data) {
-    ps.stdin.write(data);
+    ps.stdin.write(data.toString().replace(/\/public\/(.*)\.js/g, "/src/$1.js"));
     ps.stdin.end();
   }
 
