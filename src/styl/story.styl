@@ -76,140 +76,75 @@ article.story {
       }
     }
 
-    menu.share {
-      height: 30px;
-      display: inline-block;
-      order: 1;
-      background-color: blue;
-
-      > .label {
-        display: inline-block;
-        margin: 0;
-        padding: 0 5px 0 0;
-        border: 0;
-        vertical-align: top;
-        line-height: 30px;
-
-         &:before {
-          content: '';
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          margin: 7px;
-          image: '/assets/images/share.png' 15px;
-          background-size: 15px;
-          background-repeat: no-repeat;
-        }
-      }
-
-      > a {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        background-color: dark-blue;
-        background-size: 15px;
-        background-repeat: no-repeat;
-        background-position: center;
-
-        &.twitter {
-          image: '/assets/images/twitter.png';
-        }
-
-        &.facebook {
-          image: '/assets/images/facebook.png';
-        }
-
-        &.google {
-          image: '/assets/images/googleplus.png';
-        }
-
-        &:first-of-type {
-          position: relative;
-          margin-left: 8px;
-
-           &:before {
-            width: 0;
-            height: 0;
-            line-height: 0;
-            border-right: 6px solid dark-blue;
-            border-top: 6px solid transparent;
-            border-bottom: 6px solid transparent;
-            content: '';
-            display: inline-block;
-            position: absolute;
-            top: 9px
-            left: -5px;
-          }
-        }
-      }
-    }
-
-    ul.actions {
+    .socialActions {
       flex: none;
       order: 1;
       margin-top: 20px;
 
-      li.share {
-        background-color: blue;
+      menu.share {
+        height: 30px;
         display: inline-block;
-        line-height: 0;
+        order: 1;
+        background-color: blue;
 
-        &:before {
-          content: '';
+        > .label {
           display: inline-block;
-          width: 16px;
-          height: 16px;
-          margin: 7px;
-          image: '/assets/images/share.png' 15px;
-          background-size: 15px;
+          margin: 0;
+          padding: 0 5px 0 0;
+          border: 0;
+          vertical-align: top;
+          line-height: 30px;
+
+           &:before {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin: 7px;
+            image: '/assets/images/share.png' 15px;
+            background-size: 15px;
+            background-repeat: no-repeat;
+          }
         }
 
-        >.label {
-          display: inline-block;
-        }
-
-      /*
-
-        &:before {
-          width: 0;
-          height: 0;
-          line-height: 0;
-          border-right: 6px solid dark-blue;
-          border-top: 6px solid transparent;
-          border-bottom: 6px solid transparent;
-          content: '';
-          display: inline-block;
-          position: absolute;
-          top: 9px
-          left: -6px;
-        } */
-
-
-        a {
+        > a {
           display: inline-block;
           width: 30px;
           height: 30px;
           background-color: dark-blue;
+          background-size: 15px;
+          background-repeat: no-repeat;
+          background-position: center;
 
-          &:before {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            pointer-events: none;
-            background-size: 16px;
-          }
-
-          &.twitter:before {
+          &.twitter {
             image: '/assets/images/twitter.png';
           }
 
-          &.facebook:before {
+          &.facebook {
             image: '/assets/images/facebook.png';
           }
 
-          &.google:before {
+          &.google {
             image: '/assets/images/googleplus.png';
+          }
+
+          &:first-of-type {
+            position: relative;
+            margin-left: 8px;
+
+             &:before {
+              width: 0;
+              height: 0;
+              line-height: 0;
+              border-right: 6px solid dark-blue;
+              border-top: 6px solid transparent;
+              border-bottom: 6px solid transparent;
+              content: '';
+              display: inline-block;
+              position: absolute;
+              top: 9px
+              left: -5px;
+            }
           }
         }
       }
