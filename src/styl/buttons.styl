@@ -29,13 +29,6 @@ $background-blue {
   }
 }
 
-$background-blue-inverse {
-  background-color: dark-blue;
-  &:hover {
-    background-color: blue;
-  }
-}
-
 button-blue(with-icon=false) {
   if (with-icon) {
     @extend $button-with-icon;
@@ -52,13 +45,4 @@ button-orange(with-icon=false) {
     @extend $button;
   }
   @extend $background-orange;
-}
-
-button-blue-inverse(with-icon=false) {
-  if (with-icon) {
-    @extend $button-with-icon;
-  } else {
-    @extend $button;
-  }
-  @extend $background-blue-inverse;
 }
