@@ -1,5 +1,6 @@
 # PRX.org Version 4
 [![Build Status](https://travis-ci.org/PRX/PRX.org-Frontend.png?branch=master)](https://travis-ci.org/PRX/PRX.org-Frontend)
+[![Coverage Status](https://coveralls.io/repos/PRX/PRX.org-Frontend/badge.png?branch=master)](https://coveralls.io/r/PRX/PRX.org-Frontend?branch=master)
 
     Note: This repository houses only the web frontend
     component of PRX.org Version 4. In order to use it,
