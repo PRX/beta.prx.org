@@ -93,4 +93,23 @@ describe('prx.stories', function () {
       expect($injector.invoke(state.title, null, {story: "story", account: "account"})).toEqual("story by account");
     });
   });
+
+  describe('prxSocialActions directive', function () {
+    var elem;
+    beforeEach(module('templates'));
+
+    beforeEach(inject(function ($compile, $rootScope) {
+      elem = $compile('<prx-social-actions text="sigil"></prx-social-actions>')($rootScope);
+      $rootScope.$digest();
+    }));
+
+    it('compiles', function () {
+      expect(elem).toBeDefined();
+    });
+
+    it('sets $location on scope', function() {
+      expect(elem.isolateScope().$location).toBeDefined();
+    });
+  });
+
 });

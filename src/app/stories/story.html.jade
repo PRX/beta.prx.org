@@ -7,7 +7,7 @@ article.story
         .content
           .category audio story
           h1 {{story.current.title}}
-          ul
+          ul.metadata
             li
               address.author
                 | by #{''}
@@ -16,12 +16,7 @@ article.story
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
-      ul.actions(ng-flag="lovesharebuy")
-        li.love.fa.fa-heart Love
-        li.share.fa.fa-share Share
-        li.buy.fa.fa-shopping-cart
-          | Buy
-          span.fa.fa-sort-asc.more
+      prx-social-actions(text="story.current.title")
   #content
     #main
       section.details
