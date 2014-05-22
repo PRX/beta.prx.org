@@ -3,6 +3,12 @@ article.story {
     color: white;
     font-weight: lighter;
     background-image: url('/assets/images/tl_blue_mics.png');
+    position: relative;
+    padding-bottom: 60px;
+
+    @media tall-screen {
+      padding-bottom: 0;
+    }
 
     &.matt {
       position: relative;
@@ -79,7 +85,18 @@ article.story {
     .socialActions {
       flex: none;
       order: 1;
-      margin-top: 20px;
+      absolute: bottom left;
+      right: 0px;
+
+      background-color: offwhite;
+      padding: 10px 15px 5px;
+
+      @media tall-screen {
+        background: none;
+        position: initial;
+        margin-top: 20px;
+        padding: 0;
+      }
 
       menu.share {
         height: 30px;
