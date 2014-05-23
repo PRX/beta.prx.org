@@ -3,9 +3,12 @@ article.account
     .container
       prx-img(src="account.current.imageUrl", default-class="default")
       h1(ng-bind="account.current.name")
-      .bio
-        div(ng-bind-html="account.current.description", limit-to-html="250", html-limited="wasShortened")
-        a.full(ui-sref=".details", ng-if="wasShortened") (View Full Profile)
+      .details
+        .path(ng-bind="account.current.path")
+        .location(ng-bind="account.current.address")
+        .bio
+          div(ng-bind-html="account.current.description", limit-to-html="250", html-limited="wasShortened")
+          a.full(ui-sref=".details", ng-if="wasShortened") (View Full Profile)
   #content
     #main
       section
