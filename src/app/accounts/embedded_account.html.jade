@@ -3,4 +3,5 @@ section.account
     prx-img(src="account.imageUrl", default-class="default")
   h2
     a(ui-sref="account") {{account.name}}
+  .path(ng-bind="account.path")
   .location(ng-bind="account.address")
