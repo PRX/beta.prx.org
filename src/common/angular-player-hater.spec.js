@@ -29,13 +29,6 @@ describe('soundManager', function () {
     windowSm = globalSoundManager;
   }));
 
-  // function soundManagerLoaded () {
-  //   inject(function ($timeout) {
-  //     globalSoundManager.setup.calls.mostRecent().args[0].onready();
-  //     $timeout.flush();
-  //   });
-  // }
-
   it('defines soundManager2 for injection', function () {
     expect(soundManager).toBeDefined();
   });
@@ -51,7 +44,7 @@ describe('soundManager', function () {
 
   it('promises sounds', function () {
     var args = {url:'/test.mp3'};
-    soundManager.createSound(args);
+    var sound = soundManager.createSound(args);
     $scope.$digest();
     expect(windowSm.createSound).toHaveBeenCalled();
     expect(windowSm.createSound.calls.mostRecent().args[0]).toBe(args);
@@ -107,14 +100,12 @@ describe('soundManager', function () {
 
   describe('smSound', function () {
     var soundMethods = ('destruct load mute pause play resume setPan setPosition ' +
-                     'setVolume stop toogleMute togglePause unload unmute').split(' ');
+                     'setVolume stop toogleMute togglePause unmute').split(' ');
     var smSoundSpy, smSound;
-
-    // beforeEach(module('ngPlayerHater'));
 
     beforeEach(inject(function (globalSoundManager, _smSound_) {
       smSound = _smSound_;
-      smSoundSpy = jasmine.createSpyObj('sound', soundMethods);
+      smSoundSpy = jasmine.createSpyObj('sound', soundMethods.concat('setPosition'));
       globalSoundManager.createSound.and.returnValue(smSoundSpy);
     }));
 
@@ -127,6 +118,11 @@ describe('soundManager', function () {
       expect(function() {
         smSound.create();
       }).toThrow();
+    });
+
+    it ('accepts an object with the url property', function () {
+      var sound = smSound.create({url: '/asd.mp3', name: 123});
+      expect(sound.name).toBe(123);
     });
 
     describe('newly created', function () {
@@ -163,6 +159,7 @@ describe('soundManager', function () {
 
       describe('after soundManager is loaded', function () {
         beforeEach(function () {
+          sound.load();
           $scope.$digest();
         });
 
@@ -190,6 +187,31 @@ describe('soundManager', function () {
             });
           }(soundMethods[i]));
         }
+
+        it ('calls destruct when asked to unload', function () {
+          sound.unload();
+          $scope.$digest();
+          expect(smSoundSpy.destruct).toHaveBeenCalled();
+        });
+
+        it ('does not call destruct when not loaded', function () {
+          sound.unload();
+          $scope.$digest();
+          sound.unload();
+          $scope.$digest();
+          expect(smSoundSpy.destruct.calls.count()).toBe(1);
+        });
+
+        it ('sets position only after loaded', function () {
+          sound.unload();
+          $scope.$digest();
+          sound.setPosition(1);
+          $scope.$digest();
+          expect(smSoundSpy.setPosition).not.toHaveBeenCalled();
+          sound.load();
+          $scope.$digest();
+          expect(smSoundSpy.setPosition).toHaveBeenCalled();
+        });
 
         it('does not expose the onPosition or clearOnPosition methods', function () {
           expect(sound.onPosition).toBeUndefined();

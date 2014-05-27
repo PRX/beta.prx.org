@@ -1,0 +1,8 @@
+.socialActions
+  button.like(ng-flag="lovesharebuy") Like
+  menu.share
+    .label Share
+    a.twitter(ng-href="https://twitter.com/share?url={{$location.absUrl()}}&via=prx&text={{text}}")
+    a.facebook(ng-href="https://www.facebook.com/sharer/sharer.php?u={{$location.absUrl()}}")
+    a.google(ng-href="https://plus.google.com/share?url={{$location.absUrl()}}")
+  button.buy(ng-flag="lovesharebuy") Buy

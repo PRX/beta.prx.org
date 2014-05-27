@@ -2,14 +2,14 @@
   "name": "ng-boilerplate",
   "version": "0.3.1",
   "devDependencies": {
-    "angular": "~1.2",
-    "angular-animate": "~1.2",
-    "angular-mocks": "~1.2",
+    "angular": "1.3.0-beta.8",
+    "angular-animate": "1.3.0-beta.8",
+    "angular-mocks": "1.3.0-beta.8",
     "angular-ui-router": "~0.2",
     "angular-ui-utils": "~0.1",
-    "angular-touch": " ~1.2",
+    "angular-touch": "1.3.0-beta.8",
     "ngPlayerHater": "0.0.7",
     "angulartics": "~0.12",
-    "angular-sanitize": "~1.2"
+    "angular-sanitize": "1.3.0-beta.8"
   }
 }

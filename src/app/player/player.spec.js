@@ -13,28 +13,24 @@ describe('prx.player', function () {
       timeCode = $filter('timeCode');
     }));
 
-    it('returns 00:00:00 when a non-number is passed', function () {
-      expect(timeCode('foo')).toEqual('00:00:00');
+    it('returns 0:00:00 when a non-number is passed', function () {
+      expect(timeCode('foo')).toEqual('0:00:00');
     });
 
     it('pads seconds smaller than 10 with a leading 0', function () {
-      expect(timeCode(9000)).toEqual('00:00:09');
+      expect(timeCode(9000)).toEqual('0:00:09');
     });
 
     it('pads minutes smaller than 10 with a leading 0', function () {
-      expect(timeCode(540000)).toEqual('00:09:00');
-    });
-
-    it('pads hours smaller than 10 with a leading 0', function () {
-      expect(timeCode(32400000)).toEqual('09:00:00');
+      expect(timeCode(540000)).toEqual('0:09:00');
     });
 
     it('handles decimal numbers by rounding down', function () {
-      expect(timeCode(9900)).toEqual('00:00:09');
+      expect(timeCode(9900)).toEqual('0:00:09');
     });
 
     it('does not pad numbers > 10', function () {
-      expect(timeCode(11000)).toEqual('00:00:11');
+      expect(timeCode(11000)).toEqual('0:00:11');
     });
 
     it('has a short format', function () {
@@ -52,41 +48,122 @@ describe('prx.player', function () {
       var controller = $controller('GlobalPlayerCtrl', {prxPlayer: 'asd'});
       expect(controller.global).toEqual('asd');
     });
+
+    describe ('PlayerCtrl', function () {
+      var ctrl, sound, prxPlayer;
+
+      beforeEach(inject(function (_prxPlayer_) {
+        sound = {};
+        prxPlayer = _prxPlayer_;
+
+        ctrl = $controller('PlayerCtrl');
+        ctrl.setSound(sound);
+      }));
+
+
+      it ('pauses if appropriate', function () {
+        spyOn(prxPlayer, 'pause');
+
+        prxPlayer.nowPlaying = sound;
+
+        ctrl.pause();
+        expect(prxPlayer.pause).toHaveBeenCalled();
+      });
+
+      it ('does not pause if it isnt playing', function () {
+        spyOn(prxPlayer, 'pause');
+
+        ctrl.pause();
+        expect(prxPlayer.pause).not.toHaveBeenCalled();
+      });
+
+      it ('plays', function () {
+        spyOn(prxPlayer, 'play');
+
+        ctrl.play();
+        expect(prxPlayer.play.calls.mostRecent().args[0]).toBe(sound);
+      });
+
+      it ('toggles by playing if paused', function () {
+        sound.paused = true;
+
+        spyOn(ctrl, 'play');
+        ctrl.toggle();
+        expect(ctrl.play).toHaveBeenCalled();
+      });
+
+      it ('toggles by pausing if playing', function () {
+        ctrl.paused = function () { return false; };
+
+        spyOn(ctrl, 'pause');
+        ctrl.toggle();
+        expect(ctrl.pause).toHaveBeenCalled();
+      });
+
+      it ('is active if the sound is not paused', function () {
+        sound.paused = false;
+
+        expect(ctrl.active()).toBe(true);
+      });
+
+      it ('is active if the sound is not at the beginning', function () {
+        sound.paused = true;
+        sound.position = 10;
+
+        expect(ctrl.active()).toBe(true);
+      });
+
+      it ('calculates progress', function () {
+        sound.story = {duration: 10000};
+        sound.position = 1000000;
+
+        expect(ctrl.progress()).toBe(10);
+      });
+    });
   });
 
-  describe('soundFactory', function () {
-    var soundFactory, smSound;
-    beforeEach(inject(function (_smSound_, _prxSoundFactory_) {
-      soundFactory = _prxSoundFactory_;
-      smSound = _smSound_;
+  describe('directives', function () {
+    var $compile, $rootScope;
+    beforeEach(module('templates'));
+    beforeEach(inject(function (_$compile_, _$rootScope_) {
+      $compile = _$compile_;
+      $rootScope = _$rootScope_;
     }));
 
-    it ('returns a function', function () {
-      expect(angular.isFunction(soundFactory())).toBe(true);
+    describe ('prxPlayer', function () {
+      var elem;
+      beforeEach(function () {
+        elem = $compile('<prx-player sound="sound"></prx-player>')($rootScope);
+        $rootScope.$digest();
+      });
+
+      it('compiles', function () {
+        expect(elem).toBeDefined();
+      });
+
+      it ('calls setSound on controller where appropriate', function () {
+        $rootScope.sound = {id: 123, story: {}};
+        $rootScope.$digest();
+        expect($rootScope.player.sound.id).toBe(123);
+      });
     });
 
-    it ('calls smSound.createList with passed audio files', function () {
-      spyOn(smSound, 'createList').and.callThrough();
-      soundFactory({audioFiles: [1]})();
-      expect(smSound.createList.calls.mostRecent().args[0]).toEqual([1]);
+    describe ('prxGlobalPlayer', function () {
+      it ('compiles', function () {
+        var elem = $compile('<prx-global-player></prx-global-player>')($rootScope);
+        expect(elem).toBeDefined();
+
+      });
     });
 
-    it ('sets story from options', function () {
-      spyOn(smSound, 'createList').and.returnValue({});
-      var sound = soundFactory({story: 'sigil'})();
-      expect(sound.story).toEqual('sigil');
+    describe ('prxPlayerButton', function () {
+      it ('compiles', function () {
+        var elem = $compile('<prx-player-button></prx-player-button>')($rootScope);
+        $rootScope.$digest();
+        expect(elem).toBeDefined();
+      });
     });
 
-    it ('sets sound when memoized', function () {
-      var factory = soundFactory({audioFiles: []}), sound = factory();
-      expect(factory.sound).toBe(sound);
-    });
-
-    it ('returns whatever is memoized', function () {
-      var factory = soundFactory({audioFiles: []});
-      factory.sound = "sigil";
-      expect(factory()).toEqual('sigil');
-    });
   });
 
   describe ('prxPlayer', function () {
@@ -103,7 +180,7 @@ describe('prx.player', function () {
     beforeEach(inject(function (_prxPlayer_, _$analytics_) {
       prxPlayer = _prxPlayer_;
       $analytics = _$analytics_;
-      sound = jasmine.createSpyObj('sound', ['play', 'pause', 'resume']);
+      sound = jasmine.createSpyObj('sound', ['play', 'pause', 'resume', 'stop']);
       sound.story = {id: 1};
     }));
 
@@ -199,5 +276,66 @@ describe('prx.player', function () {
       });
     });
 
+    describe ('#stop', function () {
+      it ('tracks the event', function () {
+        prxPlayer.nowPlaying = sound;
+        prxPlayer.stop();
+        expect(eventTracked('Stop')).toBe(true);
+      });
+    });
+
+  });
+
+  describe ('soundFactory', function () {
+    var prxSoundFactory;
+    beforeEach(inject(function (_prxSoundFactory_) {
+      prxSoundFactory = _prxSoundFactory_;
+    }));
+
+    it ('returns the existing sound if appropriate', inject(function (prxPlayer) {
+      prxPlayer.nowPlaying = {story:{id:123}};
+      expect(prxSoundFactory({story:{id:123}})).toBe(prxPlayer.nowPlaying);
+    }));
+
+    it ('makes a sound', function () {
+      expect(prxSoundFactory({audioFiles:['/123.mp3']}).play).toBeDefined();
+    });
+
+    it ('sets the producer', function () {
+      expect(prxSoundFactory({audioFiles: [], producer: 123}).producer).toBe(123);
+    });
+
+    it ('sets the story', function () {
+      expect(prxSoundFactory({audioFiles: [], story: 123}).story).toBe(123);
+    });
+
+    it ('calls the onFinish on the sound object when the sound is finished', inject(function (smSound) {
+      spyOn(smSound, 'createList').and.returnValue({});
+      sound = prxSoundFactory({audioFiles: []});
+      var triggerFinish = smSound.createList.calls.mostRecent().args[1].onfinish;
+
+      triggerFinish();
+      sound.onfinish = jasmine.createSpy('spy');
+      expect(sound.onfinish).not.toHaveBeenCalled();
+      triggerFinish();
+      expect(sound.onfinish).toHaveBeenCalled();
+    }));
+
+    describe ('generative playlists', function () {
+      it ('can accept a method to lazily calculate the next item', function () {
+        sound = prxSoundFactory({audioFiles: [], next: function (sound) { return {audioFiles: ['asd.mp3']}; }});
+        expect(sound.next()).toBeDefined();
+      });
+
+      it ('automatically sets previous on the sound that is calulated by next()', function () {
+        sound = prxSoundFactory({audioFiles: [], next: function (sound) { return {audioFiles: []}; }});
+        expect(sound.next().then(function (d) { return d.previous(); })).toResolveTo(sound);
+      });
+
+      it ('does not set a next method when no such thing is provided', function () {
+        sound = prxSoundFactory({audioFiles: []});
+        expect(sound.next).not.toBeDefined();
+      });
+    });
   });
 });

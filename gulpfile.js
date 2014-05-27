@@ -171,6 +171,7 @@ gulp.task('helperJs', function () {
   return gulp.src(c.test.helper.src)
     .pipe(feats(featsDev, {strict: false, default: true}))
     .pipe(rename(name))
+    .pipe(newer(path))
     .pipe(gulp.dest(path));
 });
 
@@ -351,7 +352,9 @@ gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
 
   karma.start({ autoWatch: true });
 
+
   gulp.watch(allAppJs.concat(featsDev), ['buildJs', 'helperJs']);
+  gulp.watch("src/**/*.js", ['buildJs', 'helperJs']);
 });
 
 gulp.task('default', ['watch']);
@@ -393,7 +396,7 @@ gulp.task('coveralls', ['checkCoverage', 'protractor'], function (done) {
   }
 
   function pipeFile (err, data) {
-    ps.stdin.write(data);
+    ps.stdin.write(data.toString().replace(/\/public\/(?!app\/templates)(.*)\.js/g, "/src/$1.js"));
     ps.stdin.end();
   }
 

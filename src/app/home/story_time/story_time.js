@@ -1,4 +1,4 @@
-angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'prx.experiments', 'angulartics'])
+angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'angulartics'])
 .config(function ($stateProvider, urlTranslateProvider) {
   urlTranslateProvider.translate('/storytime', '/');
 
@@ -20,9 +20,8 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'prx.exp
       }
     }
   });
-}).service('MailChimp', function ($http, $q, prxperiment, $analytics) {
+}).service('MailChimp', function ($http, $q, $analytics) {
   this.subscribe = function (email) {
-    prxperiment.tryConvert('storyTimeCta');
     $analytics.eventTrack('Subscribe', {
       category: 'Mailing Lists',
       label: 'Story Time'
@@ -65,12 +64,6 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'prx.exp
   return {
     restrict: 'E',
     replace: true,
-    templateUrl: 'home/story_time/cta.html',
-    controller: 'StoryTimeCtaCtrl as storyTime'
+    template: '<section class="story-time-cta"><a ui-sref="home.storyTime">Get Free Stories</a></section>'
   };
-}).controller('StoryTimeCtaCtrl', function (prxperiment) {
-  var self = this;
-  prxperiment.run('storyTimeCta', ['free', 'more']).then(function (exp) {
-    self.text = {free: 'Get Free Stories', more: 'More Stories Like This'}[exp.choice];
-  });
 });

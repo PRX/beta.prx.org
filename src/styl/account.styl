@@ -42,10 +42,13 @@ article.account {
       }
     }
 
-    .bio {
+    .details {
       clear: both;
       background-color: white;
       padding: 15px;
+    }
+
+    .bio {
       a:last-child {
         font-weight: bold;
       }
@@ -74,12 +77,25 @@ section.account {
     line-height: 70px;
     margin-top: 0px !important;
   }
+}
 
+.account {
   .path, .location {
     font-size: 12px;
     clear: both;
     margin-bottom: 8px;
     margin-left: 10px;
+    background-repeat: no-repeat;
+    background-position-y: 4px;
+    padding-left: 22px;
+  }
+
+  .path {
+    image: 'assets/images/user_icon.png' 15px 13px;
+  }
+
+  .location {
+    image: 'assets/images/location_icon.png' 12px 15px;
   }
 }
 

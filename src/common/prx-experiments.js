@@ -1,6 +1,6 @@
 angular.module('prx.experiments', [])
 .provider('prxperiment', function () {
-  var config = {}, http, q, $injector;
+  var config = { enabled: true }, http, q, $injector;
   var Provider = {
     base: function (base) {
       config.base = base;
@@ -8,6 +8,10 @@ angular.module('prx.experiments', [])
     },
     clientId: function (clientId) {
       config.clientId = clientId;
+      return Provider;
+    },
+    enabled: function (enabled) {
+      config.enabled = enabled;
       return Provider;
     },
     '$get': ['$http', '$q', '$injector',
@@ -27,6 +31,7 @@ angular.module('prx.experiments', [])
       config.clientId = $injector.invoke(config.clientId);
     }
 
+    this.enabled  = config.enabled;
     this.clientId = $q.when(config.clientId);
     this.forces = {};
     this.active = {};
@@ -127,11 +132,25 @@ angular.module('prx.experiments', [])
   };
 
   Experiment.prototype.participate = function (experiment, alternatives) {
+    var self = this, httpPromise, promise;
+
     if (this.active[experiment]) {
       return this.active[experiment];
     }
 
-    var self = this, httpPromise = this.clientId.then(function (clientId) {
+    if (!this.enabled) {
+      return this.active[experiment] = new ParticipationPromise(this.base, alternatives, q.when(this.clientId).then(function (clientId) {
+        return {
+          data: {
+            experiment: {name: experiment},
+            alternative: {name: self.forces[experiment] || alternatives[0]},
+            client_id: clientId
+          }
+        };
+      }));
+    }
+
+    httpPromise = this.clientId.then(function (clientId) {
       var query = [self.base, '/participate?experiment=', experiment, '&client_id=', clientId];
       angular.forEach(alternatives, function (alt) {
         query.push('&alternatives=', alt);
@@ -144,7 +163,7 @@ angular.module('prx.experiments', [])
       return http.get(query.join(''));
     });
 
-    var promise = new ParticipationPromise(this.base, alternatives, httpPromise);
+    promise = new ParticipationPromise(this.base, alternatives, httpPromise);
     this.active[experiment] = promise;
     return promise;
   };

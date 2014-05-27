@@ -6,7 +6,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     title: 'Stories'
   })
   .state('story.show', {
-    url: '/stories/:storyId?autoPlay',
+    url: '/stories/:storyId?autoPlay&s',
     views: {
       '@': {
         controller: 'StoryCtrl as story',
@@ -22,12 +22,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story.follow('prx:account');
       }],
       audioUrls: ['story', function (story) {
-        return story.follow('prx:audio').then(function (files) {
-          var result = [];
-          angular.forEach(files, function (file) {
-            result.push({id: file.id, url: file.links('enclosure').url()});
-          });
-          return result;
+        return story.toSoundParams().then(function (sfParams) {
+          return sfParams.audioFiles;
         });
       }],
       coverExperiment: ['prxperiment', function (prxperiment) {
@@ -43,7 +39,17 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         templateUrl: 'stories/detail_modal.html'
       }
     }
-  });
+  })
+  .state('story.show.content_advisory', {
+    views: {
+      'modal@': {
+        controller: 'StoryDetailCtrl as story',
+        templateUrl: 'stories/content_advisory_modal.html'
+      }
+    }
+
+  })
+  ;
 
   /* istanbul ignore else */
   if (FEAT.LISTEN_LATER) {
@@ -63,9 +69,34 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
-  }]).mixin('http://meta.prx.org/model/story/*any', {
-    toString: function () { return this.title; }
-  });
+    return function (story) {
+      if (angular.isDefined(story.length)) {
+        story.duration = story.length;
+        story.length = undefined;
+        return story;
+      }
+    };
+  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', function (prxPlayer) {
+    return {
+      toString: function () { return this.title; },
+      stateParams: function () {
+        return { storyId: this.id, s: null };
+      },
+      toSoundParams: function () {
+        var self = this;
+        return this.follow('prx:audio').then(function (files) {
+          var result = [];
+          angular.forEach(files, function (file) {
+            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
+          });
+          return { audioFiles: result, story: self };
+        });
+      },
+      playing: function () {
+        return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
+      }
+    };
+  }]);
 })
 .directive('prxStory', function () {
   return {
@@ -80,15 +111,30 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   this.current = story;
   this.account = account;
   this.cover = prxperiment.get('storyCover');
-  this.getSound = prxSoundFactory({
-    story: story,
-    producer: account,
-    audioFiles: audioUrls
+  this.sound = prxSoundFactory({ story: story, producer: account,
+    audioFiles: audioUrls, next: function (sound) {
+      return account.generatePlaylist(sound);
+    }
   });
-  if ($stateParams.autoPlay) {
-    prxPlayer.play(this.getSound());
+  if ($stateParams.s !== null) {
+    this.sound.setPosition($stateParams.s * 1000);
+    prxPlayer.play(this.sound);
   }
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
-});
+})
+.directive('prxSocialActions', function($location) {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'stories/social_actions.html',
+    scope: {
+      text: '='
+    },
+    link: function (scope, elem, attrs, ctrl) {
+      scope.$location = $location;
+    }
+  };
+})
+;

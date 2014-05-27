@@ -1,4 +1,5 @@
 section(ng-if="loading || filteredStories.length")
-  h3 {{account.name}}&apos;s Recent Stories
+  h3 Recent Stories
   prx-story(ng-repeat="story in filteredStories" story="story")
+  a.more(ui-sref="account", ng-show="filteredStories.length") See all stories
   .loading-spinner(ng-show="loading")
