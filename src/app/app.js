@@ -195,7 +195,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
     }
   };
 })
-.directive('scrollThing', function ($window) {
+.directive('stickyScroller', function ($window) {
   var UP = 1, DOWN = 0;
 
   return {
