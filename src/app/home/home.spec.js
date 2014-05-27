@@ -12,11 +12,11 @@ describe('prx.home', function () {
 
   if (FEAT.HOME_PAGE) {
     describe ('HomeCtrl', function () {
-      it ('attaches the picklist injected to $scope', inject(function ($controller) {
+      it ('attaches the picks injected to $scope', inject(function ($controller) {
         var sigil = 'sigil';
         var scope = {};
-        var controller = $controller('HomeCtrl', {picklist: sigil});
-        expect(controller.picklist).toBe(sigil);
+        var controller = $controller('HomeCtrl', {picks: sigil});
+        expect(controller.picks).toBe(sigil);
       }));
     });
   }
@@ -30,10 +30,10 @@ describe('prx.home', function () {
       ngHal = _ngHal_;
     }));
 
-    it ('gets the picklist', function () {
-      var spy = ngHal.stubFollow('prx:pick-list', ngHal.mock());
-      $injector.invoke(state.resolve.picklist, null, {});
-      expect(spy.calls.mostRecent().args[0]).toEqual({id: FEAT.home_pick_list_id});
+    it ('gets the picks', function () {
+      var spy = ngHal.stubFollow('prx:picks', ngHal.mock());
+      $injector.invoke(state.resolve.picks, null, {});
+      expect(spy).toHaveBeenCalled();
     });
   });
 

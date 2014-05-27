@@ -5,6 +5,5 @@
   "COUNT_HOST": "https://count.prx.org",
   "LISTEN_LATER": false,
   "HOME_PAGE": false,
-  "APPLICATION_VERSION": "integration",
-  "home_pick_list_id": "321850"
+  "APPLICATION_VERSION": "integration"
 }

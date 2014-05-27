@@ -16,11 +16,8 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.picks'])
       }
     },
     resolve: {
-      picklist: ['ngHal', function (ngHal) {
-        return ngHal.follow('prx:pick-list', {id: FEAT.home_pick_list_id}).then(function(picklist) {
-          picklist.title = "PRX Picks";
-          return picklist;
-        });
+      picks: ['ngHal', function (ngHal) {
+        return ngHal.follow('prx:picks');
       }]
     }
   }).state('home.comingSoon', {
@@ -45,7 +42,7 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.picks'])
   }
 })
 
-.controller('HomeCtrl', function (picklist) {
-  this.picklist = picklist;
+.controller('HomeCtrl', function (picks) {
+  this.picks = picks;
 })
 ;

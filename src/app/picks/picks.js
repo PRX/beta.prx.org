@@ -6,11 +6,12 @@ angular.module('prx.picks', ['prx.stories'])
   }]);
 })
 
-.directive('prxPickList', function ($timeout, ngHal) {
+.directive('prxPicks', function ($timeout, ngHal) {
   return {
     restrict: 'E',
     scope: {
-      picklist: '='
+      picks: '=',
+      title: '@'
     },
     templateUrl: 'picks/picks.html',
     replace: true,
@@ -20,8 +21,8 @@ angular.module('prx.picks', ['prx.stories'])
           scope.loading = true;
         }
       }, 500);
-      if (angular.isDefined(scope.picklist)) {
-        scope.picklist.follow('prx:picks').follow('prx:items').then(function (picks) {
+      if (angular.isDefined(scope.picks)) {
+        scope.picks.follow('prx:items').then(function (picks) {
           scope.loading = false;
           scope.filteredPicks = scope.$eval('picks | limitTo: (limit || 5)', {picks: picks});
         });
