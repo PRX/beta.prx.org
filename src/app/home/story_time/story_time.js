@@ -3,7 +3,7 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'angular
   urlTranslateProvider.translate('/storytime', '/');
 
   $stateProvider.state('home.storyTime', {
-    url: '/storytime',
+    url: 'storytime',
     title: 'Storytime - A weekly newsletter',
     views: {
       '@': {

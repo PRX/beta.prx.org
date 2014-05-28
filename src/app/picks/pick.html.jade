@@ -1,0 +1,8 @@
+.pick
+  prx-story(story="pick.story")
+  .curation(ng-if="pick.comment")
+    .curator
+      prx-img(src="pick.account.imageUrl", default="assets/images/audrey.png")
+      .name
+        small {{pick.account.name}}
+    p(ng-bind="pick.comment")
