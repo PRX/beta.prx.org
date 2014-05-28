@@ -195,13 +195,13 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
     }
   };
 })
-.directive('stickyScroller', function ($window) {
-  var UP = 1, DOWN = 0;
+.directive('quickReturn', function ($window) {
+  var UP = 1, DOWN = 0, STILL = -1;
 
   return {
     restrict: 'A',
     link: function (scope, element) {
-      var fromPos = 0, pos = 0, dir = 3;
+      var fromPos = 0, pos = 0, dir = STILL;
 
       if ($window.requestAnimationFrame) {
         handle();
