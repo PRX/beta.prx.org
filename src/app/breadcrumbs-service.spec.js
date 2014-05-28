@@ -1,5 +1,5 @@
 describe('breadcrumb service', function () {
-  var stateCrumbs, $state, $rootScope;
+  var stateCrumbs, $state, $rootScope, $timeout;
 
   beforeEach(module('prx.breadcrumbs', function ($stateProvider) {
     $stateProvider.state('base', {
@@ -31,11 +31,12 @@ describe('breadcrumb service', function () {
     });
   }));
 
-  beforeEach(inject(function (_stateCrumbs_, _$state_, _$rootScope_) {
-    stateCrumbs = _stateCrumbs_; $state = _$state_; $rootScope = _$rootScope_;
+  beforeEach(inject(function (_stateCrumbs_, _$state_, _$rootScope_, _$timeout_) {
+    stateCrumbs = _stateCrumbs_; $state = _$state_; $rootScope = _$rootScope_; $timeout = _$timeout_;
     $rootScope.$apply(function () {
       $state.go('base.noTitle.nested.againNoTitle.last');
     });
+    $timeout.flush();
   }));
 
   it ('works', function () {
@@ -54,7 +55,7 @@ describe('breadcrumb service', function () {
   it ('can reset suffix', function () {
     stateCrumbs.setSuffix('asdf');
     $state.go('base.noTitle.nested.againNoTitle');
-    $rootScope.$digest();
+    $timeout.flush();
     expect(stateCrumbs.title).toEqual("fooFromResolveasdf");
     stateCrumbs.setSuffix('foo');
     expect(stateCrumbs.title).toEqual("fooFromResolvefoo");
@@ -72,13 +73,6 @@ describe('breadcrumb service', function () {
       $compile("<title>asd</title>")($scope);
       expect(stateCrumbs.setSuffix).toHaveBeenCalled();
       expect(stateCrumbs.setSuffix.calls.mostRecent().args[0]).toEqual(' on asd');
-    });
-
-    it ('sets the value', function () {
-      var elm = $compile("<title>foo</title>")($scope);
-      $state.go('base.noTitle.nested.againNoTitle.last');
-      $rootScope.$digest();
-      expect(elm.text()).toEqual("overrideResolve on foo");
     });
   });
 
