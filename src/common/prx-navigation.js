@@ -1,6 +1,7 @@
 angular.module('prxNavigation', ['ui.router'])
 .directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope, $animate) {
   var modalKey = 'modal@';
+  console.log(window.callPhantom);
 
   if (typeof window.callPhantom !== 'undefined') {
     $animate.enabled(false);
