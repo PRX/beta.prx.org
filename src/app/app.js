@@ -213,7 +213,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
           if (dir != UP) {
             fromPos = pos;
             dir = UP;
-            element.css({'position': 'absolute', 'top' : pos - element[0].offsetHeight + 'px'});
+            element.css({'position': 'absolute', 'top' : newPos - element[0].offsetHeight + 'px'});
           }
           if (fromPos - newPos >= element[0].offsetHeight) {
             element.removeClass('hidden');
@@ -222,7 +222,7 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
         } else if (newPos > pos) {
           if (dir != DOWN) {
             element.addClass('hidden');
-            element.css({'position': 'absolute', 'top': newPos + 'px'});
+            element.css({'position': 'absolute', 'top': pos + 'px'});
             dir = DOWN;
           }
         }
