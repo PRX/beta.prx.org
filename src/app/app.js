@@ -39,7 +39,7 @@ angular.module('prx', ['ngAnimate',
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
     var url = $analytics.settings.pageTracking.basePath + $location.url();
-    $timeout(function () {  $analytics.pageTrack(url); });
+    $timeout(function () {  $analytics.pageTrack(url); }, 2);
   });
 });
 angular.module('prx.modelConfig', ['angular-hal'])
@@ -183,6 +183,17 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
           }
         }
       };
+    }
+  };
+})
+.directive('bindCanonical', function ($location, urlTranslate) {
+  return {
+    restrict: 'A',
+    link: function (scope, elem, attrs) {
+      var attr = attrs.bindCanonical || 'href';
+      scope.$on('$stateChangeSuccess', function () {
+        elem.attr(attr, "http://www.prx.org" + urlTranslate($location.path()));
+      });
     }
   };
 });
