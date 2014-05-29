@@ -13,9 +13,11 @@ describe('application', function () {
       browser.get('/');
     });
 
-    it ('redirects to the /nxt modal', function () {
-      expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
-    });
+    if (!FEAT.HOME_PAGE) {
+      it ('redirects to the /nxt modal', function () {
+        expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
+      });
+    }
   });
 
   describe('any page', function () {
