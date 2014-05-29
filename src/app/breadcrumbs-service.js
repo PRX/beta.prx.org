@@ -31,6 +31,7 @@ angular.module('prx.breadcrumbs', ['ui.router'])
   }
 
   $rootScope.$on('$stateChangeSuccess', setTitle);
+  $rootScope.stateCrumbs = stateCrumbs;
 
   return stateCrumbs;
 
