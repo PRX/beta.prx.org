@@ -4,6 +4,6 @@
   "lovesharebuy": false,
   "COUNT_HOST": "https://count.prx.org",
   "LISTEN_LATER": false,
-  "HOME_PAGE": false,
+  "HOME_PAGE": true,
   "APPLICATION_VERSION": "integration"
 }
