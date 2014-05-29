@@ -10,7 +10,7 @@ exports.config = {
     defaultTimeoutInterval: 30000
   },
 
-  specs: [ '../src/**/*.e2e.spec.js' ]
+  specs: [ '../src/common/.release.helper.spec.js', '../src/**/*.e2e.spec.js' ]
 };
 
 if (process.env['TRAVIS']) {
@@ -25,5 +25,5 @@ if (process.env['TRAVIS']) {
   }
 
 } else {
-  exports.config.seleniumServerJar = '/usr/local/lib/node_modules/protractor/selenium/selenium-server-standalone-2.41.0.jar';
+  exports.config.seleniumServerJar = '../node_modules/protractor/selenium/selenium-server-standalone-2.40.0.jar';
 }

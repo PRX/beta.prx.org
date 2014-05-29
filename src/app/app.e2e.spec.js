@@ -8,6 +8,8 @@ beforeEach(function () {
 });
 
 describe('application', function () {
+
+  require('../common/.release.helper.spec.js');
   describe('home page', function () {
     beforeEach(function () {
       browser.get('/');
@@ -44,7 +46,7 @@ describe('application', function () {
 
     it ('takes you to the /nxt page when you tap the prx logo', function () {
       $('h1 a').click();
-      expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
+      expect(browser.getCurrentUrl()).toMatch(/\//);
     });
 
     it ('opens modals', function () {

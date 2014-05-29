@@ -22,7 +22,7 @@ describe('templates', function () {
     //Set up an endless tree of states
     $state.go('fakeState');
     $state.$current.parent = $state.$current;
-    $httpBackend.when('GET', 'http://prx-backend.dev/api/v1').respond({});
+    $httpBackend.when('GET').respond({});
     $scope = $rootScope.$new();
     $compile = _$compile_;
   }));
