@@ -15,6 +15,7 @@ namespace :deploy do
           execute :npm, 'run-script compile'
           execute :rm, '-rf public'
           execute :ln, '-s bin/ public'
+          execute :ln, '-s lib/server.js app.js'
         end
       end
     end
