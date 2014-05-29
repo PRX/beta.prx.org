@@ -10,7 +10,7 @@ exports.config = {
     defaultTimeoutInterval: 30000
   },
 
-  specs: [ '../src/common/.release.helper.spec.js', '../src/**/*.e2e.spec.js' ]
+  specs: ['../src/**/*.e2e.spec.js' ]
 };
 
 if (process.env['TRAVIS']) {
