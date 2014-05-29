@@ -9,7 +9,8 @@ beforeEach(function () {
 
 describe('application', function () {
 
-  require('../common/.release.helper.spec.js');
+  var FEAT = require('../../config/flags.release.json');
+
   describe('home page', function () {
     beforeEach(function () {
       browser.get('/');
