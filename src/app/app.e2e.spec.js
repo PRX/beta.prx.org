@@ -8,14 +8,19 @@ beforeEach(function () {
 });
 
 describe('application', function () {
+
+  var FEAT = require('../../config/flags.release.json');
+
   describe('home page', function () {
     beforeEach(function () {
       browser.get('/');
     });
 
-    it ('redirects to the /nxt modal', function () {
-      expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
-    });
+    if (!FEAT.HOME_PAGE) {
+      it ('redirects to the /nxt modal', function () {
+        expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
+      });
+    }
   });
 
   describe('any page', function () {
@@ -40,10 +45,17 @@ describe('application', function () {
       browser.get('/fake');
     });
 
-    it ('takes you to the /nxt page when you tap the prx logo', function () {
-      $('h1 a').click();
-      expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
-    });
+    if (FEAT.HOME_PAGE) {
+      it ('takes you to the / page when you tap the prx logo', function () {
+        $('h1 a').click();
+        expect(browser.getCurrentUrl()).toMatch(/\//);
+      });
+    } else {
+      it ('takes you to the /nxt page when you tap the prx logo', function () {
+        $('h1 a').click();
+        expect(browser.getCurrentUrl()).toMatch(/\/nxt/);
+      });
+    }
 
     it ('opens modals', function () {
       var modal = $('.modal');
