@@ -1,5 +1,5 @@
 angular.module('prx.breadcrumbs', ['ui.router'])
-.factory('stateCrumbs', function ($rootScope, $state, $injector) {
+.factory('stateCrumbs', function ($rootScope, $state, $injector, $window, $timeout) {
   var stateCrumbs = {
     crumbs: [],
     title: "",
@@ -8,29 +8,36 @@ angular.module('prx.breadcrumbs', ['ui.router'])
   };
 
   function setTitle () {
-    var crumbs = [], depth = 0, title, cState = $state.$current;
+    $timeout(function () {
+      var crumbs = [], depth = 0, title, cState = $state.$current;
 
-    while (cState) {
-      if (cState.self.title) {
-        title = cState.self.title;
-        if (angular.isFunction(title) ||
-          (angular.isArray(title) && angular.isFunction(title[title.length-1]))) {
-            title = $injector.invoke(title, cState.self, cState.locals.globals);
+      while (cState) {
+        if (cState.self.title) {
+          title = cState.self.title;
+          if (angular.isFunction(title) ||
+            (angular.isArray(title) && angular.isFunction(title[title.length-1]))) {
+              title = $injector.invoke(title, cState.self, cState.locals.globals);
+          }
+          crumbs.push(mkCrumb(title, cState.self, depth));
         }
-        crumbs.push(mkCrumb(title, cState.self, depth));
+        depth += 1;
+        cState = cState.parent;
       }
-      depth += 1;
-      cState = cState.parent;
-    }
 
-    if (crumbs.length) {
-      stateCrumbs.title = crumbs[0].title + (stateCrumbs.suffix || '');
-    }
+      if (crumbs.length) {
+        stateCrumbs.title = crumbs[0].title + (stateCrumbs.suffix || '');
+      }
 
-    stateCrumbs.crumbs = crumbs;
+      stateCrumbs.crumbs = crumbs;
+
+      if ($window.history.replaceState) {
+        $window.history.replaceState({}, stateCrumbs.title);
+      }
+    });
   }
 
   $rootScope.$on('$stateChangeSuccess', setTitle);
+  $rootScope.stateCrumbs = stateCrumbs;
 
   return stateCrumbs;
 
@@ -62,6 +69,7 @@ angular.module('prx.breadcrumbs', ['ui.router'])
       tElem.attr('ng-bind', "stateCrumbs.title");
       return function (scope, iElem) {
         scope.stateCrumbs = stateCrumbs;
+        stateCrumbs.title = tElem.text();
         $compile(iElem)(scope);
       };
     }

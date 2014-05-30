@@ -7,7 +7,7 @@ angular.module('prxNavigation', ['ui.router'])
   }
   function renderDone() {
     if (typeof window.callPhantom !== 'undefined') {
-      $timeout(window.callPhantom, 1);
+      $timeout(window.callPhantom, 5);
     }
   }
 

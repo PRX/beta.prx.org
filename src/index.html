@@ -7,11 +7,12 @@
   <link rel="shortcut icon" sizes="196x196" href="/assets/images/app_icon@3x.png">
   <base href="/">
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
+  <link rel="canonical" bind-canonical="href" />
   <meta name="fragment" content="!">
 </head>
 <body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying}">
   <prx-drawer ng-flag="showMenu"></prx-drawer>
-  <header>
+  <header quick-return ng-class="{'loading': loading}">
     <prx-loading-bar></prx-loading-bar>
     <prx-drawer-button ng-flag="showMenu"></prx-drawer-button>
     <h1><a ui-sref="home">PRX</a></h1>

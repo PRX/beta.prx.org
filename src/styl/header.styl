@@ -1,5 +1,5 @@
 header {
-  fixed: top left; right: 0;
+  absolute: top left; right: 0;
   height: action-bar-height;
   overflow: hidden;
   z-index: 200;
@@ -12,7 +12,14 @@ header {
     line-height: action-bar-height - 1px;
   }
 
+  &.loading {
+    position: fixed!important;
+    top: 0!important;
+  }
+
   @media tall-screen {
+    position: fixed!important;
+    top: 0px!important;
     height: tall-action-bar-height;
     h1, a {
       height: tall-action-bar-height - 1px;
