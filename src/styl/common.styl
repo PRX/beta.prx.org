@@ -156,6 +156,18 @@ aside > section, #main > section {
   }
 }
 
+#banner {
+  min-width: 300px;
+  display: flex;
+  flex: 1 100%;
+  justify-content: space-around;
+  margin: 20px;
+
+  @media multi-column {
+    order: 0;
+  }
+}
+
 // This is the main column
 #main {
   min-width: 300px;

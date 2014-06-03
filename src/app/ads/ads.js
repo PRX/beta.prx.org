@@ -36,6 +36,7 @@ angular.module('prx.ads', [])
       if (angular.isDefined($window.googletag)) {
         $window.googletag.cmd.push(function() {
           gSlot = $window.googletag.defineSlot(scope.slot, [ctrl.width, ctrl.height], elem.attr('id')).addService($window.googletag.pubads());
+          gSlot.defineSizeMapping([[[0,0],[ctrl.width,ctrl.height]]]);
           $window.googletag.enableServices();
           $window.googletag.display(elem.attr('id'));
         });
