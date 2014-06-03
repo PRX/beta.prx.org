@@ -5,10 +5,7 @@ angular.module('prx.ads', [])
     restrict: 'E',
     replace: true,
     template: "<div class='slot'/>",
-    scope: {
-      slot: '@'
-    },
-    controller: function Controller( $scope, $element, $attrs ) {
+    controller: function Controller() {
       var timeoutPromise;
       var self = this;
       this.width = this.height = 0;
@@ -35,17 +32,17 @@ angular.module('prx.ads', [])
       var win = angular.element($window);
       if (angular.isDefined($window.googletag)) {
         $window.googletag.cmd.push(function() {
-          gSlot = $window.googletag.defineSlot(scope.slot, [ctrl.width, ctrl.height], elem.attr('id')).addService($window.googletag.pubads());
+          gSlot = $window.googletag.defineSlot(attrs.slot, [ctrl.width, ctrl.height], elem.attr('id')).addService($window.googletag.pubads());
           gSlot.defineSizeMapping([[[0,0],[ctrl.width,ctrl.height]]]);
           $window.googletag.enableServices();
           $window.googletag.display(elem.attr('id'));
         });
       }
-      win.on('resize', function() {
+      win.on('resize', function doReload() {
         ctrl.reload(gSlot, elem[0].offsetWidth, elem[0].offsetHeight);
       });
       scope.$on('$destroy', function () {
-        win.off('resize', ctrl.reload);
+        win.off('resize', doReload);
       });
     }
   };

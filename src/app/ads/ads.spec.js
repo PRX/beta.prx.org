@@ -2,18 +2,21 @@ describe('prx.ads', function () {
   beforeEach(module('prx.ads'));
 
   describe('prxAd directive', function () {
-    var elem, googletag, displaySpy;
+    var elem, googletag, displaySpy, gSlot;
     beforeEach(module('templates'));
 
     beforeEach(inject(function ($compile, $rootScope, $window) {
+      gSlot = jasmine.createSpyObj('gSlot', ['defineSizeMapping']);
       googletag = {
         cmd: {
           push: function (fn) { return fn.call(); }
         },
-        display: function() { console.log("displaying"); },
+        display: function() {},
         defineSlot: function() {
           return {
-            addService: function() { }
+            addService: function() {
+              return gSlot;
+            }
           };
         },
         enableServices: function() {},
@@ -51,7 +54,6 @@ describe('prx.ads', function () {
       var controller = elem.controller('prxAd');
       controller.reload = jasmine.createSpy('reload');
       angular.element($window).triggerHandler('resize');
-      $timeout.flush();
       expect(controller.reload).toHaveBeenCalled();
     }));
 
@@ -60,7 +62,6 @@ describe('prx.ads', function () {
       var called = null;
       controller.width = 300;
       controller.height = 250;
-      var gSlot = jasmine.createSpyObj('gSlot', ['defineSizeMapping']);
       controller.reload(gSlot, 320, 50);
       $timeout.flush();
       expect(gSlot.defineSizeMapping).toHaveBeenCalled();
