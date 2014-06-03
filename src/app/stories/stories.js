@@ -137,4 +137,5 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     }
   };
 })
+
 ;
