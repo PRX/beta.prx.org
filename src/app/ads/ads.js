@@ -37,13 +37,15 @@ angular.module('prx.ads', [])
           $window.googletag.enableServices();
           $window.googletag.display(elem.attr('id'));
         });
+        win.on('resize', function doReload() {
+          ctrl.reload(gSlot, elem[0].offsetWidth, elem[0].offsetHeight);
+        });
+        scope.$on('$destroy', function () {
+          win.off('resize', doReload);
+        });
+      } else {
+        elem.css('background-color', 'grey');
       }
-      win.on('resize', function doReload() {
-        ctrl.reload(gSlot, elem[0].offsetWidth, elem[0].offsetHeight);
-      });
-      scope.$on('$destroy', function () {
-        win.off('resize', doReload);
-      });
     }
   };
 })
