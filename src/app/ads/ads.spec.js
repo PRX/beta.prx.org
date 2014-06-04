@@ -69,6 +69,13 @@ describe('prx.ads', function () {
       expect(controller.height).toBe(50);
     }));
 
+    it('removes reload callback when the scope is destroyed', inject(function($window, $rootScope) {
+      var controller = elem.controller('prxAd');
+      var spy = spyOn(controller.win, 'off');
+      $rootScope.$emit('$destroy');
+      expect(spy).toHaveBeenCalledWith('resize', controller.doReload);
+    }));
+
   });
 
 });

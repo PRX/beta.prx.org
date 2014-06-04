@@ -8,6 +8,7 @@ angular.module('prx.ads', [])
     controller: function Controller() {
       var timeoutPromise;
       var self = this;
+      this.win = angular.element($window);
       this.width = this.height = 0;
       this.reload = function(gSlot, newwidth, newheight) {
         if (timeoutPromise) {
@@ -29,7 +30,6 @@ angular.module('prx.ads', [])
       elem.attr('id', 'div-gpt-ad-' + Math.random().toString(36).substr(2, 9));
       ctrl.width = elem[0].offsetWidth;
       ctrl.height = elem[0].offsetHeight;
-      var win = angular.element($window);
       if (angular.isDefined($window.googletag)) {
         $window.googletag.cmd.push(function() {
           gSlot = $window.googletag.defineSlot(attrs.slot, [ctrl.width, ctrl.height], elem.attr('id')).addService($window.googletag.pubads());
@@ -37,11 +37,12 @@ angular.module('prx.ads', [])
           $window.googletag.enableServices();
           $window.googletag.display(elem.attr('id'));
         });
-        win.on('resize', function doReload() {
+        ctrl.doReload = function() {
           ctrl.reload(gSlot, elem[0].offsetWidth, elem[0].offsetHeight);
-        });
+        };
+        ctrl.win.on('resize', ctrl.doReload);
         scope.$on('$destroy', function () {
-          win.off('resize', doReload);
+          ctrl.win.off('resize', ctrl.doReload);
         });
       } else {
         elem.css('background-color', 'grey');
