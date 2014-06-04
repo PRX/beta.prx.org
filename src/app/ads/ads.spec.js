@@ -28,7 +28,7 @@ describe('prx.ads', function () {
       };
       $window.googletag = googletag;
       displaySpy = spyOn(googletag, 'display');
-      elem = $compile('<prx-ad slot="/foo"></prx-ad>')($rootScope);
+      elem = $compile('<prx-ad slot="/foo"></prx-ad>')($rootScope).children().eq(0);
       $rootScope.$digest();
     }));
 

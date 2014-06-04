@@ -4,8 +4,8 @@ angular.module('prx.ads', [])
   return {
     restrict: 'E',
     replace: true,
-    template: "<div class='slot'/>",
-    controller: function Controller() {
+    template: "<div class='ad'><div class='slot'/></div>",
+    controller: function controller() {
       var timeoutPromise;
       var self = this;
       this.width = this.height = 0;
@@ -26,6 +26,7 @@ angular.module('prx.ads', [])
       };
     },
     link: function(scope, elem, attrs, ctrl) {
+      elem = elem.children().eq(0);
       elem.attr('id', 'div-gpt-ad-' + Math.random().toString(36).substr(2, 9));
       ctrl.width = elem[0].offsetWidth;
       ctrl.height = elem[0].offsetHeight;
@@ -51,4 +52,3 @@ angular.module('prx.ads', [])
 })
 
 ;
-
