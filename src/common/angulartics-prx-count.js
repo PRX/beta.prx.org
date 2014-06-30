@@ -12,6 +12,7 @@ angular.module('angulartics.prx.count', ['angulartics', 'prx.url-translate'])
 
     $delegate.eventTrack = function (eventName, eventValue) {
       TheCount.logAction({
+        url: (prefix + urlTranslate(url)),
         action: eventName.split(' ',1).join('').toLowerCase(),
         action_value: JSON.stringify(eventValue)
       });
