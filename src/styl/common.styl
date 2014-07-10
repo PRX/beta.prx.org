@@ -2,7 +2,7 @@ html {
   background: darkest-grey;
 }
 
-body, header {
+body, header .wrapper {
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -165,7 +165,8 @@ aside > section, #main > section {
     order: 2;
 
     // let it stretch to fill the area to a factor of 5
-    flex: 5 5 0px;
+    flex: 5 5;
+    flex-baseline: 0px;
 
     // stretch to be as tall as the sidebar if the sidebar is naturally taller
     align-self: stretch;
@@ -186,7 +187,8 @@ aside > section, #main > section {
     order: 1;
 
     // allow it to stretch horizontally by a factor of 2
-    flex: 2 2 0px;
+    flex: 2 2;
+    flex-baseline: 0px;
 
     // spacing between the main content and the sidebar. Put on the sidebar
     // as some pages have only main content.

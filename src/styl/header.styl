@@ -1,11 +1,15 @@
 header {
   absolute: top left; right: 0;
-  height: action-bar-height;
-  overflow: hidden;
   z-index: 200;
-  text-align: center;
-  border-bottom: 1px solid lightest-grey;
-  background: white;
+  height: action-bar-height;
+
+  .wrapper {
+    text-align: center;
+    background: white;
+    overflow: hidden;
+    margin: 0 auto;
+    border-bottom: 1px solid lightest-grey;
+  }
 
   a {
     height: action-bar-height - 1px;
