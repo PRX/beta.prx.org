@@ -310,7 +310,7 @@ gulp.task('compile', function (cb) {
   runSeq('dist', 'testDist', 'cacheBust', 'compressDist', cb);
 });
 
-gulp.task('compileServer', function () {
+gulp.task('compileServer', ['compile'], function () {
   if (server) {
     server.close();
   }

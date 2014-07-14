@@ -1,4 +1,4 @@
-angular.module('prx.home', ['ui.router', 'prx.home.storytime'])
+angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.picks'])
 .config(function ($stateProvider, $urlRouterProvider) {
 
   /* istanbul ignore else */
@@ -7,8 +7,21 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime'])
   }
 
   $stateProvider.state('home', {
+    url: '/',
+    title: "Home",
+    views: {
+      '@': {
+        controller: 'HomeCtrl as home',
+        templateUrl: 'home/home.html'
+      }
+    },
+    resolve: {
+      picks: ['ngHal', function (ngHal) {
+        return ngHal.follow('prx:picks').follow('prx:items');
+      }]
+    }
   }).state('home.comingSoon', {
-    url: '/nxt',
+    url: 'nxt',
     title: "Coming Soon",
     views: {
       'modal@': {
@@ -27,4 +40,8 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime'])
       }
     });
   }
-});
+})
+.controller('HomeCtrl', function (picks) {
+  this.picks = picks;
+})
+;

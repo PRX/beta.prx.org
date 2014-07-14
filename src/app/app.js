@@ -19,7 +19,8 @@ angular.module('prx', ['ngAnimate',
   'prx.modal',
   'prx.modelConfig',
   'ngMobile',
-  'prx.breadcrumbs'])
+  'prx.breadcrumbs',
+  'prx.ads'])
 .config(function ($locationProvider, ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);
@@ -34,12 +35,12 @@ angular.module('prx', ['ngAnimate',
     } else {
       return 'tests';
     }
-  }]).enabled(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration');
+  }]).enabled(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration' && !window.callPhantom);
   ngFlagProvider.flags(FEAT.JSON);
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
     var url = $analytics.settings.pageTracking.basePath + $location.url();
-    $timeout(function () {  $analytics.pageTrack(url); });
+    $timeout(function () {  $analytics.pageTrack(url); }, 2);
   });
 });
 angular.module('prx.modelConfig', ['angular-hal'])
@@ -68,7 +69,16 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
   this.player = prxPlayer;
 
   $scope.$on('$stateChangeSuccess', function () {
+    $scope.loading = false;
     app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path()) + "?m=false";
+  });
+
+  $scope.$on('$stateChangeStart', function () {
+    $scope.loading = true;
+  });
+
+  $scope.$on('$stateChangeError', function () {
+    $scope.loading = false;
   });
 })
 .filter('timeAgo', function () {
@@ -183,6 +193,54 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
           }
         }
       };
+    }
+  };
+})
+.directive('bindCanonical', function ($location, urlTranslate) {
+  return {
+    restrict: 'A',
+    link: function (scope, elem, attrs) {
+      var attr = attrs.bindCanonical || 'href';
+      scope.$on('$stateChangeSuccess', function () {
+        elem.attr(attr, "http://www.prx.org" + urlTranslate($location.path()));
+      });
+    }
+  };
+})
+.directive('quickReturn', function ($window) {
+  var UP = 1, DOWN = 0, STILL = -1;
+
+  return {
+    restrict: 'A',
+    link: function (scope, element) {
+      var fromPos = 0, pos = 0, dir = STILL;
+
+      if ($window.requestAnimationFrame) {
+        handle();
+      }
+
+      function handle () {
+        var newPos = Math.max(0, $window.scrollY);
+        if (newPos < pos) {
+          if (dir != UP) {
+            fromPos = pos;
+            dir = UP;
+            element.css({'position': 'absolute', 'top' : newPos - element[0].offsetHeight + 'px'});
+          }
+          if (fromPos - newPos >= element[0].offsetHeight) {
+            element.removeClass('hidden');
+            element.css({'position': 'fixed', 'top': '0px'});
+          }
+        } else if (newPos > pos) {
+          if (dir != DOWN) {
+            element.addClass('hidden');
+            element.css({'position': 'absolute', 'top': pos + 'px'});
+            dir = DOWN;
+          }
+        }
+        pos = newPos;
+        $window.requestAnimationFrame(handle);
+      }
     }
   };
 });

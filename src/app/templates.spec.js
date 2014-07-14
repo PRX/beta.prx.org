@@ -17,12 +17,12 @@ describe('templates', function () {
     });
   }));
 
-  beforeEach(inject(function ($state, $rootScope, _$compile_) {
+  beforeEach(inject(function ($state, $rootScope, _$compile_, $httpBackend) {
 
     //Set up an endless tree of states
     $state.go('fakeState');
     $state.$current.parent = $state.$current;
-
+    $httpBackend.when('GET').respond({});
     $scope = $rootScope.$new();
     $compile = _$compile_;
   }));

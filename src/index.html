@@ -7,11 +7,12 @@
   <link rel="shortcut icon" sizes="196x196" href="/assets/images/app_icon@3x.png">
   <base href="/">
   <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
+  <link rel="canonical" bind-canonical="href" />
   <meta name="fragment" content="!">
 </head>
 <body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying}">
   <prx-drawer ng-flag="showMenu"></prx-drawer>
-  <header>
+  <header quick-return ng-class="{'loading': loading}">
     <prx-loading-bar></prx-loading-bar>
     <prx-drawer-button ng-flag="showMenu"></prx-drawer-button>
     <h1><a ui-sref="home">PRX</a></h1>
@@ -32,7 +33,20 @@
   ga('create', 'UA-164824-46', 'prx.org');
   ga('set', 'dimension1', FEAT.APPLICATION_VERSION);
   ga('require', 'displayfeatures');
-</script><% } scripts.forEach(function(file) { %>
+  var googletag = googletag || {};
+  googletag.cmd = googletag.cmd || [];
+  (function() {
+  var gads = document.createElement('script');
+  gads.async = true;
+  gads.type = 'text/javascript';
+  var useSSL = 'https:' == document.location.protocol;
+  gads.src = (useSSL ? 'https:' : 'http:') +
+  '//www.googletagservices.com/tag/js/gpt.js';
+  var node = document.getElementsByTagName('script')[0];
+  node.parentNode.insertBefore(gads, node);
+  })();
+</script>
+<% } scripts.forEach(function(file) { %>
 <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
 </body>
 </html>
