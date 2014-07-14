@@ -8,3 +8,4 @@ bin
 .powder
 src/common/.*
 log
+.bundle
