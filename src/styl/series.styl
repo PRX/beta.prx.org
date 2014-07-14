@@ -1,0 +1,203 @@
+article.series {
+  #hero {
+    color: black;
+    font-weight: lighter;
+    background-image: url('/assets/images/tl_orange_radios.png');
+    position: relative;
+    padding-top: 350px;
+    padding-bottom: 0;
+
+    .primer {
+      background: white;
+    }
+
+    .container {
+      background: white;
+      padding-top: 70px;
+      min-height: 325px;
+
+      .media {
+        flex: 0 100%;
+
+        .coverart {
+          display: block;
+          float: left;
+          background: #266797;
+          width: 150px;
+          height: 150px;
+          margin-right: 20px;
+          position: relative;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: 150px;
+            left: 5px
+            width: 140px;
+            height: 15px;
+            background-image: url('/assets/images/coverart_shadow@2x.png');
+            background-size: 140px 15px;
+          }
+        }
+
+        p {
+          padding-left: 180px;
+          margin-top: 10px;
+        }
+
+        a.content_advisory {
+          display: inline-block;
+          background: black;
+          color: white;
+          font-size: 12px;
+          padding-right: 4px;
+          line-height: 20px;
+          font-weight: bold;
+          position: absolute;
+          top: 386px;
+          left: 275px;
+
+          &:before {
+            content: '!'
+            background: blue;
+            width: 20px;
+            display: inline-block;
+            color: white;
+            text-align: center;
+            margin-right: 4px;
+            font-weight: bold;
+          }
+        }
+
+        dl.metadata {
+          margin-top: 15px;
+          display: inline-block;
+          max-width: 550px;
+
+          dt, dd {
+            display: inline-block;
+          }
+
+          dt {
+            font-weight: 500;
+
+            &:after {
+              content: ':';
+              padding-right: 5px;
+            }
+          }
+
+          dd {
+            padding-right: 10px;
+            margin-right: 10px;
+            border-right: 1px solid lightest-grey;
+
+            &:last-of-type {
+              border-right: none;
+              padding-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #content {
+    #topper {
+      // display: flex;
+      margin-bottom: 20px;
+      display: block;
+      width: 100%;
+
+      hgroup {
+        border-bottom: 1px solid black;
+        display: flex;
+        width: 100%;
+        margin-bottom: 25px;
+
+        h2 {
+          margin-bottom: 14px;
+          flex-grow: 1;
+        }
+
+        a {
+          color: light-orange;
+          font-weight: 600;
+          flex-grow: 1;
+          text-align: right;
+          padding-top: 6px;
+        }
+      }
+
+      .content {
+        display: flex;
+      }
+
+      section.story {
+        width: 183px;
+        height: 187px;
+        display: none;
+        margin-right: 20px;
+
+        &:nth-of-type(1),
+        &:nth-of-type(2),
+        &:nth-of-type(3),
+        &:nth-of-type(4),
+        &:nth-of-type(5) {
+          display: flex;
+        }
+
+        &:nth-of-type(5) {
+          margin-right: 0;
+        }
+
+        & > a {
+          .img {
+            width: 187px !important;
+            height: 187px;
+
+            &:before {
+              bottom: 82px;
+            }
+          }
+        }
+
+        h3 {
+          position: absolute;
+          color: white;
+          background: rgba(37,37,37,0.85);
+          width: 187px;
+          -webkit-mask-image: none;
+          bottom: 0;
+          left: 0;
+          height: 82px;
+          font-weight: normal;
+          font-size: 16px;
+          padding: 0;
+          margin: 0;
+
+          a {
+            color: inherit;
+            padding: 10px
+            display: inline-block;
+          }
+        }
+
+        time {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          color: white;
+          padding: 10px 0 4px 10px;
+          margin: 0;
+        }
+
+        .category {
+          display: none;
+        }
+
+
+      }
+    }
+  }
+}

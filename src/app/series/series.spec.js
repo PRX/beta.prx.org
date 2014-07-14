@@ -42,8 +42,8 @@ describe('prx.series', function () {
       var series = ngHal.mock();
       var stories = ngHal.mock();
       var items;
-      stories.stubFollow('items', {s:1});
-      series.stubFollow('stories', stories);
+      stories.stubFollow('prx:items', {s:1});
+      series.stubFollow('prx:stories', stories);
 
       $injector.invoke(state.resolve.stories, null, {series: series}).then(function (s) {
         items = s;
@@ -59,8 +59,8 @@ describe('prx.series', function () {
         url = 'example.png',
         series = ngHal.mock('http://meta.prx.org/model/series'),
         spy = ngHal.stubFollowOne('series', series);
-      series.stubFollow('image', ngHal.mockEnclosure(url));
-  
+      series.stubFollow('prx:image', ngHal.mockEnclosure(url));
+
       var promise = $injector.
       invoke(state.resolve.series, null, {$stateParams: {seriesId: 123}});
 

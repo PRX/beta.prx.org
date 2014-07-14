@@ -1,6 +1,44 @@
-section.header
-  h1 {{series.title}}
-section.body
-  prx-img(src="series.imageUrl", style="height:100px;")
-  div(ng-repeat="story in stories")
-    p {{story.title}}
+article.series
+  #hero
+    .primer
+      .container
+        .media
+          .content
+            prx-img(src="series.current.imageUrl", style="height:150px;", class="coverart")
+            h1 {{series.current.title}}
+            dl.metadata
+              dt Produced by
+              dd
+                address.author
+                  a(href="#") Bailey Kalafarski
+              dt Seasons
+              dd 1200-1300
+              dt Episodes
+              dd {{series.current.storyCount}}
+            p {{series.current.description}}
+            a.content_advisory() Content Advisory
+  #content
+    #topper
+      hgroup
+        h2 Season 1200
+        a(href='#') View all stories »
+      .content
+        prx-story(ng-repeat="story in series.stories" story="story")
+
+    #main
+      section
+        h2 About
+        p Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec ullamcorper nulla non metus auctor fringilla. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Cras mattis consectetur purus sit amet fermentum.
+      section
+        h2 Seasons & Episodes
+        p Etiam porta sem malesuada magna mollis euismod. Vestibulum id ligula porta felis euismod semper. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+        p Curabitur blandit tempus porttitor. Aenean lacinia bibendum nulla sed consectetur.
+      section
+        h2 Airing The Moth Radio Hour
+        h4 Carriage Confirmation & Broadcast Rights
+        p Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Maecenas faucibus mollis interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    #asides
+      aside
+        section
+          h2 Subscription Details
+          p The Moth Radio Hour is published weekly each Tuesday at 4 AM Eastern Time (US & Canada). Each episode is approximately 54 minutes long.
