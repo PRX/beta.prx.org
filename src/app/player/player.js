@@ -98,6 +98,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         var position = Math.round(this.nowPlaying.position / 1000);
         if (force || (position - this.$lastHeartbeat) >= 15) {
           var seconds = position - this.$lastHeartbeat;
+          if (seconds > 60) { seconds = 15; }
           Bus.emit('audioPlayer.listen', this.nowPlaying, seconds, this.$lastHeartbeat);
           this.$lastHeartbeat = position;
         }
