@@ -2,8 +2,9 @@
   .scrubber-track
     .scrubber(ng-style="{width: player.global.progress() }")
   prx-player-button(sound="player.global.nowPlaying")
-  a(ui-sref="player.global.nowPlaying.story", ng-if="player.global.nowPlaying")
-    prx-img.thumb(src="player.global.nowPlaying.story.imageUrl")
+  div(ng-if="player.global.nowPlaying")
+    a(ui-sref="player.global.nowPlaying.story")
+      prx-img.thumb(src="player.global.nowPlaying.story.imageUrl")
   .timecode {{player.global.nowPlaying.position | timeCode }}
   .about(ng-if="player.global.nowPlaying")
     a.title(ui-sref="player.global.nowPlaying.story", ui-sref-active="current") {{player.global.nowPlaying.story.title}}
