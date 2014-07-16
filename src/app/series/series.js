@@ -10,6 +10,9 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
       }],
       stories: ['series', function(series) {
         return series.follow('prx:stories').follow('prx:items');
+      }],
+      account: ['series', function(series) {
+        return series.follow('prx:account');
       }]
     }
   });
@@ -19,7 +22,8 @@ ngHalProvider.setRootUrl(FEAT.apiServer)
     resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url');
   }]);
 })
-.controller('SeriesCtrl', function (series, stories) {
+.controller('SeriesCtrl', function (series, stories, account) {
   this.current = series;
   this.stories = stories;
+  this.account = account;
 });
