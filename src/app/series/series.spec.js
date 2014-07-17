@@ -16,7 +16,7 @@ describe('prx.series', function () {
   });
 
   describe ('SeriesCtrl', function () {
-    it ('attaches the series, stories, and accounts injected to $scope', inject(function ($controller) {
+    it ('attaches the series, stories, and accounts injected to controller', inject(function ($controller) {
       var sigil = 'sigil';
       var scope = {};
       var controller = $controller('SeriesCtrl', {series: sigil, stories: sigil, account: sigil, $scope: scope});
@@ -27,7 +27,7 @@ describe('prx.series', function () {
   });
 
   describe ('StoryDetailCtrl', function () {
-    it ('attaches the story injected to $scope', inject(function ($controller) {
+    it ('attaches the story injected to controller', inject(function ($controller) {
       var foo = 'asd', scope = {};
       var ctrl = $controller('StoryDetailCtrl', {story: foo, $scope: scope});
       expect(ctrl.current).toBe(foo);
