@@ -16,8 +16,11 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
       account: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
         return ngHal.follow('prx:account', {id: $stateParams.accountId});
       }],
-      recentStories: ['account', function (account) {
-        return account.follow('prx:stories').follow('prx:items');
+      storiesList: ['account', function (account) {
+        return account.follow('prx:stories');
+      }],
+      recentStories: ['storiesList', function (storiesList) {
+        return storiesList.follow('prx:items');
       }],
       translateUrl: ['account', 'urlTranslate', function (account, urlTranslate) {
         urlTranslate.addTranslation('/accounts/'+account.id, account.oldPath());
@@ -217,9 +220,43 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     return elems;
   };
 })
-.controller('AccountCtrl', function (account, recentStories) {
-  this.current = account;
-  this.recentStories = recentStories;
+.controller('AccountCtrl', function (account, recentStories, storiesList) {
+  var ctrl = this;
+
+  ctrl.current = account;
+  ctrl.recentStories = recentStories;
+  ctrl.storiesList = storiesList;
+
+  this.nextStories = function() {
+    if (!ctrl.recentStories.loading) {
+      ctrl.recentStories.loading = true;
+
+      ctrl.storiesList.follow('next').then(function (list) {
+        list.follow('prx:items').then(function (stories) {
+          ctrl.recentStories.push.apply(ctrl.recentStories, stories);
+          ctrl.recentStories.loading = false;
+          ctrl.storiesList = list;
+        });
+      });
+    }
+  };
+
+  this.previousStories = function() {
+    ctrl.storiesList.follow('prev').then(function (list) {
+      list.follow('prx:items').then(function (stories) {
+        ctrl.recentStories = stories;
+        ctrl.storiesList = list;
+      });
+    });
+  };
+
+  this.hasNextStories = function() {
+    return !!ctrl.storiesList.link('next');
+  };
+
+  this.hasPreviousStories = function() {
+    return !!ctrl.storiesList.link('prev');
+  };
 })
 .controller('AccountDetailsCtrl', function (account) {
   this.current = account;
