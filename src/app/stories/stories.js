@@ -47,7 +47,14 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         templateUrl: 'stories/content_advisory_modal.html'
       }
     }
-
+  })
+  .state('story.show.timingCues', {
+    views: {
+      'modal@': {
+        controller: 'StoryDetailCtrl as story',
+        templateUrl: 'stories/timing_cues_modal.html'
+      }
+    }
   })
   ;
 
@@ -137,5 +144,14 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     }
   };
 })
-
+.filter('simpleFormat', function () {
+  return function (string) {
+    return "<p>" + string.replace(/[\n]{2,}/g, '</p><p>').replace("\n", "<br>") + "</p>";
+  };
+})
+.filter('highlightTimecodes', function () {
+  return function (string) {
+    return string.replace(/([\d]{1,2}:){1,2}\d\d/g, "<strong>$&</strong>");
+  };
+})
 ;
