@@ -146,7 +146,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
 })
 .filter('simpleFormat', function () {
   return function (string) {
-    return "<p>" + string.replace(/[\n]{2,}/g, '</p><p>').replace("\n", "<br>") + "</p>";
+    return "<p>" + string.replace(/[\n]{2,}/g, '</p><p>').replace(/\n/g, "<br>") + "</p>";
   };
 })
 .filter('highlightTimecodes', function () {
