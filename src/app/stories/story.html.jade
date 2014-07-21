@@ -25,6 +25,20 @@ article.story
         p
           | {{story.current.shortDescription}} #{''}
           a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
+        .meta
+          .term
+            | Added to PRX:
+            .value {{story.current.publishedAt | timeAgo}}
+          .term(ng-if="story.producers")
+            | Producers:
+            .value {{story.producers}}
+          .term(ng-if="story.current.producedOn")
+            | Produced:
+            .value {{ story.current.producedOn | date : 'mediumDate'}}
+          .term(ng-if="story.current.relatedWebsite")
+            | Related Site:
+            .value
+              a(ng-href="{{story.current.relatedWebsite}}", rel="nofollow", ng-bind="story.current.relatedWebsite")
     #asides
       aside
         prx-account(account="story.account")
