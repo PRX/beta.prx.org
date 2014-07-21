@@ -25,6 +25,26 @@ article.story
         p
           | {{story.current.shortDescription}} #{''}
           a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
+      section.licensing
+        h2 Licensing
+        ul(ng-show="story.license")
+          li.broadcast You may broadcast and simulcast this story for one year.
+          li.stream(ng-if="story.license.streamable") You may offer this story on your website as a stream.
+          li.stream(ng-if="!story.license.streamable") You may <strong>not</strong> offer this story on your website.
+          li.edit(ng-if="story.license.editable") You may edit or excerpt this piece without further permission.
+          li.edit(ng-if="!story.license.editable") You may <strong>not</strong> edit or excerpt this piece.
+          li.advisory(ng-if="story.current.contentAdvisory")
+            | This story has a #{''}
+            a(ui-sref=".content_advisory") content advisory
+            | .
+          li.advisory(ng-if="!story.current.contentAdvisory")
+            | This story does not include a content advisory.
+        h3(ng-if="story.license.additionalTerms") Additional Terms
+          p {{story.license.additionalTerms}}
+      section.clock(ng-if="story.current.breaks")
+        h2 Broadcast Clock
+        p This piece contains the following breaks: {{ story.current.breaks | sentence }}.
+
     #asides
       aside
         prx-account(account="story.account")

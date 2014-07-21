@@ -108,6 +108,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
 })
 .controller('StoryCtrl', function (story, account, audioUrls,
   prxSoundFactory, $stateParams, prxPlayer, prxperiment) {
+  var storyCtrl = this;
+
   this.current = story;
   this.account = account;
   this.cover = prxperiment.get('storyCover');
@@ -120,6 +122,10 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     this.sound.setPosition($stateParams.s * 1000);
     prxPlayer.play(this.sound);
   }
+
+  this.current.follow('prx:license').then(function (license) {
+    storyCtrl.license = license;
+  });
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
@@ -137,5 +143,19 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     }
   };
 })
-
+.filter('sentence', function () {
+  return function (list) {
+    if (list && list.length) {
+      if (list.length == 1) {
+        return list[0];
+      } else if (list.length == 2) {
+        return list.join(' and ');
+      } else {
+        return [list.slice(0, list.length-1).join(', '), list[list.length-1]].join(', and ');
+      }
+    } else {
+      return list;
+    }
+  };
+})
 ;
