@@ -28,7 +28,10 @@ header {
 
     h1 {
       background-position: horizontal-padding center;
-      background-size: auto 33px!important;
+      // TODO - create a large version of the image (66px high)
+      // and use it where appropriate.
+      background-image: url('/assets/images/ic_header_logo@2x.png');
+      background-size: auto 33px;
       a {
         float: left;
         width: 90px;
@@ -37,7 +40,8 @@ header {
   }
 
   h1 {
-    image: '/assets/images/ic_header_logo.png' auto 20px;
+    background-image: url('/assets/images/ic_header_logo.png');
+    background-size: auto 20px;
     background-position: center center;
     background-repeat: no-repeat;
     font-size: 0px;
@@ -52,6 +56,10 @@ header {
       max-width: max-content-width + 2 * horizontal-padding;
       padding: 0 horizontal-padding;
       margin: 0 auto;
+    }
+
+    @media high-dpi {
+      background-image: url('/assets/images/ic_header_logo@2x.png');
     }
   }
 

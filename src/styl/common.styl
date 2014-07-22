@@ -1,5 +1,6 @@
 html {
   background: darkest-grey;
+  image: '/assets/images/tl_diag_stripes.png' 19px;
 }
 
 body, header {
@@ -240,4 +241,23 @@ a.more {
 
 strong {
   font-weight: bold;
+}
+
+.meta {
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 5px;
+
+  .term {
+    flex: 1;
+    flex-baseline: 0px;
+    min-width: 250px;
+    margin-top: 10px;
+  }
+
+  .value {
+    display: inline-block;
+    margin-left: 5px;
+    font-weight: bold;
+  }
 }
