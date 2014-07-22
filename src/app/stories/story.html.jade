@@ -25,11 +25,24 @@ article.story
         p
           | {{story.current.shortDescription}} #{''}
           a.unbreakable(ui-sref=".details" ng-if="story.current.description") (View Full Description)
+        .meta
+          .term
+            | Added to PRX:
+            .value {{story.current.publishedAt | timeAgo}}
+          .term(ng-if="story.producers")
+            | Producers:
+            .value {{story.producers}}
+          .term(ng-if="story.current.producedOn")
+            | Produced:
+            .value {{ story.current.producedOn | date : 'mediumDate'}}
+          .term(ng-if="story.current.relatedWebsite")
+            | Related Site:
+            .value
+              a(ng-href="{{story.current.relatedWebsite}}", rel="nofollow", ng-bind="story.current.relatedWebsite")
       section.timing-cues(ng-if="story.current.timingAndCues")
         h2 Timing &amp; Cues
         div(ng-bind-html="story.current.timingAndCues | highlightTimecodes | simpleFormat", limit-to-html="250", html-limited="longCues")
         a.full(ui-sref=".timingCues", ng-if="longCues") (View Full Timing & Cues)
-
     #asides
       aside
         prx-account(account="story.account")
