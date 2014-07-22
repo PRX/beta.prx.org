@@ -112,4 +112,21 @@ describe('prx.stories', function () {
     });
   });
 
+  describe ('absUrl filter', function () {
+    var filter;
+
+    beforeEach(inject(function ($filter) {
+      filter = $filter('absUrl');
+    }));
+
+    it ('adds http:// when protocol is missing', function () {
+      expect(filter('google.com')).toEqual('http://google.com');
+    });
+
+    it ('does nothing when protocol is present', function () {
+      expect(filter('http://google.com')).toEqual('http://google.com');
+    });
+
+  });
+
 });
