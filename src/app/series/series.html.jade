@@ -1,10 +1,9 @@
 article.series
   #hero
-    .billboard
     .container
       .media
+        prx-img(src="series.current.imageUrl", style="height:150px;", class="coverart")
         .content
-          prx-img(src="series.current.imageUrl", style="height:150px;", class="coverart")
           h1 {{series.current.title}}
           dl.metadata
             dt Produced by
@@ -15,13 +14,11 @@ article.series
             dt Episodes
             dd {{series.current.storyCount}}
           p {{series.current.shortDescription}}
+      section
+        h2 Stories
+        prx-story(ng-repeat="story in series.stories" story="story")
   #content
-    #shelf
-      h2 Stories
-      #stories
-        prx-story(ng-repeat="story in series.stories | limitTo: 3" story="story")
-
     #main
       section
-        h2 About
+        h3 About
         p {{series.current.description}}

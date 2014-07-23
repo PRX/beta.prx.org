@@ -1,156 +1,84 @@
+
+// For the stories list
 article.series {
   #hero {
-    padding-top: 0px;
-    background: white;
-
-    .billboard {
-      background-image: url('/assets/images/tl_orange_radios.png');
-      height: 0px;
-
-      @media tall-screen {
-        height: 350px;
-      }
-
-      img {
-        display: block;
-      }
-    }
-
     .container {
-      background: white;
-      padding-top: 30px;
-      min-height: 325px;
+      & > section {
+        background: offwhite;
+        margin-left: -1 * tiny-horizontal-padding;
+        margin-right: -1 * tiny-horizontal-padding;
+        border-top: 1px solid lightest-grey;
+      }
 
-      .media {
-        flex: 0 100%;
+      & > section > h2, & > section > .story {
+      }
 
-        .content {
-          .coverart {
-            display: block;
-            background: #266797;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 30px;
-            position: relative;
-            float: none;
+      & > section > h2 {
+        padding: 10px 0 0 0;
+      }
 
-            &:before {
-              content: '';
-              position: absolute;
-              top: 150px;
-              left: 5px
-              width: 140px;
-              height: 15px;
-              background-image: url('/assets/images/coverart_shadow@2x.png');
-              background-size: 140px 15px;
-            }
-          }
-
-          h1 {
-            margin-bottom: 10px;
-          }
-
-          dl.metadata {
-            margin-top: 0;
-            display: flex;
-            flex-wrap: wrap;
-
-            dt, dd {
-            }
-
-            dt {
-              font-weight: 500;
-
-              &:after {
-                content: ':';
-                padding-right: 5px;
-              }
-            }
-
-            dd {
-              padding-right: 10px;
-              margin-right: 10px;
-            }
-          }
-
-          p {
-            display: none;
-          }
-
-          .content_advisory {
-            display: none;
-          }
-
-          .actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-
-            a {
-              background: red;
-              flex: 1 1 auto;
-              margin: 10px 10px 0 0;
-              padding: 7px 0;
-              text-align: center;
-
-              &:first-child {
-
-              }
-
-              &:last-child {
-                margin-right: 0;
-              }
-
-              &.play {
-                flex: 3 1 100%;
-                margin-right: 0;
-              }
-            }
-          }
-        }
+      .story {
       }
     }
   }
+}
 
-  #content {
-    #shelf {
-      background: offwhite;
-      padding: 10px 15px;
+// For the primary details
+article.series {
+  #hero {
+    .media {
+      flex: 0 100%;
+      padding-bottom: 10px;
 
-      h2 {
-        margin: 20px 0 15px 0;
-      }
+      .img.coverart {
+        display: block;
+        background: #266797;
+        width: 150px;
+        height: 150px;
+        margin: 15px auto 30px;
+        position: relative;
+        float: none;
 
-      #stories {
-        .story {
-          margin: 0 0 10px 0;
-
-          .category {
-            display: none;
-          }
-
-          h3 {
-            margin: 0 0 2px 0;
-            padding: 0;
-            height: auto;
-            -webkit-mask-image: none;
-          }
+        &:before {
+          content: '';
+          position: absolute;
+          top: 150px;
+          left: 5px
+          width: 140px;
+          height: 15px;
+          background-image: url('/assets/images/coverart_shadow@2x.png');
+          background-size: 140px 15px;
         }
       }
-    }
 
-    #main {
-      section {
-        h2 {
-          margin: 20px 0;
-        }
+      h1 {
+        margin-bottom: 10px;
       }
-    }
 
-    #asides {
-      section {
-        h2 {
-          margin: 20px 0;
+      p {
+        display: none;
+      }
+
+      dl.metadata {
+        margin-top: 0;
+        display: flex;
+        flex-wrap: wrap;
+
+        dt, dd {
+        }
+
+        dt {
+          font-weight: 500;
+
+          &:after {
+            content: ':';
+            padding-right: 5px;
+          }
+        }
+
+        dd {
+          padding-right: 10px;
+          margin-right: 10px;
         }
       }
     }
