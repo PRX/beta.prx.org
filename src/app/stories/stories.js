@@ -137,5 +137,14 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     }
   };
 })
+.filter('absUrl', function () {
+  var PROTOCOL_SEPARATOR = /:\/\//;
 
+  return function (url) {
+    if (!angular.isString(url) || PROTOCOL_SEPARATOR.exec(url)) {
+      return url;
+    }
+    return 'http://' + url;
+  };
+})
 ;
