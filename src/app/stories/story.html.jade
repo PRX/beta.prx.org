@@ -38,7 +38,7 @@ article.story
           .term(ng-if="story.current.relatedWebsite")
             | Related Site:
             .value
-              a(ng-href="{{story.current.relatedWebsite | absUrl }}", rel="nofollow", ng-bind="story.current.relatedWebsite")
+              a(ng-href="{{story.current.relatedWebsite | absUrl }}", rel="nofollow", ng-bind="story.current.relatedWebsite", title="{{story.current.relatedWebsite}}")
       section.licensing(ng-show="story.license")
         h2 Licensing
         ul
