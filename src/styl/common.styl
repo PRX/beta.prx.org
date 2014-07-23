@@ -249,18 +249,17 @@ strong {
   margin-top: 5px;
 
   .term {
-    flex: 1;
-    flex-baseline: 0px;
-    min-width: 250px;
+    flex: 1 0;
+    flex-baseline: 250px;
     margin-top: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .value {
-    display: inline-block;
+    display: inline;
     margin-left: 5px;
     font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }
