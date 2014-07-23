@@ -25,23 +25,29 @@ section.picks {
 
     .curator {
       float: left;
-      width: 80px;
+      width: 70px;
       min-height: 76px;
-      margin-left: 10px;
+      margin-left: 0;
 
       .img {
         border: 3px solid offwhite;
         border-radius: 50%;
         width: 58px;
         height: 58px;
-        margin-left: 10px;
+        margin-left: (80px - 58px) * 0.5px - 10px;
       }
 
       .name {
         line-height: 17px;
         text-align: center;
+        margin-left: -2px;
+        width: 62px;
       }
+    }
+
+    > p {
+      font-size: 0.9em;
+      line-height: 1.5em;
     }
   }
 }
-
