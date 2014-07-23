@@ -185,4 +185,15 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     return 'http://' + url;
   };
 })
+.filter('prettyUrl', function () {
+  var EXPRESSION = /(^(https?:\/\/)?(www\.)?)|(\/$)/ig;
+  var EMPTY_STRING = '';
+
+  return function (url) {
+    if (!angular.isString(url)) {
+      return url;
+    }
+    return url.replace(EXPRESSION, EMPTY_STRING);
+  };
+})
 ;

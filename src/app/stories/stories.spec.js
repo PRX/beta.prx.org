@@ -163,11 +163,35 @@ describe('prx.stories', function () {
     }));
 
     it ('adds http:// when protocol is missing', function () {
-      expect(filter('google.com')).toEqual('http://google.com');
+      expect(filter('prx.org')).toEqual('http://prx.org');
     });
 
     it ('does nothing when protocol is present', function () {
-      expect(filter('http://google.com')).toEqual('http://google.com');
+      expect(filter('http://prx.org')).toEqual('http://prx.org');
+    });
+  });
+
+  describe ('prettyUrl filter', function () {
+    var filter;
+
+    beforeEach(inject(function ($filter) {
+      filter = $filter('prettyUrl');
+    }));
+
+    it ('strips off protocols', function () {
+      expect(filter('http://prx.org')).toEqual('prx.org');
+    });
+
+    it ('strips off www', function () {
+      expect(filter('www.prx.org')).toEqual('prx.org');
+    });
+
+    it ('strips off http://www.', function () {
+      expect(filter('http://www.prx.org')).toEqual('prx.org');
+    });
+
+    it ('strips off trailing slash', function () {
+      expect(filter('prx.org/')).toEqual('prx.org');
     });
   });
 
