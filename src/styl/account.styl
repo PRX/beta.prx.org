@@ -118,17 +118,25 @@ section.account {
 
 aside > section.account:first-child {
   @media multi-column {
+    position: relative;
+
     .img {
       margin-top: -13px;
     }
 
+    // TODO: Figure out how much of this can be turned into variables.
+
     h2 {
-      margin: -20px !important;
+      absolute: top left;
+      right: 0;
       height: 45px;
-      line-height: 45px;
+      line-height: @height;
       font-size: 18px;
+      padding-left: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       background-color: offwhite;
-      align: bottom;
       a {
         color: dark-grey;
       }
