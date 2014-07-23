@@ -316,3 +316,52 @@ section.story {
     }
   }
 }
+
+.licensing {
+
+  li {
+    margin: 15px 0 15px 45px;
+    clear: both;
+    position: relative;
+    min-height: 45px
+    &:before {
+      width: 25px;
+      height: 25px;
+      display: block;
+      position: absolute;
+      left: -45px;
+      content: '';
+      float: left;
+      background-repeat: no-repeat;
+      margin: 10px 15px 15px 0px;
+    }
+  }
+
+  .broadcast:before {
+    image: '/assets/images/icons/broadcast.png' contain;
+  }
+  .stream:before {
+    image: '/assets/images/icons/stream.png' contain;
+  }
+  .edit:before {
+    image: '/assets/images/icons/lock.png' contain;
+  }
+  .advisory:before {
+    image: '/assets/images/icons/forbidden.png' contain;
+  }
+
+  .additional {
+
+  }
+
+  @media multi-column {
+    ul {
+      display: flex;
+      flex-flow: row wrap;
+    }
+    li {
+      flex: 1 200px;
+      margin: 20px 45px 10px 55px;
+    }
+  }
+}

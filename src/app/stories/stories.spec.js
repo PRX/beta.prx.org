@@ -33,8 +33,8 @@ describe('prx.stories', function () {
   });
 
   describe ('StoryCtrl', function () {
-    it ('attaches the story and accounts injected to $scope', inject(function ($controller) {
-      var sigil = 'sigil';
+    it ('attaches the story and accounts injected to $scope', inject(function ($controller, ngHal) {
+      var sigil = ngHal.mock();
       var scope = {};
       var controller = $controller('StoryCtrl', {story: sigil, account: sigil, audioUrls: [sigil], $scope: scope});
       expect(controller.current).toBe(sigil);
@@ -133,6 +133,41 @@ describe('prx.stories', function () {
       expect(filter('testing (0:00) testing (1:00 - 19:00) 1, 2, 3')).toEqual(
         'testing (<strong>0:00</strong>) testing (<strong>1:00</strong> - <strong>19:00</strong>) 1, 2, 3'
       );
+    });
+  });
+
+  describe('sentence filter', function () {
+    var filter;
+    beforeEach(inject(function ($filter) {
+      filter = $filter('sentence');
+    }));
+
+    it ('returns the same value with a single element', function () {
+      expect(filter(['foo'])).toEqual('foo');
+    });
+
+    it ('joins two elements with "and"', function () {
+      expect(filter(['foo', 'bar'])).toEqual('foo and bar');
+    });
+
+    it ('joins more than two elements with commas and and', function () {
+      expect(filter(['foo', 'bar', 'baz'])).toEqual('foo, bar, and baz');
+    });
+  });
+
+  describe ('absUrl filter', function () {
+    var filter;
+
+    beforeEach(inject(function ($filter) {
+      filter = $filter('absUrl');
+    }));
+
+    it ('adds http:// when protocol is missing', function () {
+      expect(filter('google.com')).toEqual('http://google.com');
+    });
+
+    it ('does nothing when protocol is present', function () {
+      expect(filter('http://google.com')).toEqual('http://google.com');
     });
   });
 

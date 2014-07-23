@@ -38,11 +38,31 @@ article.story
           .term(ng-if="story.current.relatedWebsite")
             | Related Site:
             .value
-              a(ng-href="{{story.current.relatedWebsite}}", rel="nofollow", ng-bind="story.current.relatedWebsite")
-      section.timing-cues(ng-if="story.current.timingAndCues")
-        h2 Timing &amp; Cues
-        div(ng-bind-html="story.current.timingAndCues | highlightTimecodes | simpleFormat", limit-to-html="250", html-limited="longCues")
-        a.full(ui-sref=".timingCues", ng-if="longCues") (View Full Timing & Cues)
+              a(ng-href="{{story.current.relatedWebsite | absUrl }}", rel="nofollow", ng-bind="story.current.relatedWebsite")
+      section.licensing
+        h2 Licensing
+        ul(ng-show="story.license")
+          li.broadcast You may broadcast and simulcast this story for one year.
+          li.stream(ng-if="story.license.streamable") You may offer this story on your website as a stream.
+          li.stream(ng-if="!story.license.streamable") You may <strong>not</strong> offer this story on your website.
+          li.edit(ng-if="story.license.editable") You may edit or excerpt this piece without further permission.
+          li.edit(ng-if="!story.license.editable") You may <strong>not</strong> edit or excerpt this piece.
+          li.advisory(ng-if="story.current.contentAdvisory")
+            | This story includes a #{''}
+            strong
+              a(ui-sref=".content_advisory") content advisory
+            | .
+          li.advisory(ng-if="!story.current.contentAdvisory")
+            | This story does not include a content advisory.
+        h3(ng-if="story.license.additionalTerms") Additional Terms
+          p {{story.license.additionalTerms}}
+      section.clock(ng-if="story.current.breaks")
+        h2 Broadcast Clock
+        p This piece contains the following breaks: {{ story.current.breaks | sentence }}.
+    section.timing-cues(ng-if="story.current.timingAndCues")
+      h2 Timing &amp; Cues
+      div(ng-bind-html="story.current.timingAndCues | highlightTimecodes | simpleFormat", limit-to-html="250", html-limited="longCues")
+      a.full(ui-sref=".timingCues", ng-if="longCues") (View Full Timing & Cues)
     #asides
       aside
         prx-account(account="story.account")
