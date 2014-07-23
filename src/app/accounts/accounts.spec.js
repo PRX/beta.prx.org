@@ -36,10 +36,12 @@ describe('accounts', function () {
     it('attaches the account and recent stories', inject(function ($controller) {
       var controller = $controller('AccountCtrl', {
         account: 1,
-        recentStories: 2
+        recentStories: 2,
+        storiesList: 3,
       });
       expect(controller.current).toBe(1);
       expect(controller.recentStories).toBe(2);
+      expect(controller.storiesList).toBe(3);
     }));
   });
 
@@ -72,13 +74,11 @@ describe('accounts', function () {
 
     it ('resolves recent stories', function () {
       var mock = ngHal.mock();
-      var spy = mock.stubFollow('prx:stories', mock);
-      var spy2 = mock.stubFollow('prx:items', 'sigil');
-      expect($injector.invoke(state.resolve.recentStories, null, {
-        account: mock
-      })).toResolveTo('sigil');
+      var spy = mock.stubFollow('prx:items');
+      $injector.invoke(state.resolve.recentStories, null, {
+        storiesList: mock
+      });
       expect(spy).toHaveBeenCalled();
-      expect(spy2).toHaveBeenCalled();
     });
 
     it ('sets title appropriately', function () {

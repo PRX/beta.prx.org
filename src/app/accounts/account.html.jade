@@ -14,3 +14,4 @@ article.account
       section
         h2 Recent Stories
         prx-story(ng-repeat="story in account.recentStories" story="story")
+        a.loadingButton(ng-click="account.nextStories()", ng-if="account.hasNextStories()", ng-class="{loading: account.recentStories.loading}") More Stories
