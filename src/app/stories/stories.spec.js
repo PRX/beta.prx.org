@@ -112,6 +112,29 @@ describe('prx.stories', function () {
     });
   });
 
+  describe ('simpleFormat filter', function () {
+    var filter;
+    beforeEach(inject(function ($filter) {
+      filter = $filter('simpleFormat');
+    }));
+
+    it ('wraps things in paragraphs', function () {
+      expect(filter("This is a test\nof the simple format system.\n\nThis is only a test")).toEqual("<p>This is a test<br>of the simple format system.</p><p>This is only a test</p>");
+    });
+  });
+
+  describe ('highlightTimecodes filter', function () {
+    var filter;
+    beforeEach(inject(function ($filter) {
+      filter = $filter('highlightTimecodes');
+    }));
+
+    it ('wraps timecode-looking things in <strong>', function () {
+      expect(filter('testing (0:00) testing (1:00 - 19:00) 1, 2, 3')).toEqual(
+        'testing (<strong>0:00</strong>) testing (<strong>1:00</strong> - <strong>19:00</strong>) 1, 2, 3'
+      );
+    });
+  });
 
   describe('sentence filter', function () {
     var filter;
