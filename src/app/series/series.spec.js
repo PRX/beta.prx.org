@@ -1,22 +1,36 @@
 describe('prx.series', function () {
+  beforeEach(module('prx.series', 'angular-hal-mock'));
 
-  beforeEach(module('prx.series'));
-  beforeEach(module('angular-hal-mock'));
-
-
-  describe ('SeriesCtrl', function () {
-    it ('attaches the series injected to $scope', inject(function ($controller, ngHal) {
-      var scope = {};
-      var series = ngHal.mock('http://meta.prx.org/model/series', {id: 32832, stories: {href:"/api/v1/series/32832/stories"}});
-      $controller('SeriesCtrl', {series: series, stories: [], $scope: scope});
-      expect(scope.series).toBe(series);
+  describe ('Series mixin', function () {
+    var  ngHal, mock;
+    beforeEach(inject(function (_ngHal_) {
+      ngHal = _ngHal_;
+      mock = ngHal.mock('http://meta.prx.org/model/series');
     }));
 
-    it ('attaches the stories injected to $scope', inject(function ($controller, ngHal) {
+    it('gets the image', function () {
+      mock.stubFollow('prx:image', ngHal.mockEnclosure('http://meta.prx.org/model/image', 'foo.png'));
+      mock.transform();
+      expect(mock.imageUrl).toEqual('foo.png');
+    });
+  });
+
+  describe ('SeriesCtrl', function () {
+    it ('attaches the series, stories, and accounts injected to controller', inject(function ($controller) {
+      var sigil = 'sigil';
       var scope = {};
-      var stories = ngHal.mock('http://meta.prx.org/model/stories');
-      $controller('SeriesCtrl', {series: null, stories: stories, $scope: scope});
-      expect(scope.stories).toBe(stories);
+      var controller = $controller('SeriesCtrl', {series: sigil, stories: sigil, account: sigil, $scope: scope});
+      expect(controller.current).toBe(sigil);
+      expect(controller.stories).toBe(sigil);
+      expect(controller.account).toBe(sigil);
+    }));
+  });
+
+  describe ('StoryDetailCtrl', function () {
+    it ('attaches the story injected to controller', inject(function ($controller) {
+      var foo = 'asd', scope = {};
+      var ctrl = $controller('StoryDetailCtrl', {story: foo, $scope: scope});
+      expect(ctrl.current).toBe(foo);
     }));
   });
 
@@ -42,8 +56,8 @@ describe('prx.series', function () {
       var series = ngHal.mock();
       var stories = ngHal.mock();
       var items;
-      stories.stubFollow('items', {s:1});
-      series.stubFollow('stories', stories);
+      stories.stubFollow('prx:items', {s:1});
+      series.stubFollow('prx:stories', stories);
 
       $injector.invoke(state.resolve.stories, null, {series: series}).then(function (s) {
         items = s;
@@ -53,21 +67,5 @@ describe('prx.series', function () {
 
       expect(items.s).toBe(1);
     }));
-
-    it ('mixes in the imageUrl for the series image', inject(function(ngHal) {
-      var result,
-        url = 'example.png',
-        series = ngHal.mock('http://meta.prx.org/model/series'),
-        spy = ngHal.stubFollowOne('series', series);
-      series.stubFollow('image', ngHal.mockEnclosure(url));
-  
-      var promise = $injector.
-      invoke(state.resolve.series, null, {$stateParams: {seriesId: 123}});
-
-      expect(promise.get('imageUrl')).toResolveTo(url);
-      expect(spy.calls.count()).toEqual(1);
-      expect(spy.calls.mostRecent().args[0]).toEqual({id: 123});
-    }));
   });
-
 });

@@ -1,6 +1,24 @@
-section.header
-  h1 {{series.title}}
-section.body
-  prx-img(src="series.imageUrl", style="height:100px;")
-  div(ng-repeat="story in stories")
-    p {{story.title}}
+article.series
+  #hero
+    .container
+      .media
+        prx-img.coverart(src="series.current.imageUrl", style="height:150px;")
+        .content
+          h1 {{series.current.title}}
+          dl.metadata
+            dt Produced by
+            dd
+              address.author
+                a(ui-sref="series.account") {{series.account.name}}
+          dl.metadata
+            dt Episodes
+            dd {{series.current.storyCount}}
+          p {{series.current.shortDescription}}
+      section
+        h2 Stories
+        prx-story(ng-repeat="story in series.stories" story="story")
+  #content
+    #main
+      section
+        h3 About
+        p {{series.current.description}}
