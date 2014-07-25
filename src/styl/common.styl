@@ -1,3 +1,10 @@
+flex(uno, dos=null, tres=null)
+  if tres == 0px || tres == 0%
+    tres = 0
+  flex: uno dos;
+  if tres != null
+    flex-basis: tres;
+
 html {
   background: darkest-grey;
   image: '/assets/images/tl_diag_stripes.png' 19px;
