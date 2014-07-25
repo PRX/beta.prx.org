@@ -71,6 +71,8 @@ body {
 aside > section, #main > section, #hero .container > section {
   padding: tiny-horizontal-padding;
 
+  overflow: hidden;
+
   @media multi-column {
     padding: 20px 15px;
   }
@@ -195,6 +197,7 @@ aside > section, #main > section, #hero .container > section {
 
     // allow it to stretch horizontally by a factor of 2
     flex: 2 2 0px;
+    max-width: 280px;
 
     // spacing between the main content and the sidebar. Put on the sidebar
     // as some pages have only main content.
