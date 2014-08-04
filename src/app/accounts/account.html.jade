@@ -4,8 +4,11 @@ article.account
       prx-img(src="account.current.imageUrl", default-class="default")
       h1(ng-bind="account.current.name")
       .details
-        .path(ng-bind="account.current.path")
-        .location(ng-bind="account.current.address")
+        ul
+          li.path(ng-bind="account.current.path")
+          li.location(ng-bind="account.current.address")
+          li.url(ng-repeat="link in account.current.websites() track by link.href")
+            a(ng-href="{{link.href}}" rel="external nofollow") {{ link.href | prettyUrl }}
         .bio
           div(ng-bind-html="account.current.description", limit-to-html="250", html-limited="wasShortened")
           a.full(ui-sref=".details", ng-if="wasShortened") (View Full Profile)

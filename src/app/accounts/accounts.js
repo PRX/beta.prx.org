@@ -52,6 +52,15 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
   ]).mixin('http://meta.prx.org/model/account/*any', ['$q', function ($q) {
     return  {
       toString: function () { return this.name; },
+      websites: function (force) {
+        if (!angular.isDefined(this._websites)) {
+          this._websites = this.links('prx:external').all();
+        } else if (force) {
+          angular.copy(this.links('prx:external').all(), this._websites);
+        }
+
+        return this._websites;
+      },
       getStories: function () {
         return this.follow('prx:stories').follow('prx:items');
       },
