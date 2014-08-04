@@ -1,9 +1,9 @@
 header {
   absolute: top left; right: 0;
+  width: 100%;
   height: action-bar-height;
   overflow: hidden;
   z-index: 200;
-  text-align: center;
   border-bottom: 1px solid lightest-grey;
   background: white;
 
@@ -39,9 +39,15 @@ header {
     }
   }
 
+  & > div:not(.loading) {
+    max-width: max-content-width + 2 * horizontal-padding;
+    margin: 0 auto;
+  }
+
   h1 {
     background-image: url('/assets/images/ic_header_logo.png');
     background-size: auto 20px;
+    padding: 0 horizontal-padding;
     background-position: center center;
     background-repeat: no-repeat;
     font-size: 0px;
@@ -80,16 +86,16 @@ header {
     background-position: center;
     background-repeat: no-repeat;
   }
-
-  .loading .bar {
-    fixed: top left;
-    height 1px;
-  }
 }
 
 
 .loading {
+  position: absolute;
+  width: 100%;
+  overflow hidden;
+
   .bar {
+    height: 1px;
     width: 0%;
     background: orange;
     transition: width 0.3s linear;
@@ -101,6 +107,7 @@ header {
 
   &.hide-add {
     display: block;
+    opacity: 1;
     transition: opacity 0.5s 1s;
   }
 
