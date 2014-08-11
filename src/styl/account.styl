@@ -17,6 +17,8 @@
 }
 
 article.account {
+  floating();
+
   a.loadingButton {
     button-blue(false);
     margin: 10px 0 0 0;
@@ -34,8 +36,6 @@ article.account {
     }
   }
 
-  background: offwhite;
-
   #hero {
     .img {
       // the text is what pushes stuff down, not the image.
@@ -46,14 +46,6 @@ article.account {
         height: @width;
         margin: 10px 20px;
         margin-bottom: (@width / -2) - 2px !important;
-      }
-    }
-
-    .container {
-      background: none;
-      padding: 0;
-      @media multi-column {
-        padding: 0 horizontal-padding;
       }
     }
 
@@ -69,8 +61,6 @@ article.account {
 
       @media multi-column {
         display: flex;
-        border: 1px solid lightest-grey;
-
 
         ul {
           flex: 1 1 0px;
@@ -91,12 +81,22 @@ article.account {
     }
   }
 
-  & > section {
-    border-top: none;
-    & > h2 {
-      border-bottom: 1px solid black;
-      margin-bottom: 10px;
-      line-height: 1.2em;
+  section.recent {
+    @media multi-column {
+      background: offwhite;
+      padding: 0!important;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+      section.story {
+        flex: 0 1 250px;
+      }
+      & > h2 {
+        flex-basis: 100%;
+      }
+      & > a {
+        display: none;
+      }
     }
   }
 
@@ -116,14 +116,16 @@ section.account {
 }
 
 .account {
-  .path, .location {
+  .path, .location, .url {
     font-size: 12px;
     clear: both;
     margin-bottom: 8px;
-    margin-left: 10px;
     background-repeat: no-repeat;
-    background-position-y: 4px;
+    background-position: left center;
     padding-left: 22px;
+    @media multi-column {
+      margin-left: 10px;
+    }
   }
 
   .path {
@@ -132,6 +134,9 @@ section.account {
 
   .location {
     image: 'assets/images/location_icon.png' 12px 15px;
+  }
+  .url {
+    image: 'assets/images/icons/website.png' 14px;
   }
 }
 
