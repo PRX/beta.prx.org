@@ -4,7 +4,7 @@
     background-color: lightest-grey;
     border-radius: 50%;
     width: 70px;
-    height: 70px;
+    height: @width;
     float: left;
     margin: 10px;
     position: relative;
@@ -17,6 +17,8 @@
 }
 
 article.account {
+  floating();
+
   a.loadingButton {
     button-blue(false);
     margin: 10px 0 0 0;
@@ -34,35 +36,42 @@ article.account {
     }
   }
 
-  background: offwhite;
-
   #hero {
-    .container {
-      background: none;
-      padding: 0;
+    .img {
+      // the text is what pushes stuff down, not the image.
+      margin-bottom: (70px / -2) !important;
 
       @media multi-column {
-        padding: 15px horizontal-padding;
+        width: 105px
+        height: @width;
+        margin: 10px 20px;
+        margin-bottom: (@width / -2) - 2px !important;
       }
     }
 
     h1 {
       line-height: 60px;
-
-      &:after {
-        content: ' ';
-        display: block;
-        width: 100%;
-        height: 45px;
-        margin: -10px 0;
-        background: white;
-      }
+      margin-bottom: -70px;
     }
 
     .details {
       clear: both;
       background-color: white;
-      padding: 15px;
+      padding: 50px 15px 15px;
+
+      @media multi-column {
+        display: flex;
+
+        ul {
+          flex: 1 1 0px;
+          margin-top: 20px;
+        }
+
+        .bio {
+          margin-top: -35px
+          flex: 2 2 0px;
+        }
+      }
     }
 
     .bio {
@@ -72,12 +81,20 @@ article.account {
     }
   }
 
-  & > section {
-    border-top: none;
-    & > h2 {
-      border-bottom: 1px solid black;
-      margin-bottom: 10px;
-      line-height: 1.2em;
+  section.recent {
+    @media multi-column {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+      section.story {
+        flex: 0 1 250px;
+      }
+      & > h2 {
+        flex-basis: 100%;
+      }
+      & > a {
+        display: none;
+      }
     }
   }
 
@@ -97,14 +114,16 @@ section.account {
 }
 
 .account {
-  .path, .location {
+  .path, .location, .url {
     font-size: 12px;
     clear: both;
     margin-bottom: 8px;
-    margin-left: 10px;
     background-repeat: no-repeat;
-    background-position-y: 4px;
+    background-position: left center;
     padding-left: 22px;
+    @media multi-column {
+      margin-left: 10px;
+    }
   }
 
   .path {
@@ -113,6 +132,9 @@ section.account {
 
   .location {
     image: 'assets/images/location_icon.png' 12px 15px;
+  }
+  .url {
+    image: 'assets/images/icons/website.png' 14px;
   }
 }
 

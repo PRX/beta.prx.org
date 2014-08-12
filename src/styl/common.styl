@@ -300,3 +300,42 @@ strong {
     font-weight: bold;
   }
 }
+
+$floating {
+  background: offwhite;
+
+  #hero {
+    @media multi-column {
+      padding-bottom: 0;
+    }
+    .container {
+      padding: 0;
+      @media multi-column {
+        padding: 0 horizontal-padding;
+      }
+    }
+  }
+
+  #main {
+    background: none;
+    & > section {
+      @media multi-column {
+        padding: 0;
+      }
+
+      & > h2 {
+        border-bottom: 1px solid black;
+        margin-bottom: 10px;
+        line-height: 1.2em;
+        @media multi-column {
+          line-height: 1.4em;
+          margin-bottom: 15px;
+        }
+      }
+    }
+  }
+}
+
+floating() {
+  @extend $floating;
+}
