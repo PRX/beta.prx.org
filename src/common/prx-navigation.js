@@ -117,7 +117,7 @@ angular.module('prxNavigation', ['ui.router'])
 
       return function link (scope) {
         scope.finishedPercent = function () {
-          return ~~(topScope.finishedResolutions * 100 / topScope.totalResolutions);
+          return Math.min(100, ~~(topScope.finishedResolutions * 100 / topScope.totalResolutions));
         };
 
         scope.barStyle = function () {

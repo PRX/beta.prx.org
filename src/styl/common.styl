@@ -1,9 +1,35 @@
-flex(uno, dos=null, tres=null)
-  if tres == 0px || tres == 0%
-    tres = 0
-  flex: uno dos;
-  if tres != null
-    flex-basis: tres;
+flex-basis(basis)
+  flex-basis: basis;
+  -ms-flex-preferred-size: basis;
+
+flex(growth, shrink=null, initial=null)
+  if initial == 0px || initial == 0%
+    initial = 0
+  if box in flex-version
+    shrink = 1
+    if none == growth
+      // Well known values
+      shrink = 0 if none == growth
+      growth = 0
+    else if is-width(growth) == true
+      // Basis is defined as the first parameter
+      growth = arguments[1] || 0
+      shrink = arguments[2] if 3 <= length(arguments)
+    else if arguments[1] && is-width(arguments[1]) == false
+      // Growth is first and shrink is second
+      shrink = arguments[1]
+
+    // Since we can't make the distinction between growing and shrinking in the box model, take
+    // the one that provides the most flexibility.
+    vendor('box-flex', max(growth, shrink), ignore: ms)
+
+  arguments[2] = null;
+
+  // new
+  if flex in flex-version
+    vendor('flex', arguments, only: webkit ms official)
+  if initial != null
+    flex-basis: initial;
 
 html {
   background: darkest-grey;
@@ -26,6 +52,8 @@ body {
   @media multi-column {
     background: offwhite;
   }
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .media {
@@ -70,6 +98,8 @@ body {
 // area or they are singly nested within an aside) are padded.
 aside > section, #main > section, #hero .container > section {
   padding: tiny-horizontal-padding;
+  overflow: hidden;
+  max-width: 100%;
 
   @media multi-column {
     padding: 20px 15px;
@@ -195,6 +225,7 @@ aside > section, #main > section, #hero .container > section {
 
     // allow it to stretch horizontally by a factor of 2
     flex: 2 2 0px;
+    max-width: 280px;
 
     // spacing between the main content and the sidebar. Put on the sidebar
     // as some pages have only main content.
@@ -256,8 +287,7 @@ strong {
   margin-top: 5px;
 
   .term {
-    flex: 1 0;
-    flex-basis: 250px;
+    flex: 1 250px;
     margin-top: 10px;
     overflow: hidden;
     white-space: nowrap;
