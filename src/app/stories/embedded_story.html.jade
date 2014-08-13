@@ -5,3 +5,4 @@ section.story
   h3
     a(ui-sref="story") {{story.title}}
   time(datetime="P{{story.duration}}S") {{story.duration * 1000 | timeCode }}
+  .desc(ng-bind-html="story.shortDescription", limit-to-html="150")

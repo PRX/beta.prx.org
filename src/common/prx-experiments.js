@@ -62,12 +62,13 @@ angular.module('prx.experiments', [])
 
   function ParticipationPromise (base, alternatives, promise) {
     var self = this;
-    this.alternatives = alternatives;
-    this.then         = promise.then(function (response) {
+    promise = promise.then(function (response) {
       return self.resolved = new Participation(base, response.data);
-    }).then;
-    this.alternative = this.then(function (p) { return p.alternative; });
-    this.choice      = this.alternative;
+    });
+    this.alternatives = alternatives;
+    this.then         = angular.bind(promise, promise.then);
+    this.alternative  = this.then(function (p) { return p.alternative; });
+    this.choice       = this.alternative;
   }
 
   ParticipationPromise.prototype.convert = function (kpi) {
@@ -83,10 +84,11 @@ angular.module('prx.experiments', [])
       if (typeof this.resolved !== 'undefined') {
         this.resolved.set(value);
       } else {
-        this.then = this.then(function (p) {
+        var promise = this.then(function (p) {
           p.set(value);
           return p;
-        }).then;
+        });
+        this.then = angular.bind(promise, promise.then);
       }
     }
   };
@@ -95,10 +97,11 @@ angular.module('prx.experiments', [])
     if (typeof this.resolved !== 'undefined') {
       this.resolved.unforce();
     } else {
-      this.then = this.then(function (p) {
+      var promise = this.then(function (p) {
         p.unforce();
         return p;
-      }).then;
+      });
+      this.then = angular.bind(promise, promise.then);
     }
   };
 

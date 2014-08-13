@@ -282,13 +282,16 @@ section.story {
     }
   }
 
+  .desc {
+    display: none;
+  }
+
   h3 {
-    line-height: 18px;
+    line-height: 20px;
     font-size: 16px;
-    height: 60px;
+    height: 54px;
     overflow: hidden;
     padding-top: 10px;
-    margin-bottom: -4px;
     -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 74%,
     rgba(0,0,0,0.6) 74%, rgba(0,0,0,0) 92%);
   }
@@ -304,6 +307,30 @@ section.story {
     white-space: nowrap;
     top: 0px;
     left: 80px;
+  }
+
+  &.growable {
+    @media multi-column {
+      height: 150px;
+      overflow: hidden;
+      & > a .img {
+        width: 150px;
+        height: 150px;
+      }
+      .category {
+        left: 160px;
+      }
+      h3 {
+        height: auto;
+        line-height: 24px
+        -webkit-mask-image: none;
+      }
+      .desc {
+        display: block;
+        font-size: 13px;
+        line-height: 25px;
+      }
+    }
   }
 }
 
