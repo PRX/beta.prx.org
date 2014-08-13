@@ -5,6 +5,7 @@ flex-basis(basis)
 flex(growth, shrink=null, initial=null)
   if initial == 0px || initial == 0%
     initial = 0
+    arguments[2] = null;
   if box in flex-version
     shrink = 1
     if none == growth
@@ -23,7 +24,7 @@ flex(growth, shrink=null, initial=null)
     // the one that provides the most flexibility.
     vendor('box-flex', max(growth, shrink), ignore: ms)
 
-  arguments[2] = null;
+
 
   // new
   if flex in flex-version
