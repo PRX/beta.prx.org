@@ -23,7 +23,7 @@ angular.module('prx.ads', [])
               $window.googletag.pubads().refresh([gSlot]);
             }
           }
-        }, 5);
+        }, 100);
       };
     },
     link: function(scope, elem, attrs, ctrl) {
