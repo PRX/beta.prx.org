@@ -1,6 +1,6 @@
 section.story
   .category audio story
-  a(ui-sref="story")
+  a(ng-click="play()")
     prx-img(src="story.imageUrl", default-class="default", ng-class="{playing: story.playing()}")
   h3(overflow-class)
     a(ui-sref="story") {{story.title}}

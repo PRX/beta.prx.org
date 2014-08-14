@@ -105,12 +105,22 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     };
   }]);
 })
-.directive('prxStory', function () {
+.directive('prxStory', function (prxSoundFactory, prxPlayer) {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: 'stories/embedded_story.html',
-    scope: {story: '='}
+    scope: {story: '='},
+    controller: function ($scope) {
+      $scope.play = function () {
+        $scope.story.toSoundParams().then(function (sp) {
+          var event = $scope.$emit('$play', sp);
+          if (!event.defaultPrevented) {
+            prxPlayer.play(prxSoundFactory(sp));
+          }
+        });
+      };
+    }
   };
 })
 .controller('StoryCtrl', function (story, account, audioUrls,
