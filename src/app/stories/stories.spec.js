@@ -80,13 +80,13 @@ describe('prx.stories', function () {
     }));
 
     it ('gets the audioUrls based on the story', function () {
-      var story = ngHal.mock('http://meta.prx.org/model/story'),
+      var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
         file1 = ngHal.mockEnclosure('file1.mp3'),
         file2 = ngHal.mockEnclosure('file2.mp3');
       story.stubFollow('prx:audio', [file1, file2]);
       expect($injector.invoke(state.resolve.audioUrls, null, {
         story: story
-      }).get(1).get('url')).toResolveTo('file2.mp3');
+      }).then(function(d) { return d[1].url; })).toResolveTo('file2.mp3');
     });
 
     it ('sets the title appropriately', function () {
