@@ -1,8 +1,10 @@
-.pick
-  prx-story(story="pick.story")
-  .curation(ng-if="pick.comment")
+.pick(ng-class="{standalone : !pick.current.comment}")
+  prx-story.growable(story="pick.story")
+  .curation(ng-if="pick.current.comment")
     .curator
       prx-img(src="pick.account.imageUrl", default="assets/images/audrey.png")
       .name
         small {{pick.account.shortName}}
-    p(ng-bind="pick.comment")
+    p(ng-bind="pick.current.comment", on-overflow="pick.setCommentOverflow($overflowing)")
+    p.expander(ng-bind="pick.current.comment", ng-class="{expanded : pick.shouldExpandComment}")
+    a.show-more(ng-show="pick.canShowMore", ng-click="pick.expandComment()") (Show More)
