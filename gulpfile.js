@@ -58,7 +58,7 @@ function bStyl() {
   .pipe(stylus({
       set: ['linenos'],
       use: ['nib'],
-      paths: [__dirname + '/public'],
+      paths: [__dirname + '/public', src + '/app'],
       urlFunc: ['url']
     }))
     .pipe(rework(moveMe()))
