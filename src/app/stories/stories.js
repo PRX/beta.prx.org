@@ -83,7 +83,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         return story;
       }
     };
-  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', function (prxPlayer) {
+  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', '$q', function (prxPlayer, $q) {
     return {
       toString: function () { return this.title; },
       stateParams: function () {
@@ -91,26 +91,47 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
       },
       toSoundParams: function () {
         var self = this;
-        return this.follow('prx:audio').then(function (files) {
-          var result = [];
+        return $q.all([this.follow('prx:audio'), this.getAccount()]).then(function (params) {
+          var files = params[0], producer = params[1], result = [];
           angular.forEach(files, function (file) {
             result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
           });
-          return { audioFiles: result, story: self };
+          return { audioFiles: result, story: self, producer: producer };
         });
       },
       playing: function () {
         return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
+      },
+      getAccount: function () {
+        var self = this;
+        if (this.account) {
+          return $q.when(this.account);
+        } else {
+          return this.follow('prx:account').then(function (acct) {
+            self.account = acct;
+            return acct;
+          });
+        }
       }
     };
   }]);
 })
-.directive('prxStory', function () {
+.directive('prxStory', function (prxSoundFactory, prxPlayer) {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: 'stories/embedded_story.html',
-    scope: {story: '='}
+    scope: {story: '='},
+    controller: function ($scope) {
+      $scope.play = function () {
+        $scope.story.toSoundParams().then(function (sp) {
+          var event = $scope.$emit('$play', sp);
+          if (!event.defaultPrevented) {
+            prxPlayer.play(prxSoundFactory(sp));
+          }
+        });
+      };
+    }
   };
 })
 .controller('StoryCtrl', function (story, account, audioUrls,
