@@ -6,7 +6,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     title: 'Stories'
   })
   .state('story.show', {
-    url: '/stories/:storyId?autoPlay&s',
+    url: '/stories/:storyId?s&play',
     views: {
       '@': {
         controller: 'StoryCtrl as story',
@@ -87,7 +87,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     return {
       toString: function () { return this.title; },
       stateParams: function () {
-        return { storyId: this.id, s: null };
+        return { storyId: this.id, s: null, play: false };
       },
       toSoundParams: function () {
         var self = this;
@@ -127,6 +127,8 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   });
   if ($stateParams.s !== null) {
     this.sound.setPosition($stateParams.s * 1000);
+  }
+  if ($stateParams.s !== null || $stateParams.play) {
     prxPlayer.play(this.sound);
   }
 
