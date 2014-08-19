@@ -87,7 +87,7 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     return {
       toString: function () { return this.title; },
       stateParams: function () {
-        return { storyId: this.id, s: null, play: false };
+        return { storyId: this.id, s: null, play: null };
       },
       toSoundParams: function () {
         var self = this;
