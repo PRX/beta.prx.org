@@ -1,4 +1,6 @@
-angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate', 'prx.accounts', 'prx.experiments'])
+angular.module('prx.stories', [
+  'ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate',
+  'prx.accounts', 'prx.experiments'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -13,7 +15,9 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
         templateUrl: 'stories/story.html'
       }
     },
-    title: ['story', 'account', function (story, account) { return story.toString() + ' by ' + account.toString(); }],
+    title: ['story', 'account', function (story, account) {
+      return story.toString() + ' by ' + account.toString();
+    }],
     resolve: {
       story: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
         return ngHal.followOne('prx:story', {id: $stateParams.storyId});
@@ -76,44 +80,53 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
   ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
-    return function (story) {
-      if (angular.isDefined(story.length)) {
-        story.duration = story.length;
-        story.length = undefined;
-        return story;
-      }
-    };
-  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', '$q', function (prxPlayer, $q) {
+  }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', '$q',
+  function (prxPlayer, $q) {
     return {
       toString: function () { return this.title; },
       stateParams: function () {
         return { storyId: this.id, s: null };
       },
       toSoundParams: function () {
-        var self = this;
-        return $q.all([this.follow('prx:audio'), this.getAccount()]).then(function (params) {
-          var files = params[0], producer = params[1], result = [];
-          angular.forEach(files, function (file) {
-            result.push({id: file.id, duration: file.duration * 1000, url: file.links('enclosure').url()});
-          });
-          return { audioFiles: result, story: self, producer: producer };
-        });
+        return $q.all([
+          this.follow('prx:audio'),
+          this.getAccount()
+        ]).then(angular.bind(this, generateSoundParams));
       },
       playing: function () {
         return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
       },
       getAccount: function () {
-        var self = this;
         if (this.account) {
           return $q.when(this.account);
         } else {
-          return this.follow('prx:account').then(function (acct) {
-            self.account = acct;
-            return acct;
-          });
+          return this.follow('prx:account').then(
+            angular.bind(this, function (acct) {
+              this.account = acct;
+              return acct;
+            })
+          );
         }
       }
     };
+
+    function generateSoundParams(options) {
+      var files = options[0],
+        producer = options[1],
+        result = [];
+      angular.forEach(files, function (file) {
+        result.push({
+          id: file.id,
+          duration: file.duration * 1000,
+          url: file.links('enclosure').url()
+        });
+      });
+      return {
+        audioFiles: result,
+        story: this,
+        producer: producer
+      };
+    }
   }]);
 })
 .directive('prxStory', function (prxSoundFactory, prxPlayer) {

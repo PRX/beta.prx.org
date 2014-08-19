@@ -19,13 +19,6 @@ describe('prx.stories', function () {
       expect(mock.imageUrl).toEqual(null);
     });
 
-    it ('correctly copies the length property to duration', function () {
-      mock.length = 1234;
-      mock.transform();
-      expect(mock.duration).toBe(1234);
-      expect(mock.length).not.toBeDefined();
-    });
-
     it ('returns title for toString()', function () {
       mock.title = 'asdf';
       expect(mock.toString()).toEqual('asdf');
