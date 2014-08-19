@@ -97,16 +97,12 @@ angular.module('prx.stories', [
         return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
       },
       getAccount: function () {
-        if (this.account) {
-          return $q.when(this.account);
-        } else {
-          return this.follow('prx:account').then(
-            angular.bind(this, function (acct) {
-              this.account = acct;
-              return acct;
-            })
+        if (!angular.isDefined(this.$account)) {
+          this.$account = this.follow('prx:account').then(
+            angular.bind(this, setAccount)
           );
         }
+        return $q.when(this.$account);
       }
     };
 
@@ -126,6 +122,11 @@ angular.module('prx.stories', [
         story: this,
         producer: producer
       };
+    }
+
+    function setAccount(account) {
+      this.$account = account;
+      return account;
     }
   }]);
 })
