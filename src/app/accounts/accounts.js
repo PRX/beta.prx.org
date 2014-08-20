@@ -34,6 +34,18 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
         controller: "AccountDetailsCtrl as account"
       }
     }
+  }).state('account.show.allStories', {
+    url: '/stories',
+    views: {
+      'modal@': {
+        templateUrl: "accounts/stories_modal.html",
+        controller: "AccountStoriesCtrl as account"
+      }
+    },
+    resolve: {
+      list: ['storiesList', function (list) { return list; }],
+      stories: ['recentStories', function (stories) { return stories; }]
+    }
   });
 
   ngHalProvider.mixin('http://meta.prx.org/model/account/:type/*splat', ['resolved', 'type',
@@ -229,44 +241,43 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     return elems;
   };
 })
-.controller('AccountCtrl', function (account, recentStories, storiesList) {
-  var ctrl = this;
-
-  ctrl.current = account;
-  ctrl.recentStories = recentStories;
-  ctrl.storiesList = storiesList;
-
-  this.nextStories = function() {
-    if (!ctrl.recentStories.loading) {
-      ctrl.recentStories.loading = true;
-
-      ctrl.storiesList.follow('next').then(function (list) {
-        list.follow('prx:items').then(function (stories) {
-          ctrl.recentStories.push.apply(ctrl.recentStories, stories);
-          ctrl.recentStories.loading = false;
-          ctrl.storiesList = list;
-        });
-      });
-    }
-  };
-
-  this.previousStories = function() {
-    ctrl.storiesList.follow('prev').then(function (list) {
-      list.follow('prx:items').then(function (stories) {
-        ctrl.recentStories = stories;
-        ctrl.storiesList = list;
-      });
-    });
-  };
-
-  this.hasNextStories = function() {
-    return !!ctrl.storiesList.link('next');
-  };
-
-  this.hasPreviousStories = function() {
-    return !!ctrl.storiesList.link('prev');
-  };
+.controller('AccountCtrl', function (account, recentStories) {
+  this.current = account;
+  this.recentStories = recentStories;
 })
 .controller('AccountDetailsCtrl', function (account) {
   this.current = account;
+})
+.controller('AccountStoriesCtrl', function (list, stories, account) {
+  this.current = account;
+  this.stories = stories;
+  this.hasMore = angular.isDefined(list.link('next'));
+
+  this.loadMore = function () {
+    var ctrl = this;
+    if (!ctrl.loadingMore) {
+      ctrl.loadingMore = true;
+      list.follow('next').then(function (nextList) {
+        return nextList.follow('prx:items').then(function (stories) {
+          list = nextList;
+          Array.prototype.push.apply(ctrl.stories, stories);
+        });
+      })['finally'](function () {
+        ctrl.hasMore = angular.isDefined(list.link('next'));
+        ctrl.loadingMore = false;
+      });
+    }
+  };
+})
+.directive('onApproachEnd', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, elem, attrs) {
+      elem.on('scroll', function (event) {
+        if (elem[0].scrollHeight - (elem[0].scrollTop + elem[0].clientHeight) <= 250) {
+          scope.$eval(attrs.onApproachEnd);
+        }
+      });
+    }
+  };
 });

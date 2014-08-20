@@ -19,22 +19,22 @@
 article.account {
   floating();
 
-  a.loadingButton {
-    button-blue(false);
-    margin: 10px 0 0 0;
-    display: block;
-    padding: 8px 0;
-    font-size: 1.25em;
-
-    &.loading {
-      &:before {
-        content: 'Loading ';
-      }
-      &:after {
-        content: '...';
-      }
-    }
-  }
+  // a.loadingButton {
+  //   button-blue(false);
+  //   margin: 10px 0 0 0;
+  //   display: block;
+  //   padding: 8px 0;
+  //   font-size: 1.25em;
+  //
+  //   &.loading {
+  //     &:before {
+  //       content: 'Loading ';
+  //     }
+  //     &:after {
+  //       content: '...';
+  //     }
+  //   }
+  // }
 
   #hero {
     .img {
@@ -82,6 +82,11 @@ article.account {
   }
 
   section.recent {
+    position: relative;
+    & > a {
+      absolute: right 15px top 15px;
+      line-height: 24px;
+    }
     @media multi-column {
       display: flex;
       flex-flow: row wrap;
@@ -93,7 +98,8 @@ article.account {
         flex-basis: 100%;
       }
       & > a {
-        display: none;
+        absolute: right top;
+        line-height: 35px;
       }
     }
   }
@@ -162,6 +168,20 @@ aside > section.account:first-child {
       a {
         color: dark-grey;
       }
+    }
+  }
+}
+
+article.account-stories {
+  section.story {
+    margin-bottom: 10px;
+  }
+  .load-more {
+    width: 100%;
+
+    &.active {
+      opacity: 0.5;
+      cursor: default;
     }
   }
 }
