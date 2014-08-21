@@ -35,7 +35,6 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
       }
     }
   }).state('account.show.allStories', {
-    url: '/stories',
     views: {
       'modal@': {
         templateUrl: "accounts/stories_modal.html",

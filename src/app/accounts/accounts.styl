@@ -19,23 +19,6 @@
 article.account {
   floating();
 
-  // a.loadingButton {
-  //   button-blue(false);
-  //   margin: 10px 0 0 0;
-  //   display: block;
-  //   padding: 8px 0;
-  //   font-size: 1.25em;
-  //
-  //   &.loading {
-  //     &:before {
-  //       content: 'Loading ';
-  //     }
-  //     &:after {
-  //       content: '...';
-  //     }
-  //   }
-  // }
-
   #hero {
     .img {
       // the text is what pushes stuff down, not the image.
@@ -52,6 +35,9 @@ article.account {
     h1 {
       line-height: 60px;
       margin-bottom: -70px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .details {
@@ -183,5 +169,14 @@ article.account-stories {
       opacity: 0.5;
       cursor: default;
     }
+  }
+}
+
+section.recent-stories {
+  position: relative;
+  & > a {
+    font-size: 12px;
+    absolute: top right 10px;
+    line-height: 44px;
   }
 }
