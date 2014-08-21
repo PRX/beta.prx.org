@@ -3,7 +3,7 @@ section.picks {
     background: white;
     margin-top: 20px;
     margin-bottom: 20px;
-    padding-top: 10px;
+    padding: 10px 0 0;
 
     &:first-of-type {
       margin-top: 0;
@@ -11,6 +11,13 @@ section.picks {
 
     & > *:not(.curation) {
       margin: 0 10px 10px;
+    }
+
+    &:after {
+      content: ' ';
+      display: block;
+      height: 1px;
+      margin-top: -1px;
     }
 
   }
@@ -38,7 +45,7 @@ section.picks {
         border: 3px solid light-grey;
         border-radius: 50%;
         height: 58px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
       }
 
       .name {
@@ -54,7 +61,6 @@ section.picks {
     justify-content: space-between;
     margin-left: -40px;
     max-width: calc(100% + 40px)!important;
-
 
     h2 {
       flex: 0 0 100%;
