@@ -125,10 +125,10 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
       return account.generatePlaylist(sound);
     }
   });
-  if ($stateParams.s !== undefined) {
+  if (angular.isDefined($stateParams.s) && $stateParams.s !== null) {
     this.sound.setPosition($stateParams.s * 1000);
   }
-  if ($stateParams.s !== undefined || $stateParams.play) {
+  if ((angular.isDefined($stateParams.s) && $stateParams.s !== null) || $stateParams.play) {
     prxPlayer.play(this.sound);
   }
 
