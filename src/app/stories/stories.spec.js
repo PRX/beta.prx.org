@@ -50,7 +50,7 @@ describe('prx.stories', function () {
     it ('starts playback of the story if requested', function () {
       var player = jasmine.createSpyObj('player', ['play']);
       var story  = ngHal.mock();
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true}, $scope: {}, audioUrls: []});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
     });
