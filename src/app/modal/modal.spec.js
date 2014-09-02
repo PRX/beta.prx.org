@@ -11,6 +11,7 @@ describe('prx.modal', function () {
     beforeEach(inject(function ($rootScope, _$state_, _$compile_) {
       $scope = $rootScope;
       $state = _$state_;
+      $state.current = {name:""};
       $compile = _$compile_;
       instrumentableState = {
         views: {

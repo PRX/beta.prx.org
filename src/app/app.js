@@ -21,11 +21,10 @@ angular.module('prx', ['ngAnimate',
   'ngMobile',
   'prx.breadcrumbs',
   'prx.ads'])
-.config(function ($locationProvider, ngFlagProvider,
+.config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
-  $locationProvider.html5Mode(true);
   prxperimentProvider.base('https://x.prx.org')
   .clientId(['$q', '$window', function ($q, $window) {
     if (angular.isDefined($window.ga)) {
@@ -42,6 +41,10 @@ angular.module('prx', ['ngAnimate',
     var url = $analytics.settings.pageTracking.basePath + $location.url();
     $timeout(function () {  $analytics.pageTrack(url); }, 2);
   });
+});
+angular.module('prx.base',['prx'])
+.config(function ($locationProvider) {
+  $locationProvider.html5Mode(true);
 });
 angular.module('prx.modelConfig', ['angular-hal'])
 .config(function (ngHalProvider) {
