@@ -12,7 +12,7 @@ angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'angular
       }
     }
   }).state('home.storyTime.error', {
-    params: ['message'],
+    params: {'message':''},
     views: {
       'modal@': {
         controller: 'StoryTimeErrorCtrl as error',

@@ -53,6 +53,9 @@ describe('prx.stories', function () {
       $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: []});
+      expect(player.play).toHaveBeenCalled();
+      expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
     });
   });
 
