@@ -36,12 +36,10 @@ describe('accounts', function () {
     it('attaches the account and recent stories', inject(function ($controller) {
       var controller = $controller('AccountCtrl', {
         account: 1,
-        recentStories: 2,
-        storiesList: 3,
+        recentStories: 2
       });
       expect(controller.current).toBe(1);
       expect(controller.recentStories).toBe(2);
-      expect(controller.storiesList).toBe(3);
     }));
   });
 
