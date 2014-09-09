@@ -46,16 +46,16 @@ describe('prx.picks', function () {
       $scope = $rootScope.$new();
     }));
 
-    it ('sets ctrl.current as $scope.pick', function () {
-      $scope.pick = "foo";
+    it ('sets ctrl.current as $scope.picki', function () {
+      $scope.picki = "foo";
       var ctrl = $controller('PickCtrl', {$scope: $scope});
-      expect(ctrl.current).toEqual($scope.pick);
+      expect(ctrl.current).toEqual($scope.picki);
     });
 
-    it ('sets ctrl.story as $scope.pick.story', function () {
-      $scope.pick = {story: 'foo'};
+    it ('sets ctrl.story as $scope.picki.story', function () {
+      $scope.picki = {story: 'foo'};
       var ctrl = $controller('PickCtrl', {$scope: $scope});
-      expect(ctrl.story).toEqual($scope.pick.story);
+      expect(ctrl.story).toEqual($scope.picki.story);
     });
 
     it ('sets the canShowMore when overflowing', function () {

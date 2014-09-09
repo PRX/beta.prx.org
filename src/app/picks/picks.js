@@ -10,13 +10,13 @@ angular.module('prx.picks', ['prx.modelConfig'])
     restrict: 'E',
     replace: true,
     templateUrl: 'picks/pick.html',
-    scope: {pick: '='},
-    controller: 'PickCtrl as pick'
+    scope: {picki: '=pick'},
+    controller: 'PickCtrl as pick',
   };
 })
 .controller('PickCtrl', function ($scope, $rootScope) {
-  if (angular.isDefined($scope.pick)) {
-    this.current = $scope.pick;
+  if (angular.isDefined($scope.picki)) {
+    this.current = $scope.picki;
     this.story = this.current.story;
     this.account = this.current.account;
   }
