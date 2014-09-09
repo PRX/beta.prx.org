@@ -1,9 +1,9 @@
 beforeEach(function () {
   browser.addMockModule('noAnimate', function () {
     angular.module('noAnimate', ['ngAnimate'])
-    .run(function ($animate) {
+    .run(['$animate', function ($animate) {
       $animate.enabled(false);
-    });
+    }]);
   });
 });
 
@@ -27,7 +27,7 @@ describe('application', function () {
     beforeEach(function () {
       browser.addMockModule('fakeStates', function () {
         angular.module('fakeStates', ['ui.router'])
-        .config(function ($stateProvider) {
+        .config(['$stateProvider', function ($stateProvider) {
           $stateProvider.state('fake', {
             url: '/fake',
             template: 'Hello! <a ui-sref=".modal">modal</a>'
@@ -39,7 +39,7 @@ describe('application', function () {
               }
             }
           });
-        });
+        }]);
       });
 
       browser.get('/fake');

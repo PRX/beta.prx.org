@@ -13,18 +13,18 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
       }
     },
     resolve: {
-      account: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
+      account: function (ngHal, $stateParams) {
         return ngHal.follow('prx:account', {id: $stateParams.accountId});
-      }],
-      storiesList: ['account', function (account) {
+      },
+      storiesList: function (account) {
         return account.follow('prx:stories');
-      }],
-      recentStories: ['storiesList', function (storiesList) {
+      },
+      recentStories: function (storiesList) {
         return storiesList.follow('prx:items');
-      }],
-      translateUrl: ['account', 'urlTranslate', function (account, urlTranslate) {
+      },
+      translateUrl: function (account, urlTranslate) {
         urlTranslate.addTranslation('/accounts/'+account.id, account.oldPath());
-      }]
+      }
     }
   }).state('account.show.details', {
     url: '/details',
@@ -42,8 +42,8 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
       }
     },
     resolve: {
-      list: ['storiesList', function (list) { return list; }],
-      stories: ['recentStories', function (stories) { return stories; }]
+      list: function (list) { return list; },
+      stories: function (stories) { return stories; }
     }
   });
 

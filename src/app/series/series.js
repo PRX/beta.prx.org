@@ -5,15 +5,15 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
     controller: 'SeriesCtrl as series',
     templateUrl: 'series/series.html',
     resolve: {
-      series: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
+      series: function (ngHal, $stateParams) {
         return ngHal.followOne('prx:series', {id: $stateParams.seriesId});
-      }],
-      stories: ['series', function(series) {
+      },
+      stories: function(series) {
         return series.follow('prx:stories').follow('prx:items');
-      }],
-      account: ['series', function(series) {
+      },
+      account: function(series) {
         return series.follow('prx:account');
-      }]
+      }
     }
   });
 
