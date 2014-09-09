@@ -136,4 +136,27 @@ describe('prx.picks', function () {
     });
   });
 
+  describe('groupStandalonePicks filter', function () {
+    var filter;
+    beforeEach(inject(function ($filter) {
+      filter = $filter('groupStandalonePicks');
+    }));
+
+    it ('does nothing with a non-array', function () {
+      expect(filter(false)).toEqual(false);
+    });
+
+    it ('lumps a later standalone pick with an earlier one', function () {
+      var picks = [{comment: "one"}, "pick1",{comment:true},"pick2", "pick3", {comment:true}];
+      var sorted = filter(picks);
+      expect(picks[0]).toEqual({comment: "one"});
+      expect(picks[1]).toEqual("pick1");
+      expect(picks[2]).toEqual("pick2");
+      expect(picks[3]).toEqual({comment: true});
+      expect(picks[4]).toEqual("pick3");
+    });
+
+
+  });
+
 });
