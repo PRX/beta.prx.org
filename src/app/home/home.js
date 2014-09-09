@@ -16,8 +16,10 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.picks'])
       }
     },
     resolve: {
-      picks: ['ngHal', function (ngHal) {
-        return ngHal.follow('prx:picks').follow('prx:items');
+      picks: ['ngHal', '$filter', function (ngHal, $filter) {
+        return ngHal.follow('prx:picks').follow('prx:items').then(function (picks) {
+          return $filter('groupStandalonePicks')(picks);
+        });
       }]
     }
   }).state('home.comingSoon', {
