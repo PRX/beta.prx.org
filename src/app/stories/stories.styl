@@ -348,6 +348,64 @@ section.story {
       }
     }
   }
+
+  &.square {
+    width: 160px;
+    height: 160px;
+    & > a {
+      float: none;
+      absolute: top left;
+      right: 0;
+      .img {
+        width: 160px;
+        height: 160px;
+        &:before {
+          bottom: 71px;
+        }
+      }
+    }
+    h3 {
+      absolute: bottom 22px left;
+      right: 0;
+      padding: 7px 10px 0px;
+      z-index: 11;
+      a {
+        color: white;
+        font-weight: lighter;
+      }
+    }
+    time {
+      absolute: bottom left;
+      right: 0;
+      color: white;
+      padding: 3px 10px;
+      z-index: 10;
+      font-size: 1.1em;
+      letter-spacing: 0.05em;
+      font-weight: lighter;
+      &:before {
+        content: ' ';
+        display: block;
+        height: 71px;
+        absolute: bottom left;
+        right: 0;
+        z-index: -1;
+        background-color: rgba(darkest-grey, 0.7);
+      }
+    }
+
+    @media multi-column {
+      width: 184px;
+      height: 184px;
+
+      & > a {
+        .img {
+          width: 184px;
+          height: 184px;
+        }
+      }
+    }
+  }
 }
 
 .timing-cues div {

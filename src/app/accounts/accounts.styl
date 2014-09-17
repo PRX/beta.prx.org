@@ -67,8 +67,9 @@ article.account {
     }
   }
 
-  section.recent {
+  section.recent, section.purchased {
     position: relative;
+    margin-bottom: 10px;
     & > a {
       absolute: right 15px top 15px;
       line-height: 24px;
@@ -77,8 +78,9 @@ article.account {
       display: flex;
       flex-flow: row wrap;
       justify-content: space-between;
+      margin-bottom: 20px;
       section.story {
-        flex: 0 1 250px;
+        flex: 0 1 255px;
       }
       & > h2 {
         flex-basis: 100%;
@@ -87,6 +89,23 @@ article.account {
         absolute: right top;
         line-height: 35px;
       }
+    }
+  }
+
+  section.highlighted {
+    display: flex;
+    flex-flow: row wrap;
+    section-child-h-margins: 10px;
+    max-height: 390px;
+    & > h2 {
+      flex-basis: 100%;
+    }
+    margin-bottom: 10px;
+
+    @media multi-column {
+      max-height: 254px;
+      section-child-h-margins: 20px;
+      margin-bottom: 20px;
     }
   }
 
