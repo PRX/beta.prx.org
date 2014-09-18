@@ -51,13 +51,17 @@ describe('accounts', function () {
   });
 
   describe('AccountCtrl', function () {
-    it('attaches the account and recent stories', inject(function ($controller) {
+    it('attaches the account and recent, highlighted, and purchased stories', inject(function ($controller) {
       var controller = $controller('AccountCtrl', {
         account: 1,
-        recentStories: 2
+        recentStories: 2,
+        highlightedStories: 3,
+        purchasedStories: 4
       });
       expect(controller.current).toBe(1);
       expect(controller.recentStories).toBe(2);
+      expect(controller.highlightedStories).toBe(3);
+      expect(controller.purchasedStories).toBe(4);
     }));
   });
 

@@ -33,6 +33,18 @@ flex(growth, shrink=null, initial=null)
   if initial != null
     flex-basis: initial;
 
+section-child-h-margins(margin-size) {
+  padding-left: tiny-horizontal-padding - margin-size !important;
+  & > * {
+    margin-left: margin-size;
+  }
+  @media multi-column {
+    padding-left: 0 !important;
+    margin-left: -1 * margin-size;
+    max-width: max-content-width + 2 * horizontal-padding + margin-size!important;
+  }
+}
+
 html {
   background: darkest-grey;
   image: '/assets/images/tl_diag_stripes.png' 19px;
@@ -122,6 +134,10 @@ aside > section, #main > section, #hero .container > section {
   // separated with a thin border.
   & + section {
     border-top: 1px solid offwhite;
+  }
+
+  & > h2 {
+    font-weight: lighter;
   }
 }
 

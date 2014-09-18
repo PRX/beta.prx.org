@@ -24,6 +24,12 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
       },
       translateUrl: function (account, urlTranslate) {
         urlTranslate.addTranslation('/accounts/'+account.id, account.oldPath());
+      },
+      highlightedStories: function (account) {
+        return account.follow('prx:stories', {filters: ['highlighted']}).follow('prx:items');
+      },
+      purchasedStories: function (account) {
+        return account.follow('prx:stories', {filters: ['purchased']}).follow('prx:items');
       }
     }
   }).state('account.show.details', {
@@ -240,9 +246,11 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     return elems;
   };
 })
-.controller('AccountCtrl', function (account, recentStories) {
+.controller('AccountCtrl', function (account, recentStories, highlightedStories, purchasedStories) {
   this.current = account;
   this.recentStories = recentStories;
+  this.highlightedStories = highlightedStories;
+  this.purchasedStories = purchasedStories;
 })
 .controller('AccountDetailsCtrl', function (account) {
   this.current = account;
