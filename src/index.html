@@ -25,6 +25,61 @@
     <prx-loading-bar></prx-loading-bar>
   </main>
   <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a>
+  <footer>
+    <div>
+      <section class="interactive">
+        <!-- <h2>Staff Picks</h2>
+        <h4>Stories You Should Hear</h4>
+        <button>Listen</button> -->
+      </section>
+      <section>
+        <h3>Company</h3>
+        <a href="//www.prx.org/about-us/what-is-prx">About Us</a>
+        <a href="//blog.prx.org/">Blog</a>
+        <a href="//www.prx.org/about-us/organization">Team</a>
+        <a href="//www.prx.org/about-us/press">Press</a>
+        <a href="//www.prx.org/about-us/funding">Funding</a>
+        <a href="//www.prx.org/donate">Donate</a>
+      </section>
+      <section>
+        <h3>Support</h3>
+        <a href="http://myaccount.zendesk.com/account/dropboxes/2830039812" onClick="script: Zenbox.show(); return false;">Help</a>
+        <a href="http://status.prx.org/">Status</a>
+        <a href="//www.prx.org/about-us/contact">Contact Us</a>
+        <a href="//www.prx.org/terms-of-use">Terms</a>
+        <a href="//www.prx.org/privacy-policy">Privacy </a>
+      </section>
+      <section>
+        <h3>Projects</h3>
+        <a href="http://www.radiotopia.fm">Radiotopia</a>
+        <a href="http://www.matter.vc">Matter Ventures</a>
+      </section>
+      <section class="full">
+        <ul>
+          <li><a href="//www.prx.org/newsletters" class="fa-envelope"></a></li>
+          <li><a href="https://www.twitter.com/prx" class="fa-twitter"></a></li>
+          <li><a href="https://www.facebook.com/publicradioexchange" class="fa-facebook"></a></li>
+        </ul>
+      </section>
+    </div>
+  </footer>
+  <style type="text/css" media="screen, projection">
+    @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
+  </style>
+  <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
+  <script type="text/javascript">
+    if (typeof(Zenbox) !== "undefined") {
+      Zenbox.init({
+        dropboxID:   "20181074",
+        url:         "https://prx.zendesk.com",
+        tabTooltip:  "Feedback",
+        tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_feedback.png",
+        tabColor:    "black",
+        tabPosition: "Left",
+        hide_tab:    true,
+      });
+    }
+  </script>
   <prx-global-player></prx-global-player>
 <% if (!compile) { %><script src="http://localhost:35729/livereload.js"></script>
 <% } else { %><script>
