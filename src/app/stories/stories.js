@@ -15,20 +15,20 @@ angular.module('prx.stories', ['ui.router', 'prx.modelConfig', 'prx.player', 'pr
     },
     title: ['story', 'account', function (story, account) { return story.toString() + ' by ' + account.toString(); }],
     resolve: {
-      story: ['ngHal', '$stateParams', function (ngHal, $stateParams) {
+      story: function (ngHal, $stateParams) {
         return ngHal.followOne('prx:story', {id: $stateParams.storyId});
-      }],
-      account: ['story', function (story) {
+      },
+      account: function (story) {
         return story.follow('prx:account');
-      }],
-      audioUrls: ['story', function (story) {
+      },
+      audioUrls: function (story) {
         return story.toSoundParams().then(function (sfParams) {
           return sfParams.audioFiles;
         });
-      }],
-      coverExperiment: ['prxperiment', function (prxperiment) {
+      },
+      coverExperiment: function (prxperiment) {
         return prxperiment.participate('storyCover', ['blueMics', 'matt']);
-      }]
+      }
     }
   })
   .state('story.show.details', {
