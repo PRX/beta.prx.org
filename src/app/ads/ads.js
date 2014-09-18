@@ -34,6 +34,14 @@ angular.module('prx.ads', [])
       if (angular.isDefined($window.googletag)) {
         $window.googletag.cmd.push(function() {
           gSlot = $window.googletag.defineSlot(attrs.slot, [ctrl.width, ctrl.height], elem.attr('id')).addService($window.googletag.pubads());
+          var targets = scope.$eval(attrs.targeting);
+          if (targets) {
+            angular.forEach(targets, function (value, key) {
+              if (angular.isDefined(value)) {
+                gSlot.setTargeting(key, value);
+              }
+            });
+          }
           gSlot.defineSizeMapping([[[0,0],[ctrl.width,ctrl.height]]]);
           $window.googletag.enableServices();
           $window.googletag.display(elem.attr('id'));
