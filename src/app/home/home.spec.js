@@ -14,7 +14,7 @@ describe('prx.home', function () {
     it ('attaches the picks injected to $scope', inject(function ($controller) {
       var sigil = 'sigil';
       var scope = {};
-      var controller = $controller('HomeCtrl', {picks: sigil});
+      var controller = $controller('HomeCtrl', {picks: sigil, $scope: {$on: function () {}}});
       expect(controller.picks).toBe(sigil);
     }));
   });
@@ -35,4 +35,3 @@ describe('prx.home', function () {
   });
 
 });
-

@@ -53,7 +53,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 
     sound.producer = options.producer;
     sound.story = options.story;
-    sound.next = options.next ? mkNextFun(options.next) : undefined;
+    sound.next = sound.next || (options.next ? mkNextFun(options.next) : undefined);
 
     return sound;
   }
@@ -69,7 +69,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     return function () {
       if (!calculated) {
         var previous = angular.bind(undefined, angular.identity, $q.when(this));
-        calculated = $q.when(calculator(this)).then(function (data) {
+        calculated = $q.when(calculator.call(this, this)).then(function (data) {
           data = soundFactory(data);
           data.previous = previous;
           return data;
