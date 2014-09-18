@@ -20,6 +20,7 @@ angular.module('prx', ['ngAnimate',
   'prx.modelConfig',
   'ngMobile',
   'prx.breadcrumbs',
+  'prx.zenbox',
   'prx.ads'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
