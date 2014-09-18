@@ -82,7 +82,7 @@ describe('prx.stories', function () {
           get('a')).toResolveTo(1);
     }));
 
-    it ('gets the audioUrls based on the story', function () {
+    xit ('gets the audioUrls based on the story', function () {
       var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
         file1 = ngHal.mockEnclosure('file1.mp3'),
         file2 = ngHal.mockEnclosure('file2.mp3');
