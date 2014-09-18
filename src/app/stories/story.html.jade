@@ -39,6 +39,8 @@ article.story
             | Related Site:
             .value
               a(ng-href="{{story.current.relatedWebsite | absUrl }}", rel="nofollow", ng-bind="story.current.relatedWebsite | prettyUrl ", title="{{story.current.relatedWebsite}}")
+        ul.tags(ng-show="::story.current.tags")
+          li(ng-repeat="tag in ::story.current.tags", ng-bind="tag")
       section.licensing(ng-show="story.license")
         h2 Licensing
         ul
