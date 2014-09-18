@@ -1,0 +1,3 @@
+describe('zenbox service', function () {
+
+});

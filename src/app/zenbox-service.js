@@ -1,1 +1,1 @@
-angular.module('prx.zenbox', []);
+// angular.module('prx.zenbox', []);
