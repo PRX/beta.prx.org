@@ -48,8 +48,8 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
       }
     },
     resolve: {
-      list: function (list) { return list; },
-      stories: function (stories) { return stories; }
+      list: function (storiesList) { return storiesList; },
+      stories: function (recentStories) { return recentStories; }
     }
   });
 
