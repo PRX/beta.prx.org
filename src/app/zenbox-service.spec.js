@@ -1,3 +1,0 @@
-describe('zenbox service', function () {
-
-});
