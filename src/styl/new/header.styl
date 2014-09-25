@@ -1,0 +1,19 @@
+header {
+  absolute: top left; right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  border-bottom: 1px solid lightest-grey;
+  width: 100%;
+  height: action-bar-height;
+  background: white;
+  overflow: hidden;
+  z-index: foo;
+
+  @media tall-screen {
+    position: fixed !important;
+    top: 0px !important;
+    height: tall-action-bar-height;
+  }
+}
