@@ -130,6 +130,16 @@ gulp.task('compileCss', ['compressCss', 'compressAssets'], function () {
     .pipe(gulp.dest(complDir + '/assets'));
 });
 
+/** Javascript **/
+
+gulp.task('spec', ['templates', 'buildJs', 'helperJs'], function () {
+  var cfg = {};
+  if (process.env.TRAVIS) {
+    cfg.browsers = ['PhantomJS', 'Firefox'];
+  }
+  return karma.once(cfg);
+});
+
 gulp.task('jshint', function () {
   var errors = { length : 0 };
   function formatErrors (errors) {
@@ -163,15 +173,6 @@ gulp.task('jshint', function () {
     }));
 });
 
-
-gulp.task('specs', ['templates', 'buildJs', 'helperJs'], function () {
-  var cfg = {};
-  if (process.env.TRAVIS) {
-    cfg.browsers = ['PhantomJS', 'Firefox'];
-  }
-  return karma.once(cfg);
-});
-
 gulp.task('buildJs', ['jshint'], function () {
   return es.merge(gulp.src(c.app.js)
       .pipe(feats(featsDev, {strict: false, default: true}))
@@ -203,7 +204,7 @@ gulp.task('helperJsDist', function () {
     .pipe(gulp.dest(path));
 });
 
-gulp.task('js', ['specs', 'buildJs']);
+gulp.task('js', ['spec', 'buildJs']);
 
 gulp.task('html', function (cb) {
   var walker = walk.walk(buildDir, { followLinks: false });
@@ -383,7 +384,7 @@ gulp.on('err', function (e) {
   }
 });
 
-gulp.task('checkCoverage', ['specs'], function () {
+gulp.task('checkCoverage', ['spec'], function () {
   return gulp.src('.')
     .pipe(istnbl({
       thresholds: c.covReq,
