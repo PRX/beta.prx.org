@@ -38,6 +38,7 @@
     "gulp-istanbul-enforcer": "~1.0.2",
     "gulp-jade": "^0.7.0",
     "gulp-karma": "git+https://github.com/chrisrhoden/gulp-karma.git#fix/helper_once",
+    "gulp-load-plugins": "^0.7.0",
     "gulp-newer": "^0.3.0",
     "gulp-ng-annotate": "^0.3.0",
     "gulp-order": "^1.0.6",

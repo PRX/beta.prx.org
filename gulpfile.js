@@ -6,37 +6,24 @@ var fs     = require('fs');
 
 var server;
 
+var plugin = require('gulp-load-plugins')();
+var instWd = plugin.protractor.webdriver_update;
+var prtrct = plugin.protractor.protractor;
+var karma  = plugin.karma({configFile: c.karmaCfg});
+
 var gulp   = require('gulp');
 var es     = require('event-stream');
 var through= require('through2');
-var gutil  = require('gulp-util');
-var clean  = require('gulp-clean');
-var jade   = require('gulp-jade');
-var aTempl = require('gulp-angular-templatecache');
-var rename = require('gulp-rename');
-var stylus = require('gulp-stylus');
-var concat = require('gulp-concat');
-var templt = require('gulp-template');
 var walk   = require('walk');
-var karma  = require('gulp-karma')({configFile: c.karmaCfg});
-var newer  = require('gulp-newer');
 var runSeq = require('run-sequence');
-var ngmin  = require('gulp-ng-annotate');
-var uglify = require('gulp-uglify');
 var tinyLr = require('tiny-lr');
 var path   = require('path');
 var map    = require('vinyl-map');
 var istnbl = require('gulp-istanbul-enforcer');
-var csso   = require('gulp-csso');
-var rework = require('gulp-rework');
 var moveMe = require('rework-move-media');
-var imgmin = require('gulp-imagemin');
 var jshint = require('jshint').JSHINT;
 var Notify = require('node-notifier');
-var instWd = require('gulp-protractor').webdriver_update;
-var prtrct = require('gulp-protractor').protractor;
-var order  = require('gulp-order');
-var gzip   = require('gulp-gzip');
+
 var feats  = require('./lib/gulp-featureflags');
 var pngcsh = require('imagemin-pngcrush');
 
@@ -57,14 +44,14 @@ var notifier = new Notify({});
 
 function bStyl() {
   return gulp.src(c.app.stylus)
-  .pipe(stylus({
+  .pipe(plugin.stylus({
       set: ['linenos'],
       use: ['nib'],
       paths: [__dirname + '/public', src + '/app'],
       urlFunc: ['url']
     }))
-    .pipe(rework(moveMe()))
-    .pipe(csso());
+    .pipe(plugin.rework(moveMe()))
+    .pipe(plugin.csso());
 }
 
 
@@ -76,7 +63,7 @@ function bStyl() {
 
   function formatMultiline(message) {
     if (message.indexOf("\n") !== -1) {
-      return ("\n"+message).replace(/\n(?:error[^\s]*\s*)?/ig, "\n   [" + gutil.colors.red('error') + "] ");
+      return ("\n"+message).replace(/\n(?:error[^\s]*\s*)?/ig, "\n   [" + plugin.util.colors.red('error') + "] ");
     } else {
       return message;
     }
@@ -97,7 +84,7 @@ function bStyl() {
 
 gulp.task('clean', function () {
   return gulp.src([buildDir, complDir, 'coverage'], {read: false})
-    .pipe(clean());
+    .pipe(plugin.clean());
 });
 
 gulp.task('assets', function (cb) {
@@ -105,8 +92,8 @@ gulp.task('assets', function (cb) {
       gulp.src(c.app.assets, {base: src}),
       gulp.src(c.vendor.assets, {base: cwd})
     )
-    .pipe(newer(asCache))
-    .pipe(imgmin({
+    .pipe(plugin.newer(asCache))
+    .pipe(plugin.imagemin({
       progressive: true,
       use: [pngcsh()]
     }))
@@ -143,7 +130,7 @@ gulp.task('jshint', function () {
     }))
     .pipe(through.obj(function (file, enc, next) {
       if (errors.length) {
-        next(new gutil.PluginError('gulp-jshint', formatErrors(errors)));
+        next(new plugin.util.PluginError('gulp-jshint', formatErrors(errors)));
         this.end();
       } else {
         next();
@@ -153,7 +140,7 @@ gulp.task('jshint', function () {
 
 gulp.task('css', ['assets'], function () {
   return bStyl()
-  .pipe(concat(fileName + '.css'))
+  .pipe(plugin.concat(fileName + '.css'))
   .pipe(gulp.dest(buildDir + '/assets/'));
 });
 
@@ -169,7 +156,7 @@ gulp.task('buildJs', ['jshint'], function () {
   return es.merge(gulp.src(c.app.js)
       .pipe(feats(featsDev, {strict: false, default: true}))
     , gulp.src(vBuildJs, {base: cwd}))
-    .pipe(newer(buildDir))
+    .pipe(plugin.newer(buildDir))
     .pipe(gulp.dest(buildDir));
 });
 
@@ -180,8 +167,8 @@ gulp.task('helperJs', function () {
 
   return gulp.src(c.test.helper.src)
     .pipe(feats(featsDev, {strict: false, default: true}))
-    .pipe(rename(name))
-    .pipe(newer(path))
+    .pipe(plugin.rename(name))
+    .pipe(plugin.newer(path))
     .pipe(gulp.dest(path));
 });
 
@@ -192,7 +179,7 @@ gulp.task('helperJsDist', function () {
 
   return gulp.src(c.test.helper.src)
     .pipe(feats(featDist, {strict: true, default: false}))
-    .pipe(rename(name))
+    .pipe(plugin.rename(name))
     .pipe(gulp.dest(path));
 });
 
@@ -216,7 +203,7 @@ gulp.task('html', function (cb) {
   });
   walker.on('end', function () {
     gulp.src(c.app.html)
-      .pipe(templt(ctx))
+      .pipe(plugin.template(ctx))
       .pipe(gulp.dest(buildDir))
       .on('end', cb);
   });
@@ -224,17 +211,17 @@ gulp.task('html', function (cb) {
 
 gulp.task('templates', function () {
   var compiled = gulp.src(c.app.jade)
-    .pipe(rename(function (path) {
+    .pipe(plugin.rename(function (path) {
       path.dirname = path.dirname.replace(/^app\/?/, '');
       path.extname = '';
     }))
-    .pipe(newer(buildDir + '/templates-app.js'))
-    .pipe(jade());
+    .pipe(plugin.newer(buildDir + '/templates-app.js'))
+    .pipe(plugin.jade());
   return es.merge(
       compiled.pipe(map(function(code) { return code; }))
-      .pipe(newer(buildDir))
+      .pipe(plugin.newer(buildDir))
       .pipe(gulp.dest(buildDir)),
-      compiled.pipe(aTempl('templates.js', {standalone: true}))
+      compiled.pipe(plugin.angularTemplatecache('templates.js', {standalone: true}))
         .pipe(gulp.dest(buildDir + '/app'))
     );
 });
@@ -249,14 +236,14 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
   return es.merge(
     gulp.src(vComplJs),
     gulp.src(c.app.js.concat(buildDir + '/app/templates.js'))
-      .pipe(ngmin())
+      .pipe(plugin.ngAnnotate())
       .pipe(feats(featDist, {strict: true, default: false}))
   )
-  .pipe(order(['**/angular?(.min).js', '*']))
-  .pipe(concat(fileName+'.js'))
+  .pipe(plugin.order(['**/angular?(.min).js', '*']))
+  .pipe(plugin.concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
-  .pipe(uglify({preserveComments: 'some', outSourceMap: true}))
-  .pipe(rename(function (path) {
+  .pipe(plugin.uglify({preserveComments: 'some', outSourceMap: true}))
+  .pipe(plugin.rename(function (path) {
     if (path.extname == '.js') {
       path.extname = '.min.js';
     }
@@ -276,7 +263,7 @@ gulp.task('distHtml', function () {
     compile: true
   };
   return gulp.src(c.app.html)
-    .pipe(templt(ctx))
+    .pipe(plugin.template(ctx))
     .pipe(feats(featDist, {strict: true, default: false}))
     .pipe(gulp.dest(complDir));
 });
@@ -312,7 +299,7 @@ gulp.task('cacheBust', function (done) {
 
 gulp.task('compressDist', function () {
   return gulp.src(complDir + "/**/*.*")
-  .pipe(gzip())
+  .pipe(plugin.gzip())
   .pipe(gulp.dest(complDir));
 });
 
@@ -334,11 +321,11 @@ gulp.task('build_', function (cb) {
 gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
   server = require(cwd+'/'+c.app.server)
     .listen(process.env.PORT || 8080, buildDir);
-  gutil.log("Listening on port " + process.env.PORT || 8080);
+  plugin.util.log("Listening on port " + process.env.PORT || 8080);
 
   var lr = tinyLr();
   lr.listen(35729);
-  gutil.log("LiveReload server started on port 35729");
+  plugin.util.log("LiveReload server started on port 35729");
 
   gulp.watch(buildDir + "/**/*", function (e) {
     lr.changed({
@@ -371,13 +358,13 @@ gulp.task('default', ['watch']);
 
 gulp.on('err', function (e) {
   if (!this.tasks['watch'].running) {
-    gutil.log("Failure. Terminating.");
+    plugin.util.log("Failure. Terminating.");
     process.exit(1);
   } else {
     notifier.notify({message: "Error in " + e.err.plugin + ": " + e.message }, function (e, t) { });
-    gutil.log(gutil.colors.red("Error in build. Continuing execution for `watch` task."));
+    plugin.util.log(plugin.util.colors.red("Error in build. Continuing execution for `watch` task."));
     console.log('');
-    gutil.beep();
+    plugin.util.beep();
   }
 });
 
@@ -411,7 +398,7 @@ gulp.task('coveralls', ['checkCoverage', 'protractor'], function (done) {
   }
 
   function log (data) {
-    gutil.log(data.toString().replace(/^\n|\n$/g, ''));
+    plugin.util.log(data.toString().replace(/^\n|\n$/g, ''));
   }
 });
 
@@ -433,7 +420,7 @@ gulp.task('protractor', ['installWebdriver', 'compile', 'compileServer'], functi
 gulp.task('runProtractor', function () {
   return gulp.src(c.e2eSpecs)
   .pipe(prtrct({configFile: c.protractorCfg, baseUrl: 'http://localhost:8080'}))
-  .on('error', function (e) { this.emit('end', new gutil.PluginError('gulp-jshint', e)); });
+  .on('error', function (e) { this.emit('end', new plugin.util.PluginError('gulp-jshint', e)); });
 });
 
 gulp.task('ci', ['coveralls']);
