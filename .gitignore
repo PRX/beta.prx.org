@@ -10,3 +10,4 @@ src/common/.*
 log
 .bundle
 .assets
+.cache

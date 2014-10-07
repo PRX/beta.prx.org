@@ -28,7 +28,6 @@ var feats  = require('./lib/gulp-featureflags');
 var pngcsh = require('imagemin-pngcrush');
 
 var buildDir = c.buildDir;
-var asCache  = c.assetCache;
 var complDir = c.compileDir;
 var cwd      = __dirname;
 var src      = cwd + '/src';
@@ -41,19 +40,6 @@ var featsDev = cwd + '/config/flags.dev.json';
 var featDist = cwd + '/config/flags.release.json';
 
 var notifier = new Notify({});
-
-function bStyl() {
-  return gulp.src(c.app.stylus)
-  .pipe(plugin.stylus({
-      set: ['linenos'],
-      use: ['nib'],
-      paths: [__dirname + '/public', src + '/app'],
-      urlFunc: ['url']
-    }))
-    .pipe(plugin.rework(moveMe()))
-    .pipe(plugin.csso());
-}
-
 
 // Fix formatting of error messages with newlines
 // so that the whole message starts on its own line.
@@ -87,22 +73,61 @@ gulp.task('clean', function () {
     .pipe(plugin.clean());
 });
 
-gulp.task('assets', function (cb) {
-  es.merge(
+
+/** Static Assets **/
+
+gulp.task('buildAssets', ['compressAssets'], function () {
+  return gulp.src('.cache/assets/**/*')
+    .pipe(gulp.dest(buildDir));
+});
+
+gulp.task('compileAssets', ['compressAssets'], function () {
+  return gulp.src('.cache/assets/**/*')
+    .pipe(gulp.dest(complDir));
+});
+
+gulp.task('compressAssets', function () {
+  return es.merge(
       gulp.src(c.app.assets, {base: src}),
       gulp.src(c.vendor.assets, {base: cwd})
     )
-    .pipe(plugin.newer(asCache))
+    .pipe(plugin.newer('.cache/assets'))
     .pipe(plugin.imagemin({
       progressive: true,
       use: [pngcsh()]
     }))
-    .pipe(gulp.dest(asCache))
-    .on('end', function () {
-      gulp.src(asCache + "/**/*")
-      .pipe(gulp.dest(buildDir))
-      .on('end', cb);
-    });
+    .pipe(gulp.dest('.cache/assets'));
+});
+
+/** Stylesheets **/
+
+gulp.task('stylus', function () {
+  return gulp.src(c.app.stylus)
+    .pipe(plugin.stylus({
+      set: ['linenos'],
+      use: ['nib'],
+      paths: [src + '/app']
+    }))
+    .pipe(plugin.rework(moveMe()))
+    .pipe(plugin.concat(fileName + '.css'))
+    .pipe(gulp.dest('.cache/stylus'));
+});
+
+gulp.task('buildCss', ['stylus'], function () {
+  return gulp.src('.cache/stylus/**/*')
+    .pipe(gulp.dest(buildDir + '/assets'));
+});
+
+gulp.task('compressCss', ['stylus'], function () {
+  return gulp.src('.cache/stylus/**/*')
+    .pipe(plugin.csso())
+    .pipe(gulp.dest('.cache/css-compress'));
+})
+
+gulp.task('compileCss', ['compressCss', 'compressAssets'], function () {
+  return gulp.src('.cache/css-compress/**/*')
+    .pipe(plugin.base64({ baseDir: '.cache/assets' }))
+    .pipe(gulp.dest(complDir + '/assets'));
 });
 
 gulp.task('jshint', function () {
@@ -138,11 +163,6 @@ gulp.task('jshint', function () {
     }));
 });
 
-gulp.task('css', ['assets'], function () {
-  return bStyl()
-  .pipe(plugin.concat(fileName + '.css'))
-  .pipe(gulp.dest(buildDir + '/assets/'));
-});
 
 gulp.task('specs', ['templates', 'buildJs', 'helperJs'], function () {
   var cfg = {};
@@ -227,10 +247,10 @@ gulp.task('templates', function () {
 });
 
 gulp.task('build', function (cb) {
-  runSeq('clean', ['templates', 'js', 'css', 'assets'], 'html', cb);
+  runSeq('clean', ['templates', 'js', 'buildCss', 'buildAssets'], 'html', cb);
 });
 
-gulp.task('dist', ['distJs', 'distAssets', 'distHtml']);
+gulp.task('dist', ['distJs', 'compileCss', 'compileAssets', 'distHtml']);
 
 gulp.task('distJs', ['buildJs', 'templates'], function () {
   return es.merge(
@@ -249,11 +269,6 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
     }
   }))
   .pipe(gulp.dest(complDir + '/assets'));
-});
-
-gulp.task('distAssets', ['css', 'assets'], function () {
-  return gulp.src([buildDir + '/assets/**/*.*'])
-    .pipe(gulp.dest(complDir + '/assets'));
 });
 
 gulp.task('distHtml', function () {
@@ -315,7 +330,7 @@ gulp.task('compileServer', ['compile'], function () {
 });
 
 gulp.task('build_', function (cb) {
-  runSeq('clean', ['templates', 'buildJs', 'css', 'assets'], 'html', cb);
+  runSeq('clean', ['templates', 'buildJs', 'buildCss', 'buildAssets'], 'html', cb);
 });
 
 gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
@@ -335,7 +350,7 @@ gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
     });
   });
 
-  gulp.watch('./src/**/*.styl', ['css']);
+  gulp.watch('./src/**/*.styl', ['buildCss']);
   gulp.watch(c.app.jade, ['templates']);
   gulp.watch(c.app.html, ['html']);
   gulp.watch([buildDir + '/**/*.js', buildDir + '/**/*.css'], function (e) {
