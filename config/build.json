@@ -1,5 +1,6 @@
 {
   "buildDir": "public",
+  "assetCache": ".assets",
   "compileDir": "bin",
   "app": {
     "js": [
