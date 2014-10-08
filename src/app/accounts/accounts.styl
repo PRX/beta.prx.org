@@ -1,0 +1,53 @@
+@import "accounts/accounts.hero.styl";
+
+.account {
+  // Height is 70, add some margin to get it to 84
+  #hero .img,
+  & > a .img {
+    border: 2px solid light-grey;
+    background-color: slight-grey;
+    border-radius: 50%;
+    width: 70px;
+    height: @width;
+    float: left;
+    margin: 7px $micro-spacing;
+    position: relative;
+    z-index: z-depth-4--accountImage;
+
+    &.default {
+      image: '/assets/images/anonymous.png' 70px;
+    }
+  }
+}
+
+section.account {
+  min-width: 250px;
+
+  h2 {
+    height: 6rem;
+    margin: 0px !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.account {
+  .path,
+  .location,
+  .url {
+    font-size: 12px;
+    clear: both;
+    // margin-bottom: 8px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 22px;
+
+    @media multi-column {
+      margin-left: 10px;
+    }
+  }
+
+  .path { image: 'assets/images/user_icon.png' 15px 13px; }
+  .location { image: 'assets/images/location_icon.png' 12px 15px; }
+  .url { image: 'assets/images/icons/website.png' 14px; }
+}
