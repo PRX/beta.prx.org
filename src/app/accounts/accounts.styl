@@ -22,6 +22,7 @@
 
 section.account {
   min-width: 250px;
+  padding-bottom: 1.5rem;
 
   h2 {
     height: 6rem;
@@ -31,19 +32,32 @@ section.account {
   }
 }
 
+// These are given vertical space of 1 measure for the text and half a measure
+// (0.75rem) total for padding. When there are two detail elements, this keeps
+// vertical rhythm, but when there are three (or any odd number), the end of the
+// section will be off by half a measure.
 .account {
   .path,
   .location,
   .url {
-    font-size: 12px;
+    font-size: 12px; // TODO
     clear: both;
     // margin-bottom: 8px;
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 22px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+
 
     @media multi-column {
       margin-left: 10px;
+    }
+
+    // This rule corrects for the odd-number problem discussed above, by adding
+    // an extra half measure
+    &:nth-of-type(odd):last-child {
+      margin-bottom: 0.75rem;
     }
   }
 
