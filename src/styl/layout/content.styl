@@ -47,6 +47,8 @@
 
   & > * {
     width: 100%;
+    @extends .live-area;
+    full-bleed(vertical);
   }
 
   & > section {
@@ -90,11 +92,12 @@
     // match the height of the sidebar
     align-content: flex-start;
 
-    background-color: white;
+    background-color: content-fill-color;
   }
 }
 
 #asides {
+  padding-top: 1.5rem;
   min-width: 250px;
 
   @media multi-column {
@@ -114,7 +117,7 @@
       margin-top: section-spacing;
 
       section {
-        background-color: white;
+        background-color: content-fill-color;
       }
 
       // except the first one, which has no space above

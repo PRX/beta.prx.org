@@ -1,7 +1,11 @@
+// Default sizing for story element proper is 70. Total space should ideally
+// be a factor of 21, so we shoot for 84.
+
 section.story {
   position: relative;
-  font-size: 10px;
+  font-size: 10px; // TODO
   height: 70px;
+  margin-top: 14px; // TODO
 
   & > a {
     float: left;
@@ -9,8 +13,8 @@ section.story {
     .img {
       width: 70px;
       height: @width;
-      margin-right: micro-spacing;
-      background-color: slight-grey;
+      margin-right: $micro-spacing;
+      background-color: slight-grey; // TODO
       position: relative;
 
       &.default {
@@ -22,7 +26,7 @@ section.story {
         absolute: bottom left;
         width: 25px;
         height: @width;
-        background: rgba(orange, 0.9) url('/assets/images/bt_play.png') center center / 12px no-repeat;
+        background: rgba(orange, 0.9) url('/assets/images/bt_play.png') center center / 12px no-repeat; // TODO color
         content: '';
       }
 
@@ -51,7 +55,7 @@ section.story {
 
   .category {
     position: absolute;
-    color: light-grey;
+    color: light-grey; // TODO
     font-size: 8px;
     line-height: 10px;
     font-weight: 600;
@@ -59,7 +63,7 @@ section.story {
     text-transform: uppercase;
     white-space: nowrap;
     top: 0px;
-    left: (70px + micro-spacing);
+    left: 79px; // TODO
   }
 
   &.growable {
@@ -113,10 +117,10 @@ section.story {
       absolute: bottom 22px left;
       right: 0;
       // padding: 7px 10px 0px;
-      z-index: 11;
+      z-index: 11; // TODO
 
       a {
-        color: white;
+        color: white; // TODO
         font-weight: lighter;
       }
     }
@@ -137,8 +141,8 @@ section.story {
         height: 71px;
         absolute: bottom left;
         right: 0;
-        z-index: -1;
-        background-color: rgba(darkest-grey, 0.7);
+        z-index: -1; // TODO
+        background-color: rgba(darkest-grey, 0.7); // TODO
       }
     }
 
