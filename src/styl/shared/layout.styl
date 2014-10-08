@@ -37,6 +37,8 @@ $live-area-width-max                     = 1000px;
   @extends .standard-vertical-spacing;
 }
 
+// Full-bleed will remove spacing for the container, but does not change the
+// max width restriction, which should always be enforced
 full-bleed(direction=null)
   if direction == vertical
     padding-top: 0;
@@ -57,43 +59,13 @@ full-bleed(direction=null)
       margin-left: 0;
     }
 
-//
-//
-//
-//
-//
-// live-area-sizing() {
-//
-// }
-//
-// // Used in conjunciton with $live-area-sizing to build a nicely formatted
-// // space for information
-// live-area-vertical-spacing() {
-//   margin-top: compact-spacing;
-//   margin-bottom: compact-spacing;
-//
-//   @media multi-column {
-//     margin-top: comfortable-spacing;
-//     margin-bottom: comfortable-spacing;
-//   }
-// }
-// live-area-horizontal-spacing() {
-//   margin-left: compact-spacing;
-//   margin-right: compact-spacing;
-//
-//   @media multi-column {
-//     margin-left: comfortable-spacing;
-//     margin-right: comfortable-spacing;
-//   }
-// }
-// live-area-spacing() {
-//   live-area-horizontal-spacing();
-//   live-area-vertical-spacing();
-// }
-//
-// // Convenience mixin for elements that can handle live area sizing and
-// // spacing themselves fully
-// live-area() {
-//   live-area-sizing();
-//   live-area-spacing();
-// }
+// For cases where an element is full-bleed at smaller viewport sizes the
+// live-area-spacing macro can be used add spacing back
+live-area-spacing(direction=null)
+  if direction == vertical
+    standard-vertical-spacing();
+  else if direction == horizontal
+    standard-horizontal-spacing();
+  else
+    standard-vertical-spacing();
+    standard-horizontal-spacing();

@@ -1,0 +1,88 @@
+// The hero is true full-bleed (i.e. spans the entire trim area), and
+// the child container is full-bleed vertically, but maintains default
+// horizontal spacings (for all screen sizes)
+// Vertical rhythm is generally applied loosely within the hero,
+// though the entire hero should not be disruptive.
+#hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  // This container is the "live area" of the hero, so it enforces both max
+  // width for the hero content, and spacing between the viewport edge and
+  // content at small screen sizes
+  .container {
+    @extends .live-area;
+    full-bleed(vertical);
+
+    display: flex;
+    flex-flow: row wrap;
+  }
+}
+
+// The overall presentation for #content should generally
+// be minimal, such that the style of its parent (usually
+// `main > article`) shows through.
+//
+// #content is a full bleed "live area", and as such it's contents can not
+// extend beyond maximum width define for "live areas". Because it is full bleed
+//
+#content {
+  @extend .live-area
+  full-bleed();
+}
+
+// Main and asides make up a majority of the content
+// on a given page. Asides' children should be limited
+// to <aside> elements. Main's children are generally
+// <section> elements, but not always.
+// Structurally main comes before asides, as that is
+// natural order on small screens. Visually asides
+// move in front of main when space permits them to
+// be placed side-by-side.
+
+#main,
+#asides aside {
+  display: flex;
+  flex-wrap: wrap;
+  @extends .live-area;
+  full-bleed();
+
+  & > * {
+    width: 100%;
+    @extends .live-area;
+    full-bleed(vertical);
+  }
+
+  & > section {
+    flex: 1 auto;
+
+    &.ng-leave {
+      transition: all 0.2s;
+      transform-origin: center top;
+
+      &.ng-leave-active {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    & + section {
+      // border-top: 1px solid offwhite;
+      // margin-top: $measure * 2;
+    }
+
+    &:last-child {
+      // margin-bottom: $measure * 1;
+    }
+  }
+}
+
+#main {
+  min-width: 300px;
+}
+
+#asides {
+  padding-top: 1.5rem;
+  min-width: 250px;
+}

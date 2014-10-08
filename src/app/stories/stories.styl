@@ -14,11 +14,18 @@ article.story {
   .ad {
     // Ad is 50px tall.
     // 3 * measure = 63
-    border-top: 10px solid transparent;
-    border-bottom: 3px solid transparent;
+    background: page-fill-color;
+    border-top: 10px solid page-fill-color;
+    border-bottom: 3px solid page-fill-color;
 
-    @media multi-column {
+    @media $media-tablet {
+      // add another measure
+      border-top-width: 10px + 21px;
       border-bottom: 5px solid transparent;
+
+      .slot {
+        margin-left: $comfortable-spacing * -1;
+      }
     }
   }
 }

@@ -1,0 +1,67 @@
+// #content by default is full bleed on small screens, so we need to add some
+// spacing at larger sizes to prevent edge collisions
+@media $media-tablet {
+  #content {
+    live-area-spacing(horizontal);
+
+    // and we flow the content inside it, mostly so we can have factored sizing
+    // and reordering.
+    display: flex;
+    flex-flow: row wrap;
+
+    // stick blocks to the top of the container
+    align-content: flex-start;
+  }
+
+  #main,
+  #asides aside {
+    & > * {
+      full-bleed();
+      internal-horizontal-spacing();
+    }
+  }
+
+  #main {
+    // Move it after the asides
+    order: 2;
+
+    // let it stretch to fill the area to a factor of 5
+    flex: 5 5 0px;
+
+    // stretch to be as tall as the sidebar if the sidebar is naturally taller
+    align-self: stretch;
+
+    // stick sections to the top of the block if this has been stretched to
+    // match the height of the sidebar
+    align-content: flex-start;
+
+    background-color: content-fill-color;
+  }
+
+  #asides {
+    padding-top: 0;
+
+    // move it before the main column
+    order: 1;
+
+    // allow it to stretch horizontally by a factor of 2
+    flex: 2 2 0px;
+    max-width: 280px;
+
+    // spacing between the main content and the sidebar. Put on the sidebar
+    // as some pages have only main content.
+    margin-right: column-spacing;
+
+    // each block of sidebar content is a white box with 20px above
+    aside {
+      section {
+        background-color: content-fill-color;
+      }
+
+      // except the first one, which has no space above
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}

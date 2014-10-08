@@ -1,3 +1,39 @@
+//
+////////////////////////////////////////////////////////////////////////////////
+// Generic Page Structure
+////////////////////////////////////////////////////////////////////////////////
+// The common structure of the site, regardless of viewport size, is as follows:
+//
+// <HTML> – Fills the viewport
+// <BODY> "Trim Area" – Grows and shrinks with screen width, up to 1200px
+// MAIN – Fills "trim area" but provides head room for nav bar
+// <ARTICLE>,etc "Content root" – Fills <MAIN>
+// #HERO,#CONTENT,etc "Content wrappers" – "Content wrappers" may or may not be
+//                     "live areas". Some elements, such as #hero, are not "live
+//                     areas", because they are full bleed; these elements
+//                     require a child to enforce "live area" sizing/spacing.
+//                     When a content wrapper is a "live area", by default it
+//                     enforces a maximum width and margins; the margins can be
+//                     removed with "full bleed" macros, but be aware this will
+//                     not bleed content to the edge of the "trim area", only
+//                     to the edge of the "live area" (1000px max). This is
+//                     effectively true full bleed at some viewport sizes, but
+//                     not larger sizes larger than the "live area" max width.
+// .CONTAINER,#MAIN,#ASIDES "Content elements" – "Content elements"
+//                     are the highest level elements that do not necessarily
+//                     constitute a "row" on the page. They may be used create
+//                     columns, or as "live areas" when their parents were true
+//                     full bleed elements, or used to enforce "live area"
+//                     spacing when the parent was itself a full bleed "live
+//                     area"
+// <DIV>,<SECTION>,etc "Section elements" – "Section elements" are distinct
+//                     units of content. In cases where sections need to be
+//                     fill the width of small viewports, their ancestors must
+//                     have not enforced "live area" spacing, so it is the
+//                     responsibility of the sections, at least at certain
+//                     screen sizes
+////////////////////////////////////////////////////////////////////////////////
+
 // Base stylesheets must have no dependencies
 @import "base/reset.styl";
 @import "base/colors.styl";
@@ -21,8 +57,10 @@
 // Application layout
 ////
 @import "layout/header.styl";
+@import "layout/header.tablet.styl";
 @import "layout/footer.styl";
-@import "layout/content.styl";
+@import "layout/article.styl";
+@import "layout/article.tablet.styl";
 //// Application may depend on various components and should be imported last
 @import "layout/application.styl";
 
