@@ -9,6 +9,9 @@
   .container {
     @extends .live-area;
     full-bleed(vertical);
+
+    display: flex;
+    flex-flow: row wrap;
   }
 }
 
@@ -20,6 +23,8 @@
   full-bleed();
 
   @media multi-column {
+    @extends .live-area;
+    full-bleed(vertical);
 
     // and we flow the content inside it, mostly so we can have factored sizing
     // and reordering.
@@ -49,6 +54,10 @@
     width: 100%;
     @extends .live-area;
     full-bleed(vertical);
+
+    @media multi-column {
+      // full-bleed();
+    }
   }
 
   & > section {
@@ -101,6 +110,8 @@
   min-width: 250px;
 
   @media multi-column {
+    padding-top: 0;
+
     // move it before the main column
     order: 1;
 

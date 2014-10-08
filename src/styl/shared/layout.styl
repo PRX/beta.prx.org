@@ -25,7 +25,7 @@ $live-area-width-max                     = 1000px;
 // The Live Area class enforces a max width on the element it's added to
 // (smaller than the trim width in most cases), and spacing on all four sides.
 // Vertical spacing by default is the base line height, so it does not disrupt
-// vertical rhythm. The `full-bleed` mixin can be used to remove the padding in
+// vertical rhythm. The `full-bleed` mixin can be used to remove the spacing in
 // either or both directions. When making an element full bleed vertically, that
 // element becomes responsible for its vertical rhythm.
 .live-area {
@@ -44,8 +44,18 @@ full-bleed(direction=null)
   else if direction == horizontal
     padding-right: 0;
     padding-left: 0;
+
+    @media multi-column {
+      margin-right: 0;
+      margin-left: 0;
+    }
   else
     padding: 0;
+
+    @media multi-column {
+      margin-right: 0;
+      margin-left: 0;
+    }
 
 //
 //
