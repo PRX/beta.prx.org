@@ -1,0 +1,66 @@
+html {
+  height: 100%;
+  background: background-fill-color;
+}
+
+// Body visually contains all standard page components
+// (header, content, footer, etc). It fills its
+// container horizontally up to a point, and then
+// becomes centered on a contrasting background.
+// Accessory components could visually fall outside of
+// body.
+// The body element is equivalent to the trim area, and
+// only the body element should be treated as the trim
+// area (hence element selector)
+//
+// Children of body/trim are responsible for their own
+// sizing and layout. In addition to standard content
+// that is part of the main flow of the page, body's
+// children could include modals, popups, etc, so no
+// standard behavior is assumed for any children.
+body {
+  @extends .trim-area;
+  @extends $full-site-spacing;
+  position: relative;
+  background: page-fill-color;
+  background-image: url("http://basehold.it/i/21");
+  background-position: 0 250px;
+}
+
+// Main is the root angular ui-view.
+//
+// Main does not map 1-to-1 to a functional design
+// concept. It acts primarily as a wrapper within the
+// trim area that is bound to the application. In
+// practice it is used to provide space for the header
+// bar.
+// The children and grandchildren of main generally are
+// what dictate the structure information of pages.
+main {
+  @extends $header-spacing;
+}
+
+// The following two rule sets are magic. The are included
+// because so much of the basic construction of the site
+// follows this pattern. Other, even similar, rules, should
+// probably be added as classes.
+
+// Nearly all children of main, similar to main itself,
+// are wrappers within the trim area. In order to support
+// edge cases, the rules used for laying out actual content
+// (i.e. elements below this level), are opt-in. Any child
+// elements that act in the same way as `main > article`
+// should be added to this rule set.
+main > article {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+// Children of content container elements
+// (e.g. `main > article`), by default, fill the width of the
+// container in order to allow for full-bleed design elements
+// within the trim area.
+main > article > * {
+  width: 100%;
+}

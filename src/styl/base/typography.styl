@@ -1,0 +1,78 @@
+//
+//
+// This file defines type properties for many common elements. It will only ever
+// define typeface, text size, line height, and vertical margin. The goal of
+// these property definitions is to establish a well-defined measure for text
+// and create consistent vertical rhythm. When styling text outside of this file
+// you may want to override all these properties. It's recommended you do it in
+// such a way as to preserve the vertical rhythm.
+// (Typeface properties include: case, color, etc)
+
+// Sizing (private)
+////////////////////////////////////////////////////////////////////////////////
+$font-size-tiniest                       =  8px;
+$font-size-tinier                        = 10px;
+$font-size-tiny                          = 11px;
+$font-size-smaller                       = 12px;
+$font-size-small                         = 13px;
+$font-size-base                          = 14px;
+$font-size-large                         = 16px;
+$font-size-larger                        = 20px;
+$font-size-big                           = 22px;
+$font-size-bigger                        = 25px;
+$font-size-biggest                       = 32px;
+
+$line-height-base                        = 1.5rem;
+$measure                                 = $line-height-base;
+
+// Typesets
+////////////////////////////////////////////////////////////////////////////////
+$typeset-body-copy {
+  font-size: $font-size-base;
+  font-family: 'Open Sans', sans-serif;
+  line-height: $line-height-base;
+  color: body-copy-color;
+}
+
+$typeset-hero-aux {
+  font-size: $font-size-tiny;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+$typeset-hero-caption {
+  font-size: $font-size-smaller;
+}
+
+// Main heading for page
+// 35/22px
+$typeset-page-heading {
+  font-weight: 300;
+  margin-top: (1.5rem * 0.3);
+  margin-bottom: (1.5rem * 0.7);
+
+  font-size: $font-size-larger;
+  line-height: 1.5rem;
+
+  @media multi-column {
+    font-size: $font-size-biggest;
+    line-height: 3rem;
+  }
+}
+
+// Top-level heading for standard body content/copy
+// 25/20px
+$typeset-body-heading {
+  font-weight: 100;
+  margin-top: (1.5rem * 0.75);
+  margin-bottom: (1.5rem * 0.25);
+
+  font-size: $font-size-larger;
+  line-height: 1.5rem;
+
+  @media multi-column {
+    font-size: $font-size-bigger;
+    line-height: 3rem;
+  }
+}

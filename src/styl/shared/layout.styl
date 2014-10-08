@@ -1,0 +1,89 @@
+// Vertical rhythm is based on a 21px measure. Any layout that adds vertical
+// spacing should try not to disrupt the rhythm, by adding multiples of that
+// measure. When possible, a full measure should be added before any text, so
+// text within the element isn't all off the baseline, even if the spacing after
+// the text would correct it. For visually distinct areas with limited text it's
+// okay to space things visually
+
+// Structural constraints
+////////////////////////////////////////////////////////////////////////////////
+// Trim area is the space given to the entire frame used to display most
+// content on the page. Generally in small devises the trim area will
+// fill the screen and on larger devices, at some sizes, the trim area
+// will have a maximum width and be centered within void space
+$trim-area-width-max                     = 1200px;
+// Live area is the space within the trim area that contains text,
+// pictures, etc. The live area should have good margins at all screen
+// sizes to ensure the information is easy to view
+$live-area-width-max                     = 1000px;
+
+.trim-area {
+  max-width: $trim-area-width-max;
+  margin: 0 auto;
+}
+
+// The Live Area class enforces a max width on the element it's added to
+// (smaller than the trim width in most cases), and spacing on all four sides.
+// Vertical spacing by default is the base line height, so it does not disrupt
+// vertical rhythm. The `full-bleed` mixin can be used to remove the padding in
+// either or both directions. When making an element full bleed vertically, that
+// element becomes responsible for its vertical rhythm.
+.live-area {
+  max-width: $live-area-width-max;
+  flex-basis: $live-area-width-max;
+  margin: 0 auto;
+
+  @extends .standard-horizontal-spacing;
+  @extends .standard-vertical-spacing;
+}
+
+full-bleed(direction=null)
+  if direction == vertical
+    padding-top: 0;
+    padding-bottom: 0;
+  else if direction == horizontal
+    padding-right: 0;
+    padding-left: 0;
+  else
+    padding: 0;
+
+//
+//
+//
+//
+//
+// live-area-sizing() {
+//
+// }
+//
+// // Used in conjunciton with $live-area-sizing to build a nicely formatted
+// // space for information
+// live-area-vertical-spacing() {
+//   margin-top: compact-spacing;
+//   margin-bottom: compact-spacing;
+//
+//   @media multi-column {
+//     margin-top: comfortable-spacing;
+//     margin-bottom: comfortable-spacing;
+//   }
+// }
+// live-area-horizontal-spacing() {
+//   margin-left: compact-spacing;
+//   margin-right: compact-spacing;
+//
+//   @media multi-column {
+//     margin-left: comfortable-spacing;
+//     margin-right: comfortable-spacing;
+//   }
+// }
+// live-area-spacing() {
+//   live-area-horizontal-spacing();
+//   live-area-vertical-spacing();
+// }
+//
+// // Convenience mixin for elements that can handle live area sizing and
+// // spacing themselves fully
+// live-area() {
+//   live-area-sizing();
+//   live-area-spacing();
+// }

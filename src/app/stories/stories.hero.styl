@@ -1,0 +1,131 @@
+article.story #hero {
+  position: relative;
+  color: hero-text-color;
+  font-weight: lighter;
+  background-image: url('/assets/images/tl_blue_mics.png');
+  padding-top: $compact-spacing;
+
+  @media multi-column {
+    padding-bottom: $compact-spacing;
+  }
+
+  a {
+    color: inherit;
+    font-weight: normal;
+  }
+}
+
+article.story #hero .category {
+  @extends $typeset-hero-aux;
+  color: hero-subtle-text-color;
+  line-height: 1rem;
+}
+
+article.story #hero .player {
+  float: left;
+}
+
+article.story #hero .player {
+  float: left;
+  margin-top: 1.5rem;
+  margin-right: $compact-spacing;
+
+  @media multi-column {
+    order: 1;
+    flex: 0 100%;
+    min-height: 4rem;
+    // margin-right: 0;
+
+    button {
+      width: 6rem;
+      height: @width;
+    }
+  }
+}
+
+article.story #hero h1 {
+  height: (1.5rem * 2.7);
+  overflow: hidden;
+}
+
+article.story #hero {
+  .media {
+
+    ul.metadata {
+      display: inline-block;
+
+      li {
+        @extend $typeset-hero-caption;
+        white-space: nowrap;
+        display: inline-block;
+        margin-right: 10px;
+        // line-height: 10px;
+        padding-right: 10px;
+        border-right: 1px solid lightest-grey;
+        // margin-bottom: 10px;
+
+        &:last-of-type {
+          border-right: none;
+          padding-right: 0;
+        }
+      }
+    }
+
+    a.content_advisory {
+      display:none;
+    }
+  }
+}
+
+// }
+//
+// article.story #hero .container {
+//   @media multi-column {
+//     display: flex;
+//     flex-flow: row wrap;
+//   }
+// }
+//
+
+
+
+article.story #hero .media {
+  ul.metadata {
+    display: inline-block;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  li {
+    white-space: nowrap;
+    display: inline-block;
+    margin-right: micro-spacing;
+    border-right: 1px solid slight-grey;
+    padding-right: micro-spacing;
+    line-height: 1rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+
+    &:last-of-type {
+      border-right: none;
+    }
+  }
+
+  @media multi-column {
+    flex: 0 100%;
+
+    ul.metadata {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .img {
+      width: 78px;
+      height: @width;
+      border: 1px solid slight-grey;
+      background-color: grey;
+      margin-top: 3rem;
+      margin-right: cozy-spacing;
+    }
+  }
+}

@@ -16,7 +16,7 @@ article.story
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
-      prx-social-actions(text="story.current.title")
+    prx-social-actions(text="story.current.title")
   #content
     #main
       prx-ad(slot="/41755363/visitor_story_view_less_than_800",

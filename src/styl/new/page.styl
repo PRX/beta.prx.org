@@ -1,0 +1,56 @@
+// Structural constraints
+// --------------------------------------------------
+// Trim area is the space given to the entire frame used to display most
+// content on the page. Generally in small devises the trim area will
+// fill the screen and on larger devices, at some sizes, the trim area
+// will have a maximum width and be centered within void space
+max-trim-width =               1200px;
+// Live area is the space within the trim area that contains text,
+// pictures, etc. The live area should have good margins at all screen
+// sizes to ensure the information is easy to view
+max-live-width =               1000px;
+
+$trim-area {
+  max-width: max-trim-width;
+  margin: 0 auto;
+}
+
+// The live-area-sizing mixin does not enforce margins because some
+// containing elements that are effectively bound to the live area are
+// actually full bleed on small screens (and must handle their own margins)
+live-area-sizing() {
+  max-width: max-live-width;
+  flex-basis: max-live-width;
+}
+
+// Used in conjunciton with $live-area-sizing to build a nicely formatted
+// space for information
+live-area-vertical-spacing() {
+  margin-top: compact-spacing;
+  margin-bottom: compact-spacing;
+
+  @media multi-column {
+    margin-top: comfortable-spacing;
+    margin-bottom: comfortable-spacing;
+  }
+}
+live-area-horizontal-spacing() {
+  margin-left: compact-spacing;
+  margin-right: compact-spacing;
+
+  @media multi-column {
+    margin-left: comfortable-spacing;
+    margin-right: comfortable-spacing;
+  }
+}
+live-area-spacing() {
+  live-area-horizontal-spacing();
+  live-area-vertical-spacing();
+}
+
+// Convenience mixin for elements that can handle live area sizing and
+// spacing themselves fully
+live-area() {
+  live-area-sizing();
+  live-area-spacing();
+}

@@ -1,50 +1,14 @@
-flex-basis(basis)
-  flex-basis: basis;
-  -ms-flex-preferred-size: basis;
-
-flex(growth, shrink=null, initial=null)
-  if initial == 0px || initial == 0%
-    initial = 0
-  if initial == 0
-    arguments[2] = null
-  if box in flex-version
-    shrink = 1
-    if none == growth
-      // Well known values
-      shrink = 0 if none == growth
-      growth = 0
-    else if is-width(growth) == true
-      // Basis is defined as the first parameter
-      growth = arguments[1] || 0
-      shrink = arguments[2] if 3 <= length(arguments)
-    else if arguments[1] && is-width(arguments[1]) == false
-      // Growth is first and shrink is second
-      shrink = arguments[1]
-
-    // Since we can't make the distinction between growing and shrinking in the box model, take
-    // the one that provides the most flexibility.
-    vendor('box-flex', max(growth, shrink), ignore: ms)
-
-
-
-  // new
-  if flex in flex-version
-    vendor('flex', arguments, only: webkit ms official)
-  if initial != null
-    flex-basis: initial;
-
-// Hero, content, etc are used to build the parts
-// of the page related to the current state.
-
+// The hero is (implicitly) full-bleed, and the container is full-bleed
+// vertically. Vertical rhythm is generally applied loosely within the hero,
+// though the entire hero should not be disruptive.
 #hero {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 
   .container {
-    live-area();
-    margin-top: 0;
-    margin-bottom: 0;
+    @extends .live-area;
+    full-bleed(vertical);
   }
 }
 
@@ -52,10 +16,10 @@ flex(growth, shrink=null, initial=null)
 // be minimal, such that the style of its parent (usually
 // `main > article`) shows through.
 #content {
-  live-area-sizing();
+  @extend .live-area
+  full-bleed();
 
   @media multi-column {
-    live-area-spacing();
 
     // and we flow the content inside it, mostly so we can have factored sizing
     // and reordering.
@@ -81,6 +45,10 @@ flex(growth, shrink=null, initial=null)
   display: flex;
   flex-wrap: wrap;
 
+  & > * {
+    width: 100%;
+  }
+
   & > section {
     flex: 1 auto;
 
@@ -95,12 +63,12 @@ flex(growth, shrink=null, initial=null)
     }
 
     & + section {
-      border-top: 1px solid offwhite;
-      margin-top: $measure * 2;
+      // border-top: 1px solid offwhite;
+      // margin-top: $measure * 2;
     }
 
     &:last-child {
-      margin-bottom: $measure * 1;
+      // margin-bottom: $measure * 1;
     }
   }
 }

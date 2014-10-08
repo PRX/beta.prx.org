@@ -1,0 +1,26 @@
+article.story {
+  ul.tags {
+    margin: 0.75rem 0;
+    // margin-top: 15px;
+
+    // Verticle rhythm:
+    // Height: 1rem
+    // Padding: 0.75rem * 2 = 1.5rem
+    // Margin: 0.5rem
+    // Total = 3rem
+    li {
+      display: inline-block;
+      color: tag-text-color;
+      background: tag-fill-color;
+      padding: 0.75rem 18px 0.75rem 9px;
+      margin: 0 5px 0.5rem 0;
+      line-height: 1rem;
+      // padding: 5px 18px 5px 9px;
+      // margin: 0 5px 5px 0;
+    }
+
+    @media tall-screen {
+      // margin-top: 30px;
+    }
+  }
+}

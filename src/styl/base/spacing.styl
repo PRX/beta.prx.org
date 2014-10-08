@@ -1,0 +1,26 @@
+// Spacing
+////////////////////////////////////////////////////////////////////////////////
+$micro-spacing                           = 0.5rem;
+$compact-spacing                         = 15px;
+$cozy-spacing                            = 1.5rem;
+$comfortable-spacing                     = 30px;
+
+column-spacing                           = cozy-spacing;
+section-spacing                          = cozy-spacing;
+body-image-spacing                       = micro-spacing
+
+.standard-horizontal-spacing {
+  padding-right: $compact-spacing;
+  padding-left: $compact-spacing;
+
+  @media multi-column {
+    padding-right: $comfortable-spacing;
+    padding-left: $comfortable-spacing;
+  }
+}
+
+// This spacing should make a best-effort to ensure good vertical rhythm.
+.standard-vertical-spacing {
+  padding-top: $cozy-spacing;
+  padding-bottom: $cozy-spacing;
+}
