@@ -19,23 +19,6 @@
 article.account {
   floating();
 
-  a.loadingButton {
-    button-blue(false);
-    margin: 10px 0 0 0;
-    display: block;
-    padding: 8px 0;
-    font-size: 1.25em;
-
-    &.loading {
-      &:before {
-        content: 'Loading ';
-      }
-      &:after {
-        content: '...';
-      }
-    }
-  }
-
   #hero {
     .img {
       // the text is what pushes stuff down, not the image.
@@ -52,6 +35,9 @@ article.account {
     h1 {
       line-height: 60px;
       margin-bottom: -70px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .details {
@@ -81,20 +67,45 @@ article.account {
     }
   }
 
-  section.recent {
+  section.recent, section.purchased {
+    position: relative;
+    margin-bottom: 10px;
+    & > a {
+      absolute: right 15px top 15px;
+      line-height: 24px;
+    }
     @media multi-column {
       display: flex;
       flex-flow: row wrap;
       justify-content: space-between;
+      margin-bottom: 20px;
       section.story {
-        flex: 0 1 250px;
+        flex: 0 1 255px;
       }
       & > h2 {
         flex-basis: 100%;
       }
       & > a {
-        display: none;
+        absolute: right top;
+        line-height: 35px;
       }
+    }
+  }
+
+  section.highlighted {
+    display: flex;
+    flex-flow: row wrap;
+    section-child-h-margins: 10px;
+    max-height: 390px;
+    & > h2 {
+      flex-basis: 100%;
+    }
+    margin-bottom: 10px;
+
+    @media multi-column {
+      max-height: 254px;
+      section-child-h-margins: 20px;
+      margin-bottom: 20px;
     }
   }
 
@@ -163,5 +174,28 @@ aside > section.account:first-child {
         color: dark-grey;
       }
     }
+  }
+}
+
+article.account-stories {
+  section.story {
+    margin-bottom: 10px;
+  }
+  .load-more {
+    width: 100%;
+
+    &.active {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}
+
+section.recent-stories {
+  position: relative;
+  & > a {
+    font-size: 12px;
+    absolute: top right 10px;
+    line-height: 44px;
   }
 }

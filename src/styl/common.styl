@@ -5,6 +5,8 @@ flex-basis(basis)
 flex(growth, shrink=null, initial=null)
   if initial == 0px || initial == 0%
     initial = 0
+  if initial == 0
+    arguments[2] = null
   if box in flex-version
     shrink = 1
     if none == growth
@@ -23,13 +25,25 @@ flex(growth, shrink=null, initial=null)
     // the one that provides the most flexibility.
     vendor('box-flex', max(growth, shrink), ignore: ms)
 
-  arguments[2] = null;
+
 
   // new
   if flex in flex-version
     vendor('flex', arguments, only: webkit ms official)
   if initial != null
     flex-basis: initial;
+
+section-child-h-margins(margin-size) {
+  padding-left: tiny-horizontal-padding - margin-size !important;
+  & > * {
+    margin-left: margin-size;
+  }
+  @media multi-column {
+    padding-left: 0 !important;
+    margin-left: -1 * margin-size;
+    max-width: max-content-width + 2 * horizontal-padding + margin-size!important;
+  }
+}
 
 html {
   background: darkest-grey;
@@ -120,6 +134,10 @@ aside > section, #main > section, #hero .container > section {
   // separated with a thin border.
   & + section {
     border-top: 1px solid offwhite;
+  }
+
+  & > h2 {
+    font-weight: lighter;
   }
 }
 

@@ -240,6 +240,21 @@ article.story {
     flex: 0 100%;
   }
 
+  ul.tags {
+    margin-top: 15px;
+    li {
+      display: inline-block;
+      color: blue;
+      background: rgba(blue, 0.1);
+      padding: 5px 18px 5px 9px;
+      margin: 0 5px 5px 0;
+    }
+
+    @media tall-screen {
+      margin-top: 30px;
+    }
+  }
+
   .ad {
     width: 100%;
 
@@ -282,15 +297,19 @@ section.story {
     }
   }
 
+  .desc {
+    display: none;
+  }
+
   h3 {
-    line-height: 18px;
+    line-height: 21px;
     font-size: 16px;
-    height: 60px;
+    max-height: 52px;
     overflow: hidden;
     padding-top: 10px;
-    margin-bottom: -4px;
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 74%,
-    rgba(0,0,0,0.6) 74%, rgba(0,0,0,0) 92%);
+    &.overflowing {
+      -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 65%), linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 60%);
+    }
   }
 
   .category {
@@ -304,6 +323,88 @@ section.story {
     white-space: nowrap;
     top: 0px;
     left: 80px;
+  }
+
+  &.growable {
+    @media multi-column {
+      height: 150px;
+      overflow: hidden;
+      & > a .img {
+        width: 150px;
+        height: 150px;
+      }
+      .category {
+        left: 160px;
+      }
+      h3 {
+        height: auto;
+        line-height: 24px
+        -webkit-mask-image: none;
+      }
+      .desc {
+        display: block;
+        font-size: 13px;
+        line-height: 25px;
+      }
+    }
+  }
+
+  &.square {
+    width: 160px;
+    height: 160px;
+    & > a {
+      float: none;
+      absolute: top left;
+      right: 0;
+      .img {
+        width: 160px;
+        height: 160px;
+        &:before {
+          bottom: 71px;
+        }
+      }
+    }
+    h3 {
+      absolute: bottom 22px left;
+      right: 0;
+      padding: 7px 10px 0px;
+      z-index: 11;
+      a {
+        color: white;
+        font-weight: lighter;
+      }
+    }
+    time {
+      absolute: bottom left;
+      right: 0;
+      color: white;
+      padding: 3px 10px;
+      z-index: 10;
+      font-size: 1.1em;
+      letter-spacing: 0.05em;
+      font-weight: lighter;
+      &:before {
+        content: ' ';
+        display: block;
+        height: 71px;
+        absolute: bottom left;
+        right: 0;
+        z-index: -1;
+        background-color: rgba(darkest-grey, 0.7);
+      }
+    }
+
+    @media multi-column {
+      width: 184px;
+      height: 184px;
+
+      & > a {
+        .img {
+          width: 184px;
+          height: 184px;
+        }
+      }
+    }
   }
 }
 

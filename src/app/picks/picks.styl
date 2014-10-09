@@ -1,40 +1,47 @@
 section.picks {
-
-  background: offwhite;
-
   .pick {
     background: white;
     margin-top: 20px;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 10px 0 0;
 
-    &:first-of-type {
-      margin-top: 0;
+    & > *:not(.curation) {
+      margin: 0 10px 10px;
     }
-  }
 
+    &:after {
+      content: ' ';
+      display: block;
+      height: 1px;
+      margin-top: -1px;
+    }
+
+  }
   .curation {
-    margin-top: 20px;
-    margin-left: -20px;
-    margin-right: -20px;
-    margin-bottom: -20px;
     background: light-blue;
     color: white;
     padding: 10px;
     min-height: 96px;
 
+    p.expander {
+      visibility: hidden;
+      position: absolute;
+    }
+
     .curator {
       float: left;
       width: 80px;
       min-height: 76px;
-      margin-left: 10px;
+
+      .img, .name {
+        width: 58px;
+      }
 
       .img {
-        border: 3px solid offwhite;
+        border: 3px solid light-grey;
         border-radius: 50%;
-        width: 58px;
         height: 58px;
-        margin-left: 10px;
+        margin-bottom: 5px;
       }
 
       .name {
@@ -43,5 +50,134 @@ section.picks {
       }
     }
   }
-}
 
+  @media multi-column {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    margin-left: -40px;
+    max-width: calc(100% + 40px)!important;
+
+    h2 {
+      flex: 0 0 100%;
+      margin-left: 40px;
+    }
+
+    .pick {
+      padding-top: 0;
+      display: flex;
+      flex-flow: row;
+      max-height: 210px;
+      flex: 1 1 100%;
+      margin-left: 40px;
+
+      &.standalone {
+        flex: 1 1 350px;
+      }
+
+      &:nth-of-type(2n) {
+        flex-flow: row-reverse;
+        .curation {
+          flex-flow: row-reverse;
+          a.show-more {
+            absolute: bottom 10px right 108px;
+          }
+          p.expander {
+            absolute: top right 87px;
+            left: 0px;
+            transition: margin-left 0.2s, min-height 0.2s 0.2s, max-height 0.2s 0.2s, box-shadow 0.4s;
+            &.expanded {
+              margin-left: -75px;
+              margin-right: 0px;
+              box-shadow: -1px 1px 2px -1px #000;
+            }
+          }
+        }
+        .curator:before {
+          left: -1px;
+          right: 0px;
+          transform: scaleX(-1);
+        }
+        .curator .name, .curator .img {
+          float: right;
+        }
+      }
+      .curator {
+        align-self: stretch;
+        .img {
+          width: 70px;
+          height: 70px;
+          margin-bottom: 10px;
+          margin-top: 16px;
+        }
+        background: offwhite;
+        position: relative;
+        &:before {
+          content: ' ';
+          display: block;
+          absolute: top left;
+          bottom: 0; right: -1px;
+          image: '/assets/images/icons/speech_snare.png' 17px;
+          background-repeat: no-repeat;
+          background-position: right 70px;
+        }
+
+        flex: 0 0 87px;
+        .name {
+          width: 70px;
+          color: light-blue;
+        }
+      }
+      .curation {
+        padding: 0;
+        flex: 0 1 400px;
+        order: -1;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        p {
+          margin: 0 30px;
+          max-height: 155px;
+          font-weight: 300;
+          overflow: hidden;
+          flex: 1 0 0px;
+        }
+
+        a.show-more {
+          absolute: bottom 8px right 30px;
+          color: white;
+          font-size: 10px;
+          cursor: pointer;
+          z-index: 50;
+        }
+        p.expander {
+          absolute: top left 87px;
+          margin: 0;
+          padding: 28px 30px;
+          min-height: 100%;
+          max-height: 100%;
+          transition: margin-right 0.2s, min-height 0.2s 0.2s, max-height 0.2s 0.2s, box-shadow 0.4s;
+          background-color: light-blue;
+          overflow-y: auto;
+          margin-right: 0;
+          margin-bottom: 0;
+          box-shadow: none;
+          z-index: 51;
+          &.expanded {
+            visibility: visible;
+            margin-right: -75px;
+            margin-bottom: -5px;
+            min-height: 105%;
+            max-height: 125%;
+            box-shadow: 1px 1px 2px -1px #000;
+          }
+        }
+      }
+      & > *:not(.curation) {
+        flex: 1 1 450px;
+        margin: 30px;
+      }
+    }
+  }
+}

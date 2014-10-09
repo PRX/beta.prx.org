@@ -30,18 +30,38 @@ describe('accounts', function () {
       var account = ngHal.mock('http://meta.prx.org/model/account/test', {name: 'asd'});
       expect(account.toString()).toEqual('asd');
     }));
+
+    it ('parses external links as websites', inject(function (ngHal) {
+      var account = ngHal.mock('http://meta.prx.org/model/account/test', {
+        _links: {
+          'prx:external':[
+            {
+              href:'http://prx.org'
+            },
+            {
+              href:'http://prx.mx'
+            }
+          ]
+        }
+      });
+      expect(account.websites()[0].href).toEqual('http://prx.org');
+      expect(account.websites()[1].href).toEqual('http://prx.mx');
+      expect(account.websites(1)[1].href).toEqual('http://prx.mx');
+    }));
   });
 
   describe('AccountCtrl', function () {
-    it('attaches the account and recent stories', inject(function ($controller) {
+    it('attaches the account and recent, highlighted, and purchased stories', inject(function ($controller) {
       var controller = $controller('AccountCtrl', {
         account: 1,
         recentStories: 2,
-        storiesList: 3,
+        highlightedStories: 3,
+        purchasedStories: 4
       });
       expect(controller.current).toBe(1);
       expect(controller.recentStories).toBe(2);
-      expect(controller.storiesList).toBe(3);
+      expect(controller.highlightedStories).toBe(3);
+      expect(controller.purchasedStories).toBe(4);
     }));
   });
 
@@ -172,5 +192,24 @@ describe('accounts', function () {
       $scope.$digest();
       expect(element.html()).toEqual('<div><p>This is longer than 100 letters. This is longer than 100 letters. This is longer than 100 letters. ...</p></div>');
     });
+  });
+
+  describe('onApproachEnd', function () {
+    it ('triggers expression when scrolling close to the end', inject(function ($compile, $rootScope, $window) {
+      var elem = angular.element("<div style='overflow-y:scroll;height:100px' on-approach-end='triggered=true'><div style='height:500px'></div></div>");
+      var scope = $rootScope.$new();
+      elem = $compile(elem)(scope);
+
+      $window.document.body.appendChild(elem[0]);
+
+      elem.triggerHandler('scroll');
+      expect(scope.triggered).toBeFalsy();
+
+      elem[0].scrollTop = 150;
+      elem.triggerHandler('scroll');
+      expect(scope.triggered).toBeTruthy();
+
+      $window.document.body.removeChild(elem[0]);
+    }));
   });
 });

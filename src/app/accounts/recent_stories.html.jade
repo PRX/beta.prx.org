@@ -1,5 +1,5 @@
-section(ng-show="loading || filteredStories.length")
+section.recent-stories(ng-show="loading || filteredStories.length")
   h3 Recent Stories
-  prx-story(ng-repeat="story in filteredStories" story="story")
-  a.more(ui-sref="account", ng-show="filteredStories.length") See all stories
+  a.more(ui-sref="account.show.allStories({accountId:account.id})", ng-show="filteredStories.length") View All
+  prx-story(ng-repeat="story in filteredStories" story="::story")
   .loading-spinner(ng-show="loading")

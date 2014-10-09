@@ -19,13 +19,6 @@ describe('prx.stories', function () {
       expect(mock.imageUrl).toEqual(null);
     });
 
-    it ('correctly copies the length property to duration', function () {
-      mock.length = 1234;
-      mock.transform();
-      expect(mock.duration).toBe(1234);
-      expect(mock.length).not.toBeDefined();
-    });
-
     it ('returns title for toString()', function () {
       mock.title = 'asdf';
       expect(mock.toString()).toEqual('asdf');
@@ -33,20 +26,30 @@ describe('prx.stories', function () {
   });
 
   describe ('StoryCtrl', function () {
-    it ('attaches the story and accounts injected to $scope', inject(function ($controller, ngHal) {
+    var ngHal, $controller;
+    beforeEach(inject(function (_ngHal_, _$controller_) {
+      ngHal = _ngHal_;
+      $controller = _$controller_;
+    }));
+
+    it ('attaches the story and accounts injected to $scope', function () {
       var sigil = ngHal.mock();
       var scope = {};
       var controller = $controller('StoryCtrl', {story: sigil, account: sigil, audioUrls: [sigil], $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.account).toBe(sigil);
-    }));
+    });
 
-    xit ('starts playback of the story if autoPlay is requested', inject(function ($controller) {
+    it ('starts playback of the story if requested', function () {
       var player = jasmine.createSpyObj('player', ['play']);
-      $controller('StoryCtrl', {story: 'sigil', prxPlayer: player, account: {}, $stateParams: {autoPlay: true}, $scope: {}, audioUrls: []});
+      var story  = ngHal.mock();
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
       expect(player.play).toHaveBeenCalled();
-      expect(player.play.calls.mostRecent().args[0].story).toEqual('sigil');
-    }));
+      expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: []});
+      expect(player.play).toHaveBeenCalled();
+      expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
+    });
   });
 
   describe ('StoryDetailCtrl', function () {
@@ -79,14 +82,14 @@ describe('prx.stories', function () {
           get('a')).toResolveTo(1);
     }));
 
-    it ('gets the audioUrls based on the story', function () {
-      var story = ngHal.mock('http://meta.prx.org/model/story'),
+    xit ('gets the audioUrls based on the story', function () {
+      var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
         file1 = ngHal.mockEnclosure('file1.mp3'),
         file2 = ngHal.mockEnclosure('file2.mp3');
       story.stubFollow('prx:audio', [file1, file2]);
       expect($injector.invoke(state.resolve.audioUrls, null, {
         story: story
-      }).get(1).get('url')).toResolveTo('file2.mp3');
+      }).then(function(d) { return d[1].url; })).toResolveTo('file2.mp3');
     });
 
     it ('sets the title appropriately', function () {

@@ -21,7 +21,7 @@ var walk   = require('walk');
 var karma  = require('gulp-karma')({configFile: c.karmaCfg});
 var newer  = require('gulp-newer');
 var runSeq = require('run-sequence');
-var ngmin  = require('gulp-ngmin');
+var ngmin  = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
 var tinyLr = require('tiny-lr');
 var path   = require('path');
@@ -38,6 +38,7 @@ var prtrct = require('gulp-protractor').protractor;
 var order  = require('gulp-order');
 var gzip   = require('gulp-gzip');
 var feats  = require('./lib/gulp-featureflags');
+var pngcsh = require('imagemin-pngcrush');
 
 var buildDir = c.buildDir;
 var complDir = c.compileDir;
@@ -104,7 +105,10 @@ gulp.task('assets', function () {
       gulp.src(c.vendor.assets, {base: cwd})
     )
     .pipe(newer(buildDir))
-    .pipe(imgmin())
+    .pipe(imgmin({
+      progressive: true,
+      use: [pngcsh()]
+    }))
     .pipe(gulp.dest(buildDir));
 });
 

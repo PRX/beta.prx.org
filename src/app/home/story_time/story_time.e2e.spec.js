@@ -2,7 +2,7 @@ describe ('story time', function () {
   beforeEach(function () {
     browser.addMockModule('fakeMailchimp', function () {
       angular.module('fakeMailchimp', ['ngAnimate'])
-      .service("MailChimp", function ($q) {
+      .service("MailChimp", ['$q', function ($q) {
         this.subscribe = function (email) {
           if (email == 'fail@example.com') {
             return $q.reject('no');
@@ -10,7 +10,7 @@ describe ('story time', function () {
             return $q.when("yeah");
           }
         };
-      });
+      }]);
     });
 
     browser.get('/storytime');

@@ -1,0 +1,7 @@
+h1 {{::account.current.shortName}}&apos;s Stories
+article.account-stories(on-approach-end="account.loadMore()")
+  prx-story(ng-repeat="story in account.stories", story="::story")
+  button.load-more(ng-show="account.hasMore", ng-click="account.loadMore()",
+    ng-disabled="account.loadingMore")
+      span(ng-show="account.loadingMore") Loading...
+      span(ng-hide="account.loadingMore") Load More

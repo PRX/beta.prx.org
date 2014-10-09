@@ -21,13 +21,13 @@ angular.module('prx', ['ngAnimate',
   'ngMobile',
   'prx.breadcrumbs',
   'prx.ads'])
-.config(function ($locationProvider, ngFlagProvider,
+.config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
-  $locationProvider.html5Mode(true);
   prxperimentProvider.base('https://x.prx.org')
   .clientId(['$q', '$window', function ($q, $window) {
+    /* istanbul ignore if */
     if (angular.isDefined($window.ga)) {
       var deferred = $q.defer();
       $window.ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
@@ -35,13 +35,22 @@ angular.module('prx', ['ngAnimate',
     } else {
       return 'tests';
     }
-  }]).enabled(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration' && !window.callPhantom);
+  }]);
+  /* istanbul ignore next */
+  if (!(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration' && !window.callPhantom)) {
+    prxperimentProvider.enabled(false);
+  }
   ngFlagProvider.flags(FEAT.JSON);
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
     var url = $analytics.settings.pageTracking.basePath + $location.url();
     $timeout(function () {  $analytics.pageTrack(url); }, 2);
   });
+});
+angular.module('prx.base',['prx'])
+.config(/* istanbul ignore next */
+  function ($locationProvider) {
+    $locationProvider.html5Mode(true);
 });
 angular.module('prx.modelConfig', ['angular-hal'])
 .config(function (ngHalProvider) {

@@ -87,8 +87,12 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       this.context['delete'](this.url());
     },
     follow: function follow (rel, params) {
-      return new DocumentPromise(this.followEmbedded(rel)
-        .catch(angular.bind(this, this.followLink, rel, params)));
+      if (params) {
+        return this.followLink(rel, params);
+      } else {
+        return new DocumentPromise(this.followEmbedded(rel)
+          .catch(angular.bind(this, this.followLink, rel, params)));
+      }
     },
     followOne: function followOne (rel, params) {
       return this.links.getDocument(rel, params) ||
