@@ -23,14 +23,16 @@
   <prx-modal></prx-modal>
   <main ui-view autoscroll="true">
     <prx-loading-bar></prx-loading-bar>
+    <div class="empty-space"></div>
   </main>
-  <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a>
+  <!-- <a class="full-site" ng-href="{{app.desktopUrl}}">Show Desktop Site</a> -->
   <footer>
     <div>
-      <section class="interactive">
-        <!-- <h2>Staff Picks</h2>
-        <h4>Stories You Should Hear</h4>
-        <button>Listen</button> -->
+      <section class="floater">
+        <div class="beta-notice">
+          <p>You're seeing a beta preview of prx.org. <a ng-href="http://help.prx.org/anonymous_requests/new">Let us know</a> what you think.</p>
+          <a ng-href="{{app.desktopUrl}}">Use Old Version</a>
+        </div>
       </section>
       <section>
         <h3>Company</h3>
@@ -43,9 +45,8 @@
       </section>
       <section>
         <h3>Support</h3>
-        <a href="http://myaccount.zendesk.com/account/dropboxes/2830039812" onClick="script: Zenbox.show(); return false;">Help</a>
+        <a href="http://help.prx.org/">Help</a>
         <a href="http://status.prx.org/">Status</a>
-        <a href="//www.prx.org/about-us/contact">Contact Us</a>
         <a href="//www.prx.org/terms-of-use">Terms</a>
         <a href="//www.prx.org/privacy-policy">Privacy </a>
       </section>
@@ -63,23 +64,6 @@
       </section>
     </div>
   </footer>
-  <style type="text/css" media="screen, projection">
-    @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
-  </style>
-  <script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
-  <script type="text/javascript">
-    if (typeof(Zenbox) !== "undefined") {
-      Zenbox.init({
-        dropboxID:   "20181074",
-        url:         "https://prx.zendesk.com",
-        tabTooltip:  "Feedback",
-        tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_feedback.png",
-        tabColor:    "black",
-        tabPosition: "Left",
-        hide_tab:    true,
-      });
-    }
-  </script>
   <prx-global-player></prx-global-player>
 <% if (!compile) { %><script>
   var z = document.createElement('script');
