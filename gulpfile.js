@@ -41,6 +41,7 @@ var feats  = require('./lib/gulp-featureflags');
 var pngcsh = require('imagemin-pngcrush');
 
 var buildDir = c.buildDir;
+var asCache  = c.assetCache;
 var complDir = c.compileDir;
 var cwd      = __dirname;
 var src      = cwd + '/src';
@@ -99,17 +100,22 @@ gulp.task('clean', function () {
     .pipe(clean());
 });
 
-gulp.task('assets', function () {
-  return es.merge(
+gulp.task('assets', function (cb) {
+  es.merge(
       gulp.src(c.app.assets, {base: src}),
       gulp.src(c.vendor.assets, {base: cwd})
     )
-    .pipe(newer(buildDir))
+    .pipe(newer(asCache))
     .pipe(imgmin({
       progressive: true,
       use: [pngcsh()]
     }))
-    .pipe(gulp.dest(buildDir));
+    .pipe(gulp.dest(asCache))
+    .on('end', function () {
+      gulp.src(asCache + "/**/*")
+      .pipe(gulp.dest(buildDir))
+      .on('end', cb);
+    });
 });
 
 gulp.task('jshint', function () {
