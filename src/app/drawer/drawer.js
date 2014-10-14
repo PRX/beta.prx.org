@@ -1,18 +1,10 @@
 angular.module('prx.drawer', [])
-.directive('prxDrawer', function (PRXDrawer) {
+.directive('prxDrawer', function () {
   return {
     restrict: 'E',
     templateUrl: 'drawer/container.html',
     transclude: true,
-    replace: true,
-    link: function (scope, elem) {
-      scope.drawer = PRXDrawer;
-      elem.bind('touchmove', function (event) {
-        console.log(event.target);
-        // event.preventDefault();
-        event.stopPropagation();
-      });
-    }
+    replace: true
   };
 })
 .directive('prxDrawerContents', function () {
