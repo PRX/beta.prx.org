@@ -11,59 +11,60 @@
   <meta name="fragment" content="!">
 </head>
 <body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying}">
-  <prx-drawer ng-flag="showMenu"></prx-drawer>
-  <header quick-return ng-class="{'loading': loading}">
-    <prx-loading-bar></prx-loading-bar>
-    <div>
-      <prx-drawer-button ng-flag="showMenu"></prx-drawer-button>
-      <h1><a ui-sref="home">PRX</a></h1>
-      <prx-action-buttons></prx-action-buttons>
-    </div>
-  </header>
-  <prx-modal></prx-modal>
-  <main ui-view autoscroll='true'>
-    <prx-loading-bar></prx-loading-bar>
-    <div class="empty-space"></div>
-  </main>
-  <footer>
-    <div>
-      <section class="floater">
-        <div class="beta-notice">
-          <p>You're seeing a beta preview of prx.org. <a ng-href="http://help.prx.org/anonymous_requests/new">Let us know</a> what you think.</p>
-          <a class="full-site" ng-href="{{app.desktopUrl}}">Use Old Version</a>
-        </div>
-      </section>
-      <section>
-        <h3>Company</h3>
-        <a href="//www.prx.org/about-us/what-is-prx">About Us</a>
-        <a href="//blog.prx.org/">Blog</a>
-        <a href="//www.prx.org/about-us/organization">Team</a>
-        <a href="//www.prx.org/about-us/press">Press</a>
-        <a href="//www.prx.org/about-us/funding">Funding</a>
-        <a href="//www.prx.org/donate">Donate</a>
-      </section>
-      <section>
-        <h3>Support</h3>
-        <a href="http://help.prx.org/">Help</a>
-        <a href="http://status.prx.org/">Status</a>
-        <a href="//www.prx.org/terms-of-use">Terms</a>
-        <a href="//www.prx.org/privacy-policy">Privacy </a>
-      </section>
-      <section>
-        <h3>Projects</h3>
-        <a href="http://www.radiotopia.fm">Radiotopia</a>
-        <a href="http://www.matter.vc">Matter Ventures</a>
-      </section>
-      <section class="full">
-        <ul>
-          <li><a href="//www.prx.org/newsletters" class="fa-envelope"></a></li>
-          <li><a href="https://www.twitter.com/prx" class="fa-twitter"></a></li>
-          <li><a href="https://www.facebook.com/publicradioexchange" class="fa-facebook"></a></li>
-        </ul>
-      </section>
-    </div>
-  </footer>
-  <prx-global-player></prx-global-player>
+  <prx-drawer drawer="main">
+    <header ng-class="{'loading': loading}">
+      <prx-loading-bar></prx-loading-bar>
+      <div>
+        <prx-drawer-button ng-flag="showMenu"></prx-drawer-button>
+        <h1><a ui-sref="home">PRX</a></h1>
+        <prx-action-buttons></prx-action-buttons>
+      </div>
+    </header>
+    <prx-modal></prx-modal>
+    <main ui-view autoscroll='true'>
+      <prx-loading-bar></prx-loading-bar>
+      <div class="empty-space"></div>
+    </main>
+    <footer>
+      <div>
+        <section class="floater">
+          <div class="beta-notice">
+            <p>You're seeing a beta preview of prx.org. <a ng-href="http://help.prx.org/anonymous_requests/new">Let us know</a> what you think.</p>
+            <a class="full-site" ng-href="{{app.desktopUrl}}">Use Old Version</a>
+          </div>
+        </section>
+        <section>
+          <h3>Company</h3>
+          <a href="//www.prx.org/about-us/what-is-prx">About Us</a>
+          <a href="//blog.prx.org/">Blog</a>
+          <a href="//www.prx.org/about-us/organization">Team</a>
+          <a href="//www.prx.org/about-us/press">Press</a>
+          <a href="//www.prx.org/about-us/funding">Funding</a>
+          <a href="//www.prx.org/donate">Donate</a>
+        </section>
+        <section>
+          <h3>Support</h3>
+          <a href="http://help.prx.org/">Help</a>
+          <a href="http://status.prx.org/">Status</a>
+          <a href="//www.prx.org/terms-of-use">Terms</a>
+          <a href="//www.prx.org/privacy-policy">Privacy </a>
+        </section>
+        <section>
+          <h3>Projects</h3>
+          <a href="http://www.radiotopia.fm">Radiotopia</a>
+          <a href="http://www.matter.vc">Matter Ventures</a>
+        </section>
+        <section class="full">
+          <ul>
+            <li><a href="//www.prx.org/newsletters" class="fa-envelope"></a></li>
+            <li><a href="https://www.twitter.com/prx" class="fa-twitter"></a></li>
+            <li><a href="https://www.facebook.com/publicradioexchange" class="fa-facebook"></a></li>
+          </ul>
+        </section>
+      </div>
+    </footer>
+    <prx-global-player></prx-global-player>
+  </prx-drawer>
 <% if (!compile) { %><script>
   var z = document.createElement('script');
   z.src = "http://"+window.location.hostname+":35729/livereload.js";

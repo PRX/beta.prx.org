@@ -20,7 +20,8 @@ angular.module('prx', ['ngAnimate',
   'prx.modelConfig',
   'ngMobile',
   'prx.breadcrumbs',
-  'prx.ads'])
+  'prx.ads',
+  'prx.drawer'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);
@@ -215,41 +216,41 @@ angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate'])
       });
     }
   };
-})
-.directive('quickReturn', function ($window) {
-  var UP = 1, DOWN = 0, STILL = -1;
-
-  return {
-    restrict: 'A',
-    link: function (scope, element) {
-      var fromPos = 0, pos = 0, dir = STILL;
-
-      if ($window.requestAnimationFrame) {
-        handle();
-      }
-
-      function handle () {
-        var newPos = Math.max(0, $window.scrollY);
-        if (newPos < pos) {
-          if (dir != UP) {
-            fromPos = pos;
-            dir = UP;
-            element.css({'position': 'absolute', 'top' : newPos - element[0].offsetHeight + 'px'});
-          }
-          if (fromPos - newPos >= element[0].offsetHeight) {
-            element.removeClass('hidden');
-            element.css({'position': 'fixed', 'top': '0px'});
-          }
-        } else if (newPos > pos) {
-          if (dir != DOWN) {
-            element.addClass('hidden');
-            element.css({'position': 'absolute', 'top': pos + 'px'});
-            dir = DOWN;
-          }
-        }
-        pos = newPos;
-        $window.requestAnimationFrame(handle);
-      }
-    }
-  };
 });
+// .directive('quickReturn', function ($window) {
+//   var UP = 1, DOWN = 0, STILL = -1;
+//
+//   return {
+//     restrict: 'A',
+//     link: function (scope, element) {
+//       var fromPos = 0, pos = 0, dir = STILL;
+//
+//       if ($window.requestAnimationFrame) {
+//         handle();
+//       }
+//
+//       function handle () {
+//         var newPos = Math.max(0, $window.scrollY);
+//         if (newPos < pos) {
+//           if (dir != UP) {
+//             fromPos = pos;
+//             dir = UP;
+//             element.css({'position': 'absolute', 'top' : newPos - element[0].offsetHeight + 'px'});
+//           }
+//           if (fromPos - newPos >= element[0].offsetHeight) {
+//             element.removeClass('hidden');
+//             element.css({'position': 'fixed', 'top': '0px'});
+//           }
+//         } else if (newPos > pos) {
+//           if (dir != DOWN) {
+//             element.addClass('hidden');
+//             element.css({'position': 'absolute', 'top': pos + 'px'});
+//             dir = DOWN;
+//           }
+//         }
+//         pos = newPos;
+//         $window.requestAnimationFrame(handle);
+//       }
+//     }
+//   };
+// });
