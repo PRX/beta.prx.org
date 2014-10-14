@@ -70,6 +70,17 @@ body {
   overflow-y: scroll;
 }
 
+.empty-space {
+  min-height: 320px;
+  background: lightest-grey;
+  loading-indicator();
+  position: relative;
+
+  @media multi-column {
+    min-height: 420px;
+  }
+}
+
 .media {
   .img {
     float: left;
@@ -262,21 +273,6 @@ aside > section, #main > section, #hero .container > section {
         margin-top: 0;
       }
     }
-  }
-}
-
-a.full-site {
-  absolute: bottom 10px left; right: 0;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  border-top: 1px solid lightest-grey;
-  border-bottom: 1px solid lightest-grey;
-  &:hover, &:active {
-    text-decoration: none;
-    background-color: blue;
-    color: white;
-    border-color: darker-blue;
   }
 }
 
