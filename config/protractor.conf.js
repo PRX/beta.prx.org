@@ -25,5 +25,5 @@ if (process.env['TRAVIS']) {
   }
 
 } else {
-  exports.config.seleniumServerJar = '../node_modules/protractor/selenium/selenium-server-standalone-2.42.2.jar';
+  exports.config.seleniumServerJar = '../node_modules/protractor/selenium/selenium-server-standalone-2.43.1.jar';
 }
