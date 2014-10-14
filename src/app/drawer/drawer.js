@@ -1,10 +1,13 @@
 angular.module('prx.drawer', [])
-.directive('prxDrawer', function () {
+.directive('prxDrawer', function (PRXDrawer) {
   return {
     restrict: 'E',
     templateUrl: 'drawer/container.html',
     transclude: true,
-    replace: true
+    replace: true,
+    link: function (scope) {
+      scope.drawer = PRXDrawer;
+    }
   };
 })
 .directive('prxDrawerContents', function () {
