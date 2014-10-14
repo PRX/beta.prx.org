@@ -1,0 +1,42 @@
+html {
+  @extends $typeset-body-copy;
+  line-height: 1.5em;
+}
+
+body {
+  @extends $typeset-body-copy;
+}
+
+a {
+  color: link-color;
+  text-decoration: none;
+
+  &:active {
+    color: active-link-color;
+  }
+
+  &.current:hover {
+    text-decoration: none;
+  }
+}
+
+strong {
+  font-weight: bold;
+}
+
+h1 {
+  @extends $typeset-page-heading;
+}
+
+h2 {
+  @extends $typeset-body-heading;
+}
+
+h3 {
+  @extends $typeset-supplement-heading;
+}
+
+p {
+  @extends $typeset-body-copy;
+  margin-bottom: $measure;
+}

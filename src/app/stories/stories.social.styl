@@ -1,0 +1,75 @@
+article.story #hero .social-actions {
+  // flex: none;
+  @extend .live-area;
+  full-bleed(vertical);
+  padding-top: $micro-spacing;
+  padding-bottom: $micro-spacing;
+
+  order: 1;
+  background-color: offwhite;
+
+  menu.share {
+    height: 30px;
+    display: inline-block;
+    background-color: blue;
+    // live-area-spacing();
+
+    > .label {
+      display: inline-block;
+      margin: 0;
+      padding: 0 5px 0 0;
+      border: 0;
+      vertical-align: top;
+      line-height: 30px;
+
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin: 7px;
+        image: '/assets/images/share.png' 15px;
+      }
+    }
+
+    > a {
+      display: inline-block;
+      width: 30px;
+      height: @width;
+      background-color: dark-blue;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &.twitter { image: '/assets/images/twitter.png' 15px; }
+      &.facebook { image: '/assets/images/facebook.png' 15px; }
+      &.google { image: '/assets/images/googleplus.png' 15px; }
+
+      &:first-of-type {
+        position: relative;
+        margin-left: 8px;
+
+        &:before {
+          width: 0;
+          height: 0;
+          line-height: 0;
+          border-right: 6px solid dark-blue;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          content: '';
+          display: inline-block;
+          position: absolute;
+          top: 9px
+          left: -5px;
+        }
+      }
+    }
+  }
+
+  @media multi-column {
+    background: none;
+
+    menu.share {
+      margin: 0 !important;
+    }
+  }
+}

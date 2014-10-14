@@ -1,0 +1,55 @@
+// The licensing block, with four
+article.story {
+  .licensing {
+
+    li {
+      position: relative;
+      padding: 0.75rem 0 0.75rem 45px;
+      clear: both;
+      line-height: $measure;
+      min-height: 3rem;
+
+      &:before {
+        width: 25px;
+        height: @width;
+        display: block;
+        position: absolute;
+        left: 0;
+        content: '';
+        float: left;
+        background-repeat: no-repeat;
+        margin: 10px 15px 15px 0;
+      }
+    }
+
+    .broadcast:before { image: '/assets/images/icons/broadcast.png' contain; }
+    .stream:before { image: '/assets/images/icons/stream.png' contain; }
+    .edit:before { image: '/assets/images/icons/lock.png' contain; }
+    .advisory:before { image: '/assets/images/icons/forbidden.png' contain; }
+
+    .additional {
+
+    }
+
+    @media multi-column {
+      ul {
+        display: flex;
+        flex-flow: row wrap;
+      }
+
+      li {
+        flex: 1 200px;
+        min-width: 34%; // keep it to two items per row
+        // margin: 20px 45px 10px 55px;
+        padding-top: 1.5em
+        padding-bottom: 1.5em
+        padding-right: 45px;
+        padding-left: 70px;
+
+        &:before {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,158 @@
+flex-basis(basis)
+  flex-basis: basis;
+  -ms-flex-preferred-size: basis;
+
+flex(growth, shrink=null, initial=null)
+  if initial == 0px || initial == 0%
+    initial = 0
+  if initial == 0
+    arguments[2] = null
+  if box in flex-version
+    shrink = 1
+    if none == growth
+      // Well known values
+      shrink = 0 if none == growth
+      growth = 0
+    else if is-width(growth) == true
+      // Basis is defined as the first parameter
+      growth = arguments[1] || 0
+      shrink = arguments[2] if 3 <= length(arguments)
+    else if arguments[1] && is-width(arguments[1]) == false
+      // Growth is first and shrink is second
+      shrink = arguments[1]
+
+    // Since we can't make the distinction between growing and shrinking in the box model, take
+    // the one that provides the most flexibility.
+    vendor('box-flex', max(growth, shrink), ignore: ms)
+
+
+
+  // new
+  if flex in flex-version
+    vendor('flex', arguments, only: webkit ms official)
+  if initial != null
+    flex-basis: initial;
+
+// Hero, content, etc are used to build the parts
+// of the page related to the current state.
+
+#hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .container {
+    live-area();
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+// The overall presentation for #content should generally
+// be minimal, such that the style of its parent (usually
+// `main > article`) shows through.
+#content {
+  live-area-sizing();
+
+  @media multi-column {
+    live-area-spacing();
+
+    // and we flow the content inside it, mostly so we can have factored sizing
+    // and reordering.
+    display: flex;
+    flex-flow: row wrap;
+
+    // stick blocks to the top of the container
+    align-content: flex-start;
+  }
+}
+
+// Main and asides make up a majority of the content
+// on a given page. Asides' children should be limited
+// to <aside> elements. Main's children are generally
+// <section> elements, but not always.
+// Structurally main comes before asides, as that is
+// natural order on small screens. Visually asides
+// move in front of main when space permits them to
+// be placed side-by-side.
+
+#main,
+#asides aside {
+  display: flex;
+  flex-wrap: wrap;
+
+  & > section {
+    flex: 1 auto;
+
+    &.ng-leave {
+      transition: all 0.2s;
+      transform-origin: center top;
+
+      &.ng-leave-active {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    & + section {
+      border-top: 1px solid offwhite;
+      margin-top: $measure * 2;
+    }
+
+    &:last-child {
+      margin-bottom: $measure * 1;
+    }
+  }
+}
+
+#main {
+  min-width: 300px;
+
+  @media multi-column {
+    // Move it after the asides
+    order: 2;
+
+    // let it stretch to fill the area to a factor of 5
+    flex: 5 5 0px;
+
+    // stretch to be as tall as the sidebar if the sidebar is naturally taller
+    align-self: stretch;
+
+    // stick sections to the top of the block if this has been stretched to
+    // match the height of the sidebar
+    align-content: flex-start;
+
+    background-color: white;
+  }
+}
+
+#asides {
+  min-width: 250px;
+
+  @media multi-column {
+    // move it before the main column
+    order: 1;
+
+    // allow it to stretch horizontally by a factor of 2
+    flex: 2 2 0px;
+    max-width: 280px;
+
+    // spacing between the main content and the sidebar. Put on the sidebar
+    // as some pages have only main content.
+    margin-right: column-spacing;
+
+    // each block of sidebar content is a white box with 20px above
+    aside {
+      margin-top: section-spacing;
+
+      section {
+        background-color: white;
+      }
+
+      // except the first one, which has no space above
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}

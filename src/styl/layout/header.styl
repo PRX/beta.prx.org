@@ -1,0 +1,40 @@
+$header-spacing {
+  padding-top: action-bar-height;
+
+  @media multi-column {
+    padding-top: tall-action-bar-height;
+  }
+}
+
+header {
+  @extends .trim-area;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  border-bottom: 1px solid slight-grey; // TODO make swatch
+  width: 100%;
+  height: action-bar-height;
+  background: header-fill-color;
+  overflow: hidden;
+  z-index: z-depth-4--headerBar;
+}
+
+header h1 {
+  background-image: url('/assets/images/ic_header_logo.png');
+  background-size: auto 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  font-size: 0px;
+  height: action-bar-height;
+
+  a {
+    display: inline-block;
+    width: 60px;
+    relative: top -3px;
+  }
+
+  @media high-dpi {
+    background-image: url('/assets/images/ic_header_logo@2x.png');
+  }
+}

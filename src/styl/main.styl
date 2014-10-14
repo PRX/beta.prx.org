@@ -1,233 +1,74 @@
-@import "reset.styl";
-@import "variables.styl";
-@import "buttons.styl";
-@import "scrollbars.styl";
-@import "menus.styl";
-@import "typography.styl";
-@import "header.styl";
+//
+////////////////////////////////////////////////////////////////////////////////
+// Generic Page Structure
+////////////////////////////////////////////////////////////////////////////////
+// The common structure of the site, regardless of viewport size, is as follows:
+//
+// <HTML> – Fills the viewport
+// <BODY> "Trim Area" – Grows and shrinks with screen width, up to 1200px
+// MAIN – Fills "trim area" but provides head room for nav bar
+// <ARTICLE>,etc "Content root" – Fills <MAIN>
+// #HERO,#CONTENT,etc "Content wrappers" – "Content wrappers" may or may not be
+//                     "live areas". Some elements, such as #hero, are not "live
+//                     areas", because they are full bleed; these elements
+//                     require a child to enforce "live area" sizing/spacing.
+//                     When a content wrapper is a "live area", by default it
+//                     enforces a maximum width and margins; the margins can be
+//                     removed with "full bleed" macros, but be aware this will
+//                     not bleed content to the edge of the "trim area", only
+//                     to the edge of the "live area" (1000px max). This is
+//                     effectively true full bleed at some viewport sizes, but
+//                     not larger sizes larger than the "live area" max width.
+// .CONTAINER,#MAIN,#ASIDES "Content elements" – "Content elements"
+//                     are the highest level elements that do not necessarily
+//                     constitute a "row" on the page. They may be used create
+//                     columns, or as "live areas" when their parents were true
+//                     full bleed elements, or used to enforce "live area"
+//                     spacing when the parent was itself a full bleed "live
+//                     area"
+// <DIV>,<SECTION>,etc "Section elements" – "Section elements" are distinct
+//                     units of content. In cases where sections need to be
+//                     fill the width of small viewports, their ancestors must
+//                     have not enforced "live area" spacing, so it is the
+//                     responsibility of the sections, at least at certain
+//                     screen sizes
+////////////////////////////////////////////////////////////////////////////////
+
+// Base stylesheets must have no dependencies
+@import "base/reset.styl";
+@import "base/colors.styl";
+@import "base/responsive.styl";
+@import "base/zed.styl";
+@import "base/variables.styl";
+@import "base/spacing.styl";
+@import "base/typography.styl";
+@import "base/flex.styl";
+
+// Shared stylesheets can depend on base styles
+@import "shared/typesetting.styl";
+@import "shared/image.styl";
+@import "shared/media.styl";
+@import "shared/meta.styl";
+@import "shared/layout.styl";
+@import "shared/forms.styl";
+@import "shared/buttons.styl";
+@import "shared/links.styl";
+
+// Application layout
+////
+@import "layout/header.styl";
+@import "layout/header.tablet.styl";
+@import "layout/footer.styl";
+@import "layout/article.styl";
+@import "layout/article.tablet.styl";
+//// Application may depend on various components and should be imported last
+@import "layout/application.styl";
+
+// Pages and Sections
 @import "player/player.styl";
-@import "common.styl";
-@import "modal/modal.styl";
-@import "accounts/accounts.styl";
-@import "stories/stories.styl";
-@import "series/series.styl";
-@import "errors/errors.styl";
-@import "forms.styl";
-@import "home/home.styl";
-@import "picks/picks.styl";
+@import "accounts/accounts.styl"
+@import "stories/stories.styl"
 @import "ads/ads.styl";
+
+// Webfonts
 @import url("http://fonts.googleapis.com/css?family=Open+Sans:400,300,800,700,600");
-
-html {
-  height: 100%;
-}
-
-body {
-  min-height: 100%;
-  padding-bottom: 50px;
-  position: relative;
-}
-
-body.with-player {
-  a.full-site {
-    bottom: 75px;
-  }
-  main, .modal {
-    padding-bottom: 75px;
-  }
-}
-
-.apps {
-  background-color: offwhite;
-  text-align: center;
-  border-radius: 3px;
-  box-shadow: 0 0 2px black;
-  margin: 10px 0;
-  padding: 25px;
-
-  a.logo {
-    display: block;
-    content: '';
-    width: 175px;
-    height: 150px;
-    margin: 0 auto;
-    background: url('/assets/images/remix.png') center no-repeat;
-    background-size: 175px;
-  }
-
-  p {
-    color: dark-grey;
-  }
-
-  a.app-store, a.google-play {
-    width: 114px;
-    height: 40px;
-    background-size: 114px;
-    background-repeat: no-repeat;
-    background-position: center center;
-    display: inline-block;
-    margin: 0px 10px;
-  }
-
-  a.app-store {
-    background-image: url('/assets/images/app_store.png');
-  }
-  a.google-play {
-    background-image: url('/assets/images/google_play.png');
-  }
-
-  a.website {
-    display: block;
-  }
-
-}
-
-//
-// .open {
-//
-//   header, div[ui-view], .persistent-player {
-//     transition: transform 0.2s;
-//     transform: translateX(250px);
-//     width: 100%;
-//   }
-//
-//   body {
-//     width: 100%;
-//   }
-//
-//   div.drawer {
-//     transition: transform 0.2s;
-//     transform: none;
-//   }
-// }
-//
-// .open-add, .open-remove {
-//   transition-duration: 0.2s;
-// }
-//
-// .open-add-active {
-//   div[ui-view] {
-//     background: rgb(245, 244, 242);
-//   }
-//   div.drawer {
-//     transform: none;
-//   }
-// }
-//
-// .open-remove-active {
-//   transition-duration: 0.2s;
-//
-//   header, div[ui-view], .persistent-player {
-//     transition: transform 0.2s;
-//     transform: none;
-//     width: 100%;
-//   }
-//   div.drawer {
-//     transition: transform 0.2s;
-//     transform: translateX(-250px);
-//   }
-// }
-//
-//
-//
-//
-//
-//
-// div[ui-view] > .loading {
-//   fixed: top 50% left 20px;
-//   right: 20px;
-//   height: 22px;
-//   margin-top: -5px;
-//   background: lightest-grey;
-//
-//   &:before {
-//     color: white;
-//     content: 'Loading...';
-//     width: 100%;
-//     height: 100%;
-//     position: absolute;
-//     text-align: center;
-//     line-height: 22px;
-//     font-size: 11px;
-//     text-transform: uppercase;
-//   }
-//
-//   .bar {
-//     height: 100%;
-//   }
-// }
-//
-// div[ui-view=''] ul.actions {
-//   background: lightest-grey;
-//   list-style-type: none;
-//   padding: 8px 14px;
-//   display: -webkit-flex;
-//   flex-wrap: nowrap;
-//   align-content: center;
-//   li {
-//     button-blue(true);
-//     flex-grow: 1;
-//     flex-basis: 1px;
-//     margin-left: 10px;
-//     height: 25px;
-//     line-height: 25px;
-//     font-size: 11px;
-//     font-weight: 300;
-//
-//     &.buy {
-//       button-orange(true);
-//     }
-//     &:first-child {
-//       margin-left: 0;
-//     }
-//     .more {
-//       position: absolute;
-//       right: 8px;
-//       height: 25px;
-//       line-height: 25px;
-//     }
-//   }
-// }
-//
-// section.body {
-//   padding: 0 14px;
-//   margin: 20px 0;
-//   article {
-//     &:before {
-//       content: '';
-//       display: block;
-//       margin: 20px -14px 20px;
-//       border-top: 1px solid lightest-grey;
-//     }
-//
-//     &:first-child:before {
-//       display: none;
-//       margin: 0;
-//     }
-//     // p {
-//     //   font-size: 14px;
-//     //   line-height: 22px;
-//     //   font-weight: 300;
-//     // }
-//   }
-// }
-//
-//
-//
-// .details  {
-//   p a {
-//     font-weight: bold;
-//   }
-//   dl {
-//     margin-top: 10px;
-//     dt {
-//       display: inline-block;
-//     }
-//     dd {
-//       display: inline-block;
-//       font-weight: 600;
-//       margin-left: 5px;
-//     }
-//   }
-// }
-//
