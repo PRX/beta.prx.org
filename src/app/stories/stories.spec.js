@@ -82,6 +82,15 @@ describe('prx.stories', function () {
           get('a')).toResolveTo(1);
     }));
 
+    it('gets the series based on the story', inject(function (ngHal, $rootScope) {
+      var story = ngHal.mock(), series;
+      spyOn(story.links, 'all').and.returnValue(true);
+      story.stubFollow('prx:series', {s:1});
+      expect($injector.
+        invoke(state.resolve.series, null, {story: story}).
+        get('s')).toResolveTo(1);
+    }));
+
     xit ('gets the audioUrls based on the story', function () {
       var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
         file1 = ngHal.mockEnclosure('file1.mp3'),
