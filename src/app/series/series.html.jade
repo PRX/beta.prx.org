@@ -2,23 +2,34 @@ article.series
   #hero
     .container
       .media
-        prx-img.coverart(src="series.current.imageUrl", style="height:150px;")
+        prx-img.coverart(src="::series.current.imageUrl", style="height:150px;")
         .content
           h1 {{series.current.title}}
-          dl.metadata
-            dt Produced by
-            dd
+          ul.metadata
+            li
+              strong Produced by:
               address.author
-                a(ui-sref="series.account") {{series.account.name}}
-          dl.metadata
-            dt Episodes
-            dd {{series.current.storyCount}}
-          p {{series.current.shortDescription}}
-      section
-        h2 Stories
-        prx-story(ng-repeat="story in series.stories" story="story")
+                a(ui-sref="::series.account") {{series.account.name}}
+          ul.metadata
+            li
+              strong Episodes:
+              | {{series.current.storyCount}}
+          p
+            | {{series.current.shortDescription}} #{''}
+            a.unbreakable(ui-sref=".details" ng-if="series.current.description") (View Full Description)
+          //- .buttons
+            //- a.play Listen to this series
   #content
+    #poster
+      section.stories
+        h2 Stories
+        a(ui-sref=".allStories", ng-show="::series.stories.length > 6") View All &raquo;
+        prx-story.square(ng-repeat="story in ::series.stories" story="::story")
     #main
       section
         h3 About
         p {{series.current.description}}
+    //- #asides
+    //-   aside
+    //-     section
+    //-       h3 Subscription Details

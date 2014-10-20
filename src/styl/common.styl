@@ -110,7 +110,10 @@ body {
 
 // top-level sections (either top-level because they are in the main content
 // area or they are singly nested within an aside) are padded.
-aside > section, #main > section, #hero .container > section {
+aside > section,
+#main > section,
+#hero .container > section,
+#poster {
   padding: tiny-horizontal-padding;
   overflow: hidden;
   max-width: 100%;
@@ -193,8 +196,15 @@ aside > section, #main > section, #hero .container > section {
   }
 }
 
+#poster > section {
+  flex-basis: 100%;
+  display: flex;
+  flex: 1 auto;
+  flex-flow: row wrap;
+}
+
 // flow the sections within primary blobs of content.
-#main, aside {
+#main, aside, #poster {
   display: flex;
   flex-wrap: wrap;
   & > section {

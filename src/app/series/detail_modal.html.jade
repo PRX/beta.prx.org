@@ -1,0 +1,5 @@
+h1(ng-bind="::series.current.title")
+article(ng-bind-html="::series.current.description")
+ul.actions
+  li
+    a.view(ui-sref="series.show({seriesId: ::series.current.id})") View
