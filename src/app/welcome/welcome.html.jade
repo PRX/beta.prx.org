@@ -1,0 +1,13 @@
+.welcomeContainer(ng-show="welcome.visible()")
+  a.dismiss(ng-click="$storage.welcomed = true")
+  .welcome
+    h1 Welcome to PRX!
+    h3 Public Radio Exchange is a growing social network and community of listeners, producers, and stations collaborating to reshape public radio.
+
+    div
+      section
+        h4 We've got a great collection of stories!
+        a.listen Start Listening Now
+      section
+        h4 Are you a radio station or producer?
+        a.browse Browse Marketplace
