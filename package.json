@@ -61,6 +61,7 @@
     "karma-jasmine": "^0.2.2",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-safari-launcher": "~0.1.1",
+    "lodash": "^2.4.1",
     "node-notifier": "^2.0.4",
     "protractor": "^1.1.1",
     "rework": "^1.0.1",
