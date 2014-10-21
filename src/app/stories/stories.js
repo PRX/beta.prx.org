@@ -25,6 +25,13 @@ angular.module('prx.stories', [
       account: function (story) {
         return story.follow('prx:account');
       },
+      series: function (story) {
+        if (story.links.all('prx:series')) {
+          return story.follow('prx:series');
+        } else {
+          return null;
+        }
+      },
       audioUrls: function (story) {
         return story.toSoundParams().then(function (sfParams) {
           return sfParams.audioFiles;
@@ -148,12 +155,13 @@ angular.module('prx.stories', [
     }
   };
 })
-.controller('StoryCtrl', function (story, account, audioUrls,
+.controller('StoryCtrl', function (story, account, series, audioUrls,
   prxSoundFactory, $stateParams, prxPlayer, prxperiment) {
   var storyCtrl = this;
 
   this.current = story;
   this.account = account;
+  this.series = series;
   this.cover = prxperiment.get('storyCover');
   this.sound = prxSoundFactory({ story: story, producer: account,
     audioFiles: audioUrls, next: function (sound) {

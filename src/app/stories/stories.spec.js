@@ -35,7 +35,7 @@ describe('prx.stories', function () {
     it ('attaches the story and accounts injected to $scope', function () {
       var sigil = ngHal.mock();
       var scope = {};
-      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, audioUrls: [sigil], $scope: scope});
+      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, audioUrls: [sigil], $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.account).toBe(sigil);
     });
@@ -43,10 +43,10 @@ describe('prx.stories', function () {
     it ('starts playback of the story if requested', function () {
       var player = jasmine.createSpyObj('player', ['play']);
       var story  = ngHal.mock();
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: []});
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: []});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
     });
@@ -80,6 +80,15 @@ describe('prx.stories', function () {
       expect($injector.
           invoke(state.resolve.account, null, {story: story}).
           get('a')).toResolveTo(1);
+    }));
+
+    it('gets the series based on the story', inject(function (ngHal, $rootScope) {
+      var story = ngHal.mock(), series;
+      spyOn(story.links, 'all').and.returnValue(true);
+      story.stubFollow('prx:series', {s:1});
+      expect($injector.
+        invoke(state.resolve.series, null, {story: story}).
+        get('s')).toResolveTo(1);
     }));
 
     xit ('gets the audioUrls based on the story', function () {
