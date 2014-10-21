@@ -8,12 +8,14 @@ article.story
           .category audio story
           h1 {{story.current.title}}
           ul.metadata
-            li.author(ng-if="!story.series")
+            li.author(ng-if="::!story.series")
               address.author
                 | by #{''}
                 a(rel="author" ui-sref="story.account") {{story.account.name}}
-            li.episode_identifier(ng-if="story.current.episodeIdentifier")
-              | ep. {{::story.current.episodeIdentifier}} from {{::story.series.title}}
+            li.episode_identifier(ng-if="::story.current.episodeIdentifier")
+              | ep. {{::story.current.episodeIdentifier}}
+            li.series(ng-if="::story.series")
+              | from {{::story.series.title}}
             li.duration
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
@@ -42,9 +44,9 @@ article.story
             | Related Site:
             .value
               a(ng-href="{{story.current.relatedWebsite | absUrl }}", rel="nofollow", ng-bind="story.current.relatedWebsite | prettyUrl ", title="{{story.current.relatedWebsite}}")
-          .term(ng-if="story.current.episodeDate")
+          .term(ng-if="::story.current.episodeDate")
             | For Broadcast:
-            .value {{ story.current.episodeDate | date : 'mediumDate'}}
+            .value {{ ::story.current.episodeDate | date : 'mediumDate'}}
         ul.tags(ng-show="::story.current.tags.length > 0")
           li(ng-repeat="tag in ::story.current.tags", ng-bind="tag")
       section.licensing(ng-show="story.license")
