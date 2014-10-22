@@ -26,6 +26,7 @@ var Notify = require('node-notifier');
 
 var feats  = require('./lib/gulp-featureflags');
 var pngcsh = require('imagemin-pngcrush');
+var pngqnt = require('imagemin-pngquant');
 
 var buildDir = c.buildDir;
 var complDir = c.compileDir;
@@ -92,12 +93,8 @@ gulp.task('compressAssets', function () {
       gulp.src(c.vendor.assets, {base: cwd})
     )
     .pipe(plugin.newer('.cache/assets'))
-    // unfortunately, the guy who maintains
-    // this module seems to think that output
-    // to stderr is an indication that a
-    // program failed to execute properly.
-    // As a result, we can't do this for now.
-    // .pipe(pngcsh({reduce: true}))
+    .pipe(pngcsh({reduce: true}))
+    .pipe(pngqnt())
     .pipe(plugin.imagemin({
       progressive: true
     }))
