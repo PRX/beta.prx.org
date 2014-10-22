@@ -57,32 +57,20 @@ article.about-us {
     }
   }
 
-  div.sidebar {
-    width: 100%;
+  .bottom-bar {
+    background: rgba(blue, 0.1);
 
     @media multi-column {
-      display: flex;
-      justify-content: center;
+      margin: 0px 20px 20px 20px;
 
-      div.sidebar-content {
-        margin: 20px 20px 40px 20px;
+      ul {
+        display: flex;
+        align-items: center;
       }
     }
-  }
 
-  div.sidebar-content {
-    background: rgba(blue, 0.1);
-    padding: 20px;
-
-    ul li {
-      margin: 20px;
-    }
-  }
-
-  div#more {
-    ul li a {
-      font-size: 1.1em;
+    li {
+      padding: 20px;
     }
   }
 }
-
