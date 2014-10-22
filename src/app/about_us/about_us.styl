@@ -1,0 +1,89 @@
+article.about-us {
+  section {
+    h2 {
+      border-bottom: 1px solid black;
+      margin-bottom: 0;
+    }
+
+    h4 {
+      margin-bottom: 20px;
+      padding: 0;
+      font-weight: lighter;
+      font-size: 1.1em;
+    }
+
+    div.vision {
+      p {
+        padding: 0px 0px 15px;
+        font-weight: lighter;
+      }
+    }
+
+    div.pic {
+      img {
+        border: 1px solid lightest-grey;
+        width: 100%;
+      }
+
+      p {
+        text-align: right;
+        font-weight: lighter;
+      }
+    }
+
+    div.strategy {
+      p {
+        font-weight: lighter;
+      }
+
+      p, h4 {
+        padding: 5px 0px 5px 0px;
+        margin: 0;
+      }
+
+      h4 {
+        font-weight: normal;
+      }
+
+      @media multi-column {
+        ul {
+          display: flex;
+
+          li {
+            flex: 1 200px;
+            padding-right: 13px;
+          }
+        }
+      }
+    }
+  }
+
+  div.sidebar {
+    width: 100%;
+
+    @media multi-column {
+      display: flex;
+      justify-content: center;
+
+      div.sidebar-content {
+        margin: 20px 20px 40px 20px;
+      }
+    }
+  }
+
+  div.sidebar-content {
+    background: rgba(blue, 0.1);
+    padding: 20px;
+
+    ul li {
+      margin: 20px;
+    }
+  }
+
+  div#more {
+    ul li a {
+      font-size: 1.1em;
+    }
+  }
+}
+
