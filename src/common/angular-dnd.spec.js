@@ -1,0 +1,2 @@
+describe('angular-dnd', function () {
+});
