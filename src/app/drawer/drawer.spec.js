@@ -1,5 +1,5 @@
 describe('prx.drawer', function () {
-  beforeEach(module('prx.drawer'));
+  beforeEach(module('templates', 'prx.drawer'));
   var $controller;
 
   beforeEach(inject(function (_$controller_) {
@@ -49,14 +49,9 @@ describe('prx.drawer', function () {
       ctrl = $controller('NavItemCtrl');
     });
 
-    it ('returns shortText when available', function () {
-      ctrl.item = {shortText: 'asd', text: 'asdf'};
+    it ('returns shortText', function () {
+      ctrl.item = {shortText: 'asd'};
       expect(ctrl.text()).toBe('asd');
-    });
-
-    it ('returns full text otherwise', function () {
-      ctrl.item = {text: 'asdf'};
-      expect(ctrl.text()).toBe('asdf');
     });
 
     it ('returns type', function () {
@@ -109,8 +104,10 @@ describe('prx.drawer', function () {
   });
 
   describe ('prxDrawer directive', function () {
-    it ("compiles", inject(function ($compile, $rootScope) {
-      $compile('<prx-drawer>')($rootScope);
+    it ("compiles", inject(function ($compile, $rootScope, PRXDrawer, $window) {
+      var elem = $compile('<prx-drawer>')($rootScope.$new());
+      $rootScope.$digest();
+      expect(elem.scope().drawer).toBe(PRXDrawer);
     }));
   });
 

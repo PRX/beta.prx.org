@@ -3,7 +3,7 @@ describe('templates', function () {
   beforeEach(function () {
     angular.module('prx').directive('transcludeabilibuddy', function () {
       return {
-        resitrict: 'E',
+        restrict: 'E',
         transclude: true
       };
     });

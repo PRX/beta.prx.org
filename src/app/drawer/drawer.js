@@ -17,7 +17,7 @@ angular.module('prx.drawer', [])
     replace: true
   };
 })
-.directive('drawerItem', function () {
+.directive('prxDrawerItem', function () {
   return {
     restrict: 'E',
     templateUrl: 'drawer/drawer_item.html',
@@ -44,7 +44,7 @@ angular.module('prx.drawer', [])
     this.type = type;
     this.text = text;
     this.href = href;
-    this.shortText = shortText;
+    this.shortText = shortText || text;
   }
 
   var drawer = this;
@@ -60,7 +60,8 @@ angular.module('prx.drawer', [])
     new DrawerItem("item", "Essay", "http://www.prx.org/format/Essay"),
     new DrawerItem("item", "Fiction", "http://www.prx.org/format/Fiction"),
     new DrawerItem("item", "News Reporting", "http://www.prx.org/format/News%20Reporting"),
-    new DrawerItem("item", "Special", "http://www.prx.org/format/Special")
+    new DrawerItem("item", "Special", "http://www.prx.org/format/Special"),
+    new DrawerItem("category", "Sign In", "http://www.prx.org/sessions/new")
   ];
   this.toggle = function () {
     drawer.open = !drawer.open;
@@ -110,7 +111,7 @@ angular.module('prx.drawer', [])
 })
 .controller('NavItemCtrl', function () {
   this.text = function () {
-    return this.item.shortText || this.item.text;
+    return this.item.shortText;
   };
   this.href = function () {
     return this.item.href;
