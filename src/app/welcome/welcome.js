@@ -10,23 +10,26 @@ angular.module('prx.welcome', ['ngStorage', 'prx.player', 'prx.home'])
   };
 })
 .service('prxWelcome', function () {
-  this.visible = false;
+  this.visible = true;
 })
 .controller('WelcomeCtrl', function (prxWelcome, $scope, $localStorage, prxPlayer, prxSoundFactory) {
-  $scope.$storage = $localStorage;
 
-  var sp = $scope.picks[0].story.toSoundParams();
+  var params = $scope.picks[0].story.toSoundParams();
 
   this.visible = function () {
     return !$localStorage.welcomed;
   };
 
   this.play = function () {
-    sp.then(function (sp) {
+    params.then(function (sp) {
       var event = $scope.$emit('$play', sp);
       if (!event.defaultPrevented) {
         prxPlayer.play(prxSoundFactory(sp));
       }
     });
+  };
+
+  this.dismiss = function () {
+    $localStorage.welcomed = true;
   };
 });
