@@ -1,5 +1,14 @@
 describe('templates', function () {
   var $scope, $compile;
+  beforeEach(function () {
+    angular.module('prx').directive('transcludeabilibuddy', function () {
+      return {
+        restrict: 'E',
+        transclude: true
+      };
+    });
+  });
+
 
   beforeEach(module('prx', 'templates', function ($provide, $stateProvider) {
     $stateProvider.state('fakeState', {});
@@ -31,7 +40,7 @@ describe('templates', function () {
 
     angular.forEach($templateCache.toTest, function (uri) {
       try {
-        $compile($templateCache.get(uri))($scope);
+        $compile("<transcludeabilibuddy>" + $templateCache.get(uri) + "</transcludeabilibuddy>")($scope);
       } catch (e) {
         expect(uri + " compiles").toBe(true);
         throw e;

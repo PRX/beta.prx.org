@@ -1,5 +1,5 @@
 header {
-  absolute: top left; right: 0;
+  fixed: top left; right: 0;
   width: 100%;
   height: action-bar-height;
   overflow: hidden;
@@ -42,6 +42,7 @@ header {
   & > div:not(.loading) {
     max-width: max-content-width + 2 * horizontal-padding;
     margin: 0 auto;
+    position: relative;
   }
 
   h1 {
@@ -52,6 +53,7 @@ header {
     background-repeat: no-repeat;
     font-size: 0px;
     height: action-bar-height;
+    text-align: center;
     a {
       display: inline-block;
       width: 60px;
@@ -70,12 +72,24 @@ header {
   }
 
   nav {
-    absolute: top right 4px;
+    display: none;
+    absolute: top right 30px;
     overflow: hidden;
     a {
-      float: right;
-      display: inline-block;
-      margin-right: 10px;
+      color: light-grey;
+      border-left: 1px solid lightest-grey;
+      padding: 0 25px;
+      &:first-of-type {
+        padding-left: 0;
+        border-left: none;
+      }
+      &:last-of-type {
+        padding-right: 0;
+      }
+    }
+
+    @media multi-column {
+      display: block;
     }
   }
 
@@ -85,6 +99,9 @@ header {
     image: '/assets/images/ic_header_menu.png' auto 15px;
     background-position: center;
     background-repeat: no-repeat;
+    @media multi-column {
+      display: none;
+    }
   }
 
   .loading {
