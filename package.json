@@ -13,8 +13,9 @@
     "url": "git@github.com:prx/prx.org-frontend.git"
   },
   "dependencies": {
+    "express": "~3.3.7",
     "gzippo": "~0.2.0",
-    "express": "~3.3.7"
+    "optipng-bin": "^2.0.1"
   },
   "scripts": {
     "install": "bower install || bower install || bower install",
