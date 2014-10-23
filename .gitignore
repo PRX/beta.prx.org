@@ -11,3 +11,5 @@ log
 .bundle
 .assets
 .cache
+npm-debug.log
+
