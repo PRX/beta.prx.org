@@ -12,10 +12,13 @@ article.about-us {
       font-size: 1.1em;
     }
 
+    p {
+      font-weight: lighter;
+    }
+
     div.vision {
       p {
         padding: 0px 0px 15px;
-        font-weight: lighter;
       }
     }
 
@@ -33,16 +36,14 @@ article.about-us {
 
     .strategy {
       p {
-        font-weight: lighter;
-      }
-
-      p, h4 {
-        padding: 5px 0px 5px 0px;
+        padding-bottom: 5px;
         margin: 0;
       }
 
       h4 {
         font-weight: normal;
+        border-bottom: 1px solid black;
+        margin: 0;
       }
 
       @media multi-column {
@@ -59,6 +60,7 @@ article.about-us {
 
   .bottom-bar {
     background: rgba(blue, 0.1);
+    width: 100%;
 
     @media multi-column {
       margin: 0px 20px 20px 20px;
@@ -66,6 +68,7 @@ article.about-us {
       ul {
         display: flex;
         align-items: center;
+        justify-content: space-around;
       }
     }
 
