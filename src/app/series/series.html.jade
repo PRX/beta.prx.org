@@ -14,13 +14,13 @@ article.series
             li
               strong Episodes:
               | {{series.current.storyCount}}
-          p
-            | {{series.current.shortDescription}} #{''}
+          .description
+            div(ng-bind-html="series.current.shortDescription")
             a.unbreakable(ui-sref=".details" ng-if="series.current.description") (View Full Description)
           //- .buttons
             //- a.play Listen to this series
   #content
-    #poster
+    #poster(ng-show="::series.stories.length > 0")
       section.stories
         h2 Stories
         a(ui-sref=".allStories", ng-show="::series.stories.length > 6") View All &raquo;
@@ -28,7 +28,7 @@ article.series
     #main
       section
         h3 About
-        p {{series.current.description}}
+        p(ng-bind-html="series.current.description")
     //- #asides
     //-   aside
     //-     section

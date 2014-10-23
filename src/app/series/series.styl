@@ -4,26 +4,27 @@
       background: white;
       min-height: 275px;
       position: relative;
-      margin-top: 350px;
+      // margin-top: 350px;
 
-      &::before {
-        height 350px;
-        background-image: url('/assets/images/tl_orange_radios.png');
-        position: absolute;
-        top: -1 * @height;
-        left: 0;
-        right: 0;
-        content: '';
-      }
+      // &::before {
+      //   height 350px;
+      //   background-image: url('/assets/images/tl_orange_radios.png');
+      //   position: absolute;
+      //   top: -1 * @height;
+      //   left: 0;
+      //   right: 0;
+      //   content: '';
+      // }
 
       .media {
         .img.coverart {
           float: left;
           margin-right: 20px;
           margin-top: 6px;
+          // border-bottom: none;
         }
 
-        p {
+        .description {
           display: block;
           padding-top: 10px;
         }
@@ -75,11 +76,12 @@ article.series {
       margin: 15px auto 30px;
       position: relative;
       float: none;
+      border: 1px solid lightest-grey;
 
       &:before {
         content: '';
         position: absolute;
-        top: 150px;
+        top: 149px;
         left: 5px
         width: 140px;
         height: 15px;
@@ -116,7 +118,7 @@ article.series {
       margin-bottom: 10px;
     }
 
-    p {
+    .description {
       display: none;
     }
 
