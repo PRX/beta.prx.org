@@ -48,7 +48,7 @@ angular.module('angular-evaporate', [])
       delete opts.aws_url;
     }
 
-    e._evaporate = new window.Evaporate(opts);
+    e._evaporate = new e.window.Evaporate(opts);
   }
 
   NgEvaporate.protoype = {
