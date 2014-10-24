@@ -22,7 +22,8 @@ angular.module('prx', ['ngAnimate',
   'prx.breadcrumbs',
   'prx.ads',
   'prx.drawer',
-  'angular-dnd'])
+  'angular-dnd',
+  'angular-evaporate'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);

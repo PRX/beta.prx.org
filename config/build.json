@@ -36,7 +36,8 @@
       "vendor/angular-ui-router/release/angular-ui-router.js",
       "vendor/soundmanager/script/soundmanager2-nodebug-jsmin.js",
       "vendor/angulartics/src/angulartics.js",
-      "vendor/angulartics/src/angulartics-ga.js"
+      "vendor/angulartics/src/angulartics-ga.js",
+      "vendor/EvaporateJs/evaporate.js"
     ],
     "buildJs": [
       "vendor/angular/angular.js",
