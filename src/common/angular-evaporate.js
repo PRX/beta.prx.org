@@ -4,7 +4,7 @@ angular.module('angular-evaporate', [])
   var injector;
 
   var config = {
-    signerUrl: '/sign',
+    signerUrl: '',
     awsKey: '',
     bucket: '',
     options: {}
@@ -27,13 +27,13 @@ angular.module('angular-evaporate', [])
       config.options = options;
       return Provider;
     },
-    '$get': ['$q', '$window',
-      function ($q, $window) {
-        return new NgEvaporate($q, $window, config);
+    '$get': ['$q', '$window', '$rootScope',
+      function ($q, $window, $rootScope) {
+        return new NgEvaporate($q, $window, $rootScope, config);
     }]
   };
 
-  function NgEvaporate ($q, $window, config) {
+  function NgEvaporate ($q, $window, $rootScope, config) {
     var e = this;
     e.q = $q;
     e.window = $window;
@@ -41,8 +41,12 @@ angular.module('angular-evaporate', [])
 
     var opts = angular.copy(e.options.options);
     opts.signerUrl = config['signerUrl'];
-    opts.aws_key   = config['awsKey'];
     opts.bucket    = config['bucket'];
+
+    // rename awsKey -> aws_key
+    opts.aws_key   = config['awsKey'];
+
+    // rename optional awsUrl -> aws_url
     if (opts['aws_url']) {
       opts.awsUrl = opts.aws_url;
       delete opts.aws_url;
@@ -51,11 +55,20 @@ angular.module('angular-evaporate', [])
     e._evaporate = new e.window.Evaporate(opts);
   }
 
-  NgEvaporate.protoype = {
+  NgEvaporate.prototype = {
     add: function(config) {
       var e = this;
-      // todo: wrap callbacks from config to provide a promise instead of accepting callbacks
-      return e._evaporate.add(config);
+
+      var deferred = e.q.defer();
+
+      config.complete = function () { deferred.resolve(deferred.uploadId); };
+      config.progress = function(p) { deferred.notify(p); };
+
+      // add the upload info to the underlying evaporate obj
+      // save the returned `id` on the promise itself
+      var promise = deferred.promise;
+      promise.uploadId = e._evaporate.add(config);
+      return promise;
     }
   };
 
