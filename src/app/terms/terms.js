@@ -17,5 +17,14 @@ angular.module('prx.terms', ['ui.router'])
         templateUrl: 'terms/user_agreement.html'
       }
     }
+  })
+  .state('terms.privacyPolicy', {
+    url: '/privacy-policy',
+    title: 'Privacy Policy',
+    views: {
+      '@': {
+        templateUrl: 'terms/privacy_policy.html'
+      }
+    }
   });
 });
