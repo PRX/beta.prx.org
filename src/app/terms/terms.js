@@ -44,5 +44,14 @@ angular.module('prx.terms', ['ui.router'])
         templateUrl: 'terms/downloading_policy.html'
       }
     }
+  })
+  .state('terms.digitalMillenium', {
+    url: '/digital-millennium-copyright-act-policy',
+    title: 'Digital Millennium Copyright Act Policy',
+    views: {
+      '@': {
+        templateUrl: 'terms/digital_millenium.html'
+      }
+    }
   });
 });
