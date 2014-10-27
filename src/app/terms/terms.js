@@ -53,5 +53,14 @@ angular.module('prx.terms', ['ui.router'])
         templateUrl: 'terms/digital_millenium.html'
       }
     }
+  })
+  .state('terms.paymentPolicy', {
+    url: '/payment-policy',
+    title: 'Payment Policy',
+    views: {
+      '@': {
+        templateUrl: 'terms/payment_policy.html'
+      }
+    }
   });
 });
