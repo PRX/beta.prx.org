@@ -26,5 +26,14 @@ angular.module('prx.terms', ['ui.router'])
         templateUrl: 'terms/privacy_policy.html'
       }
     }
+  })
+  .state('terms.uploadingPolicy', {
+    url: '/uploading-policy',
+    title: 'Uploading Policy',
+    views: {
+      '@': {
+        templateUrl: 'terms/uploading_policy.html'
+      }
+    }
   });
 });
