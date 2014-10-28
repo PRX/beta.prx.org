@@ -1,0 +1,58 @@
+article.team {
+  h1 {
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid black;
+  }
+
+  .header, .founders {
+    p, a {
+      padding: 5px 0;
+    }
+  }
+
+  .stations {
+    width: 100%;
+
+    a {
+      margin: 5px 0;
+      display: block;
+    }
+  }
+
+  @media multi-column {
+    .stations {
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+    }
+  }
+
+  .person {
+    height: 100px;
+    margin: 15px 0;
+    padding: 0;
+    background-color: darkest-blue;
+    color: white;
+
+    img {
+      height: 100%;
+      width: 100px;
+      float: left;
+      margin-right: 15px;
+    }
+
+    h4 {
+      padding-top: 15px;
+    }
+
+    a {
+      color: white;
+    }
+  }
+
+  section.team {
+    width: 100%;
+  }
+}
