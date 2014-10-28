@@ -1,0 +1,109 @@
+article.upload {
+  section {
+    position: relative;
+
+    .placeholeder {
+      display: hidden;
+    }
+
+    .header {
+      background-image: url('/assets/images/tl_blue_mics.png');
+
+      h1,
+      .status .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: white;
+        font-size: 40px;
+        padding: 58px 0;
+      }
+
+      .status {
+        background: white;
+        height: 80px;
+        max-width: 1200px;
+        width: 100%;
+        z-index: 199;
+      }
+    } // .header
+
+    form {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding-left: 255px;
+      position: relative;
+
+      fieldset {
+        border-bottom: 1px solid black;
+        padding-bottom: 30px;
+
+        label {
+          &.required {
+            h2 {
+              &::after {
+                content: '*';
+                color: red;
+              }
+            }
+          }
+        }
+
+        h2 {
+          padding: 25px 0 10px;
+          margin: 0;
+
+        }
+
+        h4 {
+
+        }
+
+        p {
+          padding: 0 0 15px;
+        }
+
+        textarea {
+          font-size: 14px;
+          line-height: 21px;
+          width: 600px;
+          height: 110px;
+          padding: 12px;
+          border: 1px solid lightest-grey;
+          outline: none;
+        }
+      }
+    }
+  }
+}
+
+article.upload {
+  .inspector {
+    width: 225px;
+    // height: 400px;
+    z-index: 195;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    margin-left: 0;
+  }
+
+  ol.steps {
+    z-index: 195;
+
+    li {
+      background: white;
+      color: blue;
+      padding: 20px 22px;
+      margin-bottom: 1px;
+      z-index: 195;
+
+      &.active {
+        color: white;
+        background: blue;
+      }
+    }
+  }
+}
