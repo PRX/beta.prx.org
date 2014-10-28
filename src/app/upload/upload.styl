@@ -1,0 +1,69 @@
+.file-target {
+  fixed: top left;
+  bottom: 0; right: 0;
+  z-index: 1000;
+  border-top: 50px solid transparent;
+
+  @media tall-screen {
+    border-top: 75px solid transparent;
+  }
+
+  &:before {
+    background-color: rgba(white, 0.9);
+    content: '';
+    absolute: top 10px left 10px;
+    bottom: 10px; right: 10px;
+    margin: auto;
+    border: 5px dashed light-grey;
+    border-radius: 25px;
+    max-width: 1180px;
+  }
+
+  .message {
+    absolute: top left 15px;
+    bottom: 0; right: 15px;
+    margin: auto;
+
+    color: grey;
+    font-size: 45px;
+    text-align: center;
+    line-height: 50px;
+
+    height: 100px;
+  }
+
+  .file-select {
+    font-size: 25px;
+  }
+
+  small {
+    display: block;
+    font-style: italic;
+    margin: 10px 0;
+    &:before, &:after {
+      content: ' – '
+    }
+  }
+
+  .error {
+    absolute: top -70px left;
+    right: 0;
+    font-size: 14px;
+    background: rgba(red, 0.2);
+    &.ng-hide-add {
+      transition: opacity 0.2s;
+      opacity: 1;
+    }
+    &.ng-hide-add-active {
+      opacity: 0;
+    }
+  }
+}
+
+input[prx-file-select] {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+}
