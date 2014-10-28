@@ -36,6 +36,7 @@ angular.module('angular-evaporate', [])
   function NgEvaporate ($q, $window, $rootScope, config) {
     var e = this;
     e.q = $q;
+    e.rootScope = $rootScope;
     e.window = $window;
     e.options = config;
 
@@ -61,8 +62,17 @@ angular.module('angular-evaporate', [])
 
       var deferred = e.q.defer();
 
-      config.complete = function () { deferred.resolve(deferred.uploadId); };
-      config.progress = function(p) { deferred.notify(p); };
+      config.complete = function () {
+        e.rootScope.$evalAsync( function() {
+          deferred.resolve();
+        });
+      };
+
+      config.progress = function(p) {
+        e.rootScope.$evalAsync( function() {
+          deferred.notify(p);
+        });
+      };
 
       // add the upload info to the underlying evaporate obj
       // save the returned `id` on the promise itself
