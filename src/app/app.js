@@ -25,7 +25,7 @@ angular.module('prx', ['ngAnimate',
   'prx.ads',
   'prx.drawer'])
 .config(function (ngFlagProvider,
-  $analyticsProvider, $stateProvider, prxperimentProvider) {
+  $analyticsProvider, $stateProvider, prxperimentProvider, evaporateProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
   prxperimentProvider.base('https://x.prx.org')
@@ -44,6 +44,13 @@ angular.module('prx', ['ngAnimate',
     prxperimentProvider.enabled(false);
   }
   ngFlagProvider.flags(FEAT.JSON);
+  evaporateProvider
+  .signerUrl(FEAT.UPLOADS_SIGNER_URL)
+  .awsKey(FEAT.UPLOADS_AWS_KEY)
+  .bucket(FEAT.UPLOADS_AWS_BUCKET)
+  .awsUrl(FEAT.UPLOADS_AWS_URL)
+  .cloudfront(FEAT.UPLOADS_CLOUDFRONT)
+  .options({ "logging": FEAT.UPLOADS_LOGGING });
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
     var url = $analytics.settings.pageTracking.basePath + $location.url();
