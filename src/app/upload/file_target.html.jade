@@ -1,0 +1,9 @@
+.file-target(ng-show='target.visible()', ng-dragover='target.updateMessage($event)', ng-drop='target.filesDropped($event)', ng-dragleave="target.dragLeave($event)")
+  .message
+    | {{target.message}}
+    .loading-spinner(ng-show="target.busy()")
+    .file-select(ng-show="target.showFileSelect()")
+      small or
+      input(type='file', prx-file-select, multiple)
+      button(ng-click='target.selectFiles()') Select Files
+    .error(ng-show="target.errorMessage") {{target.errorMessage}}

@@ -1,0 +1,177 @@
+article.upload {
+  section {
+    position: relative;
+
+    .placeholeder {
+      display: hidden;
+    }
+
+    .header {
+      background-image: url('/assets/images/tl_blue_mics.png');
+
+      h1,
+      .status .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: white;
+        font-size: 40px;
+        padding: 58px 0;
+      }
+
+      .status {
+        background: white;
+        height: 80px;
+        max-width: 1200px;
+        width: 100%;
+        z-index: 199;
+      }
+    } // .header
+
+    form {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding-left: 255px;
+      position: relative;
+
+      fieldset {
+        border-bottom: 1px solid black;
+        padding-bottom: 30px;
+
+        label {
+          &.required {
+            h2 {
+              &::after {
+                content: '*';
+                color: red;
+              }
+            }
+          }
+        }
+
+        h2 {
+          padding: 25px 0 10px;
+          margin: 0;
+
+        }
+
+        h4 {
+
+        }
+
+        p {
+          padding: 0 0 15px;
+        }
+
+        textarea {
+          font-size: 14px;
+          line-height: 21px;
+          width: 600px;
+          height: 110px;
+          padding: 12px;
+          border: 1px solid lightest-grey;
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .inspector {
+    width: 225px;
+    // height: 400px;
+    z-index: 195;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    margin-left: 0;
+  }
+
+  ol.steps {
+    z-index: 195;
+
+    li {
+      background: white;
+      color: blue;
+      padding: 20px 22px;
+      margin-bottom: 1px;
+      z-index: 195;
+
+      &.active {
+        color: white;
+        background: blue;
+      }
+    }
+  }
+}
+
+.file-target {
+  fixed: top left;
+  bottom: 0; right: 0;
+  z-index: 1000;
+  border-top: 50px solid transparent;
+
+  @media tall-screen {
+    border-top: 75px solid transparent;
+  }
+
+  &:before {
+    background-color: rgba(white, 0.9);
+    content: '';
+    absolute: top 10px left 10px;
+    bottom: 10px; right: 10px;
+    margin: auto;
+    border: 5px dashed light-grey;
+    border-radius: 25px;
+    max-width: 1180px;
+  }
+
+  .message {
+    absolute: top left 15px;
+    bottom: 0; right: 15px;
+    margin: auto;
+
+    color: grey;
+    font-size: 45px;
+    text-align: center;
+    line-height: 50px;
+
+    height: 100px;
+  }
+
+  .file-select {
+    font-size: 25px;
+  }
+
+  small {
+    display: block;
+    font-style: italic;
+    margin: 10px 0;
+    &:before, &:after {
+      content: ' – '
+    }
+  }
+
+  .error {
+    absolute: top -70px left;
+    right: 0;
+    font-size: 14px;
+    background: rgba(red, 0.2);
+    &.ng-hide-add {
+      transition: opacity 0.2s;
+      opacity: 1;
+    }
+    &.ng-hide-add-active {
+      opacity: 0;
+    }
+  }
+}
+
+input[prx-file-select] {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+}

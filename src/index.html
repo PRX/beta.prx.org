@@ -10,7 +10,8 @@
   <link rel="canonical" bind-canonical="href" />
   <meta name="fragment" content="!">
 </head>
-<body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying}">
+<body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying, 'show-target': app.fileTargetVisible}" ng-dragover="app.showFileTarget($event)">
+  <prx-file-target name='files'></prx-file-target>
   <prx-drawer drawer="main">
     <header ng-class="{'loading': loading}">
       <prx-loading-bar></prx-loading-bar>
