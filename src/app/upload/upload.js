@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['angular-dnd', 'angular-evaporate'])
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate'])
   .config(function ($stateProvider) {
     $stateProvider.state('upload', {
 
@@ -104,42 +104,45 @@ if (FEAT.TCF_DEMO) {
     var activeUploads = [], intervalScheduled = false;
 
     function Upload(file) {
-      this.file = file;
-      this.progress = 0;
-      this.promise = evaporate.add({
+      var u = this;
+      u.file = file;
+      u.progress = 0;
+
+      var up = evaporate.add({
         name: file.name,
         file: file
-      }).then(
+      });
+
+      u.uploadId = up.uploadId;
+
+      u.promise = up.then(
         function() {
-          console.log("complete!");
+          // console.log("complete!");
+          return;
         },
         function() {
-          console.log("fail!");
+          // console.log("fail!");
+          return;
         },
         function(p) {
-          console.log("progress", p);
+          // console.log("upload progress", p);
+          u.progress = p;
+          return p;
         }
       );
-      activeUploads.push(this);
+
+      activeUploads.push(u);
     }
 
     Upload.prototype = {
-      uploadId: function () {
-        return this.promise.uploadId;
-      },
       cancel: function () {
-        return evaporate.cancel(this.promise.uploadId);
+        return evaporate.cancel(this.uploadId);
       }
     };
 
     this.upload = function (file) {
       return new Upload(file);
     };
-
-    this.cancel = function (id) {
-      return evaporate.cancel(id);
-    };
-
 
   })
   .controller('prxFileTargetCtrl', function (UploadTarget, $scope, Upload, Validate, $state, $q, $timeout) {
