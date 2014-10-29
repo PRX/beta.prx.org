@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['angular-dnd'])
+  angular.module('prx.upload', ['angular-dnd', 'angular-evaporate'])
   .config(function ($stateProvider) {
     $stateProvider.state('upload', {
 
@@ -100,38 +100,47 @@ if (FEAT.TCF_DEMO) {
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
-  .service('Upload', function UploadService($interval) {
+  .service('Upload', function UploadService(evaporate) {
     var activeUploads = [], intervalScheduled = false;
 
     function Upload(file) {
       this.file = file;
       this.progress = 0;
+      this.promise = evaporate.add({
+        name: file.name,
+        file: file
+      }).then(
+        function() {
+          console.log("complete!");
+        },
+        function() {
+          console.log("fail!");
+        },
+        function(p) {
+          console.log("progress", p);
+        }
+      );
       activeUploads.push(this);
-      scheduleInterval();
     }
+
+    Upload.prototype = {
+      uploadId: function () {
+        return this.promise.uploadId;
+      },
+      cancel: function () {
+        return evaporate.cancel(this.promise.uploadId);
+      }
+    };
 
     this.upload = function (file) {
       return new Upload(file);
     };
 
-    function scheduleInterval() {
-      if (!intervalScheduled) {
-        intervalScheduled = $interval(increaseUploads, 200);
-      }
-    }
+    this.cancel = function (id) {
+      return evaporate.cancel(id);
+    };
 
-    function increaseUploads() {
-      if (activeUploads.length) {
-        activeUploads[0].progress += Math.random() * 10 + 1;
-        if (activeUploads[0].progress >= 100) {
-          activeUploads[0].progress = 100;
-          activeUploads.splice(0, 1);
-        }
-      } else {
-        $interval.cancel(intervalScheduled);
-        intervalScheduled = false;
-      }
-    }
+
   })
   .controller('prxFileTargetCtrl', function (UploadTarget, $scope, Upload, Validate, $state, $q, $timeout) {
     var ctrl = this, errorClearer;
