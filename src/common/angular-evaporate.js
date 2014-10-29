@@ -4,9 +4,11 @@ angular.module('angular-evaporate', [])
   var injector;
 
   var config = {
-    signerUrl: '',
-    awsKey: '',
-    bucket: '',
+    signerUrl: null,
+    bucket: null,
+    awsKey: null,
+    awsUrl: 'https://s3.amazonaws.com',
+    cloudfront: false,
     options: {}
   };
 
@@ -19,8 +21,16 @@ angular.module('angular-evaporate', [])
       config.awsKey = awsKey;
       return Provider;
     },
+    awsUrl: function (awsUrl) {
+      config.awsUrl = awsUrl;
+      return Provider;
+    },
     bucket: function (bucket) {
       config.bucket = bucket;
+      return Provider;
+    },
+    cloudfront: function (cloudfront) {
+      config.cloudfront = cloudfront;
       return Provider;
     },
     options: function (options) {
@@ -35,23 +45,19 @@ angular.module('angular-evaporate', [])
 
   function NgEvaporate ($q, $window, $rootScope, config) {
     var e = this;
-    e.q = $q;
+    e.q         = $q;
     e.rootScope = $rootScope;
-    e.window = $window;
-    e.options = config;
+    e.window    = $window;
+    e.options   = config;
 
     var opts = angular.copy(e.options.options);
-    opts.signerUrl = config['signerUrl'];
-    opts.bucket    = config['bucket'];
+    opts.signerUrl  = e.options['signerUrl'];
+    opts.bucket     = e.options['bucket'];
+    opts.cloudfront = e.options['cloudfront'];
 
     // rename awsKey -> aws_key
-    opts.aws_key   = config['awsKey'];
-
-    // rename optional awsUrl -> aws_url
-    if (opts['aws_url']) {
-      opts.awsUrl = opts.aws_url;
-      delete opts.aws_url;
-    }
+    opts.aws_key    = e.options['awsKey'];
+    opts.aws_url    = e.options['awsUrl'];
 
     e._evaporate = new e.window.Evaporate(opts);
   }
