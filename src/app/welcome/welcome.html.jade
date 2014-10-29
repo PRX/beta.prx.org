@@ -1,0 +1,13 @@
+.welcomeContainer(ng-show="welcome.visible()")
+  a.dismiss(ng-click="welcome.dismiss()")
+  .welcome
+    h1 Welcome to PRX!
+    h3 Hear and buy the best audio stories published by our community of world-class producers.
+
+    div
+      section
+        h4 Want to hear great stories?
+        a.listen(ng-click="welcome.play()") Listen For Free
+      section
+        h4 Want to publish or buy stories?
+        a.browse(ui-sref="tour.producers") Learn More

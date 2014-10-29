@@ -26,6 +26,22 @@ describe('prx.series', function () {
     }));
   });
 
+  describe ('SeriesDetailCtrl', function () {
+    it ('attaches the series injected to $scope', inject(function ($controller) {
+      var foo = 'asd', scope = {};
+      var ctrl = $controller('SeriesDetailCtrl', {series: foo, $scope: scope});
+      expect(ctrl.current).toBe(foo);
+    }));
+  });
+
+  describe ('SeriesDetailCtrl', function () {
+    it ('attaches the series injected to $scope', inject(function ($controller) {
+      var foo = 'asd', scope = {};
+      var ctrl = $controller('SeriesDetailCtrl', {series: foo, $scope: scope});
+      expect(ctrl.current).toBe(foo);
+    }));
+  });
+
   describe ('StoryDetailCtrl', function () {
     it ('attaches the story injected to controller', inject(function ($controller) {
       var foo = 'asd', scope = {};
@@ -36,9 +52,10 @@ describe('prx.series', function () {
 
   describe ('series state', function () {
     var state, $injector;
-    beforeEach(inject(function ($state, _$injector_) {
-      state = $state.get('series');
+    beforeEach(inject(function ($state, _$injector_, _ngHal_) {
+      state = $state.get('series.show');
       $injector = _$injector_;
+      ngHal = _ngHal_;
     }));
 
     it ('gets the series', inject(function(ngHal, $rootScope, $q) {
@@ -51,6 +68,15 @@ describe('prx.series', function () {
       $rootScope.$digest();
       expect(result.a).toBe(1);
     }));
+
+    it ('resolves recent stories', function () {
+      var mock = ngHal.mock();
+      var spy = mock.stubFollow('prx:items');
+      $injector.invoke(state.resolve.recentStories, null, {
+        storiesList: mock
+      });
+      expect(spy).toHaveBeenCalled();
+    });
 
     it ('gets the stories based on the series', inject(function (ngHal, $rootScope) {
       var series = ngHal.mock();
