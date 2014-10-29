@@ -7,5 +7,11 @@
   "HOME_PAGE": true,
   "APPLICATION_VERSION": "integration",
   "TCF_DEMO": false,
-  "WELCOME_MAT": false
+  "WELCOME_MAT": false,
+  "UPLOADS_SIGNER_URL": "https://prx-upload.herokuapp.com/signature",
+  "UPLOADS_AWS_KEY": "AKIAJBZEEF6K2DQO2J5A",
+  "UPLOADS_AWS_BUCKET": "prx-up",
+  "UPLOADS_AWS_URL": "https://dsn15m3yob5tf.cloudfront.net",
+  "UPLOADS_CLOUDFRONT": true,
+  "UPLOADS_LOGGING": false
 }
