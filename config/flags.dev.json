@@ -6,5 +6,6 @@
   "LISTEN_LATER": true,
   "HOME_PAGE": true,
   "APPLICATION_VERSION": "development",
-  "TCF_DEMO": true
+  "TCF_DEMO": true,
+  "WELCOME_MAT": true
 }

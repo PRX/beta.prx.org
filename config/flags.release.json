@@ -6,5 +6,6 @@
   "LISTEN_LATER": false,
   "HOME_PAGE": true,
   "APPLICATION_VERSION": "integration",
-  "TCF_DEMO": false
+  "TCF_DEMO": false,
+  "WELCOME_MAT": false
 }
