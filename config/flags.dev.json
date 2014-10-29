@@ -5,5 +5,6 @@
   "COUNT_HOST": "http://localhost",
   "LISTEN_LATER": true,
   "HOME_PAGE": true,
-  "APPLICATION_VERSION": "development"
+  "APPLICATION_VERSION": "development",
+  "WELCOME_MAT": true
 }
