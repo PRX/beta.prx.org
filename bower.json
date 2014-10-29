@@ -11,6 +11,7 @@
     "ngPlayerHater": "0.0.7",
     "angulartics": "~0.16",
     "angular-sanitize": "~1.3",
-    "ngstorage": "~0.3.0"
+    "ngstorage": "~0.3.0",
+    "EvaporateJS": "https://github.com/TTLabs/EvaporateJS.git"
   }
 }
