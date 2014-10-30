@@ -1,4 +1,22 @@
 article.upload {
+  .modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.77);
+    z-index: 1000;
+  }
+
+  #thumbnailcrop {
+    div {
+
+    }
+  }
+}
+
+article.upload {
   padding-bottom: 40px;
 
   section {
@@ -35,8 +53,9 @@ article.upload {
     form {
       max-width: 1000px;
       margin: 0 auto;
-      padding-left: 255px;
+      padding-left: 275px;
       position: relative;
+      display: block;
 
       fieldset {
         border-bottom: 1px solid black;
@@ -159,8 +178,29 @@ article.upload {
 }
 
 article.upload {
+  .tagging {
+    input {
+      diplay: block;
+      width: 600px;
+    }
+
+    .half {
+      display: inline-block;
+      width: 37%;
+      margin-bottom: 15px;
+    }
+
+    select {
+      width: 230px;
+      font-size: 18px;
+      padding: 8px;
+    }
+  }
+}
+
+article.upload {
   .inspector {
-    width: 225px;
+    width: 245px;
     // height: 400px;
     z-index: 195;
     position: absolute;
