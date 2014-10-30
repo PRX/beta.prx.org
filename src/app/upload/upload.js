@@ -121,24 +121,20 @@ angular.module('prx.upload', ['ui.router'])
                 _inspector.style.position = "fixed";
                 _inspector.style.top = _y + "px";
                 _inspector.style.left = 'initial';
-                _inspector.style.marginLeft = "-255px";
+                _inspector.style.marginLeft = "-275px";
               } else {
                 // Pin the current header to the top of the view
                 _inspector.style.position = "fixed";
                 _inspector.style.top = (verticalOffset + topMargin) + "px";
                 _inspector.style.left = 'initial';
-                _inspector.style.marginLeft = "-255px";
+                _inspector.style.marginLeft = "-275px";
               }
-
-              // pushY = ();
-
-
             } else {
               // Pin the current header to the top of the view
               _inspector.style.position = "fixed";
               _inspector.style.top = (verticalOffset + topMargin) + "px";
               _inspector.style.left = 'initial';
-              _inspector.style.marginLeft = "-255px";
+              _inspector.style.marginLeft = "-275px";
             }
           } else {
             // Reset the inspector's styles
@@ -148,72 +144,6 @@ angular.module('prx.upload', ['ui.router'])
             _inspector.style.removeProperty('top');
             _inspector.style.removeProperty('left');
           }
-
-
-
-
-
-
-
-
-        //   // Placeholder for the current header has been scrolled out the top
-        //   // (ie we are scrolled past the natural header position)
-        //   // need to account for the header (73px)
-        //   if ($window.pageYOffset + 153 > this.findPosY(_placeholder)) {
-        //
-        //     // There are more headers after this one
-        //     if (typeof _nextInspector != 'undefined'){
-        //
-        //       nextMinY = this.findPosY(_nextInspector);
-        //       adjNextMinY = nextMinY - 550;
-        //
-        //       breakpoint = adjNextMinY;
-        //
-        //       // The distance between where the page is currenly scrolled to and
-        //       // the natural position of the next header
-        //       dif = this.findPosY(_nextInspector) - $window.pageYOffset;
-        //
-        //       // if ((dif) < _inspector.offsetHeight) {
-        //       if ($window.pageYOffset > breakpoint) {
-        //         console.log('push');
-        //         // The next header is pushing the current header off screen
-        //         _inspector.style.position = "fixed";
-        //         _inspector.style.top = '-' + (_inspector.offsetHeight - dif - 200) + 'px';
-        //         _inspector.style.left = 'initial';
-        //         _inspector.style.marginLeft = "-255px";
-        //       } else {
-        //         // Pin the current header to the top of the view
-        //         _inspector.style.position = "fixed";
-        //         _inspector.style.top = "182px";
-        //         _inspector.style.left = 'initial';
-        //         _inspector.style.marginLeft = "-255px";
-        //       }
-        //     } else {
-        //       // There are no headers after this one
-        //       // _placeholder.style.height = _inspector.offsetHeight + 'px';
-        //       _inspector.style.position = "fixed";
-        //       _inspector.style.top = "182px";
-        //       _inspector.style.left = 'initial';
-        //       _inspector.style.marginLeft = "-255px";
-        //     }
-        //   } else {
-        //     // Natural location for this header is below the top of the page
-        //     _inspector.style.removeProperty('marginLeft');
-        //     _inspector.style.removeProperty('margin');
-        //     _inspector.style.removeProperty('position');
-        //     _inspector.style.removeProperty('top');
-        //     _inspector.style.removeProperty('left');
-        //   }
-
-
-
-
-
-
-
-
-
-
         }
       };
 

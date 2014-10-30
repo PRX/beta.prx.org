@@ -1,4 +1,7 @@
 article.upload(on-page-scroll)
+  //- #thumbnailcrop.modal
+  //-   div
+  //-     cropme(width="200", height="200")
   section
     .header
       h1 Step 1: Create your Story!
@@ -13,7 +16,7 @@ article.upload(on-page-scroll)
         ol.steps
           li.active STEP 1: Create your story
           li STEP 2: Decorate your story
-          li STEP 3: Sell your story
+          li STEP 3: Distribute your story
       fieldset
         label.required
           h2 Story Title
@@ -23,6 +26,25 @@ article.upload(on-page-scroll)
           h2 Teaser
           p A first impression; think of this as a the single-item lead of a piece.
           textarea
+      fieldset
+        label.required
+          h2 Story Versions
+      fieldset.tagging
+        label.required
+          h2 Tag Your Story
+          p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
+          .half
+            h4 Genre
+            select
+              option News
+              option Dog Talk
+          .half
+            h4 Type
+            select
+              option Documentary
+              option Dog Talk
+          input(placeholder="Type tags for your story.")
+          p Suggestions: Dog, Dogs, Beagles, Animals
       fieldset
         label
           h2 Producers
@@ -42,7 +64,7 @@ article.upload(on-page-scroll)
         ol.steps
           li STEP 1: Create your story
           li.active STEP 2: Decorate your story
-          li STEP 3: Sell your story
+          li STEP 3: Distribute your story
         button Some thing
       fieldset
         h2 Upload a Cover Image
@@ -77,7 +99,7 @@ article.upload(on-page-scroll)
         ol.steps
           li STEP 1: Create your story
           li STEP 2: Decorate your story
-          li.active STEP 3: Sell your story
+          li.active STEP 3: Distribute your story
       fieldset
         label
           h2 May listeners download your story?
