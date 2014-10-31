@@ -5,7 +5,7 @@ if (FEAT.TCF_DEMO) {
     $stateProvider.state('upload', {
 
     }).state('upload.new_story', {
-        url: '/prx-upload',
+        url: '/upload',
         title: 'Create Your Story',
         params: {uploads: []},
         views: {
