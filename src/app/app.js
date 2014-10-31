@@ -50,7 +50,7 @@ angular.module('prx', ['ngAnimate',
   .bucket(FEAT.UPLOADS_AWS_BUCKET)
   .awsUrl(FEAT.UPLOADS_AWS_URL)
   .cloudfront(FEAT.UPLOADS_CLOUDFRONT)
-  .options({ "logging": FEAT.UPLOADS_LOGGING });
+  .options({ logging: FEAT.UPLOADS_LOGGING });
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
     var url = $analytics.settings.pageTracking.basePath + $location.url();
