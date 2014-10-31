@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate'])
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid'])
   .config(function ($stateProvider) {
     $stateProvider.state('upload', {
 
@@ -97,10 +97,55 @@ if (FEAT.TCF_DEMO) {
     }
 
     this.validate = function (file) {
+      window.validateFile = file;
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
-  .service('Upload', function UploadService(evaporate) {
+  .service('MimeType', function MimeTypeService() {
+
+    var expectedMimeTypes = {
+      "aif": "audio\/x-aiff",
+      "aifc": "audio\/x-aiff",
+      "aiff": "audio\/x-aiff",
+      "caf": "audio\/x-caf",
+      "flac": "audio\/x-flac",
+      "m2a": "audio\/mpeg",
+      "m3a": "audio\/mpeg",
+      "m4a": "audio\/mp4",
+      "mp2": "audio\/mpeg",
+      "mp2a": "audio\/mpeg",
+      "mp3": "audio\/mpeg",
+      "mp4": "video\/mp4",
+      "mp4a": "audio\/mp4",
+      "mpga": "audio\/mpeg",
+      "oga": "audio\/ogg",
+      "ogg": "audio\/ogg",
+      "spx": "audio\/ogg",
+      "wav": "audio\/x-wav",
+      "weba": "audio\/webm",
+      "gif": "image\/gif",
+      "jpe": "image\/jpeg",
+      "jpeg": "image\/jpeg",
+      "jpg": "image\/jpeg",
+      "png": "image\/png",
+      "svg": "image\/svg+xml",
+      "svgz": "image\/svg+xml",
+      "webp": "image\/webp"
+    };
+
+    this.lookup = function(file, defaultType) {
+      defaultType = defaultType || "application\/octet-stream";
+
+      var type = file.type;
+      if (typeof type === 'undefined' || type === null || type === '') {
+        var ext = file.name.split('.').pop();
+        type = expectedMimeTypes[ext];
+      }
+      return type || defaultType;
+    };
+
+  })
+  .service('Upload', function UploadService(evaporate, $uuid, MimeType) {
     var activeUploads = [], intervalScheduled = false;
 
     function Upload(file) {
@@ -109,8 +154,15 @@ if (FEAT.TCF_DEMO) {
       u.progress = 0;
 
       var up = evaporate.add({
-        name: file.name,
-        file: file
+        name: this.uploadKey(file),
+        file: file,
+        contentType: MimeType.lookup(file),
+        xAmzHeadersAtInitiate: {
+          'x-amz-acl': 'private'
+        },
+        notSignedHeadersAtInitiate: {
+          'Content-Disposition': 'attachment; filename=' + this.safeName(u.file.name)
+        }
       });
 
       u.uploadId = up.uploadId;
@@ -137,6 +189,17 @@ if (FEAT.TCF_DEMO) {
     Upload.prototype = {
       cancel: function () {
         return evaporate.cancel(this.uploadId);
+      },
+      uploadKey: function (file) {
+        var fn = this.safeName(file.name);
+        var id = $uuid.v4();
+        var vn = FEAT.APPLICATION_VERSION || 'development';
+        var nn = (vn + '/' + id + '/' + fn);
+        // console.log('new file name for file', nn, file);
+        return nn;
+      },
+      safeName: function(name) {
+        return name.replace(/[^a-z0-9\.]+/gi,'_');
       }
     };
 
