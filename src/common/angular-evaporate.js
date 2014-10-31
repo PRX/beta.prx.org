@@ -74,6 +74,12 @@ angular.module('angular-evaporate', [])
         });
       };
 
+      config.error = function(msg) {
+        e.rootScope.$evalAsync( function() {
+          deferred.reject(msg);
+        });
+      };
+
       config.progress = function(p) {
         e.rootScope.$evalAsync( function() {
           deferred.notify(p);

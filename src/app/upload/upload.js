@@ -186,11 +186,11 @@ if (FEAT.TCF_DEMO) {
       u.promise = up.then(
         function() {
           // console.log("complete!");
-          return;
+          return u;
         },
-        function() {
-          // console.log("fail!");
-          return;
+        function(msg) {
+          // console.log("error!");
+          return msg;
         },
         function(p) {
           // console.log("upload progress", p);
@@ -207,7 +207,7 @@ if (FEAT.TCF_DEMO) {
         return evaporate.cancel(this.uploadId);
       },
       then: function () {
-        this.promise.then.apply(this.promise, arguments);
+        return this.promise.then.apply(this.promise, arguments);
       }
     };
 
