@@ -1,7 +1,7 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
   angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid'])
-  .config(function ($stateProvider) {
+  .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
 
     }).state('upload.new_story', {
@@ -16,6 +16,14 @@ if (FEAT.TCF_DEMO) {
         }
       }
     );
+
+    evaporateProvider
+    .signerUrl(FEAT.UPLOADS_SIGNER_URL)
+    .awsKey(FEAT.UPLOADS_AWS_KEY)
+    .bucket(FEAT.UPLOADS_AWS_BUCKET)
+    .awsUrl(FEAT.UPLOADS_AWS_URL)
+    .cloudfront(FEAT.UPLOADS_CLOUDFRONT)
+    .options({ logging: FEAT.UPLOADS_LOGGING });
   })
   .service('UploadTarget', function ($rootScope) {
     var targets = [],
