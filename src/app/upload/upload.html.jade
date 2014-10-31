@@ -1,4 +1,7 @@
 article.upload(on-page-scroll)
+  //- #thumbnailcrop.modal
+  //-   div
+  //-     cropme(width="200", height="200")
   section
     .header
       h1 Step 1: Create your Story!
@@ -11,9 +14,9 @@ article.upload(on-page-scroll)
       .placeholder(inspector-placeholder)
       .inspector(inspector)
         ol.steps
-          li STEP 1: Create your story
-          li.active STEP 2: Decorate your story
-          li STEP 3: Sell your story
+          li.active STEP 1: Create your story
+          li STEP 2: Decorate your story
+          li STEP 3: Distribute your story
       fieldset
         label.required
           h2 Story Title
@@ -24,6 +27,25 @@ article.upload(on-page-scroll)
           p A first impression; think of this as a the single-item lead of a piece.
           textarea
       fieldset
+        label.required
+          h2 Story Versions
+      fieldset.tagging
+        label.required
+          h2 Tag Your Story
+          p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
+          .half
+            h4 Genre
+            select
+              option News
+              option Dog Talk
+          .half
+            h4 Type
+            select
+              option Documentary
+              option Dog Talk
+          input(placeholder="Type tags for your story.")
+          p Suggestions: Dog, Dogs, Beagles, Animals
+      fieldset
         label
           h2 Producers
           input
@@ -33,7 +55,7 @@ article.upload(on-page-scroll)
         h4 Full Description
         textarea
         p Adding a written description of your piece full of keywords, names of interviewees, places and topics will help people find your piece and may improve your chances of being heard and licensed.
-  section
+  section.decorate
     .header
       h1 Step 2: Decorate your Story!
     form
@@ -42,28 +64,32 @@ article.upload(on-page-scroll)
         ol.steps
           li STEP 1: Create your story
           li.active STEP 2: Decorate your story
-          li STEP 3: Sell your story
-        button Some thing
+          li STEP 3: Distribute your story
+        prx-upload-decorate-progress
       fieldset
-        label
-          h2 Story Title
-          p Write a short, Tweetable title like a newspaper headline. Make viewers want to click on your piece from the title alone.
-          textarea
-
-        label
-          h2.required Teaser
-          p A first impression; think of this as a the single-item lead of a piece.
-          textarea
+        h2 Upload a Cover Image
+        p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
+        .cover
+        h2 Upload a Thumbnail
+        p Use your own
+        .thumbnail
+        a(href="#") + Add caption or credit
       fieldset
-        label
-          h2 Producers
-          input
-          button Add Producer
+        h2 Musical Works
+        input(type='text', placeholder="Search for an title, artist, album, or label")
+        button Add Work
+      fieldset
+        h2 Producers
+        input(type='text', placeholder="Add producer name")
+        button Add Producer
       fieldset
         h2 Details
         h4 Full Description
-        textarea
+        textarea(placeholder="Full Description is the full piece of your piece that can be accessed by all users.")
         p Adding a written description of your piece full of keywords, names of interviewees, places and topics will help people find your piece and may improve your chances of being heard and licensed.
+        h4 Transcription
+        input(type='text', placeholder="Add transcript")
+        button Generate transcript
   section
     .header
       h1 Step 3: Distribute your Story!
@@ -72,24 +98,35 @@ article.upload(on-page-scroll)
       .inspector(inspector)
         ol.steps
           li STEP 1: Create your story
-          li.active STEP 2: Decorate your story
-          li STEP 3: Sell your story
+          li STEP 2: Decorate your story
+          li.active STEP 3: Distribute your story
       fieldset
         label
-          h2 Story Title
-          p Write a short, Tweetable title like a newspaper headline. Make viewers want to click on your piece from the title alone.
-          textarea
-
-          h2.required Teaser
-          p A first impression; think of this as a the single-item lead of a piece.
-          textarea
+          h2 May listeners download your story?
+          p We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
+          fieldset.downloads
+            input(type='radio', name="downloadable")
+            label No way, man!
+            input(type='radio', name="downloadable")
+            label Sure, it's okay.
+            .donation
+              input(type="text", placeholder="Min. Donation")
       fieldset
-        label
-          h2 Producers
-          input
-          button Add Producer
-      fieldset
-        h2 Details
-        h4 Full Description
-        textarea
-        p Adding a written description of your piece full of keywords, names of interviewees, places and topics will help people find your piece and may improve your chances of being heard and licensed.
+        h2 Approved Purchasers
+        p You can manage which purchasers are allowed to license your stories within your account settings. You may also override your account settings for this story below. While PRX reviews and approves these purchasers, we recommend that you closely read each agreement before approval.
+        
+        fieldset.purchaser
+          h2 Public Radio Stations&nbsp;
+          h3 – $30 minimum (average $51) based on the length of your story
+          p There are over 400 public radio stations in the United States with an account on PRX. By approving them to purchase your piece you’ll be eligible for royalties (paid accounts only) and your story may be heard by thousands, even millions of listeners.
+          a(href="#") Adjust the pricing and agreement
+          input(type="checkbox")
+          label Approved
+          
+        fieldset.purchaser
+          h2 PRX Remix&nbsp;
+          h3 – $75 flat fee
+          p Be heard on XM Radio Channel 123, iPhone and Andriod apps and over 14 public radio stations around the country.
+          a(href="#") View the agreement
+          input(type="checkbox")
+          label Approved

@@ -1,4 +1,24 @@
 article.upload {
+  .modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.77);
+    z-index: 1000;
+  }
+
+  #thumbnailcrop {
+    div {
+
+    }
+  }
+}
+
+article.upload {
+  padding-bottom: 40px;
+
   section {
     position: relative;
 
@@ -33,12 +53,20 @@ article.upload {
     form {
       max-width: 1000px;
       margin: 0 auto;
-      padding-left: 255px;
+      padding-left: 275px;
       position: relative;
+      display: block;
 
       fieldset {
         border-bottom: 1px solid black;
         padding-bottom: 30px;
+
+        fieldset {
+          border: 0;
+          background: white;
+          padding: 30px 50px;
+          max-width: 575px;
+        }
 
         label {
           &.required {
@@ -63,6 +91,7 @@ article.upload {
 
         p {
           padding: 0 0 15px;
+          max-width: 575px;
         }
 
         textarea {
@@ -74,12 +103,104 @@ article.upload {
           border: 1px solid lightest-grey;
           outline: none;
         }
+
+        input {
+          background: white;
+        }
       }
     }
   }
+}
 
+article.upload {
+  .decorate {
+    input {
+      width: 600px;
+    }
+
+    button {
+      display: block;
+      margin-top: 15px;
+    }
+
+    .cover {
+      height: 185px;
+      border: 2px light-grey dashed;
+      background-color: white;
+      width: 740px;
+      background-image: url('/assets/images/icons/coverphoto@2x.png');
+      background-size: 83px 62.5px;
+      background-repeat: no-repeat;
+      background-position: 50% 50px;
+      position: relative;
+
+      &::after {
+        content: '1200x300 px';
+        color: light-grey;
+        position: absolute;
+        width: 100px;
+        text-align: center;
+        left: 50%;
+        margin-left: -50px;
+        top: 120px;
+      }
+    }
+
+    .thumbnail {
+      width: 235px;
+      height: 235px;
+      background-image: url('/assets/images/icons/coverphoto@2x.png');
+      background-size: 83px 62.5px;
+      background-repeat: no-repeat;
+      background-position: 50% 60px;
+      position: relative;
+      border: 2px light-grey dashed;
+      background-color: white;
+
+      &::after {
+        content: '200x200 px';
+        color: light-grey;
+        position: absolute;
+        width: 100px;
+        text-align: center;
+        left: 50%;
+        margin-left: -50px;
+        top: 135px;
+      }
+    }
+
+    a {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  }
+}
+
+article.upload {
+  .tagging {
+    input {
+      diplay: block;
+      width: 600px;
+    }
+
+    .half {
+      display: inline-block;
+      width: 37%;
+      margin-bottom: 15px;
+    }
+
+    select {
+      width: 230px;
+      font-size: 18px;
+      padding: 8px;
+    }
+  }
+}
+
+article.upload {
   .inspector {
-    width: 225px;
+    width: 245px;
     // height: 400px;
     z-index: 195;
     position: absolute;
@@ -174,4 +295,128 @@ input[prx-file-select] {
   height: 0;
   padding: 0;
   margin: 0;
+}
+
+article.upload {
+  section {
+    fieldset.downloads {
+      .donation {
+        display: inline-block;
+        margin-left: 35px;
+        position: relative;
+
+        input {
+          width: 140px;
+        }
+
+        &::after {
+          content: '.00';
+          line-height: 40px;
+          text-align: center;
+          font-size: 18px;
+          color: white;
+          background: blue;
+          position: absolute;
+          top: 0;
+          right: -50px;
+          width: 50px;
+          height: 100%;
+        }
+      }
+
+      input {
+        display: inline-block;
+      }
+
+      label {
+        display: inline-block;
+        margin-right: 15px;
+      }
+    }
+  }
+}
+
+article.upload {
+  section {
+    fieldset.purchaser {
+      background: lightest-grey;
+      width: 660px;
+      max-width: initial;
+      padding: 15px 20px 20px;
+      margin-bottom: 20px;
+
+      h2,
+      h3 {
+        display: inline;
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 14px;
+      }
+
+      label {
+        display: inline-block;
+        margin-left: 10px;
+      }
+
+      a {
+        float: right;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+article.upload {
+  #decorateProgress {
+    margin-top: 10px;
+    background: gunmetal-blue;
+    padding: 12px;
+    color: white;
+    height: 100px;
+    position: relative;
+
+    &::before {
+      background: white;
+      position: absolute;
+      top: 60px;
+      left: 12px;
+      width: 218px;
+      height: 17px;
+      content: '';
+      z-index: 25;
+    }
+
+    h1 {
+      font-size: 15px;
+      color: white;
+    }
+
+    .progress {
+      background-color: green;
+      position: absolute;
+      top: 60px;
+      left: 12px;
+      height: 17px;
+      z-index: 30;
+
+      &.p10 { width: 22px; }
+      &.p20 { width: 44px; }
+      &.p30 { width: 66px; }
+      &.p40 { width: 88px; }
+      &.p50 { width: 110px; }
+      &.p60 { width: 132px; }
+      &.p70 { width: 154px; }
+      &.p80 { width: 176px; }
+      &.p90 { width: 98px; }
+      &.p100 { width: 220px; }
+    }
+  }
 }
