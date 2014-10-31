@@ -146,22 +146,38 @@ if (FEAT.TCF_DEMO) {
 
   })
   .service('Upload', function UploadService(evaporate, $uuid, MimeType) {
-    var activeUploads = [], intervalScheduled = false;
+
+    var uploads = [];
+
+    var safeName = function(name) {
+      return name.replace(/[^a-z0-9\.]+/gi,'_');
+    };
+
+    var uploadKey = function (guid, name) {
+      var av = FEAT.APPLICATION_VERSION || 'development';
+      return [av, guid, name].join('/');
+    };
 
     function Upload(file) {
       var u = this;
       u.file = file;
+
+      u.guid = $uuid.v4();
+      u.name = safeName(u.file.name);
+      u.path = uploadKey(u.guid, u.name);
+      u.type = MimeType.lookup(file);
+
       u.progress = 0;
 
       var up = evaporate.add({
-        name: this.uploadKey(file),
-        file: file,
-        contentType: MimeType.lookup(file),
+        file: u.file,
+        name: u.path,
+        contentType: u.type,
         xAmzHeadersAtInitiate: {
           'x-amz-acl': 'private'
         },
         notSignedHeadersAtInitiate: {
-          'Content-Disposition': 'attachment; filename=' + this.safeName(u.file.name)
+          'Content-Disposition': 'attachment; filename=' + u.name
         }
       });
 
@@ -183,23 +199,15 @@ if (FEAT.TCF_DEMO) {
         }
       );
 
-      activeUploads.push(u);
+      uploads.push(u);
     }
 
     Upload.prototype = {
       cancel: function () {
         return evaporate.cancel(this.uploadId);
       },
-      uploadKey: function (file) {
-        var fn = this.safeName(file.name);
-        var id = $uuid.v4();
-        var vn = FEAT.APPLICATION_VERSION || 'development';
-        var nn = (vn + '/' + id + '/' + fn);
-        // console.log('new file name for file', nn, file);
-        return nn;
-      },
-      safeName: function(name) {
-        return name.replace(/[^a-z0-9\.]+/gi,'_');
+      then: function () {
+        this.promise.then.apply(this.promise, arguments);
       }
     };
 
