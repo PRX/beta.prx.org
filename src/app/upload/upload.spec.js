@@ -1,3 +1,4 @@
+if (FEAT.TCF_DEMO) {
 describe('prx.upload', function () {
 
   beforeEach(module('angular-evaporate', function (evaporateProvider, $provide) {
@@ -86,3 +87,4 @@ describe('prx.upload', function () {
   });
 
 });
+}
