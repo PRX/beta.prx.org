@@ -316,13 +316,13 @@ if (FEAT.TCF_DEMO) {
                   _inspector.style.position = "fixed";
                   _inspector.style.top = _y + "px";
                   _inspector.style.left = 'initial';
-                  _inspector.style.marginLeft = "-255px";
+                  _inspector.style.marginLeft = "-275px";
                 } else {
                   // Pin the current header to the top of the view
                   _inspector.style.position = "fixed";
                   _inspector.style.top = (verticalOffset + topMargin) + "px";
                   _inspector.style.left = 'initial';
-                  _inspector.style.marginLeft = "-255px";
+                  _inspector.style.marginLeft = "-275px";
                 }
 
                 // pushY = ();
@@ -333,7 +333,7 @@ if (FEAT.TCF_DEMO) {
                 _inspector.style.position = "fixed";
                 _inspector.style.top = (verticalOffset + topMargin) + "px";
                 _inspector.style.left = 'initial';
-                _inspector.style.marginLeft = "-255px";
+                _inspector.style.marginLeft = "-275px";
               }
             } else {
               // Reset the inspector's styles
