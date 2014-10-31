@@ -1,7 +1,4 @@
 article.upload(on-page-scroll)
-  //- #thumbnailcrop.modal
-  //-   div
-  //-     cropme(width="200", height="200")
   section
     .header
       h1 Step 1: Create your Story!
@@ -105,28 +102,54 @@ article.upload(on-page-scroll)
           h2 May listeners download your story?
           p We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
           fieldset.downloads
-            input(type='radio', name="downloadable")
-            label No way, man!
-            input(type='radio', name="downloadable")
-            label Sure, it's okay.
+            input#dlNo(type='radio', name="downloadable", ng-value="false", ng-model="upload.listener")
+            label(for="dlNo") No way, man!
+            input#dlYes(type='radio', name="downloadable", ng-value="true", ng-model="upload.listener")
+            label(for="dlYes") Sure, it's okay.
             .donation
-              input(type="text", placeholder="Min. Donation")
+              input(type="text", placeholder="Min. Donation", ng-disabled="!upload.listener")
       fieldset
         h2 Approved Purchasers
         p You can manage which purchasers are allowed to license your stories within your account settings. You may also override your account settings for this story below. While PRX reviews and approves these purchasers, we recommend that you closely read each agreement before approval.
         
         fieldset.purchaser
-          h2 Public Radio Stations&nbsp;
+          h2 Public Radio Stations #{''}
           h3 – $30 minimum (average $51) based on the length of your story
           p There are over 400 public radio stations in the United States with an account on PRX. By approving them to purchase your piece you’ll be eligible for royalties (paid accounts only) and your story may be heard by thousands, even millions of listeners.
-          a(href="#") Adjust the pricing and agreement
-          input(type="checkbox")
-          label Approved
+          a(href="#", ng-disabled="!upload.prsEnabled") Adjust the pricing and agreement
+          input#prs(type="checkbox", ng-model="upload.prsEnabled")
+          label(for="prs") Approved
           
         fieldset.purchaser
-          h2 PRX Remix&nbsp;
+          h2 PRX Remix #{''}
           h3 – $75 flat fee
           p Be heard on XM Radio Channel 123, iPhone and Andriod apps and over 14 public radio stations around the country.
-          a(href="#") View the agreement
-          input(type="checkbox")
-          label Approved
+          a(href="#", ng-disabled="!upload.prxRemixEnabled") View the agreement
+          input#remix(type="checkbox", ng-model="upload.prxRemixEnabled")
+          label(for="remix") Approved
+          
+      fieldset
+        h2 Social Distribution #{''}
+        p Copy Copy Copy, all Day Long, Copy Copy Copy, hey!
+        
+        fieldset.purchaser
+          h2 Soundcloud #{''}
+          p Soundcloud is a website. If you want to be on Soundcloud, great!
+          a(href="#") Connect to Soundcloud
+          input#sc(type="checkbox", disabled="disabled")
+          label(for="sc") Upload
+        
+        fieldset.purchaser
+          h2 Youtube #{''}
+          p Youtube is a website. If you want to be on Youtube, great!
+          a(href="#") Connect to Google
+          input#yt(type="checkbox", disabled="disabled")
+          label(for="yt") Upload
+        
+      fieldset
+        h2 Podcasts
+        p Copy Copy Copy!
+        
+        fieldset.purchaser
+          h2 PRX Podcast #{''}
+          h3 Free
