@@ -145,7 +145,7 @@ if (FEAT.TCF_DEMO) {
     };
 
   })
-  .service('Upload', function UploadService(evaporate, $uuid, MimeType) {
+  .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q) {
 
     var uploads = [];
 
@@ -186,11 +186,11 @@ if (FEAT.TCF_DEMO) {
       u.promise = up.then(
         function() {
           // console.log("complete!");
-          return u;
+          return;
         },
         function(msg) {
-          // console.log("error!");
-          return msg;
+          // console.log("error!", msg);
+          return $q.reject(msg);
         },
         function(p) {
           // console.log("upload progress", p);

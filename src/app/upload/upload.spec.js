@@ -47,14 +47,39 @@ describe('prx.upload', function () {
     });
 
     it('updates the progress', function () {
+      var msg = 0;
+
       var mockFile = {name: 'foo', testId: 123};
       var up = uploadSvc.upload(mockFile);
+      up.then(function(){}, function(m){}, function(p){ msg = p; });
       var progressFn = evaporate._evaporate.config.progress;
 
       expect(up.progress).toEqual(0);
       $rs.$apply( function() { progressFn(0.5); } );
       expect(up.progress).toEqual(0.5);
+      expect(msg).toEqual(0.5);
+    });
 
+    it('calls back on error', function () {
+      var msg = '';
+      var mockFile = {name: 'foo', testId: 123};
+      uploadSvc.upload(mockFile).then(function(){}, function(m){ msg = m; }, function(p){});
+      var errorFn = evaporate._evaporate.config.error;
+
+      expect(msg).toEqual('');
+      $rs.$apply( function() { errorFn('this is not good.'); } );
+      expect(msg).toEqual('this is not good.');
+    });
+
+    it('calls back on complete', function () {
+      var msg = '';
+      var mockFile = {name: 'foo', testId: 123};
+      uploadSvc.upload(mockFile).then(function(){ msg = 'done!'; }, function(m){}, function(p){});
+      var completeFn = evaporate._evaporate.config.complete;
+
+      expect(msg).toEqual('');
+      $rs.$apply( function() { completeFn(); } );
+      expect(msg).toEqual('done!');
     });
 
   });
