@@ -72,14 +72,15 @@ describe('prx.upload', function () {
     });
 
     it('calls back on complete', function () {
-      var msg = '';
+      var upload;
       var mockFile = {name: 'foo', testId: 123};
-      uploadSvc.upload(mockFile).then(function(){ msg = 'done!'; }, function(m){}, function(p){});
+      uploadSvc.upload(mockFile).then(function(up){ upload = up;}, function(m){}, function(p){});
       var completeFn = evaporate._evaporate.config.complete;
 
-      expect(msg).toEqual('');
+      expect(upload).not.toBeDefined();
       $rs.$apply( function() { completeFn(); } );
-      expect(msg).toEqual('done!');
+      expect(upload).toBeDefined();
+      expect(upload.upload).toBeDefined();
     });
 
   });

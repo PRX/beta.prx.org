@@ -186,7 +186,7 @@ if (FEAT.TCF_DEMO) {
       u.promise = up.then(
         function() {
           // console.log("complete!");
-          return;
+          return {upload: u};
         },
         function(msg) {
           // console.log("error!", msg);
