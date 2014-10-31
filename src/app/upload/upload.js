@@ -406,5 +406,13 @@ if (FEAT.TCF_DEMO) {
         ctrl.registerInspectorPlaceholder(elem);
       }
     };
+  })
+  .directive('prxUploadDecorateProgress', function () {
+    return {
+      restrict: 'E',
+      controller: 'UploadCtrl',
+      controllerAs: 'upload',
+      templateUrl: 'upload/decorate_progress.html'
+    };
   });
 }

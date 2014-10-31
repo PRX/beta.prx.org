@@ -373,3 +373,50 @@ article.upload {
     }
   }
 }
+
+article.upload {
+  #decorateProgress {
+    margin-top: 10px;
+    background: gunmetal-blue;
+    padding: 12px;
+    color: white;
+    height: 100px;
+    position: relative;
+
+    &::before {
+      background: white;
+      position: absolute;
+      top: 60px;
+      left: 12px;
+      width: 218px;
+      height: 17px;
+      content: '';
+      z-index: 25;
+    }
+
+    h1 {
+      font-size: 15px;
+      color: white;
+    }
+
+    .progress {
+      background-color: green;
+      position: absolute;
+      top: 60px;
+      left: 12px;
+      height: 17px;
+      z-index: 30;
+
+      &.p10 { width: 22px; }
+      &.p20 { width: 44px; }
+      &.p30 { width: 66px; }
+      &.p40 { width: 88px; }
+      &.p50 { width: 110px; }
+      &.p60 { width: 132px; }
+      &.p70 { width: 154px; }
+      &.p80 { width: 176px; }
+      &.p90 { width: 98px; }
+      &.p100 { width: 220px; }
+    }
+  }
+}
