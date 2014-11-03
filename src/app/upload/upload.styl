@@ -43,10 +43,31 @@ article.upload {
 
       .status {
         background: white;
-        height: 80px;
+        height: 74px;
         max-width: 1200px;
         width: 100%;
         z-index: 199;
+        padding: 0 20px;
+        border-bottom: 1px solid transparent;
+        transition: height 0.2s, border-bottom-color 0.2s;
+
+        h2, h3 {
+          transition:  font-size 0.2s, line-height 0.2s;
+        }
+
+        &.stuck {
+          border-bottom-color: lightest-grey;
+          height: 42px;
+          h2 {
+            font-size: 0.9em;
+            line-height: 2.0em;
+          }
+
+          h3 {
+            font-size: 0.6em;
+            line-height: 1.0em;
+          }
+        }
       }
     } // .header
 
@@ -106,6 +127,9 @@ article.upload {
           padding: 12px;
           border: 1px solid lightest-grey;
           outline: none;
+          &.ng-pristine {
+            color: light-grey;
+          }
         }
 
         input {

@@ -212,6 +212,9 @@ if (FEAT.TCF_DEMO) {
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
     this.listener = false;
+    this.story = {
+      title: "Untitled Story"
+    };
   })
   .directive('onPageScroll', function ($window) {
     return {
@@ -292,7 +295,7 @@ if (FEAT.TCF_DEMO) {
 
             pageY = $window.pageYOffset;
 
-            verticalOffset = 153;
+            verticalOffset = 110;
             topMargin = 30;
 
             y = this.findPosY(_placeholder);
@@ -357,10 +360,12 @@ if (FEAT.TCF_DEMO) {
             placeholder.style.height = bar.offsetHeight + 'px';
             bar.style.position = "fixed";
             bar.style.top = "73px";
+            this.statusBar.addClass('stuck');
           } else {
             placeholder.style.height = '0px';
             bar.style.position = 'static';
             bar.style.removeProperty('top');
+            this.statusBar.removeClass('stuck');
           }
         };
       },

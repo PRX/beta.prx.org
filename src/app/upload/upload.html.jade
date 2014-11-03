@@ -5,7 +5,7 @@ article.upload(on-page-scroll)
       .placeholder(status-bar-placeholder)
       .status(status-bar)
         .container
-          h2 This is the title of my story
+          h2(ng-bind="upload.story.title")
           h3 Last saved at 12/12/2013, 0:23:45
     form
       .placeholder(inspector-placeholder)
@@ -18,7 +18,7 @@ article.upload(on-page-scroll)
         label.required
           h2 Story Title
           p Write a short, Tweetable title like a newspaper headline. Make viewers want to click on your piece from the title alone.
-          textarea
+          textarea(ng-model="upload.story.title")
 
           h2 Teaser
           p A first impression; think of this as a the single-item lead of a piece.
