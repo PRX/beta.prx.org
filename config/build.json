@@ -40,7 +40,8 @@
       "vendor/ngstorage/ngStorage.js",
       "vendor/ng-sortable/dist/ng-sortable.js",
       "vendor/EvaporateJS/evaporate.js",
-      "vendor/node-uuid/uuid.js"
+      "vendor/node-uuid/uuid.js",
+      "vendor/id3/dist/id3.js"
     ],
     "buildJs": [
       "vendor/angular/angular.js",
