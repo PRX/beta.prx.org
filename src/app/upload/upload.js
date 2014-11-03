@@ -209,6 +209,9 @@ if (FEAT.TCF_DEMO) {
     }
   })
   .controller('UploadCtrl', function () {
+    this.prsEnabled = true;
+    this.prxRemixEnabled = true;
+    this.listener = false;
   })
   .directive('onPageScroll', function ($window) {
     return {

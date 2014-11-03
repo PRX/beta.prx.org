@@ -130,26 +130,55 @@ article.upload(on-page-scroll)
           
       fieldset
         h2 Social Distribution #{''}
-        p Copy Copy Copy, all Day Long, Copy Copy Copy, hey!
+        p 
+          | PRX can help you spread your story all over the web. By publishing to
+          |  other websites, you can increase the exposure and audience of your
+          |  story. #{''}
+          a(ng-click="learnMore('social')") Learn More
+        p(ng-hide='true') Please bear in mind that each of these services exists
+          |  outside of the PRX ecosystem, and each of them is subject to its
+          |  own terms and conditions. You should make sure you understand the
+          |  upsides and downsides before you publish to these other services.
         
         fieldset.purchaser
-          h2 Soundcloud #{''}
-          p Soundcloud is a website. If you want to be on Soundcloud, great!
-          a(href="#") Connect to Soundcloud
+          h2 SoundCloud #{''}
+          p SoundCloud is the world’s leading social sound platform where anyone
+            |  can create sounds and share them everywhere.
+          p You can choose to have your story automatically published to
+            |  SoundCloud, but this requires you to connect your SoundCloud
+            |  account to PRX and allow PRX to publish on your behalf.
+          a.connect-sc(href="#") Connect to Soundcloud
           input#sc(type="checkbox", disabled="disabled")
-          label(for="sc") Upload
+          label(for="sc", disabled="disabled") Publish on SoundCloud
         
         fieldset.purchaser
-          h2 Youtube #{''}
-          p Youtube is a website. If you want to be on Youtube, great!
-          a(href="#") Connect to Google
+          h2 YouTube #{''}
+          p Founded in February 2005, YouTube allows billions of people to
+            |  discover, watch and share originally-created videos. 
+          p You can choose to have your story converted to a video and uploaded
+            |  to YouTube automatically by PRX, but you'll need to connect your
+            |  Google account and grant PRX permission to publish videos on your
+            |  behalf.
+          a.connect-go(href="#") Connect to Google
           input#yt(type="checkbox", disabled="disabled")
-          label(for="yt") Upload
+          label(for="yt", disabled="disabled") Publish on YouTube
         
       fieldset
         h2 Podcasts
-        p Copy Copy Copy!
+        p
+          | A podcast is a great way to distribute an episodic series of stories
+          |  for free over the internet. Listeners can subscribe to your podcast
+          |  and automatically be informed when there's a new episode to listen
+          |  to. #{''}
+          a(ng-click="learnMore('podcast')") Learn More
         
         fieldset.purchaser
           h2 PRX Podcast #{''}
           h3 Free
+          p PRX provides podcast hosting, letting you publish new stories as
+            | episodes in a podcast.
+          p To get started, you'll need to create a podcast on PRX and then come
+            | back to this page.
+          a(href="#") Create a Podcast
+          input#pc(type='checkbox', disabled="disabled")
+          label(for="pc", disabled="disabled") Add to a Podcast
