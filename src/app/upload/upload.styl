@@ -154,15 +154,36 @@ article.upload {
       h1 {
         color: white;
         font-size: 40px;
-        padding: 58px 0;
+        padding: 40px 0;
       }
 
       .status {
         background: white;
-        height: 80px;
+        height: 74px;
         max-width: 1200px;
         width: 100%;
         z-index: 199;
+        padding: 0 20px;
+        border-bottom: 1px solid transparent;
+        transition: height 0.2s, border-bottom-color 0.2s;
+
+        h2, h3 {
+          transition:  font-size 0.2s, line-height 0.2s;
+        }
+
+        &.stuck {
+          border-bottom-color: lightest-grey;
+          height: 42px;
+          h2 {
+            font-size: 0.9em;
+            line-height: 2.0em;
+          }
+
+          h3 {
+            font-size: 0.6em;
+            line-height: 1.0em;
+          }
+        }
       }
     } // .header
 
@@ -177,6 +198,10 @@ article.upload {
         border-bottom: 1px solid black;
         padding-bottom: 30px;
 
+        &:last-child {
+          border-bottom: none;
+        }
+
         fieldset {
           border: 0;
           background: white;
@@ -186,7 +211,7 @@ article.upload {
 
         label {
           &.required {
-            h2 {
+            h2, h3, h4, h5, h6 {
               &::after {
                 content: '*';
                 color: red;
@@ -218,10 +243,17 @@ article.upload {
           padding: 12px;
           border: 1px solid lightest-grey;
           outline: none;
+          &.ng-pristine {
+            color: light-grey;
+          }
         }
 
         input {
           background: white;
+        }
+
+        input[disabled] {
+          background-color: offwhite;
         }
       }
     }
@@ -283,12 +315,6 @@ article.upload {
         margin-left: -50px;
         top: 135px;
       }
-    }
-
-    a {
-      display: block;
-      font-weight: bold;
-      margin-top: 15px;
     }
   }
 }
@@ -417,27 +443,7 @@ article.upload {
   section {
     fieldset.downloads {
       .donation {
-        display: inline-block;
-        margin-left: 35px;
-        position: relative;
 
-        input {
-          width: 140px;
-        }
-
-        &::after {
-          content: '.00';
-          line-height: 40px;
-          text-align: center;
-          font-size: 18px;
-          color: white;
-          background: blue;
-          position: absolute;
-          top: 0;
-          right: -50px;
-          width: 50px;
-          height: 100%;
-        }
       }
 
       input {
@@ -480,11 +486,49 @@ article.upload {
       label {
         display: inline-block;
         margin-left: 10px;
+
+        &[for=listener] {
+          line-height: 38px;
+        }
+      }
+
+      .donation {
+        float: right;
+        position: relative;
+        margin-right: 50px;
+        clear: right;
+
+        input {
+          width: 140px;
+          &:disabled {
+            border-color: offwhite;
+          }
+          border-color: white;
+        }
+
+        &::after {
+          content: '.00';
+          line-height: 40px;
+          text-align: center;
+          font-size: 18px;
+          color: white;
+          background: blue;
+          position: absolute;
+          top: 0;
+          right: -50px;
+          width: 50px;
+          height: 100%;
+        }
       }
 
       a {
         float: right;
         font-weight: bold;
+
+        &.listener-manage {
+          text-align: right;
+          width: 100%;
+        }
       }
     }
   }
@@ -535,4 +579,20 @@ article.upload {
       &.p100 { width: 220px; }
     }
   }
+}
+
+
+a.connect-sc {
+  background-image: url('/assets/images/connect_sc.png');
+  font-size: 0px;
+  width: 207px;
+  height: 25px;
+}
+
+a.connect-go {
+  background-image: url('/assets/images/connect_go.png');
+  width: 115px;
+  background-size: 115px;
+  height: 33px;
+  font-size: 0px;
 }

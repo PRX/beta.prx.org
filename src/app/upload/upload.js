@@ -304,6 +304,11 @@ if (FEAT.TCF_DEMO) {
     this.uploads = [1,2,3,4,5,6];
     //upload.file
 
+    this.prsEnabled = true;
+    this.prxRemixEnabled = true;
+    this.listener = false;
+    this.story = {};
+
     this.dragControlListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
         return true;
@@ -313,8 +318,7 @@ if (FEAT.TCF_DEMO) {
       },
       orderChanged: function (event) {
 
-      },
-      // containment: '#fileList'
+      }
     };
   })
   .directive('onPageScroll', function ($window) {
@@ -396,7 +400,7 @@ if (FEAT.TCF_DEMO) {
 
             pageY = $window.pageYOffset;
 
-            verticalOffset = 153;
+            verticalOffset = 110;
             topMargin = 30;
 
             y = this.findPosY(_placeholder);
@@ -461,10 +465,12 @@ if (FEAT.TCF_DEMO) {
             placeholder.style.height = bar.offsetHeight + 'px';
             bar.style.position = "fixed";
             bar.style.top = "73px";
+            this.statusBar.addClass('stuck');
           } else {
             placeholder.style.height = '0px';
             bar.style.position = 'static';
             bar.style.removeProperty('top');
+            this.statusBar.removeClass('stuck');
           }
         };
       },
