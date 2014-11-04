@@ -106,10 +106,12 @@ article.upload(on-page-scroll)#step-1
       fieldset
         h2 Upload a Cover Image
         p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
-        .cover
+        #coverDisplay.cover(ng-click="upload.coverClick()")
+        input#coverFile(type="file", file-change="upload.coverChange($event, files)")
         h2 Upload a Thumbnail
         p Use your own
-        .thumbnail
+        #thumbDisplay.thumbnail(ng-click="upload.thumbClick()")
+        input#thumbFile(type="file", file-change="upload.thumbChange($event, files)")
         a(href="#") + Add caption or credit
       fieldset
         h2 Musical Works
