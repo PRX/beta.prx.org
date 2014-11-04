@@ -299,7 +299,23 @@ if (FEAT.TCF_DEMO) {
       errorClearer = null;
     }
   })
-  .controller('UploadCtrl', function () {
+  .controller('UploadCtrl', function ($stateParams) {
+    // this.uploads = $stateParams.uploads;
+    this.uploads = [1,2,3,4,5,6];
+    //upload.file
+
+    this.dragControlListeners = {
+      accept: function (sourceItemHandleScope, destSortableScope) {
+        return true;
+      },
+      itemMoved: function (event) {
+
+      },
+      orderChanged: function (event) {
+
+      },
+      // containment: '#fileList'
+    };
   })
   .directive('onPageScroll', function ($window) {
     return {
