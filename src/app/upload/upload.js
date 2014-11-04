@@ -212,9 +212,7 @@ if (FEAT.TCF_DEMO) {
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
     this.listener = false;
-    this.story = {
-      title: "Untitled Story"
-    };
+    this.story = {};
   })
   .directive('onPageScroll', function ($window) {
     return {

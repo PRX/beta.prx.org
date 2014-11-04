@@ -1,47 +1,46 @@
-article.upload(on-page-scroll)
+article.upload(on-page-scroll)#step-1
   section
     .header
       h1 Step 1: Create your Story!
       .placeholder(status-bar-placeholder)
       .status(status-bar)
         .container
-          h2(ng-bind="upload.story.title")
+          h2(ng-bind="upload.story.title || 'Untitled Story'")
           h3 Last saved at 12/12/2013, 0:23:45
     form
       .placeholder(inspector-placeholder)
       .inspector(inspector)
         ol.steps
           li.active STEP 1: Create your story
-          li STEP 2: Decorate your story
-          li STEP 3: Distribute your story
+          li <a href="#step-2">STEP 2: Decorate your story</a>
+          li <a href="#step-3">STEP 3: Distribute your story</a>
       fieldset
         label.required
           h2 Story Title
-          p Write a short, Tweetable title like a newspaper headline. Make viewers want to click on your piece from the title alone.
-          textarea(ng-model="upload.story.title")
+          textarea(ng-model="upload.story.title", required, placeholder="Write a short, Tweetable title like a newspaper headline. Make viewers want to click on your piece from the title alone.")
 
+        label.required
           h2 Teaser
-          p A first impression; think of this as a the single-item lead of a piece.
-          textarea
+          textarea(ng-model="upload.story.teaser", required, placeholder="A first impression; think of this as a the single-item lead of a piece.")
       fieldset
         label.required
           h2 Story Versions
       fieldset.tagging
-        label.required
-          h2 Tag Your Story
-          p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
-          .half
-            h4 Genre
-            select
-              option News
-              option Dog Talk
-          .half
-            h4 Type
-            select
-              option Documentary
-              option Dog Talk
-          input(placeholder="Type tags for your story.")
-          p Suggestions: Dog, Dogs, Beagles, Animals
+        h2 Tag Your Story
+        p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
+        label.half.required
+          h4 Genre
+          select
+            option News
+            option Dog Talk
+        label.half.required
+          h4 Type
+          select
+            option Documentary
+            option Dog Talk
+        label
+          h4 Tags
+          input(placeholder="Suggestsions: Dog, Dogs, Beagles, Animals")
       fieldset
         label
           h2 Producers
@@ -52,16 +51,16 @@ article.upload(on-page-scroll)
         h4 Full Description
         textarea
         p Adding a written description of your piece full of keywords, names of interviewees, places and topics will help people find your piece and may improve your chances of being heard and licensed.
-  section.decorate
+  section#step-2.decorate
     .header
       h1 Step 2: Decorate your Story!
     form
       .placeholder(inspector-placeholder)
       .inspector(inspector)
         ol.steps
-          li STEP 1: Create your story
+          li <a href="#step-1">STEP 1: Create your story</a>
           li.active STEP 2: Decorate your story
-          li STEP 3: Distribute your story
+          li <a href="#step-3">STEP 3: Distribute your story</a>
         prx-upload-decorate-progress
       fieldset
         h2 Upload a Cover Image
@@ -87,29 +86,19 @@ article.upload(on-page-scroll)
         h4 Transcription
         input(type='text', placeholder="Add transcript")
         button Generate transcript
-  section
+  section#step-3
     .header
       h1 Step 3: Distribute your Story!
     form
       .placeholder(inspector-placeholder)
       .inspector(inspector)
         ol.steps
-          li STEP 1: Create your story
-          li STEP 2: Decorate your story
+          li <a href="#step-1">STEP 1: Create your story</a>
+          li <a href="#step-2">STEP 2: Decorate your story</a>
           li.active STEP 3: Distribute your story
+            
       fieldset
-        label
-          h2 May listeners download your story?
-          p We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
-          fieldset.downloads
-            input#dlNo(type='radio', name="downloadable", ng-value="false", ng-model="upload.listener")
-            label(for="dlNo") No way, man!
-            input#dlYes(type='radio', name="downloadable", ng-value="true", ng-model="upload.listener")
-            label(for="dlYes") Sure, it's okay.
-            .donation
-              input(type="text", placeholder="Min. Donation", ng-disabled="!upload.listener")
-      fieldset
-        h2 Approved Purchasers
+        h2 Marketplace
         p You can manage which purchasers are allowed to license your stories within your account settings. You may also override your account settings for this story below. While PRX reviews and approves these purchasers, we recommend that you closely read each agreement before approval.
         
         fieldset.purchaser
@@ -119,7 +108,17 @@ article.upload(on-page-scroll)
           a(href="#", ng-disabled="!upload.prsEnabled") Adjust the pricing and agreement
           input#prs(type="checkbox", ng-model="upload.prsEnabled")
           label(for="prs") Approved
-          
+        
+        fieldset.purchaser
+          h2 Listeners #{''}
+          h3 – Varies (Donation)
+          p You can let listeners download your story and optionally require a minimum donation. We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
+          a(href="#", ng-disabled="!upload.listener") Manage Terms
+          input#listener(type="checkbox", ng-model="upload.listener")
+          label(for="listener") Permit Listener Downloads
+          .donation
+            input(type="text", placeholder="Min. Donation", ng-disabled="!upload.listener")
+              
         fieldset.purchaser
           h2 PRX Remix #{''}
           h3 – $75 flat fee
@@ -129,7 +128,7 @@ article.upload(on-page-scroll)
           label(for="remix") Approved
           
       fieldset
-        h2 Social Distribution #{''}
+        h2 Third Party Distribution #{''}
         p 
           | PRX can help you spread your story all over the web. By publishing to
           |  other websites, you can increase the exposure and audience of your
@@ -151,6 +150,15 @@ article.upload(on-page-scroll)
           input#sc(type="checkbox", disabled="disabled")
           label(for="sc", disabled="disabled") Publish on SoundCloud
         
+        fieldset.purchaser
+          h2 Public Media Platform #{''}
+          p The Public Media Platform is a centralized API for the sharing and
+            | distribution of public media stories. Media from various
+            | organizations, including NPR and PBS, is included in the PMP.
+          a.pmp-settings(href="#", ng-disabled="!upload.pmp") Adjust Metadata
+          input#pmp(type="checkbox", ng-model="upload.pmp")
+          label(for="pmp") Upload to the PMP
+          
         fieldset.purchaser
           h2 YouTube #{''}
           p Founded in February 2005, YouTube allows billions of people to
