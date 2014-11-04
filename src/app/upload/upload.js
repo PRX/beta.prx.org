@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid'])
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'angular-id3'])
   .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
       url: '/upload',
@@ -107,7 +107,7 @@ if (FEAT.TCF_DEMO) {
       }
     };
   })
-  .service('Validate', function ValidateService($timeout, $q) {
+  .service('Validate', function ValidateService($timeout, $q, Id3Service) {
     var invalidatedOnce = true;
 
     function validationResult (file) {
@@ -122,7 +122,7 @@ if (FEAT.TCF_DEMO) {
     }
 
     this.validate = function (file) {
-      window.validateFile = file;
+      Id3Service.analyze(file, function(tags) { file.tags = tags; } );
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
