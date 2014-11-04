@@ -320,6 +320,18 @@ if (FEAT.TCF_DEMO) {
 
       }
     };
+
+    this.categories = {
+      'Current Event': ['1','2'],
+      'Arts & Entertainment': ['3','4'],
+    };
+
+    this.xcategories = [
+      {name: 'Current Events', subcategories: [1,2,3,4]},
+      {name: 'Arts & Entertainment', subcategories: [4,2,3,4]},
+      {name: 'Culture & Learning', subcategories: [5,2,3,4]},
+      {name: 'Music & DJ', subcategories: [6,2,3,4]},
+    ];
   })
   .directive('onPageScroll', function ($window) {
     return {

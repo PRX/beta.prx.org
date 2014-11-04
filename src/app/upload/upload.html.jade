@@ -37,18 +37,58 @@ article.upload(on-page-scroll)#step-1
               .delete ×
               em Waiting...
       fieldset.tagging
-        h2 Tag Your Story
-        p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
-        label.half.required
-          h4 Genre
-          select
-            option News
-            option Dog Talk
-        label.half.required
-          h4 Type
-          select
-            option Documentary
-            option Dog Talk
+        label.required
+          h2 Tag Your Story
+          p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
+          //- .half
+          //-   h4 Genre
+          //-   select(ng-options="category for (category, sub) in upload.categories", ng-model="upload.story.category")
+          .half
+            h4 Genre
+            //- select(ng-options="subcategory for subcategory in upload.categories[upload.story.category]", ng-model="upload.story.subcategory")
+            select
+              optgroup(label="Current Events")
+                option US News
+                option Politics
+                option Business &amp; Economics
+                option Commentary &amp; Opinion
+                option Sports
+                option Science &amp; Technology
+                option Health &amp; Medicine
+              optgroup(label="Arts & Entertainment")
+                option Art &amp; Design
+                option Pop Culture
+                option Food
+                option Movies &amp; Film
+                option Music &amp; Musicians
+                option Radio Drama
+                option Storytelling
+                option Books/Literature
+                option Sports
+              optgroup(label="Culture & Learning")
+                option Diary / Essay
+                option US History
+                option World History
+                option Biography
+                option Human Interest
+                option Society &amp; Justice
+              optgroup(label="Music & DJ")
+                option AAA
+                option Jazz
+                option Blues
+                option Rock
+                option Classical
+                option Bluegrass
+                option Hip Hop
+                option Country
+                option Holiday
+                option Electronic
+                option World
+                option Other
+
+          input(placeholder="Type tags for your story.")
+          p Suggestions: Dog, Dogs, Beagles, Animals
+      fieldset
         label
           h4 Tags
           input(placeholder="Suggestions: Dog, Dogs, Beagles, Animals")
