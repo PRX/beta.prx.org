@@ -8,6 +8,15 @@ if (FEAT.TCF_DEMO) {
         url: '/upload',
         title: 'Create Your Story',
         params: {uploads: []},
+        resolve: {
+          files: function ($stateParams, Upload) {
+            var uploads = [];
+            angular.forEach($stateParams.uploads, function (id) {
+              uploads.push(Upload.getUpload(id));
+            });
+            return uploads;
+          }
+        },
         views: {
           '@': {
             templateUrl: 'upload/upload.html',
@@ -91,7 +100,7 @@ if (FEAT.TCF_DEMO) {
     };
   })
   .service('Validate', function ValidateService($timeout, $q) {
-    var invalidatedOnce = false;
+    var invalidatedOnce = true;
 
     function validationResult (file) {
       return function () {
@@ -155,7 +164,7 @@ if (FEAT.TCF_DEMO) {
   })
   .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q) {
 
-    var uploads = [];
+    var uploads = {};
 
     var safeName = function(name) {
       return name.replace(/[^a-z0-9\.]+/gi,'_');
@@ -201,13 +210,12 @@ if (FEAT.TCF_DEMO) {
           return $q.reject(msg);
         },
         function(p) {
-          // console.log("upload progress", p);
           u.progress = p;
           return p;
         }
       );
 
-      uploads.push(u);
+      uploads[u.uploadId] = u;
     }
 
     Upload.prototype = {
@@ -223,6 +231,9 @@ if (FEAT.TCF_DEMO) {
       return new Upload(file);
     };
 
+    this.getUpload = function (uploadId) {
+      return uploads[uploadId];
+    };
   })
   .controller('prxFileTargetCtrl', function (UploadTarget, $scope, Upload, Validate, $state, $q, $timeout) {
     var ctrl = this, errorClearer;
@@ -263,7 +274,7 @@ if (FEAT.TCF_DEMO) {
       });
       $q.all(validations).then(function (validFiles) {
         angular.forEach(validFiles, function (file, index) {
-          validFiles[index] = Upload.upload(file);
+          validFiles[index] = Upload.upload(file).uploadId;
         });
         return validFiles;
       }, function (validationError) {
@@ -299,10 +310,10 @@ if (FEAT.TCF_DEMO) {
       errorClearer = null;
     }
   })
-  .controller('UploadCtrl', function ($stateParams) {
-    // this.uploads = $stateParams.uploads;
-    this.uploads = [1,2,3,4,5,6];
-    //upload.file
+  .controller('UploadCtrl', function (files, $window) {
+    var audio = new $window.Audio();
+    var nowPlaying;
+    this.files = files;
 
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
@@ -319,6 +330,25 @@ if (FEAT.TCF_DEMO) {
       orderChanged: function (event) {
 
       }
+    };
+
+    this.preview = function (file) {
+      if (nowPlaying != file) {
+        nowPlaying = file;
+        audio.pause();
+        audio.src = $window.URL.createObjectURL(file.file);
+        audio.play();
+      } else {
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      }
+    };
+
+    this.previewing = function (file) {
+      return nowPlaying == file && !audio.paused;
     };
   })
   .directive('onPageScroll', function ($window) {
@@ -523,8 +553,6 @@ if (FEAT.TCF_DEMO) {
   .directive('prxUploadDecorateProgress', function () {
     return {
       restrict: 'E',
-      controller: 'UploadCtrl',
-      controllerAs: 'upload',
       templateUrl: 'upload/decorate_progress.html'
     };
   });

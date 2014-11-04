@@ -25,17 +25,18 @@ article.upload(on-page-scroll)#step-1
       fieldset
         label.required
           h2 Audio Files
-          ol#audioFiles(as-sortable="upload.dragControlListeners", ng-model="upload.uploads")
-            li(as-sortable-item, ng-repeat="upload in upload.uploads")
+          ol#audioFiles(as-sortable="upload.dragControlListeners", ng-model="upload.files")
+            li(as-sortable-item, ng-repeat="file in upload.files")
               .handle(as-sortable-item-handle)
-              .play
+              .play(ng-click="upload.preview(file)", ng-class="{playing: upload.previewing(file)}")
               select
                 option Segment
                 option Break
                 option Intro
-              input(type="text", placeholder="File name (length)")
+              input(type="text", ng-model="file.name")
               .delete ×
-              em Waiting...
+              .progress
+                .bar(ng-style="{width: file.progress * 100 + '%'}")
       fieldset.tagging
         h2 Tag Your Story
         p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
