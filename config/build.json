@@ -38,7 +38,9 @@
       "vendor/angulartics/src/angulartics.js",
       "vendor/angulartics/src/angulartics-ga.js",
       "vendor/ngstorage/ngStorage.js",
-      "vendor/EvaporateJS/evaporate.js"
+      "vendor/ng-sortable/dist/ng-sortable.js",
+      "vendor/EvaporateJS/evaporate.js",
+      "vendor/node-uuid/uuid.js"
     ],
     "buildJs": [
       "vendor/angular/angular.js",

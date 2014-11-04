@@ -1,7 +1,7 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['angular-dnd'])
-  .config(function ($stateProvider) {
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid'])
+  .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
 
     }).state('upload.new_story', {
@@ -16,6 +16,14 @@ if (FEAT.TCF_DEMO) {
         }
       }
     );
+
+    evaporateProvider
+    .signerUrl(FEAT.UPLOADS_SIGNER_URL)
+    .awsKey(FEAT.UPLOADS_AWS_KEY)
+    .bucket(FEAT.UPLOADS_AWS_BUCKET)
+    .awsUrl(FEAT.UPLOADS_AWS_URL)
+    .cloudfront(FEAT.UPLOADS_CLOUDFRONT)
+    .options({ logging: FEAT.UPLOADS_LOGGING });
   })
   .service('UploadTarget', function ($rootScope) {
     var targets = [],
@@ -97,41 +105,124 @@ if (FEAT.TCF_DEMO) {
     }
 
     this.validate = function (file) {
+      window.validateFile = file;
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
-  .service('Upload', function UploadService($interval) {
-    var activeUploads = [], intervalScheduled = false;
+  .service('MimeType', function MimeTypeService() {
+
+    var expectedMimeTypes = {
+      "aif": "audio\/x-aiff",
+      "aifc": "audio\/x-aiff",
+      "aiff": "audio\/x-aiff",
+      "caf": "audio\/x-caf",
+      "flac": "audio\/x-flac",
+      "m2a": "audio\/mpeg",
+      "m3a": "audio\/mpeg",
+      "m4a": "audio\/mp4",
+      "mp2": "audio\/mpeg",
+      "mp2a": "audio\/mpeg",
+      "mp3": "audio\/mpeg",
+      "mp4": "video\/mp4",
+      "mp4a": "audio\/mp4",
+      "mpga": "audio\/mpeg",
+      "oga": "audio\/ogg",
+      "ogg": "audio\/ogg",
+      "spx": "audio\/ogg",
+      "wav": "audio\/x-wav",
+      "weba": "audio\/webm",
+      "gif": "image\/gif",
+      "jpe": "image\/jpeg",
+      "jpeg": "image\/jpeg",
+      "jpg": "image\/jpeg",
+      "png": "image\/png",
+      "svg": "image\/svg+xml",
+      "svgz": "image\/svg+xml",
+      "webp": "image\/webp"
+    };
+
+    this.lookup = function(file, defaultType) {
+      defaultType = defaultType || "application\/octet-stream";
+
+      var type = file.type;
+      if (typeof type === 'undefined' || type === null || type === '') {
+        var ext = file.name.split('.').pop();
+        type = expectedMimeTypes[ext];
+      }
+      return type || defaultType;
+    };
+
+  })
+  .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q) {
+
+    var uploads = [];
+
+    var safeName = function(name) {
+      return name.replace(/[^a-z0-9\.]+/gi,'_');
+    };
+
+    var uploadKey = function (guid, name) {
+      var av = FEAT.APPLICATION_VERSION || 'development';
+      return [av, guid, name].join('/');
+    };
 
     function Upload(file) {
-      this.file = file;
-      this.progress = 0;
-      activeUploads.push(this);
-      scheduleInterval();
+      var u = this;
+      u.file = file;
+
+      u.guid = $uuid.v4();
+      u.name = safeName(u.file.name);
+      u.path = uploadKey(u.guid, u.name);
+      u.type = MimeType.lookup(file);
+
+      u.progress = 0;
+
+      var up = evaporate.add({
+        file: u.file,
+        name: u.path,
+        contentType: u.type,
+        xAmzHeadersAtInitiate: {
+          'x-amz-acl': 'private'
+        },
+        notSignedHeadersAtInitiate: {
+          'Content-Disposition': 'attachment; filename=' + u.name
+        }
+      });
+
+      u.uploadId = up.uploadId;
+
+      u.promise = up.then(
+        function() {
+          // console.log("complete!");
+          return {upload: u};
+        },
+        function(msg) {
+          // console.log("error!", msg);
+          return $q.reject(msg);
+        },
+        function(p) {
+          // console.log("upload progress", p);
+          u.progress = p;
+          return p;
+        }
+      );
+
+      uploads.push(u);
     }
+
+    Upload.prototype = {
+      cancel: function () {
+        return evaporate.cancel(this.uploadId);
+      },
+      then: function () {
+        return this.promise.then.apply(this.promise, arguments);
+      }
+    };
 
     this.upload = function (file) {
       return new Upload(file);
     };
 
-    function scheduleInterval() {
-      if (!intervalScheduled) {
-        intervalScheduled = $interval(increaseUploads, 200);
-      }
-    }
-
-    function increaseUploads() {
-      if (activeUploads.length) {
-        activeUploads[0].progress += Math.random() * 10 + 1;
-        if (activeUploads[0].progress >= 100) {
-          activeUploads[0].progress = 100;
-          activeUploads.splice(0, 1);
-        }
-      } else {
-        $interval.cancel(intervalScheduled);
-        intervalScheduled = false;
-      }
-    }
   })
   .controller('prxFileTargetCtrl', function (UploadTarget, $scope, Upload, Validate, $state, $q, $timeout) {
     var ctrl = this, errorClearer;
@@ -208,11 +299,27 @@ if (FEAT.TCF_DEMO) {
       errorClearer = null;
     }
   })
-  .controller('UploadCtrl', function () {
+  .controller('UploadCtrl', function ($stateParams) {
+    // this.uploads = $stateParams.uploads;
+    this.uploads = [1,2,3,4,5,6];
+    //upload.file
+
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
     this.listener = false;
     this.story = {};
+
+    this.dragControlListeners = {
+      accept: function (sourceItemHandleScope, destSortableScope) {
+        return true;
+      },
+      itemMoved: function (event) {
+
+      },
+      orderChanged: function (event) {
+
+      }
+    };
   })
   .directive('onPageScroll', function ($window) {
     return {
