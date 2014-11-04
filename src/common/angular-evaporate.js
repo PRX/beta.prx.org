@@ -82,7 +82,6 @@ angular.module('angular-evaporate', [])
 
       config.progress = function(p) {
         e.rootScope.$evalAsync( function() {
-          console.log(p);
           deferred.notify(p);
         });
       };
