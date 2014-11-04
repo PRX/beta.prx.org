@@ -107,7 +107,7 @@ article.upload(on-page-scroll)#step-1
           h2 Public Radio Stations #{''}
           h3 – $30 minimum (average $51) based on the length of your story
           p There are over 400 public radio stations in the United States with an account on PRX. By approving them to purchase your piece you’ll be eligible for royalties (paid accounts only) and your story may be heard by thousands, even millions of listeners.
-          a(href="#", ng-disabled="!upload.prsEnabled") Adjust the pricing and agreement
+          a(ui-sref=".public_radio_t_and_c", ng-disabled="!upload.prsEnabled") Adjust the pricing and agreement
           input#prs(type="checkbox", ng-model="upload.prsEnabled")
           label(for="prs") Approved
         

@@ -42,3 +42,44 @@ button {
     color: light-blue;
   }
 }
+
+.modal form {
+
+  h2, h3, h4, h5, h6 {
+    color: white;
+  }
+
+  fieldset {
+    padding-bottom: 10px;
+    border-bottom: 1px solid light-grey;
+    &:last-child {
+      border-bottom-color: transparent;
+    }
+  }
+
+  label {
+    display: block;
+  }
+
+  label:not(.light) {
+    font-weight: bold;
+  }
+
+  input[type=checkbox] {
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 70px;
+    border: 1px solid black;
+    padding: 5px;
+    background-color: dark-grey;
+    color: white;
+  }
+
+  fieldset.pricing label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}

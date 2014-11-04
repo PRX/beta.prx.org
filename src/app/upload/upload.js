@@ -3,10 +3,11 @@ if (FEAT.TCF_DEMO) {
   angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid'])
   .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
-
+      url: '/upload',
+      abstract: true
     }).state('upload.new_story', {
-        url: '/upload',
         title: 'Create Your Story',
+        url: '^/upload',
         params: {uploads: []},
         resolve: {
           files: function ($stateParams, Upload) {
@@ -24,7 +25,14 @@ if (FEAT.TCF_DEMO) {
           }
         }
       }
-    );
+    ).state('upload.new_story.public_radio_t_and_c', {
+      params: { uploads: [], story: null },
+      views: {
+        'modal@': {
+          templateUrl: 'upload/public_radio_modal.html'
+        }
+      }
+    });
 
     evaporateProvider
     .signerUrl(FEAT.UPLOADS_SIGNER_URL)
