@@ -28,7 +28,18 @@ article.upload(on-page-scroll)
           textarea
       fieldset
         label.required
-          h2 Story Versions
+          h2 Audio Files
+          ol#audioFiles(as-sortable="upload.dragControlListeners", ng-model="upload.uploads")
+            li(as-sortable-item, ng-repeat="upload in upload.uploads")
+              .handle(as-sortable-item-handle)
+              .play
+              select
+                option Segment
+                option Break
+                option Intro
+              input(type="text", placeholder="File name (length)")
+              .delete ×
+              em Waiting...
       fieldset.tagging
         label.required
           h2 Tag Your Story
