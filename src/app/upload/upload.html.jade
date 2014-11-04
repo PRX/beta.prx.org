@@ -41,16 +41,6 @@ article.upload(on-page-scroll)#step-1
         label
           h4 Tags
           input(placeholder="Suggestsions: Dog, Dogs, Beagles, Animals")
-      fieldset
-        label
-          h2 Producers
-          input
-          button Add Producer
-      fieldset
-        h2 Details
-        h4 Full Description
-        textarea
-        p Adding a written description of your piece full of keywords, names of interviewees, places and topics will help people find your piece and may improve your chances of being heard and licensed.
   section#step-2.decorate
     .header
       h1 Step 2: Decorate your Story!
@@ -113,7 +103,7 @@ article.upload(on-page-scroll)#step-1
           h2 Listeners #{''}
           h3 – Varies (Donation)
           p You can let listeners download your story and optionally require a minimum donation. We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
-          a(href="#", ng-disabled="!upload.listener") Manage Terms
+          a.listener-manage(href="#", ng-disabled="!upload.listener") Additional Terms
           input#listener(type="checkbox", ng-model="upload.listener")
           label(for="listener") Permit Listener Downloads
           .donation

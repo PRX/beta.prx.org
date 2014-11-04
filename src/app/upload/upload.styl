@@ -327,27 +327,7 @@ article.upload {
   section {
     fieldset.downloads {
       .donation {
-        display: inline-block;
-        margin-left: 35px;
-        position: relative;
 
-        input {
-          width: 140px;
-        }
-
-        &::after {
-          content: '.00';
-          line-height: 40px;
-          text-align: center;
-          font-size: 18px;
-          color: white;
-          background: blue;
-          position: absolute;
-          top: 0;
-          right: -50px;
-          width: 50px;
-          height: 100%;
-        }
       }
 
       input {
@@ -390,11 +370,49 @@ article.upload {
       label {
         display: inline-block;
         margin-left: 10px;
+
+        &[for=listener] {
+          line-height: 38px;
+        }
+      }
+
+      .donation {
+        float: right;
+        position: relative;
+        margin-right: 50px;
+        clear: right;
+
+        input {
+          width: 140px;
+          &:disabled {
+            border-color: offwhite;
+          }
+          border-color: white;
+        }
+
+        &::after {
+          content: '.00';
+          line-height: 40px;
+          text-align: center;
+          font-size: 18px;
+          color: white;
+          background: blue;
+          position: absolute;
+          top: 0;
+          right: -50px;
+          width: 50px;
+          height: 100%;
+        }
       }
 
       a {
         float: right;
         font-weight: bold;
+
+        &.listener-manage {
+          text-align: right;
+          width: 100%;
+        }
       }
     }
   }
