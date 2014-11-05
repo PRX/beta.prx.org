@@ -149,7 +149,7 @@ article.upload(on-page-scroll)#step-1
         
         fieldset.purchaser
           h2 Public Radio Stations #{''}
-          h3 – $30 minimum (average $51) based on the length of your story
+          //- h3 – $30 minimum (average $51) based on the length of your story
           p There are over 400 public radio stations in the United States with an account on PRX. By approving them to purchase your piece you’ll be eligible for royalties (paid accounts only) and your story may be heard by thousands, even millions of listeners.
           a(ui-sref=".public_radio_t_and_c", ng-disabled="!upload.prsEnabled") Adjust the pricing and agreement
           input#prs(type="checkbox", ng-model="upload.prsEnabled")
@@ -157,7 +157,7 @@ article.upload(on-page-scroll)#step-1
         
         fieldset.purchaser
           h2 Listeners #{''}
-          h3 – Varies (Donation)
+          //- h3 – Varies (Donation)
           p You can let listeners download your story and optionally require a minimum donation. We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
           a.listener-manage(href="#", ng-disabled="!upload.listener") Additional Terms
           input#listener(type="checkbox", ng-model="upload.listener")
@@ -167,7 +167,7 @@ article.upload(on-page-scroll)#step-1
               
         fieldset.purchaser
           h2 PRX Remix #{''}
-          h3 – $75 flat fee
+          //- h3 – $75 flat fee
           p Be heard on XM Radio Channel 123, iPhone and Andriod apps and over 14 public radio stations around the country.
           a(href="#", ng-disabled="!upload.prxRemixEnabled") View the agreement
           input#remix(type="checkbox", ng-model="upload.prxRemixEnabled")
