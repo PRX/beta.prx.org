@@ -544,6 +544,25 @@ if (FEAT.TCF_DEMO) {
             this.statusBar.removeClass('stuck');
           }
         };
+
+        this.displayDiscoverTip = function () {
+          tooltip = angular.element(document.querySelector('#discoverabilityTipText'))[0];
+
+          details = angular.element(document.querySelector('#discDetails'))[0];
+          music = angular.element(document.querySelector('#discMusic'))[0];
+          producers = angular.element(document.querySelector('#discProducers'))[0];
+          images = angular.element(document.querySelector('#discImages'))[0];
+
+          if ($window.pageYOffset + 240 > this.findPosY(details)) {
+            tooltip.innerHTML = 'Clear and consise story details improve searchability and improve the listening experience.';
+          } else if ($window.pageYOffset + 240 > this.findPosY(producers)) {
+            tooltip.innerHTML = "Listing story producers can create a connection with listeners, much like people having favorite musicians or directors.";
+          } else if ($window.pageYOffset + 240 > this.findPosY(music)) {
+            tooltip.innerHTML = "Listing the music used in your story can help listeners and buyers find your work.";
+          } else {
+            tooltip.innerHTML = "Good images dramatically increase the visual impact of your story's webpage, and help to engage the listener.";
+          }
+        };
       },
       link: function (scope, elem, attrs, ctrl) {
         ctrl.root = elem[0];
@@ -551,6 +570,7 @@ if (FEAT.TCF_DEMO) {
         angular.element($window).on('scroll', function (event) {
           ctrl.positionStatusBar();
           ctrl.positionInspectors();
+          ctrl.displayDiscoverTip();
         });
       }
     };
