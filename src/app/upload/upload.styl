@@ -22,16 +22,23 @@ ol#audioFiles {
     float: left;
     width: 22.5px;
     height: 20px;
-    margin: 20px 25px 20px 10px;
+    margin: 25px 25px 25px 10px;
     background: linear-gradient(to bottom, #368aa2 0%,#368aa2 20%,#ffffff 20%,#ffffff 40%,#368aa2 40%,#368aa2 60%,#ffffff 60%,#ffffff 80%,#ffffff 80%,#368aa2 80%,#368aa2 100%);
   }
 
   .play {
     background: orange;
-    width: 50px;
-    height: 50px;
+    image: '/assets/images/bt_play.png' 25px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 65px;
+    height: 65px;
     float: left;
-    margin: 7px 25px 0 0;
+    margin: 0 25px 0 0;
+
+    &.playing {
+      image: '/assets/images/bt_pause.png' 25px;
+    }
   }
 
   .delete {
@@ -61,7 +68,7 @@ ol#audioFiles {
   }
 
   input[type="text"] {
-    width: 365px;
+    width: 350px;
     height: 35px;
     font-size: 14px;
     line-height: 35px;
@@ -70,6 +77,21 @@ ol#audioFiles {
     outline: none;
     float: left;
     display: block;
+  }
+
+  .progress {
+    clear: both;
+    float: right;
+    margin-right: 20px;
+    width: 503px;
+    margin-top: -12px;
+    height: 10px;
+    background-color: offwhite;
+    .bar {
+      height: 100%;
+      width: 0;
+      background-color: orange;
+    }
   }
 
   em {
