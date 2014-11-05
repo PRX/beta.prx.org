@@ -122,7 +122,12 @@ if (FEAT.TCF_DEMO) {
     }
 
     this.validate = function (file) {
-      Id3Service.analyze(file, function(tags) { file.tags = tags; } );
+      Id3Service.analyze(file).then(function (tags) {
+        console.log('tags', tags);
+        file.tags = tags;
+      }, function (err) {
+        console.log('err', err);
+      } );
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
