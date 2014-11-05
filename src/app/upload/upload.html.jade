@@ -103,7 +103,9 @@ article.upload(on-page-scroll)#step-1
           li.active STEP 2: Decorate your story
           li <a href="#step-3">STEP 3: Distribute your story</a>
         prx-upload-decorate-progress
-      fieldset
+        #discoverabilityTip
+          p#discoverabilityTipText
+      fieldset#discImages
         h2 Upload a Cover Image
         p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
         #coverDisplay.cover(ng-click="upload.coverClick()")
@@ -113,15 +115,15 @@ article.upload(on-page-scroll)#step-1
         #thumbDisplay.thumbnail(ng-click="upload.thumbClick()")
         input#thumbFile(type="file", file-change="upload.thumbChange($event, files)")
         a(href="#") + Add caption or credit
-      fieldset
+      fieldset#discMusic
         h2 Musical Works
         input(type='text', placeholder="Search for an title, artist, album, or label")
         button Add Work
-      fieldset
+      fieldset#discProducers
         h2 Producers
         input(type='text', placeholder="Add producer name")
         button Add Producer
-      fieldset
+      fieldset#discDetails
         h2 Details
         h4 Full Description
         textarea(placeholder="Full Description is the full piece of your piece that can be accessed by all users.")
