@@ -30,10 +30,7 @@ article.upload(on-page-scroll)#step-1
             li(as-sortable-item, ng-repeat="file in upload.files")
               .handle(as-sortable-item-handle)
               .play(ng-click="upload.preview(file)", ng-class="{playing: upload.previewing(file)}")
-              select
-                option Segment
-                option Break
-                option Intro
+              select(ng-model="file.type", ng-options="type for type in ['Segment', 'Break', 'Intro']")
               input(type="text", ng-model="file.name")
               .delete ×
               .progress

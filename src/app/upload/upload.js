@@ -15,8 +15,9 @@ if (FEAT.TCF_DEMO) {
               return story.uploads;
             } else {
               var uploads = [];
-              angular.forEach($stateParams.uploads, function (id) {
+              angular.forEach($stateParams.uploads, function (id, index) {
                 uploads.push(Upload.getUpload(id));
+                uploads[index].type = (index === 0 ? 'Intro' : index % 2 ? 'Segment' : 'Break');
               });
               story.uploads = uploads;
               return uploads;
