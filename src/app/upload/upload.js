@@ -412,7 +412,7 @@ if (FEAT.TCF_DEMO) {
       return nowPlaying == file && !audio.paused;
     };
 
-    this.inPreview = true;
+    this.inPreview = false;
 
     $scope.story = $controller('StoryCtrl', {story: story, account: account, audioUrls: [], series: undefined, $scope: $scope});
   })
