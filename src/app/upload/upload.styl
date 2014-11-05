@@ -194,7 +194,26 @@ article.upload {
           transition:  font-size 0.2s, line-height 0.2s;
         }
 
-        &.stuck {
+        a {
+          float: right;
+          margin-top: -60px;
+          background-color: orange;
+          padding: 5px;
+          cursor: pointer;
+          color: white;
+          transition: margin-top 0.2s, background-color 0.2s, color 0.2s;
+        }
+
+        &.previewing {
+          position: fixed !important;
+          top: 73px !important;
+          a {
+            color: dark-grey;
+            background-color: offwhite;
+          }
+        }
+
+        &.stuck, &.previewing {
           border-bottom-color: lightest-grey;
           height: 42px;
           h2 {
@@ -205,6 +224,10 @@ article.upload {
           h3 {
             font-size: 0.6em;
             line-height: 1.0em;
+          }
+
+          a {
+            margin-top: -28px;
           }
         }
       }
@@ -684,4 +707,29 @@ a.connect-go {
     color: white;
     padding: 10px;
   }
+}
+
+#preview {
+  &.ng-enter {
+    transition: transform 0.4s;
+    transform: translateY(100%);
+    &.ng-enter-active {
+      transform: translateY(0);
+    }
+  }
+
+  &.ng-leave {
+    transition: transform 0.4s, opacity 0.2s;
+    transform: translateY(0);
+    &.ng-leave-active {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+  position: fixed;
+  top: 115px;
+  width: 100%;
+  max-width: 1200px;
+  background-color: offwhite;
+  z-index: 199;
 }

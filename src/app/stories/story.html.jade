@@ -1,5 +1,5 @@
 article.story
-  #hero(ng-class="story.cover.choice")
+  #hero(ng-class="story.cover.choice", ng-style="::story.coverStyle()")
     .container
       prx-player(sound="story.sound", prxp-convert="story.cover")
       .media

@@ -3,10 +3,11 @@ article.upload(on-page-scroll)#step-1
     .header
       h1 Step 1: Create your Story!
       .placeholder(status-bar-placeholder)
-      .status(status-bar)
+      .status(status-bar, ng-class="{previewing: upload.inPreview}")
         .container
           h2(ng-bind="upload.story.title || 'Untitled Story'")
           h3 Last saved at 12/12/2013, 0:23:45
+          a(ng-click="upload.inPreview = !upload.inPreview") Preview
     form
       .placeholder(inspector-placeholder)
       .inspector(inspector)
@@ -91,7 +92,7 @@ article.upload(on-page-scroll)#step-1
       fieldset
         label
           h4 Tags
-          input(placeholder="Suggestions: Dog, Dogs, Beagles, Animals")
+          input(placeholder="Suggestions: Dog, Dogs, Beagles, Animals", ng-model="upload.story.tags", ng-list="&#10;", ng-trim="false")
   section#step-2.decorate
     .header
       h1 Step 2: Decorate your Story!
@@ -236,3 +237,5 @@ article.upload(on-page-scroll)#step-1
           a(href="#") Create a Podcast
           input#pc(type='checkbox', disabled="disabled")
           label(for="pc", disabled="disabled") Add to a Podcast
+  div#preview(ng-if="upload.inPreview")
+    ng-include(src="'stories/story.html'")

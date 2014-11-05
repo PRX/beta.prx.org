@@ -10,12 +10,30 @@ if (FEAT.TCF_DEMO) {
         url: '^/upload',
         params: {uploads: []},
         resolve: {
-          files: function ($stateParams, Upload) {
-            var uploads = [];
-            angular.forEach($stateParams.uploads, function (id) {
-              uploads.push(Upload.getUpload(id));
+          files: function ($stateParams, Upload, story) {
+            if (story.uploads) {
+              return story.uploads;
+            } else {
+              var uploads = [];
+              angular.forEach($stateParams.uploads, function (id) {
+                uploads.push(Upload.getUpload(id));
+              });
+              story.uploads = uploads;
+              return uploads;
+            }
+          },
+          account: function (ngHal) {
+            return ngHal.follow('prx:account', {id: 179396});
+          },
+          story: function (ngHal, account) {
+            return ngHal.build('prx:story', {id:''}).then(function (doc) {
+              doc.title = "Dog Talk Episode 7";
+              doc.imageUrl = account.imageUrl;
+              doc.duration = 65;
+              doc.publishedAt = new Date();
+              doc.relatedWebsite = "http://www.prx.org";
+              return doc;
             });
-            return uploads;
           }
         },
         views: {
@@ -26,7 +44,7 @@ if (FEAT.TCF_DEMO) {
         }
       }
     ).state('upload.new_story.public_radio_t_and_c', {
-      params: { uploads: [], story: null },
+      params: { uploads: [] },
       views: {
         'modal@': {
           templateUrl: 'upload/public_radio_modal.html'
@@ -318,7 +336,7 @@ if (FEAT.TCF_DEMO) {
       errorClearer = null;
     }
   })
-  .controller('UploadCtrl', function (files, $window) {
+  .controller('UploadCtrl', function (files, $window, story, $scope, $controller, account) {
     var audio = new $window.Audio();
     var nowPlaying;
     this.files = files;
@@ -326,7 +344,7 @@ if (FEAT.TCF_DEMO) {
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
     this.listener = false;
-    this.story = {};
+    this.story = story;
 
     this.dragControlListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
@@ -352,6 +370,7 @@ if (FEAT.TCF_DEMO) {
       display.style.backgroundPosition = 'center center';
       display.style.backgroundSize = 'cover';
       display.style.backgroundImage = "url(" + src + ")";
+      this.story.coverUrl = src;
     };
 
     this.thumbClick = function() {
@@ -366,6 +385,7 @@ if (FEAT.TCF_DEMO) {
       display.style.backgroundPosition = 'initial';
       display.style.backgroundSize = 'cover';
       display.style.backgroundImage = "url(" + src + ")";
+      this.story.imageUrl = src;
     };
 
     this.categories = {
@@ -391,6 +411,10 @@ if (FEAT.TCF_DEMO) {
     this.previewing = function (file) {
       return nowPlaying == file && !audio.paused;
     };
+
+    this.inPreview = true;
+
+    $scope.story = $controller('StoryCtrl', {story: story, account: account, audioUrls: [], series: undefined, $scope: $scope});
   })
   .directive('onPageScroll', function ($window) {
     return {

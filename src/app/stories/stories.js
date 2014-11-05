@@ -36,9 +36,6 @@ angular.module('prx.stories', [
         return story.toSoundParams().then(function (sfParams) {
           return sfParams.audioFiles;
         });
-      },
-      coverExperiment: function (prxperiment) {
-        return prxperiment.participate('storyCover', ['blueMics', 'matt']);
       }
     }
   })
@@ -178,6 +175,18 @@ angular.module('prx.stories', [
   this.current.follow('prx:license').then(function (license) {
     storyCtrl.license = license;
   });
+
+  this.coverStyle = function () {
+    if (!this.current.coverUrl) {
+      return {};
+    } else {
+      return {
+        'background-image': 'url('+this.current.coverUrl+')',
+        'background-size': 'cover',
+        'background-position': 'center center'
+      };
+    }
+  };
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
