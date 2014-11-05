@@ -19,6 +19,7 @@
   },
   "scripts": {
     "install": "bower install || bower install || bower install",
+    "postinstall": "(cd vendor/mp3 && npm install && make browser) && (cd vendor/aurora && npm install && make browser)",
     "test": "gulp ci",
     "compile": "gulp compile",
     "devServer": "npm install --quiet && apiServer=https://hal.prx.org/api/v1 gulp"

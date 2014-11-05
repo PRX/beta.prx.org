@@ -213,7 +213,8 @@ gulp.task('html', function (cb) {
   var ctx = {styles:[], scripts:[], compile: false};
   walker.on('file', function (root, stat, next) {
     root = path.relative(buildDir, root);
-    if (stat.name == 'angular.js') {
+
+    if (stat.name == 'angular.js' || stat.name == 'aurora.js') {
       ctx.scripts.unshift(root + '/' + stat.name);
     } else {
       if (stat.name.match(/\.css$/)) {
@@ -262,7 +263,7 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
       .pipe(plugin.ngAnnotate())
       .pipe(feats(featDist, {strict: true, default: false}))
   )
-  .pipe(plugin.order(['**/angular?(.min).js', '*']))
+  .pipe(plugin.order(['**/angular?(.min).js', '**/aurora?(.min).js', '*']))
   .pipe(plugin.concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
   .pipe(plugin.uglify({preserveComments: 'some', outSourceMap: true}))

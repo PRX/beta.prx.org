@@ -41,7 +41,9 @@
       "vendor/ng-sortable/dist/ng-sortable.js",
       "vendor/EvaporateJS/evaporate.js",
       "vendor/node-uuid/uuid.js",
-      "vendor/id3/dist/id3.js"
+      "vendor/id3/dist/id3.js",
+      "vendor/aurora/build/aurora.js",
+      "vendor/mp3/build/mp3.js"
     ],
     "buildJs": [
       "vendor/angular/angular.js",
