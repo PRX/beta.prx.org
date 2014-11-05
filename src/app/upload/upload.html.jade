@@ -6,8 +6,15 @@ article.upload(on-page-scroll)#step-1
       .status(status-bar, ng-class="{previewing: upload.inPreview}")
         .container
           h2(ng-bind="upload.story.title || 'Untitled Story'")
-          h3 Last saved at 12/12/2013, 0:23:45
-          a(ng-click="upload.inPreview = !upload.inPreview") Preview
+          h3 Last saved {{upload.lastSaved | date: 'medium'}}
+          ul.actions
+            li
+              a.save(ng-click="upload.save()") Save
+            li
+              a.preview(ng-click="upload.inPreview = !upload.inPreview") Preview
+            li
+              a.publish() Publish
+              
     form
       .placeholder(inspector-placeholder)
       .inspector(inspector)

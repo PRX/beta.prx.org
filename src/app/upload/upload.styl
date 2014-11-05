@@ -194,22 +194,43 @@ article.upload {
           transition:  font-size 0.2s, line-height 0.2s;
         }
 
-        a {
+        ul.actions {
           float: right;
-          margin-top: -60px;
+          margin-top: -55px;
+          transition: margin-top 0.2s;
+          li {
+            display: inline-block;
+          }
+        }
+
+        a {
           background-color: orange;
-          padding: 5px;
+          padding: 5px 10px;
           cursor: pointer;
           color: white;
-          transition: margin-top 0.2s, background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s;
+          margin-right: 10px;
+
+          &.save {
+            background-color: blue;
+          }
+
+          &.publish {
+            cursor: not-allowed;
+            background-color: lightest-grey;
+            color: light-grey;
+            border: 1px solid light-grey;
+            padding: 4px 9px;
+            margin-right: 0;
+          }
         }
 
         &.previewing {
           position: fixed !important;
           top: 73px !important;
-          a {
-            color: dark-grey;
-            background-color: offwhite;
+
+          a.preview {
+            background-color: red;
           }
         }
 
@@ -226,8 +247,8 @@ article.upload {
             line-height: 1.0em;
           }
 
-          a {
-            margin-top: -28px;
+          ul {
+            margin-top: -24px;
           }
         }
       }

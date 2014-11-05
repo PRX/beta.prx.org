@@ -341,11 +341,16 @@ if (FEAT.TCF_DEMO) {
     var audio = new $window.Audio();
     var nowPlaying;
     this.files = files;
+    this.lastSaved = new Date();
 
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
     this.listener = false;
     this.story = story;
+
+    this.save = function () {
+      this.lastSaved = new Date();
+    };
 
     this.dragControlListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
