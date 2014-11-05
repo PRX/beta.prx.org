@@ -349,7 +349,7 @@ if (FEAT.TCF_DEMO) {
       file = files[0];
       src = URL.createObjectURL(file);
       display = angular.element(document.querySelector('#coverDisplay'))[0];
-      display.style.backgroundPosition = 'initial';
+      display.style.backgroundPosition = 'center center';
       display.style.backgroundSize = 'cover';
       display.style.backgroundImage = "url(" + src + ")";
     };
