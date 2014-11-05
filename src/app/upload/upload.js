@@ -28,7 +28,7 @@ if (FEAT.TCF_DEMO) {
           },
           story: function (ngHal, account) {
             return ngHal.build('prx:story', {id:''}).then(function (doc) {
-              doc.title = "Dog Talk Episode 7";
+              // doc.title = "";
               doc.imageUrl = account.imageUrl;
               doc.duration = 65;
               doc.publishedAt = new Date();
