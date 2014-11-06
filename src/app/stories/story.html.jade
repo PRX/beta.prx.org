@@ -15,7 +15,7 @@ article.story
             li.episode_identifier(ng-if="::story.current.episodeIdentifier")
               | ep. {{::story.current.episodeIdentifier}}
             li.series(ng-if="::story.series")
-              | from {{::story.series.title}}
+              a(ui-sref="::story.series") from {{::story.series.title}}
             li.duration
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
