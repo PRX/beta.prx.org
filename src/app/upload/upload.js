@@ -28,8 +28,9 @@ if (FEAT.TCF_DEMO) {
           },
           story: function (ngHal, account) {
             return ngHal.build('prx:story', {id:''}).then(function (doc) {
-              // doc.title = "";
-              doc.imageUrl = account.imageUrl;
+              doc.title = "Why Is This Cow So Freaking Angry?";
+              doc.shortDescription = "This cow gives a first hand account, telling you what farmers do not want you to know. The story is udderly terrifying.";
+              doc.tags = ["farming", "cows", "agriculture", "milking"];
               doc.duration = 65;
               doc.publishedAt = new Date();
               doc.relatedWebsite = "http://www.prx.org";
