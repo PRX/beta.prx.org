@@ -35,11 +35,8 @@ describe('angular-evaporate', function () {
 
   });
 
-
   describe ('when configured', function () {
-    var evaporate;
-    var $q;
-    var $rs;
+    var evaporate, $q, $rs;
 
     beforeEach(module('angular-evaporate', function (evaporateProvider) {
       evaporateProvider.options({});
@@ -70,8 +67,6 @@ describe('angular-evaporate', function () {
       expect(testComplete).toBeTruthy();
     });
 
-
   });
-
 
 });
