@@ -1,10 +1,10 @@
 // simple service to get uuids using node-uuid project
 
 angular.module('angular-id3', [])
-.factory('id3', function ($window) {
+.factory('$id3', function ($window) {
   return $window.id3;
 })
-.service('Id3Service', function (id3, $rootScope, $q) {
+.service('Id3Service', function ($id3, $rootScope, $q) {
 
   var flattenTags = function (tags) {
     var ft = angular.copy(tags);
@@ -20,7 +20,7 @@ angular.module('angular-id3', [])
 
   this.analyze = function (file) {
     var deferred = $q.defer();
-    id3(file, function(err, tags) {
+    $id3(file, function(err, tags) {
 
       $rootScope.$evalAsync( function() {
         if (angular.isDefined(tags)) {
