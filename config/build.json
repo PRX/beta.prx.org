@@ -42,8 +42,8 @@
       "vendor/EvaporateJS/evaporate.js",
       "vendor/node-uuid/uuid.js",
       "vendor/id3/dist/id3.js",
-      "vendor/aurora/build/aurora.js",
-      "vendor/mp3/build/mp3.js"
+      "vendor/aurora.js/build/aurora.js",
+      "vendor/mp3.js/build/mp3.js"
     ],
     "buildJs": [
       "vendor/angular/angular.js",
