@@ -52,9 +52,11 @@ $player-button {
   height: 70px;
   background-position: center center;
   background-repeat: no-repeat;
-  image: '/assets/images/bt_pause.png' auto 25px;
+  background-image: url('/assets/images/bt_pause.svg');
+  background-size: 23px 25px;
   &.play {
-    image: '/assets/images/bt_play.png' auto 25px;
+    background-image: url('/assets/images/bt_play.svg');
+    background-size: 16px 24px;
   }
   &.loading:not(.play) {
     background-image: none;
