@@ -41,10 +41,10 @@ describe('angular-id3', function () {
     it ("will return tags", function() {
       expect(Id3Service).toBeDefined();
       var mockFile = {name: 'test.mp3', type: 'audio/mpeg', mockTags: {artist: 'miss foo'} };
-      Id3Service.analyze(mockFile).then( function(res) {
-        expect(res['artist']).toEqual('miss foo');
-      });
+      var result;
+      Id3Service.analyze(mockFile).then( function(res) { result = res; });
       $rootScope.$digest();
+      expect(result['artist']).toEqual('miss foo');
     });
 
   });
