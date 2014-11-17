@@ -72,16 +72,17 @@ describe('prx.analyze-audio', function () {
 
     it("can analyze an audio file", function() {
       var mockFile = {name: 'test.mp2', type: null};
+      var result;
 
-      AnalyzeAudio.analyze(mockFile).then( function (file) {
-        expect(file.mimeType.major()).toEqual('audio');
-        expect(file.tags.album).toEqual('mister bar');
-        expect(file.format.bitRate).toEqual(128);
-        expect(file.duration).toEqual(600);
-        expect(file.metadata.artist).toEqual('miss foo');
-      });
-
+      AnalyzeAudio.analyze(mockFile).then( function (file) { result = file; });
       $rs.$apply();
+
+      expect(result.mimeType.major()).toEqual('audio');
+      expect(result.tags.album).toEqual('mister bar');
+      expect(result.format.bitRate).toEqual(128);
+      expect(result.duration).toEqual(600);
+      expect(result.metadata.artist).toEqual('miss foo');
+
     });
 
   });
@@ -98,19 +99,17 @@ describe('prx.analyze-audio', function () {
     }));
 
     it('validates the format', inject(function (AnalyzeAudio, ValidateAudio, MimeDefinition) {
+
       AnalyzeAudio.mock( function(file) {
         file.mimeType = new MimeDefinition('foo/bar');
       });
 
-      var mockFile = {};
-      AnalyzeAudio.analyze(mockFile).then( function(file){
-        expect(file.mimeType.major()).toEqual('foo');
-        ValidateAudio.validateType(mockFile);
-        expect(mockFile.validationResults).toBeDefined();
-        expect(mockFile.validationResults.results.length).toBe(1);
-        expect(mockFile.validationResults.messages('mimeType').length).toBe(1);
-      });
-
+      var result;
+      AnalyzeAudio.analyze({}).then( function(file){ result = file; });
+      expect(result.mimeType.major()).toEqual('foo');
+      ValidateAudio.validateType(result);
+      expect(result._results).toBeDefined();
+      expect(result._results.notAudio).toBeDefined();
     }));
 
   });

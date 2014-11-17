@@ -80,53 +80,42 @@ if (FEAT.TCF_DEMO) {
   })
   .service('ValidateAudio', function ValidateAudio(AnalyzeAudio) {
 
-    function ValidationResult(msgType, message, attribute) {
-      this.type = msgType;
-      this.message = message;
-      this.attribute = attribute || '_global_';
-    }
-
     function ValidationResults() {
-      this.results = [];
-      this.byType = {};
-      this.byAttr = {};
     }
 
     ValidationResults.prototype = {
-      addMessage: function (mtype, msg, attr) {
-        var vr = new ValidationResult(mtype, msg, attr);
-        this.results.push(vr);
-
-        if (!angular.isDefined(this.byType[mtype])) { this.byType[mtype] = []; }
-        this.byType[mtype].push(vr);
-
-        if (!angular.isDefined(this.byAttr[attr])) { this.byAttr[attr] = []; }
-        this.byAttr[attr].push(vr);
+      addMessage: function (validation, options) {
+        this[validation] = options;
       },
-      error: function(msg, attr) {
-        return this.addMessage('error', msg, attr);
+      error: function(validation, options) {
+        options = options || {};
+        options.severity = 'error';
+        return this.addMessage(validation, options);
       },
-      warning: function(msg, attr) {
-        return this.addMessage('warning', msg, attr);
-      },
-      messages: function(forAttr) {
-        var a = forAttr || '_global_';
-        return this.byAttr[a];
+      warning: function(context, validation, options) {
+        options = options || {};
+        options.severity = 'warning';
+        return this.addMessage(validation, options);
       }
     };
 
+    // notAudio:      error:   This is not an audio file or media file containing audio
+    // videoFile:     warning: the file is video, will use audio track
+    // lossyEncoding: warning: uses a lossy encoding, not so good for transcoding
     this.validateType = function(file) {
-      file.validationResults = file.validationResults || new ValidationResults();
+      file._results = file._results || new ValidationResults();
+
+      var mt = file.mimeType.full();
 
       var t = file.mimeType.major();
       if (t == 'video') {
-        file.validationResults.warning('audio track will be extracted from the video.', 'mimeType');
+        file._results.warning('videoFile', {mimeType: mt});
       } else if (t == 'audio') {
         if (!file.mimeType.minor().match(/(wav|flac|aiff|alac|raw|pcm)/)) {
-          file.validationResults.warning('encoded in a lossy format, transcoding or altering will affect audio quality.', 'mimeType');
+          file._results.warning('lossyEncoding', {mimeType: mt});
         }
       } else {
-        file.validationResults.error('must contain audio, but type is "'+t+'".', 'mimeType');
+        file._results.error('notAudio', {mimeType: mt});
       }
       return this;
     };
@@ -134,7 +123,7 @@ if (FEAT.TCF_DEMO) {
     // need to figure out what warnings we want per type, and per channel count
     // for an mp2, bitrate should be 256 for stereo, and 128 for mono
     this.validateBitRate = function(file) {
-      file.validationResults = file.validationResults || new ValidationResults();
+      file._results = file._results || new ValidationResults();
       if (file.mimeType.major() != 'audio') { return this; }
       return this;
     };
@@ -142,14 +131,14 @@ if (FEAT.TCF_DEMO) {
     // need to figure out what warnings we want per type
     // for an mp2, sample rate should by 44100
     this.validateSampleRate = function(file) {
-      file.validationResults = file.validationResults || new ValidationResults();
+      file._results = file._results || new ValidationResults();
       if (file.mimeType.major() != 'audio') { return this; }
       return this;
     };
 
     this.validate = function (file) {
       return AnalyzeAudio.analyze(file).then( function () {
-        file.validationResults = new ValidationResults();
+        file._results = new ValidationResults();
         this.validateType(file);
         this.validateBitRate(file);
         this.validateSampleRate(file);
