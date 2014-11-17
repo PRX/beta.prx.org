@@ -48,6 +48,7 @@ ol#audioFiles {
     display: block;
     float: left;
     padding: 5px 0 0 10px;
+    cursor: pointer;
   }
 
   select {
@@ -193,7 +194,47 @@ article.upload {
           transition:  font-size 0.2s, line-height 0.2s;
         }
 
-        &.stuck {
+        ul.actions {
+          float: right;
+          margin-top: -55px;
+          transition: margin-top 0.2s;
+          li {
+            display: inline-block;
+          }
+        }
+
+        a {
+          background-color: orange;
+          padding: 5px 10px;
+          cursor: pointer;
+          color: white;
+          transition: background-color 0.2s;
+          margin-right: 10px;
+
+          &.save {
+            background-color: blue;
+          }
+
+          &.publish {
+            cursor: not-allowed;
+            background-color: lightest-grey;
+            color: light-grey;
+            border: 1px solid light-grey;
+            padding: 4px 9px;
+            margin-right: 0;
+          }
+        }
+
+        &.previewing {
+          position: fixed !important;
+          top: 73px !important;
+
+          a.preview {
+            background-color: red;
+          }
+        }
+
+        &.stuck, &.previewing {
           border-bottom-color: lightest-grey;
           height: 42px;
           h2 {
@@ -204,6 +245,10 @@ article.upload {
           h3 {
             font-size: 0.6em;
             line-height: 1.0em;
+          }
+
+          ul {
+            margin-top: -24px;
           }
         }
       }
@@ -265,9 +310,6 @@ article.upload {
           padding: 12px;
           border: 1px solid lightest-grey;
           outline: none;
-          &.ng-pristine {
-            color: light-grey;
-          }
         }
 
         input {
@@ -559,7 +601,7 @@ article.upload {
 article.upload {
   #decorateProgress {
     margin-top: 10px;
-    background: gunmetal-blue;
+    background: #2E5965;
     padding: 12px;
     color: white;
     height: 100px;
@@ -582,7 +624,7 @@ article.upload {
     }
 
     .progress {
-      background-color: green;
+      background-color: #27D15B;
       position: absolute;
       top: 60px;
       left: 12px;
@@ -616,4 +658,96 @@ a.connect-go {
   background-size: 115px;
   height: 33px;
   font-size: 0px;
+}
+
+.paid-membership {
+  float: right;
+  color: white;
+  font-size: 12px;
+  background: orange;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 27px 0 0 0;
+  display: block;
+}
+
+#coverFile,
+#thumbFile {
+  display: none;
+}
+
+.help {
+  width: 20px;
+  height: @width;
+  border-radius: 10px;
+  background: darkest-grey;
+  color: white;
+  float: right;
+  position: relative;
+  margin-top: 25px;
+  cursor: pointer;
+
+  &::after {
+    content: '?';
+    color: white;
+    font-size: 14px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    text-align: center;
+  }
+
+  p {
+    display: none;
+  }
+
+  &:hover {
+    p {
+      display: block;
+      position: absolute;
+      width: 400px;
+      height: 125px;
+      background: rgba(0,0,0,0.75);
+      font-size: 13px;
+      top: 26px;
+      left: -300px;
+      padding: 10px 10px 0 10px;
+    }
+  }
+}
+
+#discoverabilityTip {
+  background: #2E5965;
+  opacity: 0.6;
+  margin-top: 15px;
+
+  p {
+    color: white;
+    padding: 10px;
+  }
+}
+
+#preview {
+  &.ng-enter {
+    transition: transform 0.4s;
+    transform: translateY(100%);
+    &.ng-enter-active {
+      transform: translateY(0);
+    }
+  }
+
+  &.ng-leave {
+    transition: transform 0.4s, opacity 0.2s;
+    transform: translateY(0);
+    &.ng-leave-active {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+  position: fixed;
+  top: 115px;
+  width: 100%;
+  max-width: 1200px;
+  background-color: offwhite;
+  z-index: 199;
 }

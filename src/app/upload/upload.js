@@ -10,12 +10,32 @@ if (FEAT.TCF_DEMO) {
         url: '^/upload',
         params: {uploads: []},
         resolve: {
-          files: function ($stateParams, Upload) {
-            var uploads = [];
-            angular.forEach($stateParams.uploads, function (id) {
-              uploads.push(Upload.getUpload(id));
+          files: function ($stateParams, Upload, story) {
+            if (story.uploads) {
+              return story.uploads;
+            } else {
+              var uploads = [];
+              angular.forEach($stateParams.uploads, function (id, index) {
+                uploads.push(Upload.getUpload(id));
+                uploads[index].type = (index === 0 ? 'Intro' : index % 2 ? 'Segment' : 'Break');
+              });
+              story.uploads = uploads;
+              return uploads;
+            }
+          },
+          account: function (ngHal) {
+            return ngHal.follow('prx:account', {id: 179396});
+          },
+          story: function (ngHal, account) {
+            return ngHal.build('prx:story', {id:''}).then(function (doc) {
+              doc.title = "Why Is This Cow So Freaking Angry?";
+              doc.shortDescription = "This cow gives a first hand account, telling you what farmers do not want you to know. The story is udderly terrifying.";
+              doc.tags = ["farming", "cows", "agriculture", "milking"];
+              doc.duration = 65;
+              doc.publishedAt = new Date();
+              doc.relatedWebsite = "http://www.prx.org";
+              return doc;
             });
-            return uploads;
           }
         },
         views: {
@@ -26,7 +46,7 @@ if (FEAT.TCF_DEMO) {
         }
       }
     ).state('upload.new_story.public_radio_t_and_c', {
-      params: { uploads: [], story: null },
+      params: { uploads: [] },
       views: {
         'modal@': {
           templateUrl: 'upload/public_radio_modal.html'
@@ -318,15 +338,20 @@ if (FEAT.TCF_DEMO) {
       errorClearer = null;
     }
   })
-  .controller('UploadCtrl', function (files, $window) {
+  .controller('UploadCtrl', function (files, $window, story, $scope, $controller, account) {
     var audio = new $window.Audio();
     var nowPlaying;
     this.files = files;
+    this.lastSaved = new Date();
 
     this.prsEnabled = true;
     this.prxRemixEnabled = true;
     this.listener = false;
-    this.story = {};
+    this.story = story;
+
+    this.save = function () {
+      this.lastSaved = new Date();
+    };
 
     this.dragControlListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
@@ -338,6 +363,41 @@ if (FEAT.TCF_DEMO) {
       orderChanged: function (event) {
 
       }
+    };
+
+    this.coverClick = function() {
+      picker = angular.element(document.querySelector('#coverFile'))[0];
+      picker.click();
+    };
+
+    this.coverChange = function (event, files) {
+      file = files[0];
+      src = URL.createObjectURL(file);
+      display = angular.element(document.querySelector('#coverDisplay'))[0];
+      display.style.backgroundPosition = 'center center';
+      display.style.backgroundSize = 'cover';
+      display.style.backgroundImage = "url(" + src + ")";
+      this.story.coverUrl = src;
+    };
+
+    this.thumbClick = function() {
+      picker = angular.element(document.querySelector('#thumbFile'))[0];
+      picker.click();
+    };
+
+    this.thumbChange = function (event, files) {
+      file = files[0];
+      src = URL.createObjectURL(file);
+      display = angular.element(document.querySelector('#thumbDisplay'))[0];
+      display.style.backgroundPosition = 'initial';
+      display.style.backgroundSize = 'cover';
+      display.style.backgroundImage = "url(" + src + ")";
+      this.story.imageUrl = src;
+    };
+
+    this.categories = {
+      'Current Event': ['1','2'],
+      'Arts & Entertainment': ['3','4'],
     };
 
     this.preview = function (file) {
@@ -358,6 +418,10 @@ if (FEAT.TCF_DEMO) {
     this.previewing = function (file) {
       return nowPlaying == file && !audio.paused;
     };
+
+    this.inPreview = false;
+
+    $scope.story = $controller('StoryCtrl', {story: story, account: account, audioUrls: [], series: undefined, $scope: $scope});
   })
   .directive('onPageScroll', function ($window) {
     return {
@@ -511,6 +575,25 @@ if (FEAT.TCF_DEMO) {
             this.statusBar.removeClass('stuck');
           }
         };
+
+        this.displayDiscoverTip = function () {
+          tooltip = angular.element(document.querySelector('#discoverabilityTipText'))[0];
+
+          details = angular.element(document.querySelector('#discDetails'))[0];
+          music = angular.element(document.querySelector('#discMusic'))[0];
+          producers = angular.element(document.querySelector('#discProducers'))[0];
+          images = angular.element(document.querySelector('#discImages'))[0];
+
+          if ($window.pageYOffset + 240 > this.findPosY(details)) {
+            tooltip.innerHTML = 'Clear and consise story details improve searchability and improve the listening experience.';
+          } else if ($window.pageYOffset + 240 > this.findPosY(producers)) {
+            tooltip.innerHTML = "Listing story producers can create a connection with listeners, much like people having favorite musicians or directors.";
+          } else if ($window.pageYOffset + 240 > this.findPosY(music)) {
+            tooltip.innerHTML = "Listing the music used in your story can help listeners and buyers find your work.";
+          } else {
+            tooltip.innerHTML = "Good images dramatically increase the visual impact of your story's webpage, and help to engage the listener.";
+          }
+        };
       },
       link: function (scope, elem, attrs, ctrl) {
         ctrl.root = elem[0];
@@ -518,6 +601,7 @@ if (FEAT.TCF_DEMO) {
         angular.element($window).on('scroll', function (event) {
           ctrl.positionStatusBar();
           ctrl.positionInspectors();
+          ctrl.displayDiscoverTip();
         });
       }
     };
@@ -563,5 +647,36 @@ if (FEAT.TCF_DEMO) {
       restrict: 'E',
       templateUrl: 'upload/decorate_progress.html'
     };
-  });
+  })
+  .directive('fileChange', ['$parse', function($parse) {
+    return {
+      restrict: 'A',
+      link: function ($scope, element, attrs) {
+
+        // Get the function provided in the file-change attribute.
+        // Note the attribute has become an angular expression,
+        // which is what we are parsing. The provided handler is
+        // wrapped up in an outer function (attrHandler) - we'll
+        // call the provided event handler inside the handler()
+        // function below.
+        var attrHandler = $parse(attrs['fileChange']);
+
+        // This is a wrapper handler which will be attached to the
+        // HTML change event.
+        var handler = function (e) {
+
+          $scope.$apply(function () {
+
+            // Execute the provided handler in the directive's scope.
+            // The files variable will be available for consumption
+            // by the event handler.
+            attrHandler($scope, { $event: e, files: e.target.files });
+          });
+        };
+
+        // Attach the handler to the HTML change event
+        element[0].addEventListener('change', handler, false);
+      }
+    };
+  }]);
 }

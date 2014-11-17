@@ -3,10 +3,18 @@ article.upload(on-page-scroll)#step-1
     .header
       h1 Step 1: Create your Story!
       .placeholder(status-bar-placeholder)
-      .status(status-bar)
+      .status(status-bar, ng-class="{previewing: upload.inPreview}")
         .container
           h2(ng-bind="upload.story.title || 'Untitled Story'")
-          h3 Last saved at 12/12/2013, 0:23:45
+          h3 Last saved {{upload.lastSaved | date: 'medium'}}
+          ul.actions
+            li
+              a.save(ng-click="upload.save()") Save
+            li
+              a.preview(ng-click="upload.inPreview = !upload.inPreview") Preview
+            li
+              a.publish() Publish
+              
     form
       .placeholder(inspector-placeholder)
       .inspector(inspector)
@@ -21,7 +29,7 @@ article.upload(on-page-scroll)#step-1
 
         label.required
           h2 Teaser
-          textarea(ng-model="upload.story.teaser", required, placeholder="A first impression; think of this as a the single-item lead of a piece.")
+          textarea(ng-model="upload.story.shortDescription", required, placeholder="A first impression; think of this as a the single-item lead of a piece.")
       fieldset
         label.required
           h2 Audio Files
@@ -29,30 +37,66 @@ article.upload(on-page-scroll)#step-1
             li(as-sortable-item, ng-repeat="file in upload.files")
               .handle(as-sortable-item-handle)
               .play(ng-click="upload.preview(file)", ng-class="{playing: upload.previewing(file)}")
-              select
-                option Segment
-                option Break
-                option Intro
+              select(ng-model="file.type", ng-options="type for type in ['Segment', 'Break', 'Intro']")
               input(type="text", ng-model="file.name")
               .delete ×
               .progress
                 .bar(ng-style="{width: file.progress * 100 + '%'}")
       fieldset.tagging
-        h2 Tag Your Story
-        p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
-        label.half.required
-          h4 Genre
-          select
-            option News
-            option Dog Talk
-        label.half.required
-          h4 Type
-          select
-            option Documentary
-            option Dog Talk
+        label.required
+          .help
+            p Select a genre and type, then add as many tags as you’d like to help people find your story. You might tag your stories with information about holidays or special events like “Christmas”, “Black History Month”, “Valentines Day” or “Veterans Day”.
+          h2 Tag Your Story
+          p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
+          //- .half
+          //-   h4 Genre
+          //-   select(ng-options="category for (category, sub) in upload.categories", ng-model="upload.story.category")
+          .half
+            h4 Genre
+            //- select(ng-options="subcategory for subcategory in upload.categories[upload.story.category]", ng-model="upload.story.subcategory")
+            select
+              optgroup(label="Current Events")
+                option US News
+                option Politics
+                option Business &amp; Economics
+                option Commentary &amp; Opinion
+                option Sports
+                option Science &amp; Technology
+                option Health &amp; Medicine
+              optgroup(label="Arts & Entertainment")
+                option Art &amp; Design
+                option Pop Culture
+                option Food
+                option Movies &amp; Film
+                option Music &amp; Musicians
+                option Radio Drama
+                option Storytelling
+                option Books/Literature
+                option Sports
+              optgroup(label="Culture & Learning")
+                option Diary / Essay
+                option US History
+                option World History
+                option Biography
+                option Human Interest
+                option Society &amp; Justice
+              optgroup(label="Music & DJ")
+                option AAA
+                option Jazz
+                option Blues
+                option Rock
+                option Classical
+                option Bluegrass
+                option Hip Hop
+                option Country
+                option Holiday
+                option Electronic
+                option World
+                option Other
+      fieldset
         label
           h4 Tags
-          input(placeholder="Suggestions: Dog, Dogs, Beagles, Animals")
+          input(placeholder="Suggestions: Dog, Dogs, Beagles, Animals", ng-model="upload.story.tags", ng-list=" ", ng-trim="false")
   section#step-2.decorate
     .header
       h1 Step 2: Decorate your Story!
@@ -64,26 +108,30 @@ article.upload(on-page-scroll)#step-1
           li.active STEP 2: Decorate your story
           li <a href="#step-3">STEP 3: Distribute your story</a>
         prx-upload-decorate-progress
-      fieldset
+        #discoverabilityTip
+          p#discoverabilityTipText
+      fieldset#discImages
         h2 Upload a Cover Image
         p Adding tags that are relevant to your piece help people find your work on PRX and can help you be licensed and heard.
-        .cover
+        #coverDisplay.cover(ng-click="upload.coverClick()")
+        input#coverFile(type="file", file-change="upload.coverChange($event, files)")
         h2 Upload a Thumbnail
         p Use your own
-        .thumbnail
+        #thumbDisplay.thumbnail(ng-click="upload.thumbClick()")
+        input#thumbFile(type="file", file-change="upload.thumbChange($event, files)")
         a(href="#") + Add caption or credit
-      fieldset
+      fieldset#discMusic
         h2 Musical Works
         input(type='text', placeholder="Search for an title, artist, album, or label")
         button Add Work
-      fieldset
+      fieldset#discProducers
         h2 Producers
         input(type='text', placeholder="Add producer name")
         button Add Producer
-      fieldset
+      fieldset#discDetails
         h2 Details
         h4 Full Description
-        textarea(placeholder="Full Description is the full piece of your piece that can be accessed by all users.")
+        textarea(placeholder="Add a longer version of the teaser including more information about your story.", ng-model="upload.story.description")
         p Adding a written description of your piece full of keywords, names of interviewees, places and topics will help people find your piece and may improve your chances of being heard and licensed.
         h4 Transcription
         input(type='text', placeholder="Add transcript")
@@ -105,7 +153,6 @@ article.upload(on-page-scroll)#step-1
         
         fieldset.purchaser
           h2 Public Radio Stations #{''}
-          h3 – $30 minimum (average $51) based on the length of your story
           p There are over 400 public radio stations in the United States with an account on PRX. By approving them to purchase your piece you’ll be eligible for royalties (paid accounts only) and your story may be heard by thousands, even millions of listeners.
           a(ui-sref=".public_radio_t_and_c", ng-disabled="!upload.prsEnabled") Adjust the pricing and agreement
           input#prs(type="checkbox", ng-model="upload.prsEnabled")
@@ -113,7 +160,6 @@ article.upload(on-page-scroll)#step-1
         
         fieldset.purchaser
           h2 Listeners #{''}
-          h3 – Varies (Donation)
           p You can let listeners download your story and optionally require a minimum donation. We’ll ask everyone to tell you how they intend to use it and suggest they support your financially for your story. This option should only be selected if you have the rights to allow people to download your story. Stories with music in them are likely not cleared for download.
           a.listener-manage(href="#", ng-disabled="!upload.listener") Additional Terms
           input#listener(type="checkbox", ng-model="upload.listener")
@@ -123,7 +169,6 @@ article.upload(on-page-scroll)#step-1
               
         fieldset.purchaser
           h2 PRX Remix #{''}
-          h3 – $75 flat fee
           p Be heard on XM Radio Channel 123, iPhone and Andriod apps and over 14 public radio stations around the country.
           a(href="#", ng-disabled="!upload.prxRemixEnabled") View the agreement
           input#remix(type="checkbox", ng-model="upload.prxRemixEnabled")
@@ -174,6 +219,7 @@ article.upload(on-page-scroll)#step-1
           label(for="yt", disabled="disabled") Publish on YouTube
         
       fieldset
+        .paid-membership Paid membership required
         h2 Podcasts
         p
           | A podcast is a great way to distribute an episodic series of stories
@@ -192,3 +238,5 @@ article.upload(on-page-scroll)#step-1
           a(href="#") Create a Podcast
           input#pc(type='checkbox', disabled="disabled")
           label(for="pc", disabled="disabled") Add to a Podcast
+  div#preview(ng-if="upload.inPreview")
+    ng-include(src="'stories/story.html'")

@@ -1,12 +1,12 @@
 article.story
-  #hero(ng-class="story.cover.choice")
+  #hero(ng-class="story.cover.choice", ng-style="::story.coverStyle()")
     .container
       prx-player(sound="story.sound", prxp-convert="story.cover")
       .media
         prx-img(src="story.current.imageUrl", default-class="default")
         .content
           .category audio story
-          h1 {{story.current.title}}
+          h1 {{::story.current.title || "Untitled Story"}}
           ul.metadata
             li.author(ng-if="::!story.series")
               address.author

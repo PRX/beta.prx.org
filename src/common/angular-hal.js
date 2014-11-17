@@ -187,8 +187,13 @@ angular.module('angular-hal', ['ng', 'uri-template'])
 
   return function linkCollection(rLinks, context) {
     var links = {};
-    angular.forEach(rLinks, function (link, rel) {
+
+    accessor.$addLink = function (link, rel) {
       links[rel] = new Link(link, rel, context);
+    };
+
+    angular.forEach(rLinks, function (link, rel) {
+      accessor.$addLink(link, rel);
     });
     if (typeof links['self'] === 'undefined' &&
       typeof context.origin !== 'undefined') {
@@ -292,7 +297,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return hrefs;
     },
     profile: function profile (params) {
-      return this.to(params).profile;
+      return (this.to(params) || {}).profile;
     },
     getDocument: function getDocument (params) {
       var spec = this.to(params);
@@ -351,9 +356,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
   DocumentPromise.prototype = Object.create(halPromise.prototype);
   angular.extend(DocumentPromise.prototype, {
     constructor: DocumentPromise,
-    build: function build (rel) {
+    build: function build (rel, params) {
       return this.then(function (document) {
-        return document.build(rel);
+        return document.build(rel, params);
       });
     },
     destroy: function destroy () {
