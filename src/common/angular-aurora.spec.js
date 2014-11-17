@@ -49,19 +49,19 @@ describe('angular-aurora', function () {
     it ("will analyze file format", function() {
       expect(AuroraService).toBeDefined();
       var mockFile = {name: 'test.mp3', type: 'audio/mpeg', mockGet: {bitRate: '128'} };
-      AuroraService.format(mockFile).then( function(res) {
-        expect(res['bitRate']).toEqual('128');
-      });
+      var result;
+      AuroraService.format(mockFile).then( function(res) { result = res; });
       $rootScope.$digest();
+      expect(result['bitRate']).toEqual('128');
     });
 
     it ("can get duration of a file", function() {
       expect(AuroraService).toBeDefined();
       var mockFile = {name: 'test.mp3', type: 'audio/mpeg', mockGet: 120 };
-      AuroraService.duration(mockFile).then( function(res) {
-        expect(res).toEqual(120);
-      });
+      var result;
+      AuroraService.format(mockFile).then( function(res) { result = res; });
       $rootScope.$digest();
+      expect(result).toEqual(120);
     });
 
   });

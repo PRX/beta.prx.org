@@ -1,7 +1,7 @@
 angular.module('angular-aurora', [])
-.factory('$AV', [ '$window', function ($window) {
+.factory('$AV', function ($window) {
   return $window.AV;
-}])
+})
 .service('AuroraService', function ($AV, $rootScope, $q) {
 
   // formatID is less than useful, update it
