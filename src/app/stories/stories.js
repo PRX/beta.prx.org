@@ -156,7 +156,7 @@ angular.module('prx.stories', [
   };
 })
 .controller('StoryCtrl', function (story, account, series, audioUrls,
-  prxSoundFactory, $stateParams, prxPlayer, prxperiment, $analytics, $window) {
+  prxSoundFactory, $stateParams, prxPlayer, prxperiment, $analytics, $window, $timeout) {
   var storyCtrl = this;
 
   this.current = story;
