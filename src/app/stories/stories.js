@@ -179,12 +179,11 @@ angular.module('prx.stories', [
     $analytics.eventTrack('Donate', {
       category: 'Outbound',
       label: this.current.id.toString(),
-      noninteraction: {
-        'hitCallback': function () {
-          $window.location.href = url;
-        }
-      }
+      // hitcallback: function () {
+      //   $window.location.href = url;
+      // }
     });
+    $timeout(function() { $window.location.href = url; }, 200);
   };
 
   this.current.follow('prx:license').then(function (license) {
