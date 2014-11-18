@@ -1,6 +1,6 @@
 angular.module('prx.stories', [
   'ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate',
-  'prx.accounts', 'prx.experiments'])
+  'prx.accounts', 'prx.experiments', 'angulartics'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -156,7 +156,7 @@ angular.module('prx.stories', [
   };
 })
 .controller('StoryCtrl', function (story, account, series, audioUrls,
-  prxSoundFactory, $stateParams, prxPlayer, prxperiment) {
+  prxSoundFactory, $stateParams, prxPlayer, prxperiment, $analytics, $window) {
   var storyCtrl = this;
 
   this.current = story;
@@ -174,6 +174,18 @@ angular.module('prx.stories', [
   if ((angular.isDefined($stateParams.s) && $stateParams.s !== null) || $stateParams.play) {
     prxPlayer.play(this.sound);
   }
+  this.donate = function(e, url) {
+    e.preventDefault();
+    $analytics.eventTrack('Donate', {
+      category: 'Outbound',
+      label: this.current.id.toString(),
+      noninteraction: {
+        'hitCallback': function () {
+          $window.location.href = url;
+        }
+      }
+    });
+  };
 
   this.current.follow('prx:license').then(function (license) {
     storyCtrl.license = license;

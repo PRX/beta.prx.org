@@ -21,8 +21,7 @@ article.story
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
 
-      .donate(ng-if="::story.account.id == 45139")
-        a(href="http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate", analytics-on="click" analytics-category="Donate" analytics-event="Story" analytics-label="{{::story.current.id}}") Donate
+      .donate(ng-if="::story.account.id == 45139", ng-click="::story.donate($event, 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate')") Donatex
       prx-social-actions(text="story.current.title")
   #content
     #main
