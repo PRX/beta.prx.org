@@ -20,6 +20,9 @@ article.story
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
+
+      .donate(ng-if="::story.account.id == 45139")
+        a(href="http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate") Donate
       prx-social-actions(text="story.current.title")
   #content
     #main
