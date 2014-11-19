@@ -122,9 +122,6 @@ if (FEAT.TCF_DEMO) {
     }
 
     this.validate = function (file) {
-
-      window.validateFile = file;
-
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
