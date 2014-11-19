@@ -1,4 +1,4 @@
-angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-translate'])
+angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-translate', 'angulartics'])
 .config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('account', {
     abstract: true,
@@ -246,11 +246,22 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     return elems;
   };
 })
-.controller('AccountCtrl', function (account, recentStories, highlightedStories, purchasedStories) {
+.controller('AccountCtrl', function (account, recentStories, highlightedStories, purchasedStories, $analytics, $window, $timeout) {
   this.current = account;
   this.recentStories = recentStories;
   this.highlightedStories = highlightedStories;
   this.purchasedStories = purchasedStories;
+  this.donate = function(e, url) {
+    e.preventDefault();
+    $analytics.eventTrack('Donate', {
+      category: 'Outbound',
+      label: this.current.id.toString(),
+      // hitcallback: function () {
+      //   $window.location.href = url;
+      // }
+    });
+    $timeout(function() { $window.location.href = url; }, 200);
+  };
 })
 .controller('AccountDetailsCtrl', function (account) {
   this.current = account;
