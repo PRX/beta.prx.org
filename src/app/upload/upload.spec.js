@@ -1,6 +1,16 @@
 if (FEAT.TCF_DEMO) {
 describe('prx.upload', function () {
 
+
+  beforeEach(module('async-loader', function ($provide) {
+    mf = [];
+    MockAsyncLoader = {};
+    MockAsyncLoader._a_mock     = true;
+    MockAsyncLoader.load        = function(files) { mf = files; return MockAsyncLoader; };
+    MockAsyncLoader.then        = function(f) { var r = f(mf) || MockAsyncLoader; return r;};
+    $provide.value('AsyncLoader', MockAsyncLoader);
+  }));
+
   beforeEach(module('angular-evaporate', function (evaporateProvider, $provide) {
 
     evaporateProvider.awsKey('AKIRAISAGREATMOVIE');
