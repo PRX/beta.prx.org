@@ -1,4 +1,4 @@
-angular.module('angular-evaporate', [])
+angular.module('angular-evaporate', ['async-loader'])
 .provider('evaporate', function () {
 
   var injector;
@@ -37,32 +37,37 @@ angular.module('angular-evaporate', [])
       config.options = options;
       return Provider;
     },
-    '$get': ['$q', '$window', '$rootScope',
-      function ($q, $window, $rootScope) {
-        return new NgEvaporate($q, $window, $rootScope, config);
+    '$get': ['$q', '$window', '$rootScope', 'AsyncLoader',
+      function ($q, $window, $rootScope, AsyncLoader) {
+        return new NgEvaporate($q, $window, $rootScope, config, AsyncLoader);
     }]
   };
 
-  function NgEvaporate ($q, $window, $rootScope, config) {
+  function NgEvaporate ($q, $window, $rootScope, config, AsyncLoader) {
     var e = this;
     e.q         = $q;
     e.rootScope = $rootScope;
     e.window    = $window;
     e.options   = config;
+    e.loader    = AsyncLoader;
 
-    var opts = angular.copy(e.options.options);
-    opts.signerUrl  = e.options['signerUrl'];
-    opts.bucket     = e.options['bucket'];
-    opts.cloudfront = e.options['cloudfront'];
+    e.opts = angular.copy(e.options.options);
+    e.opts.signerUrl  = e.options['signerUrl'];
+    e.opts.bucket     = e.options['bucket'];
+    e.opts.cloudfront = e.options['cloudfront'];
 
     // rename awsKey -> aws_key
-    opts.aws_key    = e.options['awsKey'];
-    opts.aws_url    = e.options['awsUrl'];
-
-    e._evaporate = new e.window.Evaporate(opts);
+    e.opts.aws_key    = e.options['awsKey'];
+    e.opts.aws_url    = e.options['awsUrl'];
   }
 
   NgEvaporate.prototype = {
+    loadEvaporate: function() {
+      var e = this;
+      return e.loader.load('vendor/EvaporateJS/evaporate.js').then( function(loaded) {
+        e._evaporate = new e.window.Evaporate(e.opts);
+      });
+    },
     add: function(config) {
       var e = this;
 
@@ -89,8 +94,12 @@ angular.module('angular-evaporate', [])
       // add the upload info to the underlying evaporate obj
       // save the returned `id` on the promise itself
       var promise = deferred.promise;
-      promise.uploadId = e._evaporate.add(config);
-      return promise;
+
+      // return promise;
+      return e.loadEvaporate().then( function () {
+        promise.uploadId = e._evaporate.add(config);
+        return promise;
+      });
     }
   };
 
