@@ -25,7 +25,8 @@ angular.module('prx', ['ngAnimate',
   'prx.breadcrumbs',
   'prx.ads',
   'prx.drawer',
-  'prx.aboutus'])
+  'prx.aboutus',
+  'prx.terms'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);

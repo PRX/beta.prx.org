@@ -10,6 +10,7 @@
   <link rel="canonical" bind-canonical="href" />
   <meta name="fragment" content="!">
 </head>
+<<<<<<< HEAD
 <body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying, 'show-target': app.fileTargetVisible}" ng-dragover="app.showFileTarget($event)">
   <prx-file-target name='files'></prx-file-target>
   <prx-drawer drawer="main">
@@ -38,8 +39,8 @@
           <h3>Company</h3>
           <a href="//www.prx.org/about-us/what-is-prx">About Us</a>
           <a href="//blog.prx.org/">Blog</a>
-          <a href="//www.prx.org/about-us/organization">Team</a>
-          <a href="//www.prx.org/about-us/press">Press</a>
+          <a ui-sref="aboutUs.team">Team</a>
+          <a ui-sref="aboutUs.press">Press</a>
           <a href="//www.prx.org/about-us/funding">Funding</a>
           <a href="//www.prx.org/donate">Donate</a>
         </section>
@@ -47,8 +48,8 @@
           <h3>Support</h3>
           <a href="http://help.prx.org/">Help</a>
           <a href="http://status.prx.org/">Status</a>
-          <a href="//www.prx.org/terms-of-use">Terms</a>
-          <a href="//www.prx.org/privacy-policy">Privacy </a>
+          <a ui-sref="terms">Terms</a>
+          <a ui-sref="terms.privacyPolicy">Privacy </a>
         </section>
         <section>
           <h3>Projects</h3>
