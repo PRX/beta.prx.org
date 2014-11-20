@@ -1,23 +1,16 @@
 describe('angular-aurora', function () {
 
-  describe ('$AV', function () {
-
-    beforeEach(module('angular-aurora'));
-
-    beforeEach(inject(function (_$AV_, _AuroraService_) {
-      $AV = _$AV_;
-      AuroraService = _AuroraService_;
-    }));
-
-    it ('provides the aurora AV object', function () {
-      expect($AV).toBeDefined();
-      expect($AV.Asset).toBeDefined();
-    });
-
-  });
-
   describe ('AuroraService', function() {
-    var $AV, AuroraService, $rootScope;
+    var AuroraService, $rootScope;
+
+    beforeEach(module('async-loader', function ($provide) {
+      mf = [];
+      MockAsyncLoader = {};
+      MockAsyncLoader._a_mock     = true;
+      MockAsyncLoader.load        = function(files) { mf = files; return MockAsyncLoader; };
+      MockAsyncLoader.then        = function(f) { var r = f(mf) || MockAsyncLoader; return r;};
+      $provide.value('AsyncLoader', MockAsyncLoader);
+    }));
 
     beforeEach(function() {
       module('angular-aurora', function ($provide) {
@@ -31,20 +24,21 @@ describe('angular-aurora', function () {
             }
           };
 
-          var MockAV  =function () {};
+          var MockAV  = function MockAV() {};
           MockAV.Asset = MockAsset;
           $delegate.AV = MockAV;
+
           return $delegate;
         }]);
 
       });
     });
 
-    beforeEach(inject(function (_AuroraService_, _$AV_, _$rootScope_) {
+    beforeEach(inject(function (_AuroraService_, _$rootScope_) {
       AuroraService = _AuroraService_;
-      $AV = _$AV_;
       $rootScope = _$rootScope_;
     }));
+
 
     it ("will analyze file format", function() {
       expect(AuroraService).toBeDefined();

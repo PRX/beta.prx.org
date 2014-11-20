@@ -1,22 +1,16 @@
 describe('angular-id3', function () {
 
-  describe ('$id3', function () {
-
-    beforeEach(module('angular-id3'));
-
-    beforeEach(inject(function (_$id3_, _Id3Service_) {
-      $id3 = _$id3_;
-      Id3Service = _Id3Service_;
-    }));
-
-    it ('provides the id3 AV object', function () {
-      expect($id3).toBeDefined();
-    });
-
-  });
-
   describe ('Id3Service', function() {
-    var $id3, Id3Service, $rootScope;
+    var Id3Service, $rootScope;
+
+    beforeEach(module('async-loader', function ($provide) {
+      mf = [];
+      MockAsyncLoader = {};
+      MockAsyncLoader._a_mock     = true;
+      MockAsyncLoader.load        = function(files) { mf = files; return MockAsyncLoader; };
+      MockAsyncLoader.then        = function(f) { var r = f(mf) || MockAsyncLoader; return r;};
+      $provide.value('AsyncLoader', MockAsyncLoader);
+    }));
 
     beforeEach(function() {
       module('angular-id3', function ($provide) {
@@ -32,9 +26,8 @@ describe('angular-id3', function () {
       });
     });
 
-    beforeEach(inject(function (_Id3Service_, _$id3_, _$rootScope_) {
+    beforeEach(inject(function (_Id3Service_, _$rootScope_) {
       Id3Service = _Id3Service_;
-      $id3 = _$id3_;
       $rootScope = _$rootScope_;
     }));
 

@@ -64,7 +64,7 @@ angular.module('angular-evaporate', ['async-loader'])
   NgEvaporate.prototype = {
     loadEvaporate: function() {
       var e = this;
-      return e.loader.load('vendor/EvaporateJS/evaporate.js').then( function(loaded) {
+      return e.loader.load('/vendor/EvaporateJS/evaporate.js').then( function(loaded) {
         e._evaporate = new e.window.Evaporate(e.opts);
       });
     },

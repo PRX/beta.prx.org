@@ -1,8 +1,17 @@
-angular.module('angular-aurora', [])
-.factory('$AV', function ($window) {
-  return $window.AV;
-})
-.service('AuroraService', function ($AV, $rootScope, $q) {
+angular.module('angular-aurora', ['async-loader'])
+.service('AuroraService', function ($rootScope, $q, $window, AsyncLoader) {
+
+  var AuroraService = this;
+
+  var loadAV = function () {
+    // load codecs or other libs that need to be available before loading aurora.js
+    return AsyncLoader.load(['/vendor/mp3.js/build/mp3.js']).then( function() {
+      return AsyncLoader.load('/vendor/aurora.js/build/aurora.js').then( function () {
+        // AV is loaded on the window now.
+        AuroraService.$AV = $window.AV;
+      });
+    });
+  };
 
   // formatID is less than useful, update it
   var correctFormat = function (format) {
@@ -12,28 +21,33 @@ angular.module('angular-aurora', [])
 
   var getInfo = function (file, info) {
     var deferred = $q.defer();
-    var asset = $AV.Asset.fromFile(file);
+    var asset;
 
-    asset.get(info, function (res) {
-      $rootScope.$evalAsync( function() {
-        deferred.resolve(res);
+    loadAV().then( function() {
+      asset = AuroraService.$AV.Asset.fromFile(file);
+
+      asset.get(info, function (res) {
+        $rootScope.$evalAsync( function() {
+          deferred.resolve(res);
+        });
       });
+
     });
 
     return deferred.promise;
   };
 
-  this.format = function (file) {
+  AuroraService.format = function (file) {
     return getInfo(file, 'format').then( function (format) {
       return correctFormat(format);
     });
   };
 
-  this.duration = function (file) {
+  AuroraService.duration = function (file) {
     return getInfo(file, 'duration');
   };
 
-  this.metadata = function (file) {
+  AuroraService.metadata = function (file) {
     return getInfo(file, 'metadata');
   };
 
