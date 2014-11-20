@@ -255,7 +255,7 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     e.preventDefault();
     $analytics.eventTrack('Donate', {
       category: 'Outbound',
-      label: this.current.id.toString(),
+      label: 'Account-' + this.current.id.toString()+ '-' + url,
       // hitcallback: function () {
       //   $window.location.href = url;
       // }

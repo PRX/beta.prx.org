@@ -178,7 +178,7 @@ angular.module('prx.stories', [
     e.preventDefault();
     $analytics.eventTrack('Donate', {
       category: 'Outbound',
-      label: this.current.id.toString(),
+      label: 'Story-' + this.current.id.toString()+ '-' + url,
       // hitcallback: function () {
       //   $window.location.href = url;
       // }
