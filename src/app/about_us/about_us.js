@@ -24,16 +24,16 @@ angular.module('prx.aboutus', ['ui.router'])
   })
   .state('aboutUs.whatIsPrx', {
     url: '/about-us/what-is-prx',
+    title: 'What Is PRX',
     views: {
       '@': {
         templateUrl: 'about_us/what_is_prx.html'
       }
-    },
-    title: 'What Is PRX'
+    }
   })
   .state('aboutUs.funding', {
     url: '/about-us/funding',
-    title: "Funding"
+    title: "Funding",
     views: {
       '@': {
         templateUrl: 'about_us/funding.html'
