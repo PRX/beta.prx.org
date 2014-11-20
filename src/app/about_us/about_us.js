@@ -12,5 +12,14 @@ angular.module('prx.aboutus', ['ui.router'])
         templateUrl: 'about_us/press.html'
       }
     }
+  })
+  .state('aboutUs.team', {
+    url: 'about-us/team',
+    title: 'Team',
+    views: {
+      '@': {
+        templateUrl: 'about_us/team.html'
+      }
+    }
   });
 });
