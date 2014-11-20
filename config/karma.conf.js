@@ -15,7 +15,8 @@ module.exports = function ( config ) {
       })
     ),
     proxies: {
-      '/assets': '/base/src/assets'
+      '/assets': '/base/src/assets',
+      '/vendor': '/base/public/vendor'
     },
     exclude: [ 'public/assets/**/*.js', '**/*.e2e.spec.js' ],
     frameworks: [ 'jasmine' ],

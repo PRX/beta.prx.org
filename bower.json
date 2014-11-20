@@ -14,7 +14,11 @@
     "ngstorage": "~0.3.0",
     "EvaporateJS": "https://github.com/TTLabs/EvaporateJS.git",
     "node-uuid": "~1.4.1",
-    "ng-sortable": "~1.1.6"
+    "ng-sortable": "~1.1.6",
+    "id3": "~1.0.2",
+    "aurora.js": "audiocogs/aurora.js#~0.4.3",
+    "mp3.js": "audiocogs/mp3.js#~0.1.0",
+    "scriptjs": "~2.5.7"
   },
   "dependencies": {},
   "resolutions": {

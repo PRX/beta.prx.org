@@ -35,11 +35,17 @@ describe('angular-evaporate', function () {
 
   });
 
-
   describe ('when configured', function () {
-    var evaporate;
-    var $q;
-    var $rs;
+    var evaporate, $q, $rs;
+
+    beforeEach(module('async-loader', function ($provide) {
+      mf = [];
+      MockAsyncLoader = {};
+      MockAsyncLoader._a_mock     = true;
+      MockAsyncLoader.load        = function(files) { mf = files; return MockAsyncLoader; };
+      MockAsyncLoader.then        = function(f) { var r = f(mf) || MockAsyncLoader; return r;};
+      $provide.value('AsyncLoader', MockAsyncLoader);
+    }));
 
     beforeEach(module('angular-evaporate', function (evaporateProvider) {
       evaporateProvider.options({});
@@ -54,24 +60,23 @@ describe('angular-evaporate', function () {
     it ('can get a promise when you add a file', function () {
       var p = evaporate.add({name: 'foo', testId: 123});
       expect(angular.isFunction(p.then)).toBeTruthy();
+    });
+
+    it ('can get uploadid when you add a file', function () {
+      var p = evaporate.add({name: 'foo', testId: 123});
       expect(p.uploadId).toEqual(123);
     });
 
     it ('can call complete when done', function () {
       var testComplete = false;
-
       evaporate.add({name: 'foo', testId: 123}).then( function() { testComplete = true; } );
-
       var completeFn = evaporate._evaporate.config.complete;
       expect(angular.isFunction(completeFn)).toBeTruthy();
-
       expect(testComplete).toBeFalsy();
       $rs.$apply( completeFn );
       expect(testComplete).toBeTruthy();
     });
 
-
   });
-
 
 });
