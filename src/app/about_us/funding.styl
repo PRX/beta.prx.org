@@ -1,0 +1,58 @@
+article.funding {
+  div {
+    width: 100%;
+  }
+
+  h1 {
+    border-bottom: 1px solid black;
+    margin: 20px;
+    padding-bottom: 10px;
+    font-weight: lighter;
+  }
+
+  h2, a, h3 {
+    text-align: center;
+    font-weight: lighter;
+  }
+
+  ul {
+    margin: 20px;
+
+    @media multi-column {
+      display: flex;
+      flex-wrap: wrap;
+      // justify-content: space-around;
+      align-items: center;
+
+      li {
+        flex-grow: 2;
+      }
+    }
+  }
+
+  li {
+    margin: 10px;
+    border: 1px solid rgba(darkest-blue);
+
+    a {
+      display: block;
+      padding: 20px 10px;
+      background-color: rgba(darkest-blue);
+      color: white;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+      padding: 30px;
+    }
+  }
+
+  .cta {
+    margin: 30px;
+
+    h3 {
+      padding: 10px;
+    }
+  }
+}

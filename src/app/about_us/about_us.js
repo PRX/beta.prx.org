@@ -21,5 +21,23 @@ angular.module('prx.aboutus', ['ui.router'])
         templateUrl: 'about_us/team.html'
       }
     }
+  })
+  .state('aboutUs.whatIsPrx', {
+    url: '/about-us/what-is-prx',
+    views: {
+      '@': {
+        templateUrl: 'about_us/what_is_prx.html'
+      }
+    },
+    title: 'What Is PRX'
+  })
+  .state('aboutUs.funding', {
+    url: '/about-us/funding',
+    title: "Funding"
+    views: {
+      '@': {
+        templateUrl: 'about_us/funding.html'
+      }
+    }
   });
 });
