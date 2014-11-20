@@ -27,7 +27,6 @@ angular.module('prx', ['ngAnimate',
   'prx.drawer',
   'prx.aboutus',
   'prx.terms'])
->>>>>>> feat/funding_page
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider) {
   $analyticsProvider.firstPageview(false);
