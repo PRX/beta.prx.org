@@ -34,7 +34,9 @@ var cwd      = __dirname;
 var src      = cwd + '/src';
 var hintCfg  = c.jsHintCfg;
 var fileName = pkg.name + "-" + pkg.version;
-var vBuildJs = c.vendor.buildJs.concat(c.vendor.js);
+var vCopyJs  = c.vendor.copyJs;
+var vCopyJsNames = vCopyJs.map( function(path){ return path.split('/').pop(); });
+var vBuildJs = c.vendor.buildJs.concat(c.vendor.js).concat(vCopyJs);
 var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
 var featsDev = cwd + '/config/flags.dev.json';
@@ -214,7 +216,10 @@ gulp.task('html', function (cb) {
   walker.on('file', function (root, stat, next) {
     root = path.relative(buildDir, root);
 
-    if (stat.name == 'angular.js' || stat.name == 'aurora.js') {
+    if (vCopyJsNames.indexOf(stat.name.toString()) != -1) {
+      // skip it
+      // console.log('ignore', stat.name);
+    } else if (stat.name == 'angular.js') {
       ctx.scripts.unshift(root + '/' + stat.name);
     } else {
       if (stat.name.match(/\.css$/)) {
@@ -254,7 +259,13 @@ gulp.task('build', function (cb) {
   runSeq('clean', ['templates', 'js', 'buildCss', 'buildAssets'], 'html', cb);
 });
 
-gulp.task('dist', ['distJs', 'compileCss', 'compileAssets', 'distHtml']);
+gulp.task('dist', ['distJs', 'compileCss', 'compileAssets', 'distHtml', 'distVCopyJs']);
+
+gulp.task('distVCopyJs', ['buildJs'], function () {
+  return gulp.src(vCopyJs, {base: cwd})
+  .pipe(plugin.uglify({preserveComments: 'some', outSourceMap: true}))
+  .pipe(gulp.dest(complDir));
+});
 
 gulp.task('distJs', ['buildJs', 'templates'], function () {
   return es.merge(
@@ -263,7 +274,7 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
       .pipe(plugin.ngAnnotate())
       .pipe(feats(featDist, {strict: true, default: false}))
   )
-  .pipe(plugin.order(['**/angular?(.min).js', '**/aurora?(.min).js', '*']))
+  .pipe(plugin.order(['**/angular?(.min).js', '*']))
   .pipe(plugin.concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
   .pipe(plugin.uglify({preserveComments: 'some', outSourceMap: true}))
