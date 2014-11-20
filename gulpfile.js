@@ -407,7 +407,7 @@ gulp.task('checkCoverage', ['spec'], function () {
     }));
 });
 
-gulp.task('coveralls', ['checkCoverage', 'protractor'], function (done) {
+gulp.task('coveralls', ['checkCoverage', 'compile'], function (done) {
   var ps = spawn(cwd+'/node_modules/coveralls/bin/coveralls.js');
   var coverageDir = cwd + '/coverage/';
   fs.readdir(coverageDir, pickFolder);

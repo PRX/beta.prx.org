@@ -19,11 +19,11 @@ notifications:
       / <a href="%{compare_url}">changes</a>
     format: html
 addons:
-  sauce_connect:
-    username:
-      secure: ZjhXedIYs8hLKqfqJ3v9fqJB78p28pIs0/iz1kRspfZ8fpQ8twQ+ViPKB98FjhiLDR9vKFOHa23vpMmJNIjFYaD9gem4J9A7OtadMVkIUiHw6L5KljEZu+Tnu+IWpqV2xEUXpjYEjcXAyVRU0qhrL5qOba4yyJipNLQhaQzTsLw=
-    access_key:
-      secure: KNEVg8+zXX7ZuYYaxRtJCkw81hoSzmGcCr5AwqOJUZ69kBzxVvleMTQUujhrVBGvTHsb/clpZj1TBWWf7PSsNiXYga/fO66RVoagonkO/U6ZSNMxk9S3bWs7Gm9p8DLG6m78PUn4kGRStaJ4+tAdTPlgN6COyvx3o7JOb6jeuG0=
+  # sauce_connect:
+  #   username:
+  #     secure: ZjhXedIYs8hLKqfqJ3v9fqJB78p28pIs0/iz1kRspfZ8fpQ8twQ+ViPKB98FjhiLDR9vKFOHa23vpMmJNIjFYaD9gem4J9A7OtadMVkIUiHw6L5KljEZu+Tnu+IWpqV2xEUXpjYEjcXAyVRU0qhrL5qOba4yyJipNLQhaQzTsLw=
+  #   access_key:
+  #     secure: KNEVg8+zXX7ZuYYaxRtJCkw81hoSzmGcCr5AwqOJUZ69kBzxVvleMTQUujhrVBGvTHsb/clpZj1TBWWf7PSsNiXYga/fO66RVoagonkO/U6ZSNMxk9S3bWs7Gm9p8DLG6m78PUn4kGRStaJ4+tAdTPlgN6COyvx3o7JOb6jeuG0=
 env:
   global:
     secure: NbiuAcWkmBYRych4+6k/zYRBS3YAp7UUSDnlNSyivkvQkHeHCQ7CkZxUj170juk++ONl8L4mHB0/+Cez7ytwD4kNHuvrP9NLrDMyLZZ354nkE8z5RuDGCEXPfNwFjl/BjkiIRUs/1J97iT3MA42zmQP6Qy+mc5nmuuKRHUAG41M=
