@@ -14,7 +14,7 @@ angular.module('prx.aboutus', ['ui.router'])
     }
   })
   .state('aboutUs.team', {
-    url: 'about-us/team',
+    url: '/about-us/team',
     title: 'Team',
     views: {
       '@': {
