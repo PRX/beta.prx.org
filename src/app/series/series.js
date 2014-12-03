@@ -54,7 +54,7 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
 
 ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/series', ['resolved', function (resolved) {
-    resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url');
+    resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url').or(null);
   }]);
 })
 .controller('SeriesCtrl', function (series, stories, account) {
