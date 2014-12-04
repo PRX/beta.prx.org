@@ -113,7 +113,7 @@ angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-transla
     };
   }]).mixin('http://meta.prx.org/model/address', {
     toString: function () {
-      return this.city + ', ' + this.state;
+      return [this.city, this.state].join(', ');
     }
   });
 })
