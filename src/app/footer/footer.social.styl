@@ -1,32 +1,21 @@
-.xyzforeground > footer {
-  & > ul {
-    display: flex;
-    justify-content: center;
+._chase > footer > ul {
+  display: flex;
+  justify-content: center;
 
-    li {
-      a {
-        display: block;
-        text-align: center;
-        font-family: fontello;
-        font-size: 18px;
-        font-weight: normal;
-        font-style: normal;
-        width: 3rem;
-        height: @width;
-        line-height: @height;
+  li {
+  }
 
-        &[href="//www.prx.org/newsletters"] {
-          color: $middle-grey;
-        }
+  a {
+    display: block;
+    text-align: center;
+    font-family: 'fontello';
+    font-size: 18px; // TODO
+    width: 3rem;
+    height: @width;
+    line-height: @height;
 
-        &[href="https://www.twitter.com/prx"] {
-          color: #55ACEE;
-        }
-
-        &[href="https://www.facebook.com/publicradioexchange"] {
-          color: #4C66A4;
-        }
-      }
-    }
+    &[href*="newsletters"] { color: $middle-grey; } // TODO color
+    &[href*="twitter"] { color: $twitter-blue; }
+    &[href*="facebook"] { color: $facebook-blue; }
   }
 }
