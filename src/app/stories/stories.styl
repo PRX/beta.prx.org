@@ -64,7 +64,7 @@ article.story .main {
       position: relative;
       min-height: 45px
 
-      &:before {
+      &::before {
         width: 25px;
         height: @width;
         display: block;
@@ -77,16 +77,16 @@ article.story .main {
       }
     }
 
-    .broadcast:before {
+    .broadcast::before {
       image: '/assets/images/icons/broadcast.png' contain;
     }
-    .stream:before {
+    .stream::before {
       image: '/assets/images/icons/stream.png' contain;
     }
-    .edit:before {
+    .edit::before {
       image: '/assets/images/icons/lock.png' contain;
     }
-    .advisory:before {
+    .advisory::before {
       image: '/assets/images/icons/forbidden.png' contain;
     }
 
@@ -125,7 +125,7 @@ article.story .asides {
           right: 10px;
           line-height: 44px;
 
-          &:after {
+          &::after {
             content: '»';
             display: inline-block;
             padding-left: 8px;

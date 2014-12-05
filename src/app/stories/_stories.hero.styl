@@ -15,7 +15,7 @@ article.story .hero {
     line-height: 20px;
     font-weight: bold;
 
-    &:before {
+    &::before {
       content: '!'
       background: $blue;
       width: 20px;
@@ -86,7 +86,7 @@ article.story .hero {
         flex-grow: 2;
         margin-left: 10px;
 
-        &:before {
+        &::before {
           font-family: 'fontello';
           content: '';
           line-height: 32px;
@@ -104,14 +104,14 @@ article.story .hero {
           padding: 0 15px 0 0;
           position: relative;
 
-          &:before { // Share arrow
+          &::before { // Share arrow
             font-family: 'fontello';
             line-height: 32px;
             content: '';
             padding: 0 10px;
           }
 
-          &:after { // Triangle
+          &::after { // Triangle
             width: 0;
             height: 0;
             line-height: 0;

@@ -23,7 +23,7 @@
 }
 
 loading-indicator() {
-  &:before {
+  &::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -39,7 +39,7 @@ loading-indicator() {
     animation-play-state: running;
   }
 
-  &:after {
+  &::after {
     content: '';
     position: absolute;
     top: 50%;

@@ -12,7 +12,7 @@
       &:nth-of-type(2n) .curation {
         flex-flow: row-reverse;
       }
-      &:nth-of-type(2n) .exhibit:before {
+      &:nth-of-type(2n) .exhibit::before {
         left: initial!important;
         right: -17px!important;
         transform: scaleX(-1);
@@ -45,7 +45,7 @@
           padding: 30px;
           position: relative;
 
-          &:before {
+          &::before {
             content: '';
             display: block;
             position: absolute;

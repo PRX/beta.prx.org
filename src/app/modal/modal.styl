@@ -49,7 +49,7 @@
     display: block;
     flex-shrink: 0;
 
-    &:before {
+    &::before {
       content: '';
       font-family: 'fontello';
       color: $white;
@@ -110,22 +110,22 @@
         display: block;
         background: $blue;
 
-        &.listen:after {
+        &.listen::after {
           image: '/assets/images/headphones_white.png' auto 14px;
         }
 
-        &.schedule:after {
+        &.schedule::after {
           image: '/assets/images/calendar_white.png' auto 14px;
         }
 
-        &.view:after {
+        &.view::after {
           image: '/assets/images/eye_white.png' auto 14px;
         }
 
         &.listen,
         &.schedule,
         &.view {
-          &:after {
+          &::after {
             display: inline-block;
             content: '';
             float: left;
