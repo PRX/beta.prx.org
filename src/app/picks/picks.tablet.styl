@@ -1,0 +1,72 @@
+@media $media-width-tablet {
+  section.picks.gallery {
+    .pick {
+      flex-basis: 350px;
+      max-width: 480px;
+      margin-top: 40px;
+
+      &.curated { flex-basis: 100%; max-width: initial; }
+
+      //
+      &:nth-of-type(2n),
+      &:nth-of-type(2n) .curation {
+        flex-flow: row-reverse;
+      }
+      &:nth-of-type(2n) .exhibit:before {
+        left: initial!important;
+        right: -17px!important;
+        transform: scaleX(-1);
+      }
+
+      .story {
+        margin: 30px;
+        order: 2;
+        flex-grow: 2;
+        flex-shrink: 1;
+      }
+
+      .curation {
+        order: 1;
+        flex: 0 2 400px;
+
+        .curator {
+          background: $page-fill-color; // TODO shouldn't need a bg
+          flex-basis: 100px;
+          padding: 10px 15px;
+
+          a {
+            color: $link-color;
+          }
+        }
+
+        .exhibit {
+          font-weight: 300;
+          align-items: center;
+          padding: 30px;
+          position: relative;
+
+          &:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 60px;
+            left: -17px;
+            width: 17px;
+            height: 30px;
+            image: '/assets/images/icons/speech_snare.png' 17px;
+            background-repeat: no-repeat;
+          }
+
+          p {
+            max-height: 155px;
+          }
+
+          .show-more {
+            display: block;
+            absolute: bottom 8px right 30px;
+          }
+        }
+      }
+    }
+  }
+}

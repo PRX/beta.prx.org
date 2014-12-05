@@ -1,0 +1,33 @@
+@import "layout/article/article.tablet.styl";
+
+@import "layout/article/article.gallery.styl";
+@import "layout/article/article.gallery.small-tablet.styl";
+@import "layout/article/article.gallery.tablet.styl";
+
+article {
+  .hero {
+    & > section,
+    & div > section {
+      @extends $live-area;
+    }
+  }
+
+  .main {
+    > div {
+      // noop
+    }
+
+    > section {
+      @extends $live-area;
+      position: relative;
+    }
+  }
+
+  .asides {
+    aside {
+      > section {
+        @extends $live-area;
+      }
+    }
+  }
+}

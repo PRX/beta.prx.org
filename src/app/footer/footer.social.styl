@@ -1,0 +1,32 @@
+.xyzforeground > footer {
+  & > ul {
+    display: flex;
+    justify-content: center;
+
+    li {
+      a {
+        display: block;
+        text-align: center;
+        font-family: fontello;
+        font-size: 18px;
+        font-weight: normal;
+        font-style: normal;
+        width: 3rem;
+        height: @width;
+        line-height: @height;
+
+        &[href="//www.prx.org/newsletters"] {
+          color: $middle-grey;
+        }
+
+        &[href="https://www.twitter.com/prx"] {
+          color: #55ACEE;
+        }
+
+        &[href="https://www.facebook.com/publicradioexchange"] {
+          color: #4C66A4;
+        }
+      }
+    }
+  }
+}

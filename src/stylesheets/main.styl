@@ -1,0 +1,40 @@
+// Copyright 2014 Public Radio Exchange
+//
+// main.styl
+
+// Base stylesheets must have no dependencies
+@import "base/reset.styl";
+//-- rest.styl should always be imported first
+@import "base/responsive.styl";
+@import "base/rhythm.styl";
+@import "base/swatches.styl";
+@import "base/sizing.styl";
+@import "base/flex.styl";
+
+// Shared stylesheets can depend on base styles
+@import "shared/font-face.styl";
+@import "shared/prx-image.styl";
+@import "shared/loading-indicator.styl";
+@import "shared/media.styl";
+@import "shared/meta.styl";
+@import "shared/scrollbars.styl";
+@import "shared/buttons.styl";
+@import "shared/forms.styl";
+
+// Layout and design for application
+@import "layout/composition.styl";
+@import "layout/layout.styl";
+
+@import "drawer/drawer.styl";
+@import "header/header.styl";
+@import "footer/footer.styl";
+
+@import "modal/modal.styl";
+@import "player/player.styl";
+@import "upload/upload.styl"; // TODO
+
+@import "stories/stories.styl";
+@import "series/series.styl";
+@import "accounts/accounts.styl";
+@import "home/home.styl";
+@import "picks/picks.styl";

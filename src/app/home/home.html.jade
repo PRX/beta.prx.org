@@ -1,7 +1,9 @@
 article.home
-  prx-welcome(picks="home.picks", ng-flag="WELCOME_MAT")
-  #content
-    #main
-      section.picks
-        h2 Staff Picks
-        prx-pick(ng-repeat="pick in home.picks", pick="pick")
+  //- prx-welcome(picks="home.picks", ng-flag="WELCOME_MAT")
+  .content
+    .main
+      section.gallery.picks
+        header
+          h2 Staff Picks
+        div
+          prx-pick(ng-repeat="pick in home.picks", pick="pick")

@@ -1,0 +1,46 @@
+// TODO
+// Galleries tend to be particular about the height of their contents,
+// so it would be worth making it easier for pages using a gallery to
+// figure that out by itself, rather than manually
+
+article .content .gallery {
+  > header {
+    position: relative;
+    flex-basis: 100%;
+
+    h2 {
+      border-bottom: 1px solid $body-copy-color;
+      font-size: 20px;
+      line-height: 24px;
+      color: $heading-color;
+
+      & + a {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        display: block;
+        padding-right: 15px; // TODO padding var?
+        font-size: 13px;
+        line-height: 24px; // matches parent, keeps v-centers aligned
+      }
+    }
+  }
+
+  > div {
+    display: flex;
+    justify-content: space-between; // TODO this is getting inherited even when overwritten?
+    flex-flow: row wrap;
+    margin-left: -10px!important;
+  }
+}
+
+article .content .gallery.panels {
+  > div {
+    display: flex;
+    justify-content: flex-start!important;
+    flex-flow: row wrap;
+    margin-left: -10px!important;
+    overflow: hidden;
+    max-height: 600px;
+  }
+}

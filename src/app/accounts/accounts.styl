@@ -1,12 +1,30 @@
+@import "accounts/_accounts.tablet.styl"
+
+@import "accounts/_accounts.hero.styl"
+@import "accounts/_accounts.hero.tablet.styl"
+
+article.account {
+  padding: 0 0 60px;
+
+  .main {
+    .gallery {
+      header {
+        margin-top: 25px;
+      }
+    }
+  }
+}
+
 .account {
-  #hero .img, & > a .img {
-    border: 2px solid light-grey;
-    background-color: lightest-grey;
+  .hero .img,
+  & > a .img {
+    border: 2px solid $light-grey;//TODO
+    background-color: $slight-grey;//TODO
     border-radius: 50%;
     width: 70px;
     height: @width;
     float: left;
-    margin: 10px;
+    margin: 0 10px 10px;
     position: relative;
     z-index: 5;
 
@@ -14,123 +32,21 @@
       image: '/assets/images/anonymous.png' 70px;
     }
   }
-}
 
-article.account {
-  floating();
-
-  #hero {
-    .img {
-      // the text is what pushes stuff down, not the image.
-      margin-bottom: (70px / -2) !important;
-
-      @media multi-column {
-        width: 105px
-        height: @width;
-        margin: 10px 20px;
-        margin-bottom: (@width / -2) - 2px !important;
-      }
-    }
-
-    h1 {
-      line-height: 60px;
-      margin-bottom: -70px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .details {
-      clear: both;
-      background-color: white;
-      padding: 50px 15px 15px;
-
-      @media multi-column {
-        display: flex;
-
-        ul {
-          flex: 1 1 0px;
-          margin-top: 20px;
-        }
-
-        .bio {
-          margin-top: -35px
-          flex: 2 2 0px;
-        }
-      }
-    }
-
-    .donate {
-      button-orange(true)
-      order: 1;
-      height: 30px;
-      line-height: 30px;
-      display: inline-block;
-      z-index: 40;
-      padding-right: 30px;
-      padding-left: 35px;
-      margin-bottom: 10px;
-      background-image: url('/assets/images/icons/cart_sm@2x.png');
-      background-repeat: no-repeat;
-      background-size: 14px 14px;
-      background-position: 10px 8px;
-      display: block;
-      max-width: 192px;
-      text-align: left;
-
-      @media multi-column {
-      }
-    }
-
-    .bio {
-      a:last-child {
-        font-weight: bold;
-      }
-    }
+  .path,
+  .location,
+  .url {
+    font-size: 12px; // TODO
+    clear: both;
+    // margin-bottom: 8px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 22px;
   }
 
-  section.recent, section.purchased {
-    position: relative;
-    margin-bottom: 10px;
-    & > a {
-      absolute: right 15px top 15px;
-      line-height: 24px;
-    }
-    @media multi-column {
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      section.story {
-        flex: 0 1 255px;
-      }
-      & > h2 {
-        flex-basis: 100%;
-      }
-      & > a {
-        absolute: right top;
-        line-height: 35px;
-      }
-    }
-  }
-
-  section.highlighted {
-    display: flex;
-    flex-flow: row wrap;
-    section-child-h-margins: 10px;
-    max-height: 390px;
-    & > h2 {
-      flex-basis: 100%;
-    }
-    margin-bottom: 10px;
-
-    @media multi-column {
-      max-height: 254px;
-      section-child-h-margins: 20px;
-      margin-bottom: 20px;
-    }
-  }
-
+  .path { image: '/assets/images/user_icon.png' 15px 13px; }
+  .location { image: '/assets/images/location_icon.png' 12px 15px; }
+  .url { image: '/assets/images/icons/website.png' 14px; }
 }
 
 section.account {
@@ -143,81 +59,5 @@ section.account {
   h2 {
     line-height: 70px;
     margin-top: 0px !important;
-  }
-}
-
-.account {
-  .path, .location, .url {
-    font-size: 12px;
-    clear: both;
-    margin-bottom: 8px;
-    background-repeat: no-repeat;
-    background-position: left center;
-    padding-left: 22px;
-    @media multi-column {
-      margin-left: 10px;
-    }
-  }
-
-  .path {
-    image: '/assets/images/user_icon.png' 15px 13px;
-  }
-
-  .location {
-    image: '/assets/images/location_icon.png' 12px 15px;
-  }
-  .url {
-    image: '/assets/images/icons/website.png' 14px;
-  }
-}
-
-aside > section.account:first-child {
-  @media multi-column {
-    position: relative;
-
-    .img {
-      margin-top: -13px;
-    }
-
-    // TODO: Figure out how much of this can be turned into variables.
-
-    h2 {
-      absolute: top left;
-      right: 0;
-      height: 45px;
-      line-height: @height;
-      font-size: 18px;
-      padding-left: 100px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      background-color: offwhite;
-      a {
-        color: dark-grey;
-      }
-    }
-  }
-}
-
-article.account-stories {
-  section.story {
-    margin-bottom: 10px;
-  }
-  .load-more {
-    width: 100%;
-
-    &.active {
-      opacity: 0.5;
-      cursor: default;
-    }
-  }
-}
-
-section.recent-stories {
-  position: relative;
-  & > a {
-    font-size: 12px;
-    absolute: top right 10px;
-    line-height: 44px;
   }
 }

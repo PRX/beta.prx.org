@@ -1,7 +1,7 @@
 section.story
-  .category audio story
   a(ui-sref="story")
     prx-img(src="story.imageUrl", default-class="default", ng-class="{playing: story.playing()}")
+  .category audio story
   h3(overflow-class)
     a(ui-sref="story") {{story.title}}
   time(datetime="P{{story.duration}}S") {{story.duration * 1000 | timeCode }}

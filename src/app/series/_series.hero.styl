@@ -1,0 +1,64 @@
+article.series .hero {
+  background: $content-fill-color;
+  padding-bottom: 20px;
+
+  .media {
+    padding-top: 25px;
+
+    .coverart {
+      position: relative;
+      float: none;
+      display: block;
+      background: #266797; // TODO
+      width: 150px;
+      height: @width;
+      margin: 0 auto 30px;
+      border: 1px solid $art-border-color;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 149px;
+        left: 5px
+        width: 140px;
+        height: 15px;
+        background-image: url('/assets/images/coverart_shadow@2x.png');
+        background-size: 140px 15px;
+      }
+    }
+
+    .media-content { // TODO rename?
+      h1 {
+        color: $heading-color;
+      }
+
+      .description {
+        display: none;
+      }
+
+      ul.metadata {
+        line-height: 16px;
+
+        li {
+          display: inline-block;
+          white-space: nowrap;
+          font-size: 12px;
+          margin: 0;
+          padding: 0;
+          margin-right: 10px;
+          line-height: 12px;
+          padding-right: 10px;
+
+          strong {
+            font-weight: 600;
+            padding-right: 4px;
+          }
+
+          address {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+//
+// In a gallery all stories need some around spacing
+//
+.gallery section.story {
+  margin-top: 10px;
+  margin-left: 10px; // TODO match gallery offset (-10)
+}
+
+//
+// Gallery panel specific styles
+//
+.gallery.panels section.story {
+  width: 140px;
+  height: @width;
+  max-width: @width;
+  color: $contrast-body-copy-color;
+
+  .category { display: none; }
+
+  & > a {
+    float: none;
+
+    .img {
+      width: 100%;
+      height: @width;
+
+      &::after {
+        bottom: 71px;
+      }
+    }
+  }
+
+  h3 {
+    absolute: bottom 22px left;
+    right: 0;
+    padding: 0 10px 0px;
+    z-index: 11;
+    color: inherit;
+    max-height: 42px;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  time {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 3px 10px;
+    z-index: 10;
+
+    &::before {
+      content: '';
+      display: block;
+      height: 71px;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba($darkest-grey, 0.7);
+      z-index: -1;
+    }
+  }
+}

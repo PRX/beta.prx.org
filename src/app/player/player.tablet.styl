@@ -1,0 +1,100 @@
+@media $media-width-tablet {
+  .player {
+    .track {
+      display: flex;
+      flex: 1;
+
+      &.active {
+        .scrubber {
+          border-right: 1px solid $slight-grey;
+          span {
+            float: right;
+            padding: 0 3px 0 5px;
+          }
+        }
+
+        .inverse {
+          border-left: 1px solid $slight-grey;
+
+          span {
+            float: left;
+            visibility: visible;
+            padding: 0 5px 0 3px;
+          }
+        }
+
+        span {
+          background: $slight-grey;
+          color: $dark-blue;
+          font-weight: 500;
+          font-size: 13px;
+          z-index: 10;
+        }
+
+        &.flip {
+          .inverse span { visibility: hidden; }
+          .scrubber span { visibility: visible; }
+        }
+      }
+
+      .scrubber {
+        flex: 0 auto;
+        overflow: hidden;
+        -webkit-mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC');
+        mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0xIGhlaWdodD0xPg0KPG1hc2sgbWFza0NvbnRlbnRVbml0cz0ib2JqZWN0Qm91bmRpbmdCb3giIG1hc2tVbml0cz0ib2JqZWN0Qm91bmRpbmdCb3giPg0KICAgIDxyZWN0IGZpbGw9IndoaXRlIiB4PTAgeT0wIHdpZHRoPTEgaGVpZ2h0PTEvPg0KICA8L21hc2s+DQo8L3N2Zz4=');
+        background-color: rgba($slight-grey, 0.6);
+
+        .waveform {
+          border-color: $slight-grey;
+        }
+      }
+
+      .inverse {
+        flex: 1;
+        position: relative;
+        z-index: 10;
+        background-color: rgba($darkest-blue, 0.6);
+      }
+
+      span {
+        visibility: hidden;
+        position: relative;
+        z-index: 10;
+      }
+
+      .waveform {
+        absolute: top 9px right -3px; left: 0;
+        height: 53px;
+        width: 100%;
+        pointer-events: none;
+        border-color: rgba($darkest-blue, 0.6);
+      }
+
+      ul {
+        absolute: bottom right; left: 0;
+        z-index: 11;
+        height: 20px;
+        width: 100%;
+
+        li {
+          pointer-events: none;
+          display: inline-block;
+
+          &:first-child a {
+            display: none;
+          }
+
+          a {
+            line-height: 20px;
+            color: #fff;
+            margin-left: -2.5px;
+
+            &:before {
+              content: '⬩';
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,200 +1,23 @@
-@media multi-column {
-  article.series {
-    #hero {
-      background: white;
-      min-height: 275px;
-      position: relative;
-      // margin-top: 350px;
+@import "series/_series.tablet.styl"
 
-      // &::before {
-      //   height 350px;
-      //   background-image: url('/assets/images/tl_orange_radios.png');
-      //   position: absolute;
-      //   top: -1 * @height;
-      //   left: 0;
-      //   right: 0;
-      //   content: '';
-      // }
+@import "series/_series.hero.styl"
+@import "series/_series.hero.tablet.styl"
 
-      .media {
-        .img.coverart {
-          float: left;
-          margin-right: 20px;
-          margin-top: 6px;
-          // border-bottom: none;
-        }
+article.series .main {
+  background: $content-fill-color;
 
-        .description {
-          display: block;
-          padding-top: 10px;
-        }
+  .gallery {
+    background: $page-fill-color;
+    // border-top: 20px solid $page-fill-color; // TODO hax
+    
+    padding-bottom: 30px;
+  }
 
-        ul.metadata {
-          display: inline-block;
-
-          &:last-of-type {
-            li:last-of-type {
-              border: none;
-              padding-right: 0;
-            }
-          }
-
-          li {
-            border-right: 1px solid lightest-grey;
-            font-size: 14px;
-            line-height: 14px;
-            padding-right: 15px;
-            margin-right: 15px;
-          }
-        }
-
-        .buttons {
-          float: right;
-        }
-      }
-    }
-
-    #poster {
-      padding-top: 0px;
-
-      & > section.stories {
-        max-height: 254px;
-        margin-bottom: 20px;
-        overflow: hidden;
-      }
+  .details {
+    h3 {
+      font-size: 18px;
+      padding: 25px 0 10px;
+      color: $heading-color;
     }
   }
-}
-
-article.series {
-  .media {
-    .img.coverart {
-      display: block;
-      background: #266797;
-      width: 150px;
-      height: 150px;
-      margin: 15px auto 30px;
-      position: relative;
-      float: none;
-      border: 1px solid lightest-grey;
-
-      &:before {
-        content: '';
-        position: absolute;
-        top: 149px;
-        left: 5px
-        width: 140px;
-        height: 15px;
-        background-image: url('/assets/images/coverart_shadow@2x.png');
-        background-size: 140px 15px;
-      }
-    }
-
-    ul.metadata {
-      line-height: 16px;
-
-      li {
-        display: inline-block;
-        white-space: nowrap;
-        font-size: 12px;
-        margin: 0;
-        padding: 0;
-        margin-right: 10px;
-        line-height: 10px;
-        padding-right: 10px;
-
-        strong {
-          font-weight: 600;
-          padding-right: 4px;
-        }
-
-        address {
-          display: inline-block;
-        }
-      }
-    }
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    .description {
-      display: none;
-    }
-
-    .buttons {
-      padding-top: 15px;
-
-      a {
-        display: block;
-        width: 100%;
-        color: white;
-        background: blue;
-        font-size: 14px;
-        padding: 11px 14px;
-        position: relative;
-        margin-bottom: 10px;
-
-        &.share {
-          padding-left: 50px;
-
-          &::after {
-            position: absolute;
-            top: 14px;
-            left: 12px;
-            width: 16px;
-            height: 16px;
-            image: '/assets/images/share.png' 15px;
-            content: '';
-          }
-        }
-
-        &.play {
-          padding-left: 62px;
-          background-color: gunmetal-blue;
-
-          &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 40px;
-            // background: orange url('/assets/images/bt_play.png') center center / 12px no-repeat;
-          }
-        }
-      }
-    }
-  }
-}
-
-article.series {
-  #poster {
-    background: offwhite;
-
-    & > section.stories {
-      section-child-h-margins: 10px;
-      position: relative;
-
-      & > section {
-        margin-bottom: 10px;
-      }
-
-      & > a {
-        absolute: right 15px top 15px;
-        line-height: 24px;
-      }
-    }
-
-    h2 {
-      flex-basis: 100%;
-      padding-top: 20px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid black;
-    }
-  }
-}
-
-article.series {
-
 }

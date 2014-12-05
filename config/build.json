@@ -12,7 +12,7 @@
     ],
     "specs":  [ "src/**/*.spec.js" ],
     "html":   [ "src/index.html" ],
-    "stylus": [ "src/styl/main.styl" ],
+    "stylus": [ "src/stylesheets/main.styl" ],
     "jade":   [ "src/**/*.html.jade" ],
     "assets": [ "src/assets/**/*" ],
     "server": "lib/server.js"

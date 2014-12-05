@@ -1,0 +1,49 @@
+@media $media-width-tablet {
+  article.series .hero {
+    min-height: 235px;
+    padding-bottom: 0;
+    position: relative;
+
+    .media {
+      .coverart {
+        float: left;
+        margin-right: 20px;
+        margin-top: 6px;
+      }
+
+      .media-content {
+        display: block;
+
+        h1 {
+          font-size: 32px;
+          padding-top: 10px;
+          padding-bottom: 15px;
+        }
+
+        .description {
+          display: block;
+          padding-top: 10px;
+        }
+
+        ul.metadata {
+          display: inline-block;
+
+          &:last-of-type {
+            li:last-of-type {
+              border: none;
+              padding-right: 0;
+            }
+          }
+
+          li {
+            border-right: 1px solid lightest-grey;
+            font-size: 14px;
+            line-height: 14px;
+            padding-right: 15px;
+            margin-right: 15px;
+          }
+        }
+      }
+    }
+  }
+}

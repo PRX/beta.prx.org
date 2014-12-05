@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html ng-app="prx.base" ng-class="{'open': drawerOpen}"<% if (compile) { %> ng-strict-di<% } %>>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>PRX</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" sizes="196x196" href="/assets/images/app_icon@3x.png">
+  <base href="/">
+  <% styles.forEach(function(file) { %><link rel="stylesheet" href="<%= file %>" /><% }); %>
+  <link rel="canonical" bind-canonical="href" />
+  <meta name="fragment" content="!">
+</head>
+<body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying, 'show-target': app.fileTargetVisible}" ng-dragover="app.showFileTarget($event)">
+
+  <div class='xyzforeground'>
+    <main>
+      <article>
+        <div class="hero" style="background: LightSteelBlue ;">
+          <section style="background: LightSalmon;">
+            <h2>article > .hero > section</h2>
+            <p>Basic implementation of a hero. Style the .hero element, the section element maintains proper spacing.</p>
+            <p>eg: .hero is blue; hero > section is salmon.</p>
+          </section>
+          <div style="background: PaleVioletRed;">
+            <section style="background: pink;">
+              <h2>article > .hero > div > section</h2>
+              <p>Alternatively there can be a containing div within the .hero element, which allows for additional full-bleed styling without affecting the entire hero.</p>
+              <p>eg: .hero > div is dark pink; hero > div > section is light pink</o>
+            </section>
+          </div>
+        </div>
+        <div class="content" style="background: tan;">
+           <div class="main">
+            <section>
+              <p>.content is not consider to be full-bleed. At small sizes it will fill the page width, but at larger sizes it is constrained.</p>
+              <p>At larger scren sizes .content maintains spacing, but smallers sizes child elements are responsible for their own spacing</p>
+              <p>eg: .content is tan</p>
+            </section>
+            <section style="background: MediumSeaGreen;">
+              <h2>article > .content > .main > section</h2>
+              <p>The standard implementaion of conten, the section element maintains proper spacing at small screen sizes.</p>
+              <p>eg: .content > .main > section is green</p>
+            </section>
+            <div style="background: plum;">
+              <h2>article > .content > .main > div</h2>
+              <p>Alternatively the section can be replaced with a div which is effectively full-bleed on small screens, but will still be constrained at larger screen sizes.</p>
+              <p>eg: .content > .main > div is purple</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="content" style="background: tan;">
+          <div class="main">
+            <section style="background: CornflowerBlue;">
+              <p>When used in conjunction with .content > .asides, .main will appear first at small screen sizes, but as the second column at larger sizes.</p>
+              <p>Internal spacing for sections (and divs) when multiple columns are presented are not handled by the default layout</p>
+              <p>eg: .content > .main > section is blue</p>
+            </section>
+            <div style="background: Cornsilk;">
+              <p>The distinction between section and div is still true</p>
+              <p>eg: .content > .main > div is tan</p>
+            </div>
+          </div>
+          <div class="asides">
+            <aside style="background: darkorange;">
+              <section>
+                <p>.asides is presented after .main when shown as a single column, and to the left when shown as multiple columns.</p>
+                <p>Content in .asides should be wrapped in `aside` elements</p>
+                <p>eg: .asides > aside is orange</p>
+              </section>
+              <section style="background: Tomato;">
+                <p>Most aside content can also be wrapped in a section to maintain proper spacing</p>
+                <p>eg: .asides > aside > section is red</p>
+              </section>
+              <div style="background: LightGreen;">
+                <p>Alt. content can be wrapped in a div to surpress spacing</p>
+                <p>eg: .asides > aside > div is green</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+        <div class="content" style="background: tan;">
+          <div class="main">
+            <section class="gallery">
+              <p>A gallery is a special type of container in main content</p>
+              <p>It is intended for presenting collections of repeating elements, which may be part of a larger collection</p>
+              <p></p>
+              <p></p>
+              <p></p>
+              <p></p>
+            </section>
+          </div>
+        </div>
+      </article>
+    </main>
+    <footer>
+      <div>
+        <section>
+          <div class="beta-notice">
+            <p>You're seeing a beta preview of prx.org. <a ng-href="http://help.prx.org/anonymous_requests/new">Let us know</a> what you think.</p>
+            <a ng-href="{{app.desktopUrl}}">Use Old Version</a>
+          </div>
+        </section>
+        <section>
+          <h3>Company</h3>
+          <a href="//www.prx.org/about-us/what-is-prx">About Us</a>
+          <a href="//blog.prx.org/">Blog</a>
+          <a href="//www.prx.org/about-us/organization">Team</a>
+          <a href="//www.prx.org/about-us/press">Press</a>
+          <a href="//www.prx.org/about-us/funding">Funding</a>
+          <a href="//www.prx.org/donate">Donate</a>
+        </section>
+        <section>
+          <h3>Support</h3>
+          <a href="http://help.prx.org/">Help</a>
+          <a href="http://status.prx.org/">Status</a>
+          <a href="//www.prx.org/terms-of-use">Terms</a>
+          <a href="//www.prx.org/privacy-policy">Privacy </a>
+        </section>
+        <section>
+          <h3>Projects</h3>
+          <a href="http://www.radiotopia.fm">Radiotopia</a>
+          <a href="http://www.matter.vc">Matter Ventures</a>
+        </section>
+      </div>
+      <ul>
+        <li><a href="//www.prx.org/newsletters"></a></li>
+        <li><a href="https://www.twitter.com/prx"></a></li>
+        <li><a href="https://www.facebook.com/publicradioexchange"></a></li>
+      </ul>
+    </footer>
+    <!-- <prx-global-player></prx-global-player> -->
+  </div>
+  <% if (!compile) { %><script>
+    var z = document.createElement('script');
+    z.src = "http://"+window.location.hostname+":35729/livereload.js";
+    document.body.appendChild(z);</script>
+    <% } else { %><script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-164824-46', 'prx.org');
+      ga('set', 'dimension1', FEAT.APPLICATION_VERSION);
+      ga('require', 'displayfeatures');
+      var googletag = googletag || {};
+      googletag.cmd = googletag.cmd || [];
+      (function() {
+        var gads = document.createElement('script');
+        gads.async = true;
+        gads.type = 'text/javascript';
+        var useSSL = 'https:' == document.location.protocol;
+        gads.src = (useSSL ? 'https:' : 'http:') +
+        '//www.googletagservices.com/tag/js/gpt.js';
+        var node = document.getElementsByTagName('script')[0];
+        node.parentNode.insertBefore(gads, node);
+      })();
+    </script>
+    <% } scripts.forEach(function(file) { %>
+      <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
+    </body>
+    </html>
