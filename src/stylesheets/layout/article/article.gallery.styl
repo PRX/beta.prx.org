@@ -28,9 +28,17 @@ article .content .gallery {
 
   > div {
     display: flex;
-    justify-content: space-between; // TODO this is getting inherited even when overwritten?
+    // justify-content: space-between; // TODO this is getting inherited even when overwritten?
     flex-flow: row wrap;
     margin-left: -10px;
+  }
+}
+
+// TODO this is a workaround because browsers were not cat'ing
+// multiple values and rendering incorrectly
+article .content .gallery:not(.panels) {
+  > div {
+    justify-content: space-between;
   }
 }
 
