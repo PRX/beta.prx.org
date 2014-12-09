@@ -1,10 +1,10 @@
 article.story-time
-  #hero
-    .container
+  .hero
+    section
       h1 Storytime
       h2 A weekly newsletter from PRX
-  #content
-    #main
+  .content
+    .main
       section.greeting
         prx-img
         p
@@ -17,7 +17,7 @@ article.story-time
           input(name="email", ng-model="storyTime.email", type="email", placeholder="Enter your Email Address", ng-disabled="storyTime.submitting", required)
           button(type="submit", ng-disabled="storyTime.submitting || !subscribe.$valid") {{ storyTime.submitting ? 'Subscribing...' : 'Join mailing list' }}
         p.subscribed(ng-if="storyTime.subscribed") {{storyTime.message}}
-    #asides
+    .asides
       aside
         section.disclaimer
           p
