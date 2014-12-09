@@ -11,16 +11,17 @@
     may be subject to rate-limiting.
 
 ## Getting Started
-The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS and NPM installed.
+The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS, NPM, and pow installed.
 
 ```shell
-git clone git://github.com/PRX/PRX.org-Frontend.git prx4-fe
-cd prx4-fe
+git clone git://github.com/PRX/PRX.org-Frontend.git
+cd PRX.org-Frontend
+echo 8080 > ~/.pow/beta.prx
 npm install
 npm run-script devServer
 ```
 
-After executing the above, opening a web browser to `http://localhost:8080/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
+After executing the above, opening a web browser to `http://beta.prx.dev/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
 
 ## Architecture
 Version 4 of PRX.org is implemented as a pair of applications – a *backend* which is executed by the server and implemented using Ruby on Rails, and a *frontend* which is executed by web browsers and implemented using AngularJS.
@@ -48,8 +49,8 @@ Tests are automatically run by Travis CI in several circumstances. Generally, th
 Deployment is handled through Capistrano. If you have access to commit directly to this repo, you probably have deploy permissions as well. If you don't, you will likely need to customize the deployment scripts anyway, so it will not be addressed in detail here. The basics are these:
 
 ```shell
-cap production deploy # deploys to m.prx.org, *always* from master
-cap staging deploy    # deploys to m-staging.prx.org, allows specifying the branch
+cap production deploy # deploys to beta.prx.org, *always* from master
+cap staging deploy    # deploys to alpha.prx.org, allows specifying the branch
 ```
 
 If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let chris know.
