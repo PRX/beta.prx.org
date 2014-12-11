@@ -1,10 +1,7 @@
 // simple service to get uuids using node-uuid project
 
 angular.module('angular-id3', ['async-loader'])
-.factory('$id3', function ($window) {
-  return $window.id3;
-})
-.service('Id3Service', function ($id3, $rootScope, $q, $window, AsyncLoader) {
+.service('Id3Service', function ($rootScope, $q, $window, AsyncLoader) {
 
   var Id3Service = this;
 
