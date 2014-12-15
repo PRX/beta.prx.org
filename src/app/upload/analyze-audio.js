@@ -131,8 +131,9 @@ if (FEAT.TCF_DEMO) {
 
       // mp2 validation
       if (file.format.format == 'mp2') {
-        if (file.format.sampleRate != 44100) {
-          file._results.warning('broadcastSamplerate', {sampleRate: file.format.sampleRate} );
+        var channelRate = (file.format.bitrate / file.format.channelsPerFrame);
+        if (channelRate < 128) {
+          file._results.error('broadcastLowBitrate', {bitrate: file.format.bitrate, channelsPerFrame: file.format.channelsPerFrame} );
         }
       }
 
@@ -147,12 +148,10 @@ if (FEAT.TCF_DEMO) {
 
       // mp2 validation
       if (file.format.format == 'mp2') {
-        var channelRate = (file.format.bitrate / file.format.channelsPerFrame);
-        if (channelRate < 128) {
-          file._results.error('broadcastLowBitrate', {bitrate: file.format.bitrate, channelsPerFrame: file.format.channelsPerFrame} );
+        if (file.format.sampleRate != 44100) {
+          file._results.warning('broadcastSamplerate', {sampleRate: file.format.sampleRate} );
         }
       }
-
 
       return ValidateAudio;
     };
