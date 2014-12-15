@@ -107,7 +107,7 @@ if (FEAT.TCF_DEMO) {
       }
     };
   })
-  .service('Validate', function ValidateService($timeout, $q, Id3Service) {
+  .service('Validate', function ValidateService($timeout, $q, ValidateAudio) {
     var invalidatedOnce = true;
 
     function validationResult (file) {
@@ -122,6 +122,11 @@ if (FEAT.TCF_DEMO) {
     }
 
     this.validate = function (file) {
+
+      ValidateAudio.validate(file).then( function(file){
+        console.log('validated', file);
+      });
+
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
