@@ -15,8 +15,12 @@ angular.module('angular-aurora', ['async-loader'])
 
   // formatID is less than useful, update it
   var correctFormat = function (format) {
-    var cf = angular.copy(format);
-    return cf;
+    if ((format.formatID == 'mp3') && (format.layer == 2)) {
+      format.format = 'mp2';
+    } else {
+      format.format = format.formatID;
+    }
+    return format;
   };
 
   var getInfo = function (file, info) {
