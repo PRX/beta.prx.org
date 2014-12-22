@@ -20,9 +20,9 @@ article.story
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           .badges
-            a.content-advisory(ui-sref=".content_advisory" xng-if="story.current.contentAdvisory") 
+            a.content-advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") 
               span Content Advisory
-            a.multiple-versions(ui-sref=".content_advisory" xng-if="story.current.contentAdvisory")
+            a.multiple-versions(ng-if="story.audioVersions.length > 0")
               span Multiple Versions
     .toolbar
       section
