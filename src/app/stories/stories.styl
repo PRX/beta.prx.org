@@ -59,6 +59,42 @@ article.story .main {
     }
   }
 
+  .musical-works {
+    table {
+      margin: 0;
+      border: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    tr {
+      &:nth-child(2n) {
+        background: $offwhite;
+      }
+    }
+
+    th,
+    td {
+      display: none;
+
+      &:nth-child(1) { display: table-cell; }
+      &:nth-child(2) { display: table-cell; }
+      &:nth-child(3) { display: table-cell; }
+    }
+
+    th {
+      font-weight: bold;
+      border-bottom: 1px solid $table-header-border-color;
+      padding: 8px 6px 3px;
+    }
+
+    td {
+      padding: 8px 6px;
+      vertical-align: top;
+      font-size: 0.9em;
+    }
+  }
+
   .licensing {
     padding-bottom: 1px;
 

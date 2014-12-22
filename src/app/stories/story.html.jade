@@ -76,6 +76,24 @@ article.story
         h2 Timing &amp; Cues
         div(ng-bind-html="story.current.timingAndCues | highlightTimecodes | simpleFormat", limit-to-html="250", html-limited="longCues")
         a.full(ui-sref=".timingCues", ng-if="longCues") (View Full Timing & Cues)
+      section.musical-works
+        h2 Musical Works
+        table
+          thead
+            tr
+              th Title
+              th Artist
+              th Album
+              th Label
+              th Year
+          tbody
+            tr(ng-repeat="musicalWork in story.musicalWorks | orderBy:'position':false")
+              td {{musicalWork.title}}
+              td {{musicalWork.artist}}
+              td {{musicalWork.album}}
+              td {{musicalWork.label}}
+              td {{musicalWork.year}}
+            
     .asides
       aside
         prx-account(account="story.account")
