@@ -32,7 +32,7 @@ angular.module('prx.donations', [])
           //   $window.location.href = url;
           // }
         });
-        // $timeout(function() { $window.location.href = map[scope.account.id.toString()]; }, 200);
+        $timeout(function() { $window.location.href = map[scope.account.id.toString()]; }, 200);
       });
     }
   };
