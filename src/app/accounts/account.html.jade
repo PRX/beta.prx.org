@@ -10,7 +10,8 @@ article.account
           li.url(ng-repeat="link in ::account.current.websites() track by link.href")
             a(ng-href="{{::link.href}}" rel="external nofollow") {{ ::link.href | prettyUrl }}
           li
-            .donate(ng-if="::account.current.id == 45139", ng-click="::account.donate($event, 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate')") Donate
+            prx-donate(account="::account.current")
+            //- .donate(ng-if="::account.current.id == 45139", ng-click="::account.donate($event, 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate')") Donate
         .bio
           span(ng-bind-html="::account.current.description", limit-to-html="450", html-limited="wasShortened")
           a.unbreakable.full(ui-sref=".details", ng-if="wasShortened")  (View Full Profile)
