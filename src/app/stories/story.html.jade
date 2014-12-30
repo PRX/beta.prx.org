@@ -22,7 +22,7 @@ article.story
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
     .toolbar
       section
-        prx-donate(account="::story.account.id")
+        prx-donate(account="::story.account")
         prx-social-actions(text="story.current.title")
   .content
     .main
