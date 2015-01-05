@@ -22,7 +22,7 @@
     "postinstall": "(cd vendor/mp3.js && npm install && make clean browser) && (cd vendor/aurora.js && npm install && make clean browser)",
     "test": "gulp ci",
     "compile": "gulp compile",
-    "devServer": "npm install --quiet && apiServer=https://hal.prx.org/api/v1 gulp"
+    "devServer": "npm install --quiet && apiServer=https://cms.prx.org/api/v1 gulp"
   },
   "devDependencies": {
     "bower": "^1.3.3",
