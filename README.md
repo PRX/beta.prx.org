@@ -22,8 +22,8 @@
 The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS, NPM, and pow installed.
 
 ```shell
-git clone git://github.com/PRX/PRX.org-Frontend.git
-cd PRX.org-Frontend
+git clone git://github.com/PRX/www.prx.org.git prx.org
+cd prx.org
 echo 8080 > ~/.pow/www.prx
 npm install
 npm run-script devServer
