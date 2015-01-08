@@ -1,0 +1,103 @@
+article.story-time {
+  .hero {
+    padding: 15px;
+    background: url('/assets/images/towers.png');
+    position: relative;
+
+    &:before {
+      content: '';
+      display: block;
+      absolute: top left;
+      bottom: 0; right: 0;
+      background: rgba(black, 0.3);
+      z-index: 1;
+    }
+
+    h1, h2 {
+      position: relative;
+      z-index: 2;
+      color: white;
+    }
+
+    h1 {
+      font-weight: lighter;
+      font-size: 2.5em;
+      line-height: 1.5em;
+    }
+  }
+
+  .main,
+  .asides {
+    background: $content-fill-color;
+    padding: 20px 0 10px;
+  }
+
+  aside section,
+  .main section.subscribe {
+    border-top: 1px solid $slight-grey;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .main section.subscribe {
+    margin-top: 15px;
+  }
+
+  section.greeting {
+    .img {
+      float: left;
+      border: 2px solid grey;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      image: '/assets/images/audrey.png' 70px;
+      margin: 0 10px 50px 0;
+    }
+    // font-size: 0.9em;
+    font-style: italic;
+  }
+
+  section.disclaimer {
+    color: $light-grey;
+  }
+
+  form {
+    &.ng-leave {
+      transition: transform 0.5s, opacity 0.2s;
+      position: absolute;
+
+      &.ng-leave-active {
+        transform: scale(0,0);
+        opacity: 0;
+      }
+    }
+  }
+
+  p.subscribed {
+    margin-top: 15px;
+    border-radius: 3px;
+    background: $offwhite;
+    padding: 15px;
+
+    &.ng-enter {
+      transition: transform 0.5s, opacity 0.2s 0.3s;
+      transform: scale(0,0);
+      opacity: 0;
+
+      &.ng-enter-active {
+        transform: none;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+section.story-time-cta {
+  padding: 0;
+
+  a {
+    button-blue();
+    padding: 10px;
+    width: 100%;
+  }
+}

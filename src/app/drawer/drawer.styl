@@ -1,9 +1,11 @@
 #slideable {
 
   ul.drawer {
-    fixed: top left;
-    background: offwhite;
-    border-right: 1px solid lightest-grey;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: offwhite; // TODO
+    border-right: 1px solid $slight-grey; // TODO
     width: 250px;
     height: 100%;
     display: none;
@@ -11,12 +13,12 @@
     li a {
       padding: 10px 20px 10px 40px;
       display: block;
-      border-bottom: 1px solid lightest-grey;
+      border-bottom: 1px solid $slight-grey; // TODO
     }
 
     a.search {
-      background-color: orange;
-      color: white;
+      background-color: $orange; // TODO
+      color: white; // TODO
     }
 
     a.category {
@@ -24,7 +26,7 @@
     }
 
     a.item {
-      background-color: white;
+      background-color: white; // TODO
       padding-left: 45px;
     }
   }
@@ -67,6 +69,7 @@
   &.open-remove {
     transition: none;
     transform: translateX(250px);
+
     > .body > * {
       transform: none;
     }

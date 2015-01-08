@@ -1,0 +1,43 @@
+._chase > header {
+  &.loading {
+    position: fixed!important;
+    top: 0!important;
+  }
+
+  & > div:not(.loading) {
+    // max-width: max-content-width + 2 * horizontal-padding;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .loading {
+    position: absolute;
+    width: 100%;
+    overflow hidden;
+
+    .bar {
+      height: 1px;
+      width: 0%;
+      background: orange;
+      transition: width 0.3s linear;
+    }
+
+    &.hide {
+      display: none;
+    }
+
+    &.hide-add {
+      display: block;
+      opacity: 1;
+      transition: opacity 0.5s 1s;
+    }
+
+    &.hide-add-active {
+      opacity: 0;
+    }
+
+    &.reset .bar {
+      transition: none;
+    }
+  }
+}

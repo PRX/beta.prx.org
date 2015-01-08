@@ -1,0 +1,42 @@
+@media $media-width-tablet {
+  article.account {
+    .hero {
+      background: none;
+      padding-bottom: 0;
+      // margin-bottom: 20px;
+
+      .img {
+        width: 105px
+        height: @width;
+        margin-right: 20px;
+        margin-bottom: -54px;
+        margin-left: 20px;
+        // margin: 30px 20px;
+        // margin-bottom: (@width / -2) - 2px !important;
+      }
+
+      h1 {
+        font-size: 32px;
+        line-height: 32px;
+        max-height: 32px;
+      }
+
+      .details {
+        clear: both;
+        background: $content-fill-color;
+        padding: 25px
+        display: flex;
+
+        ul {
+          flex: 1 1 0px;
+          margin-top: 50px;
+        }
+
+        .bio {
+          margin: 0;
+          flex: 2 2 0px;
+        }
+      }
+    }
+  }
+}

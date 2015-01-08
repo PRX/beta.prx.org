@@ -1,0 +1,46 @@
+article.account {
+  .hero {
+    padding: 10px 0 20px;
+    background: $content-fill-color;
+
+    h1 {
+      font-size: 22px
+      line-height: 26px;
+      max-height: 52px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .details {
+      ul {
+        .donate {
+          button-orange(true)
+          order: 1;
+          height: 30px;
+          line-height: 30px;
+          display: inline-block;
+          z-index: 40;
+          padding-right: 30px;
+          padding-left: 35px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          background-image: url('/assets/images/icons/cart_sm@2x.png');
+          background-repeat: no-repeat;
+          background-size: 14px 14px;
+          background-position: 10px 8px;
+          display: block;
+          max-width: 192px;
+          text-align: left;
+        }
+      }
+
+      .bio {
+        margin-top: 15px;
+
+        a:last-child {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+@media $media-width-tablet {
+  ._chase > header {
+    height: $tall-action-bar-height;
+
+    h1 {
+      margin-left: 0;
+      width: 93px;
+
+      a {
+        line-height: $tall-action-bar-height;
+        background-size: auto 33px;
+      }
+    }
+
+    a.drawer {
+      display: none;
+    }
+
+    nav {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 30px;
+      overflow: hidden;
+      max-width: 50%;
+
+      a {
+        color: $nav-link-color;
+        border-left: 1px solid $nav-separator-color;
+        padding: 0 25px;
+        font-size: 14px;
+        line-height: $tall-action-bar-height;
+
+        &:first-of-type {
+          padding-left: 0;
+          border-left: none;
+        }
+
+        &:last-of-type {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}

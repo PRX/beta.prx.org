@@ -1,0 +1,61 @@
+@keyframes spinner-outside {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+
+  100% {
+    transform: rotate(1080deg);
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes spinner-inside {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+
+  100% {
+    transform: rotate(720deg);
+    animation-timing-function: linear;
+  }
+}
+
+loading-indicator() {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    width: 25px;
+    height: @width;
+    margin: -12.5px -12.5px 0;
+    background-image: url('/assets/images/bt_loading_inner.svg');
+    background-size: 25px 25px;
+    animation-name: spinner-outside;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    width: 17px;
+    height: @width;
+    margin: -8.5px -8.5px 0;
+    background-image: url('/assets/images/bt_loading_inner.svg');
+    animation-name: spinner-inside;
+    animation-duration: 3s;
+    animation-direction: reverse;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+  }
+}
+
+$loading-indicator {
+  loading-indicator();
+}

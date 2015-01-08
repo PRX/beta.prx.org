@@ -1,9 +1,9 @@
 article.series
-  #hero
-    .container
+  .hero
+    section
       .media
-        prx-img.coverart(src="::series.current.imageUrl", style="height:150px;")
-        .content
+        prx-img.coverart(src="::series.current.imageUrl")
+        .media-content
           h1 {{series.current.title}}
           ul.metadata
             li
@@ -17,19 +17,17 @@ article.series
           .description
             div(ng-bind-html="series.current.shortDescription")
             a.unbreakable(ui-sref=".details" ng-if="series.current.description") (View Full Description)
-          //- .buttons
-            //- a.play Listen to this series
-  #content
-    #poster(ng-show="::series.stories.length > 0")
-      section.stories
-        h2 Stories
-        a(ui-sref=".allStories", ng-show="::series.stories.length > 6") View All &raquo;
-        prx-story.square(ng-repeat="story in ::series.stories" story="::story")
-    #main
-      section
+  .content 
+    .main
+      section.gallery.panels.stories
+        header
+          h2 Stories
+          a(ui-sref=".allStories", ng-show="::series.stories.length > 3") View All &raquo;
+        div
+          prx-story(ng-repeat="story in ::series.stories" story="::story")
+  .content      
+    .main
+      section.details
         h3 About
         p(ng-bind-html="series.current.description")
-    //- #asides
-    //-   aside
-    //-     section
-    //-       h3 Subscription Details
+          

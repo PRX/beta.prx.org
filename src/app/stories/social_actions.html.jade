@@ -1,8 +1,8 @@
-.socialActions
+.social-actions
   button.like(ng-flag="lovesharebuy") Like
   menu.share
-    .label Share
-    a.twitter(ng-href="https://twitter.com/share?url={{$location.absUrl()}}&via=prx&text={{text}}" analytics-on="click" analytics-event="Twitter" analytics-category="Share" analytics-label="{{text}}")
-    a.facebook(ng-href="https://www.facebook.com/sharer/sharer.php?u={{$location.absUrl()}}" analytics-on="click" analytics-event="Facebook" analytics-category="Share" analytics-label="{{text}}")
-    a.google(ng-href="https://plus.google.com/share?url={{$location.absUrl()}}" analytics-on="click" analytics-event="Google+" analytics-category="Share" analytics-label="{{text}}")
+    h4 Share
+    a(ng-href="https://twitter.com/share?url={{$location.absUrl()}}&via=prx&text={{text}}" analytics-on="click" analytics-event="Twitter" analytics-category="Share" analytics-label="{{text}}") 
+    a(ng-href="https://www.facebook.com/sharer/sharer.php?u={{$location.absUrl()}}" analytics-on="click" analytics-event="Facebook" analytics-category="Share" analytics-label="{{text}}") 
+    a(ng-href="https://plus.google.com/share?url={{$location.absUrl()}}" analytics-on="click" analytics-event="Google+" analytics-category="Share" analytics-label="{{text}}") 
   button.buy(ng-flag="lovesharebuy") Buy
