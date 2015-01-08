@@ -32,6 +32,12 @@ angular.module('prx.stories', [
           return null;
         }
       },
+      musicalWorksList: function (story) {
+        return story.follow('prx:musical-works');
+      },
+      musicalWorks: function (story) {
+        return story.follow('prx:musical-works').follow('prx:items');
+      },
       audioUrls: function (story) {
         return story.toSoundParams().then(function (sfParams) {
           return sfParams.audioFiles;
@@ -155,7 +161,7 @@ angular.module('prx.stories', [
     }
   };
 })
-.controller('StoryCtrl', function (story, account, series, audioUrls,
+.controller('StoryCtrl', function (story, account, series, musicalWorks, musicalWorksList, audioUrls,
   prxSoundFactory, $stateParams, prxPlayer, prxperiment, $analytics, $window, $timeout) {
   var storyCtrl = this;
 
@@ -185,6 +191,24 @@ angular.module('prx.stories', [
     });
     $timeout(function() { $window.location.href = url; }, 200);
   };
+
+  this.musicalWorks = musicalWorks;
+
+  this.loadNextWorks = function() {
+    ctrl = this;
+
+    musicalWorksList.follow('next').then(function (nextList) {
+      return nextList.follow('prx:items').then(function (works) {
+        musicalWorksList = nextList;
+        Array.prototype.push.apply(ctrl.musicalWorks, works);
+      });
+    })['finally'](function () {
+      if (angular.isDefined(musicalWorksList.link('next'))) {
+        ctrl.loadNextWorks();
+      }
+    });
+  };
+  this.loadNextWorks();
 
   this.current.follow('prx:license').then(function (license) {
     storyCtrl.license = license;
