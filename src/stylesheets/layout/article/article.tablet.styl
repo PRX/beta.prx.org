@@ -1,0 +1,32 @@
+@media $media-width-tablet {
+  article {
+    .content {
+      live-area();
+      display: flex;
+    }
+
+    .main section,
+    .asides aside section {
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .main {
+      order: 2;
+      align-self: stretch;
+      align-content: flex-start;
+      flex-grow: 5;
+      flex-shrink: 5;
+      flex-basis: auto;
+    }
+
+    .asides {
+      order: 1;
+      flex-grow: 2;
+      flex-shrink: 0; // TODO why can't this shrink correctly?
+      flex-basis: 280px;
+      max-width: 280px;
+      margin-right: 20px;
+    }
+  }
+}

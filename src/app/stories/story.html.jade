@@ -1,10 +1,10 @@
 article.story
-  #hero(ng-class="story.cover.choice")
-    .container
+  .hero(ng-class="story.cover.choice")
+    section
       prx-player(sound="story.sound", prxp-convert="story.cover")
       .media
         prx-img(src="story.current.imageUrl", default-class="default")
-        .content
+        .media-content
           .category audio story
           h1 {{story.current.title}}
           ul.metadata
@@ -20,11 +20,12 @@ article.story
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
           a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
-
-      .donate(ng-if="::story.account.id == 45139", ng-click="::story.donate($event, 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate')") Donate
-      prx-social-actions(text="story.current.title")
-  #content
-    #main
+    .toolbar
+      section
+        .donate(ng-if="::story.account.id == 45139", ng-click="::story.donate($event, 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate')") Donate
+        prx-social-actions(text="story.current.title")
+  .content
+    .main
       prx-ad(slot="/41755363/visitor_story_view_less_than_800",
         targeting="{storyId:story.current.id, accountId:story.account.id}")
       section.details
@@ -75,7 +76,7 @@ article.story
         h2 Timing &amp; Cues
         div(ng-bind-html="story.current.timingAndCues | highlightTimecodes | simpleFormat", limit-to-html="250", html-limited="longCues")
         a.full(ui-sref=".timingCues", ng-if="longCues") (View Full Timing & Cues)
-    #asides
+    .asides
       aside
         prx-account(account="story.account")
         prx-account-recent-stories(account="story.account", limit="3", skip="story.current")

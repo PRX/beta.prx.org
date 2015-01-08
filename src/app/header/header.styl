@@ -1,0 +1,59 @@
+@import "header/header.tablet.styl"
+
+@import "header/header.bar.styl"
+
+._chase > header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: $action-bar-height;
+  overflow: hidden;
+  z-index: 200;
+  border-bottom: 1px solid $header-border-color;
+  background: $content-fill-color;
+
+  & > div:last-child {
+    @extends $live-area;
+  }
+
+  a.drawer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    margin: 0 14px;
+    line-height: $action-bar-height;
+    image: '/assets/images/ic_header_menu.png' auto 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  h1 {
+    width: 62px;
+    margin: 0 auto;
+
+    a {
+      line-height: $action-bar-height;
+      display: block;
+      background-image: url('/assets/images/ic_header_logo.svg');
+      background-size: auto 22px;
+      background-position: center center;
+      background-repeat: no-repeat;
+      text-indent: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  nav {
+    display: none;
+  }
+}

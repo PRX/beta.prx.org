@@ -12,12 +12,14 @@
 </head>
 <body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying, 'show-target': app.fileTargetVisible}" ng-dragover="app.showFileTarget($event)">
   <prx-file-target name='files'></prx-file-target>
-  <prx-drawer drawer="main">
+  <prx-drawer drawer="main" class="_chase">
     <header ng-class="{'loading': loading}">
       <prx-loading-bar></prx-loading-bar>
       <div>
-        <a class="drawer" prx-drawer-toggle="main"></a>
-        <h1><a ui-sref="home">PRX</a></h1>
+        <a class="drawer" prx-drawer-toggle="main">Menu</a>
+        <h1>
+          <a ui-sref="home">PRX</a>
+        </h1>
         <prx-nav-buttons></prx-nav-buttons>
       </div>
     </header>
@@ -28,10 +30,10 @@
     </main>
     <footer>
       <div>
-        <section class="floater">
+        <section>
           <div class="beta-notice">
             <p>You're seeing a beta preview of prx.org. <a ng-href="http://help.prx.org/anonymous_requests/new">Let us know</a> what you think.</p>
-            <a class="full-site" ng-href="{{app.desktopUrl}}">Use Old Version</a>
+            <a ng-href="{{app.desktopUrl}}">Use Old Version</a>
           </div>
         </section>
         <section>
@@ -55,14 +57,12 @@
           <a href="http://www.radiotopia.fm">Radiotopia</a>
           <a href="http://www.matter.vc">Matter Ventures</a>
         </section>
-        <section class="full">
-          <ul>
-            <li><a href="//www.prx.org/newsletters" class="fa-envelope"></a></li>
-            <li><a href="https://www.twitter.com/prx" class="fa-twitter"></a></li>
-            <li><a href="https://www.facebook.com/publicradioexchange" class="fa-facebook"></a></li>
-          </ul>
-        </section>
       </div>
+      <ul>
+        <li><a href="//www.prx.org/newsletters"></a></li>
+        <li><a href="https://www.twitter.com/prx"></a></li>
+        <li><a href="https://www.facebook.com/publicradioexchange"></a></li>
+      </ul>
     </footer>
     <prx-global-player></prx-global-player>
   </prx-drawer>

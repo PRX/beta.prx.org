@@ -378,14 +378,14 @@ article.upload {
 
     li {
       background: white;
-      color: blue;
+      color: $blue;
       padding: 20px 22px;
       margin-bottom: 1px;
       z-index: 195;
 
       &.active {
         color: white;
-        background: blue;
+        background: $blue;
       }
     }
   }
@@ -401,7 +401,7 @@ article.upload {
     border-top: 75px solid transparent;
   }
 
-  &:before {
+  &::before {
     background-color: rgba(white, 0.9);
     content: '';
     absolute: top 10px left 10px;
@@ -433,7 +433,7 @@ article.upload {
     display: block;
     font-style: italic;
     margin: 10px 0;
-    &:before, &:after {
+    &::before, &::after {
       content: ' – '
     }
   }
@@ -534,7 +534,7 @@ article.upload {
           text-align: center;
           font-size: 18px;
           color: white;
-          background: blue;
+          background: $blue;
           position: absolute;
           top: 0;
           right: -50px;

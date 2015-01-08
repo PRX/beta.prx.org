@@ -1,0 +1,37 @@
+// TODO This should be scoped better
+._chase > footer {
+  & > div {
+    @extends $live-area;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+
+    section {
+      flex-basis: 96px; // Three items in a row at 320 viewport (290px to fill)
+      flex-grow: 1;
+      flex-shrink: 1;
+
+      &:first-child {
+        flex-basis: 100%;
+        flex-grow: 6;
+        margin-top: -1px;
+        padding-top: $measure;
+        padding-bottom: 0.5 * $measure;
+        border-bottom: 1px solid $section-border-color;
+        margin-bottom: 0.5 * $measure;
+        text-align: center;
+      }
+
+      h3,
+      a {
+        display: block;
+      }
+
+      h3 {
+        line-height: 3rem; // TODO
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+@media $media-width-tablet {
+  article.story .content { // TODO get rid of .content in hero to eliminate child selector
+    padding-top: 40px;
+    padding-bottom: 30px;
+  }
+
+  article.story .main {
+    padding-bottom: 25px;
+    background: none;
+
+    > section {
+      background: $white;
+      padding: 15px;
+
+      h2 {
+        font-size: 25px;
+        line-height: 42px;
+        padding-top: 0;
+      }
+    }
+
+    .licensing {
+      ul {
+        display: flex;
+        flex-flow: row wrap;
+      }
+
+      li {
+        flex: 1 200px;
+        margin: 20px 45px 10px 55px;
+      }
+    }
+  }
+
+  article.story .asides {
+    aside {
+      > section {
+        padding: 15px;
+
+        &:first-child { border: none; }
+      }
+
+      .account {
+        h2 { // TODO this maybe should move back to account stylesheet
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 45px;
+          line-height: 45px;
+          font-size: 18px;
+          padding-left: 100px;
+          overflow: hidden;
+          white-space: nowrap;
+          -o-text-overflow: ellipsis; // TODO mixin if this is necessary
+          text-overflow: ellipsis;
+          background-color: $page-fill-color;
+          color: $heading-color;
+
+          a {
+            color: inherit;
+          }
+        }
+      }
+    }
+  }
+}

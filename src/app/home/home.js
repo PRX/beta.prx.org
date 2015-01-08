@@ -30,6 +30,22 @@ angular.module('prx.home', ['ui.router', 'prx.home.storytime', 'prx.picks'])
         templateUrl: 'home/construction_modal.html'
       }
     }
+  }).state('demo', {
+    url: '/demo',
+    title: "Demo",
+    views: {
+      '@': {
+        controller: 'HomeCtrl as home',
+        templateUrl: 'home/demo.html'
+      }
+    },
+    resolve: {
+      picks: function (ngHal, $filter) {
+        return ngHal.follow('prx:picks').follow('prx:items').then(function (picks) {
+          return $filter('groupStandalonePicks')(picks);
+        });
+      }
+    }
   });
 }).run(function ($rootScope, $state) {
 

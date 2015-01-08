@@ -1,0 +1,70 @@
+@import "layout/app/app.tablet.styl";
+
+html {
+  line-height: $line-height-base-value * 1em;
+  height: 100%;
+  background-color: $background-fill-color;
+  background-image: url('/assets/images/tl_diag_stripes.svg');
+}
+
+body {
+  background: $content-fill-color;
+  max-width: 1200px;
+  min-height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  font-family: 'Open Sans', sans-serif;
+  line-height: $line-height-base;
+  font-size: 14px;
+  color: $body-copy-color;
+}
+
+::selection {
+  background: $orange;
+  color: $white;
+}
+
+main {
+  background: $page-fill-color;
+  padding-top: $action-bar-height;
+}
+
+h1,
+h2,
+h3 {
+  color: $heading-color;
+  font-weight: 100;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+
+  &:active {
+    color: $active-link-color;
+  }
+
+  &.current:hover {
+    text-decoration: none;
+  }
+}
+
+strong {
+  font-weight: bold;
+}
+
+.unbreakable {
+  white-space: nowrap;
+}
+
+.empty-space {
+  @extends $loading-indicator;
+
+  min-height: 320px;
+  background: $content-placeholder-fill-color;
+  position: relative;
+
+  @media multi-column {
+    min-height: 420px;
+  }
+}

@@ -1,8 +1,8 @@
 article.account
-  #hero
-    .container
+  .hero
+    section
       prx-img(src="::account.current.imageUrl", default-class="default")
-      h1(ng-bind="::account.current.name")
+      h1(ng-bind="::account.current.name") 
       .details
         ul
           li.path(ng-bind="::account.current.path")
@@ -13,16 +13,22 @@ article.account
             .donate(ng-if="::account.current.id == 45139", ng-click="::account.donate($event, 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate')") Donate
         .bio
           span(ng-bind-html="::account.current.description", limit-to-html="450", html-limited="wasShortened")
-          a.full(ui-sref=".details", ng-if="wasShortened")  (View Full Profile)
-  #content
-    #main
-      section.highlighted(ng-show="::account.highlightedStories.length > 0")
-        h2 Highlighted
-        prx-story.square(ng-repeat="story in ::account.highlightedStories", story="::story")
-      section.recent
-        h2 Recent Stories
-        a(ui-sref=".allStories", ng-show="::account.recentStories.length > 6") View All &raquo;
-        prx-story(ng-repeat="story in ::account.recentStories | limitTo: 6", story="::story")
-      section.purchased(ng-show="::account.purchasedStories.length > 0")
-        h2 Most Purchased Stories
-        prx-story(ng-repeat="story in ::account.purchasedStories | limitTo: 6", story="::story")
+          a.unbreakable.full(ui-sref=".details", ng-if="wasShortened")  (View Full Profile)
+  .content
+    .main
+      section.gallery.panels.highlighted(ng-show="::account.highlightedStories.length > 0")
+        header
+          h2 Highlighted
+        div
+          prx-story(ng-repeat="story in ::account.highlightedStories", story="::story")
+      section.gallery.recent
+        header
+          h2 Recent Stories
+          a(ui-sref=".allStories", ng-show="::account.recentStories.length > 6") View All &raquo;
+        div
+          prx-story(ng-repeat="story in ::account.recentStories | limitTo: 6", story="::story")
+      section.gallery.purchased(ng-show="::account.purchasedStories.length > 0")
+        header
+          h2 Most Purchased Stories
+        div
+          prx-story(ng-repeat="story in ::account.purchasedStories | limitTo: 6", story="::story")
