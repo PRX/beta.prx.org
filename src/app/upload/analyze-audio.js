@@ -69,7 +69,8 @@ if (FEAT.TCF_DEMO) {
       var analysis = [];
 
       // metadata may be redundant with tags, getting it anyway
-      analysis.push( AuroraService.metadata(file).then( function (m) { file.metadata = m; return m; }) );
+      AuroraService.metadata(file).then( function (m) { file.metadata = m; return m; });
+
       analysis.push( AuroraService.format(file).then(   function (f) { file.format   = f; return f; }) );
       analysis.push( AuroraService.duration(file).then( function (d) { file.duration = d; return d; }) );
       analysis.push( Id3Service.analyze(file).then(     function (t) { file.tags     = t; return t; }) );
@@ -78,7 +79,9 @@ if (FEAT.TCF_DEMO) {
       return $q.all(analysis).then(function (data) { return file; });
     };
   })
-  .service('ValidateAudio', function ValidateAudio(AnalyzeAudio) {
+  .service('ValidateAudio', function (AnalyzeAudio) {
+
+    var ValidateAudio = this;
 
     function ValidationResults() {
     }
@@ -90,19 +93,19 @@ if (FEAT.TCF_DEMO) {
       error: function(validation, options) {
         options = options || {};
         options.severity = 'error';
-        return this.addMessage(validation, options);
+        this.addMessage(validation, options);
       },
-      warning: function(context, validation, options) {
+      warning: function(validation, options) {
         options = options || {};
         options.severity = 'warning';
-        return this.addMessage(validation, options);
+        this.addMessage(validation, options);
       }
     };
 
     // notAudio:      error:   This is not an audio file or media file containing audio
     // videoFile:     warning: the file is video, will use audio track
     // lossyEncoding: warning: uses a lossy encoding, not so good for transcoding
-    this.validateType = function(file) {
+    ValidateAudio.validateType = function(file) {
       file._results = file._results || new ValidationResults();
 
       var mt = file.mimeType.full();
@@ -115,33 +118,53 @@ if (FEAT.TCF_DEMO) {
           file._results.warning('lossyEncoding', {mimeType: mt});
         }
       } else {
-        file._results.error('notAudio', {mimeType: mt});
+        file._results.warning('notAudio', {mimeType: mt});
       }
-      return this;
+      return ValidateAudio;
     };
 
     // need to figure out what warnings we want per type, and per channel count
     // for an mp2, bitrate should be 256 for stereo, and 128 for mono
-    this.validateBitRate = function(file) {
+    ValidateAudio.validateBitRate = function(file) {
       file._results = file._results || new ValidationResults();
-      if (file.mimeType.major() != 'audio') { return this; }
-      return this;
+      if (file.mimeType.major() != 'audio') { return ValidateAudio; }
+
+      // mp2 validation
+      if (file.format.format == 'mp2') {
+        var channelRate = (file.format.bitrate / file.format.channelsPerFrame);
+        if (channelRate < 128) {
+          file._results.error('broadcastLowBitrate', {bitrate: file.format.bitrate, channelsPerFrame: file.format.channelsPerFrame} );
+        }
+      }
+
+      return ValidateAudio;
     };
 
     // need to figure out what warnings we want per type
     // for an mp2, sample rate should by 44100
-    this.validateSampleRate = function(file) {
+    ValidateAudio.validateSampleRate = function(file) {
       file._results = file._results || new ValidationResults();
-      if (file.mimeType.major() != 'audio') { return this; }
-      return this;
+      if (file.mimeType.major() != 'audio') { return ValidateAudio; }
+
+      // mp2 validation
+      if (file.format.format == 'mp2') {
+        if (file.format.sampleRate != 44100) {
+          file._results.warning('broadcastSamplerate', {sampleRate: file.format.sampleRate} );
+        }
+      }
+
+      return ValidateAudio;
     };
 
-    this.validate = function (file) {
-      return AnalyzeAudio.analyze(file).then( function () {
+    ValidateAudio.validate = function (file) {
+      return AnalyzeAudio.analyze(file).then( function (file) {
+
         file._results = new ValidationResults();
-        this.validateType(file);
-        this.validateBitRate(file);
-        this.validateSampleRate(file);
+        ValidateAudio.validateType(file);
+        ValidateAudio.validateBitRate(file);
+        ValidateAudio.validateSampleRate(file);
+
+        return file;
       });
 
     };
