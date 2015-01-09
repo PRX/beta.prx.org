@@ -1,7 +1,7 @@
 h1 {{::series.current.title}}&apos;s Stories
-article.account-stories(on-approach-end="::series.loadMore()")
-  prx-story(ng-repeat="story in ::series.stories", story="::story")
-  button.load-more(ng-show="::series.hasMore", ng-click="::series.loadMore()",
-    ng-disabled="::series.loadingMore")
-      span(ng-show="::series.loadingMore") Loading...
-      span(ng-hide="::series.loadingMore") Load More
+article.account-stories(on-approach-end="series.loadMore()")
+  prx-story(ng-repeat="story in series.stories", story="::story")
+  button.load-more(ng-show="::series.hasMore", ng-click="series.loadMore()",
+    ng-disabled="series.loadingMore")
+      span(ng-show="series.loadingMore") Loading...
+      span(ng-hide="series.loadingMore") Load More
