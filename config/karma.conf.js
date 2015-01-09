@@ -33,6 +33,6 @@ module.exports = function ( config ) {
     },
     urlRoot: '/',
     autoWatch: false,
-    browsers: ['Chrome']
+    browsers: ['Safari']
   });
 };

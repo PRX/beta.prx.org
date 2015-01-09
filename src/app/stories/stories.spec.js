@@ -35,7 +35,7 @@ describe('prx.stories', function () {
     it ('attaches the story and accounts injected to $scope', function () {
       var sigil = ngHal.mock();
       var scope = {};
-      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, audioUrls: [sigil], $scope: scope});
+      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, musicalWorks: [sigil],  musicalWorksList: [sigil], audioUrls: [sigil], $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.account).toBe(sigil);
     });
@@ -79,6 +79,14 @@ describe('prx.stories', function () {
       story.stubFollow('prx:account', {a:1});
       expect($injector.
           invoke(state.resolve.account, null, {story: story}).
+          get('a')).toResolveTo(1);
+    }));
+
+    it ('gets the musical works based on the story', inject(function (ngHal, $rootScope) {
+      var story = ngHal.mock(), musicalWorksList;
+      story.stubFollow('prx:musicalWorksList', {a:1});
+      expect($injector.
+          invoke(state.resolve.musicalWorksList, null, {story: story}).
           get('a')).toResolveTo(1);
     }));
 
