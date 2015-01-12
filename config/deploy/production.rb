@@ -6,7 +6,7 @@ set :default_env, { path: '/opt/node/current/bin:/opt/python/current/bin:$PATH' 
 set :slack_webhook, -> {
   webhook = nil
   on roles(:web) do
-    cmd = 'cat /var/www/domains/prx.org/hal/shared/config/slack_webhook.txt'
+    cmd = "cat #{fetch(:deploy_to)}/shared/config/slack_webhook.txt"
     webhook = capture cmd
   end
   webhook
