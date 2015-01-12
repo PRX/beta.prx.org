@@ -1,7 +1,7 @@
 lock '~> 3.1'
 
-set :application, 'prx.org-frontend'
-set :repo_url, 'git://github.com/PRX/PRX.org-frontend.git'
+set :application, 'www.prx.org'
+set :repo_url, 'git://github.com/PRX/www.prx.org.git'
 set :linked_dirs, %w{node_modules tmp .cache}
 set :revision_timestamp, (proc do
    rev = fetch(:current_revision)
