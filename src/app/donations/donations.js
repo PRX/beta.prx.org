@@ -1,4 +1,4 @@
-angular.module('prx.donations', [])
+angular.module('prx.donations', ['prx.bus', 'angulartics',])
 .run(function (Bus, $analytics) {
   var category = 'Outbound';
 
@@ -29,7 +29,7 @@ angular.module('prx.donations', [])
     return map[account.id.toString()];
   };
 })
-.directive('prxDonate', function(prxDonateURL, $analytics, $window, $timeout) {
+.directive('prxDonate', function(prxDonateURL, $analytics, $window, $timeout, Bus) {
   return {
     restrict: 'E',
     replace: true,
