@@ -43,7 +43,7 @@ angular.module('prx.donations', ['prx.bus', 'angulartics',])
       if (!url) {
         elem.remove();
       } else {
-        elem.on('mousedown', function(event) {
+        elem.on('click', function(event) {
           event.preventDefault();
 
           Bus.emit('donate.outbound', account, url);
@@ -52,7 +52,7 @@ angular.module('prx.donations', ['prx.bus', 'angulartics',])
       }
 
       scope.$on('$destroy', function () {
-        elem.off('mousedown');
+        elem.off('click');
       });
     }
   };

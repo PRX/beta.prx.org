@@ -88,13 +88,13 @@ describe('donations', function () {
 
     it('binds to clicks when in the DOM', function () {
       spyOn(busProxy, 'click');
-      button.triggerHandler('mousedown');
+      button.triggerHandler('click');
 
       expect(busProxy.click).toHaveBeenCalled();
     });
 
     it('tracks an event when clicked', function () {
-      button.triggerHandler('mousedown');
+      button.triggerHandler('click');
 
       account = scope.radiotopiaAaccount;
       url = prxDonateURL.forAccount(account);
