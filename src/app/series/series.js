@@ -19,7 +19,7 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
       storiesList: function (series) {
         return series.follow('prx:stories');
       },
-      stories: function (series) {
+      stories: function (storiesList) {
         return storiesList.follow('prx:items');
       },
       recentStories: function (storiesList) {
