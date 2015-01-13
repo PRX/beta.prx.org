@@ -46,7 +46,6 @@ angular.module('prx.donations', ['prx.bus', 'angulartics',])
         elem.on('click', function(event) {
           event.preventDefault();
 
-          console.log('click');
           Bus.emit('donate.outbound', account, url);
           $timeout(function() { $window.location.href = url; }, 200);
         });
