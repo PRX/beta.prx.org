@@ -81,11 +81,12 @@ describe('prx.series', function () {
     it ('gets the stories based on the series', inject(function (ngHal, $rootScope) {
       var series = ngHal.mock();
       var stories = ngHal.mock();
+      var storiesList = ngHal.mock();
       var items;
       stories.stubFollow('prx:items', {s:1});
       series.stubFollow('prx:stories', stories);
 
-      $injector.invoke(state.resolve.stories, null, {series: series}).then(function (s) {
+      $injector.invoke(state.resolve.stories, null, {series: series, storiesList: storiesList}).then(function (s) {
         items = s;
       });
 
