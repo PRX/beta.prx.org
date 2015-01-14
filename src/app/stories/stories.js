@@ -35,7 +35,7 @@ angular.module('prx.stories', [
       musicalWorksList: function (story) {
         return story.follow('prx:musical-works');
       },
-      musicalWorks: function (story) {
+      musicalWorks: function (musicalWorksList) {
         return musicalWorksList.follow('prx:items');
       },
       audioUrls: function (story) {

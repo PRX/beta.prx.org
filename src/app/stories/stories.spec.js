@@ -35,7 +35,7 @@ describe('prx.stories', function () {
     it ('attaches the story and accounts injected to $scope', function () {
       var sigil = ngHal.mock();
       var scope = {};
-      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, musicalWorks: [sigil],  musicalWorksList: [sigil], audioUrls: [sigil], $scope: scope});
+      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, audioUrls: [sigil], $scope: scope, musicalWorks: [sigil], musicalWorksList: sigil});
       expect(controller.current).toBe(sigil);
       expect(controller.account).toBe(sigil);
     });
@@ -43,10 +43,11 @@ describe('prx.stories', function () {
     it ('starts playback of the story if requested', function () {
       var player = jasmine.createSpyObj('player', ['play']);
       var story  = ngHal.mock();
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
+      list = ngHal.mock();
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: [], musicalWorks: [], musicalWorksList: list});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: []});
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: [], musicalWorks: [], musicalWorksList: list});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
     });
@@ -79,14 +80,6 @@ describe('prx.stories', function () {
       story.stubFollow('prx:account', {a:1});
       expect($injector.
           invoke(state.resolve.account, null, {story: story}).
-          get('a')).toResolveTo(1);
-    }));
-
-    it ('gets the musical works based on the story', inject(function (ngHal, $rootScope) {
-      var story = ngHal.mock(), musicalWorksList;
-      story.stubFollow('prx:musicalWorksList', {a:1});
-      expect($injector.
-          invoke(state.resolve.musicalWorksList, null, {story: story}).
           get('a')).toResolveTo(1);
     }));
 
