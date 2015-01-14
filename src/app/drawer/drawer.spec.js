@@ -1,16 +1,12 @@
 describe('prx.drawer', function () {
   beforeEach(module('templates', 'prx.drawer'));
-  var $controller;
 
-  beforeEach(inject(function (_$controller_) {
-    $controller = _$controller_;
-  }));
 
   describe('DrawerItemCtrl', function () {
     var ctrl;
-    beforeEach(function () {
+    beforeEach(inject(function ($controller) {
       ctrl = $controller('DrawerItemCtrl');
-    });
+    }));
 
     it ('returns type in classes', function () {
       ctrl.item = {type: 'asd'};
@@ -30,7 +26,7 @@ describe('prx.drawer', function () {
 
   describe ('NavButtonsCtrl', function () {
     var ctrl, PRXDrawer;
-    beforeEach(inject(function (_PRXDrawer_) {
+    beforeEach(inject(function (_PRXDrawer_, $controller) {
       ctrl = $controller('NavButtonsCtrl');
       PRXDrawer = _PRXDrawer_;
     }));
@@ -45,9 +41,9 @@ describe('prx.drawer', function () {
 
   describe ('NavItemCtrl', function () {
     var ctrl;
-    beforeEach(function () {
+    beforeEach(inject(function ($controller) {
       ctrl = $controller('NavItemCtrl');
-    });
+    }));
 
     it ('returns shortText', function () {
       ctrl.item = {shortText: 'asd'};
@@ -66,17 +62,133 @@ describe('prx.drawer', function () {
   });
 
   describe ('PRXDrawer', function () {
-    var PRXDrawer;
-    beforeEach(inject(function (_PRXDrawer_) {
-      PRXDrawer = _PRXDrawer_;
-    }));
+    describe ('provider', function () {
+      var drawerProvider;
+      var PRXDrawer;
+      beforeEach(module(function (PRXDrawerProvider) {
+        drawerProvider = PRXDrawerProvider;
+      }));
 
-    it ('toggles', function () {
-      PRXDrawer.open = false;
-      PRXDrawer.toggle();
-      expect(PRXDrawer.open).toBe(true);
-      PRXDrawer.toggle();
-      expect(PRXDrawer.open).toBe(false);
+      // to cause the config block to run, and clean up old runs.
+      beforeEach(inject(function () { PRXDrawer = undefined; }));
+
+      function getDrawer() {
+        if (!PRXDrawer) {
+          inject(function (_PRXDrawer_) {
+            PRXDrawer = _PRXDrawer_;
+          });
+        }
+
+        return PRXDrawer;
+      }
+
+      it ('permits registration of menu items', function () {
+        drawerProvider.register({
+          name: 'Search',
+          icon: 'search',
+          directive: '<prx-search-in-nav>'
+        });
+      });
+
+      it ('includes registered menu items after injection', function () {
+        drawerProvider.register({
+          name: 'Search'
+        });
+
+        expect(getDrawer().items[0].name).toEqual('Search');
+      });
+
+      it ('can register items that are always in nav', function () {
+        drawerProvider.register({
+          name: 'Search',
+          nav: true
+        });
+
+        expect(getDrawer().navItems()[0].name).toEqual('Search');
+      });
+
+      it ('can register things that are in the nav when there is room', function () {
+        drawerProvider.register({
+          name: 'Browse',
+        }).register({
+          name: 'Search',
+          nav: true
+        }).register({
+          name: 'SignUp',
+          nav: true
+        });
+
+        expect(getDrawer().navItems(2).length).toEqual(2);
+        expect(getDrawer().navItems(2)[0].name).toEqual('Search');
+        expect(getDrawer().drawerItems(2).length).toEqual(1);
+      });
+
+      it ('orders things by weight', function () {
+        drawerProvider.register({
+          name: 'Browse'
+        }).register({
+          name: 'SignUp',
+          nav: true,
+          weight: drawerProvider.LAST
+        }).register({
+          name: 'Search',
+          weight: drawerProvider.FIRST,
+          nav: true
+        });
+
+        var sortedItems = getDrawer().drawerItems(0);
+
+        expect(sortedItems[0].name).toEqual('Search');
+        expect(sortedItems[1].name).toEqual('Browse');
+        expect(sortedItems[2].name).toEqual('SignUp');
+      });
+
+      it ('combines nav sorting with weight sorting', function () {
+        drawerProvider.register({
+          name: 'Browse'
+        }).register({
+          name: 'Other',
+          weight: drawerProvider.HIGH
+        }).register({
+          name: 'SignUp',
+          nav: true,
+          weight: drawerProvider.LAST
+        }).register({
+          name: 'Search',
+          weight: drawerProvider.FIRST,
+          nav: true
+        });
+
+        var navItems = getDrawer().navItems(3);
+        expect(navItems[0].name).toEqual('Search');
+        expect(navItems[1].name).toEqual('Other');
+        expect(navItems[2].name).toEqual('SignUp');
+
+        navItems = getDrawer().navItems(2);
+        expect(navItems[0].name).toEqual('Search');
+        expect(navItems[1].name).toEqual('SignUp');
+        expect(getDrawer().drawerItems(2)[0].name).toEqual('Other');
+        expect(getDrawer().drawerItems(2)[1].name).toEqual('Browse');
+      });
+    });
+
+    describe ('service', function () {
+      var PRXDrawer;
+      beforeEach(inject(function (_PRXDrawer_) {
+        PRXDrawer = _PRXDrawer_;
+      }));
+
+      it ('toggles', function () {
+        PRXDrawer.open = false;
+        PRXDrawer.toggle();
+        expect(PRXDrawer.open).toBe(true);
+        PRXDrawer.toggle();
+        expect(PRXDrawer.open).toBe(false);
+      });
+
+      it ('has navItems()', function () {
+        expect(PRXDrawer.navItems()).toEqual([]);
+      });
     });
   });
 

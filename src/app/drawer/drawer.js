@@ -39,7 +39,9 @@ angular.module('prx.drawer', [])
     return this.item.text;
   };
 })
-.service('PRXDrawer', function () {
+.provider('PRXDrawer', function () {
+  var menuItems = [];
+
   function DrawerItem(type, text, href, shortText) {
     this.type = type;
     this.text = text;
@@ -47,24 +49,85 @@ angular.module('prx.drawer', [])
     this.shortText = shortText || text;
   }
 
-  var drawer = this;
-  this.open = false;
-  this.items = [
-    new DrawerItem("search",
-      "Search for a story, theme, or producer",
-      "http://www.prx.org/search/all", "Search"),
-    new DrawerItem("category",
-      "Stories", "http://www.prx.org/pieces", "Browse"),
-    new DrawerItem("item", "Diary", "http://www.prx.org/format/Diary"),
-    new DrawerItem("item", "Documentary", "http://www.prx.org/format/Documentary"),
-    new DrawerItem("item", "Essay", "http://www.prx.org/format/Essay"),
-    new DrawerItem("item", "Fiction", "http://www.prx.org/format/Fiction"),
-    new DrawerItem("item", "News Reporting", "http://www.prx.org/format/News%20Reporting"),
-    new DrawerItem("item", "Special", "http://www.prx.org/format/Special"),
-    new DrawerItem("category", "Sign In", "http://www.prx.org/sessions/new")
+  var legacy = [
+  new DrawerItem("search",
+  "Search for a story, theme, or producer",
+  "http://www.prx.org/search/all", "Search"),
+  new DrawerItem("category",
+  "Stories", "http://www.prx.org/pieces", "Browse"),
+  new DrawerItem("item", "Diary", "http://www.prx.org/format/Diary"),
+  new DrawerItem("item", "Documentary", "http://www.prx.org/format/Documentary"),
+  new DrawerItem("item", "Essay", "http://www.prx.org/format/Essay"),
+  new DrawerItem("item", "Fiction", "http://www.prx.org/format/Fiction"),
+  new DrawerItem("item", "News Reporting", "http://www.prx.org/format/News%20Reporting"),
+  new DrawerItem("item", "Special", "http://www.prx.org/format/Special"),
+  new DrawerItem("category", "Sign In", "http://www.prx.org/sessions/new")
   ];
-  this.toggle = function () {
-    drawer.open = !drawer.open;
+
+  function calculateNavCache(items) {
+    var result = [], tmp = angular.copy(items);
+
+    for (var i=0; i<tmp.length; i++) {
+      if (tmp[i].nav) {
+        result.push(tmp.splice(i, 1)[0]);
+        i -= 1;
+      }
+    }
+
+    result.push.apply(result, tmp);
+    return result;
+  }
+
+  function Drawer(items, sortFn) {
+    var self = this;
+    this.open = false;
+    this.items = items;
+    this.navCache = calculateNavCache(items);
+    this.toggle = function toggle () {
+      self.open = !self.open;
+    };
+    this.sortFn = sortFn;
+  }
+
+  Drawer.prototype.navItems = function navItems (maxItems) {
+    if (maxItems >= this.items.length) { return this.items; }
+    return this.sortFn(this.navCache.slice(0, maxItems));
+  };
+
+  Drawer.prototype.drawerItems = function drawerItems (maxNavItems) {
+    if (maxNavItems === 0) { return this.items; }
+    if (maxNavItems >= this.items.length) { return []; }
+    return this.sortFn(this.navCache.slice(maxNavItems));
+  };
+
+  getDrawer.$inject = ['$filter'];
+  function getDrawer($filter) {
+    var orderBy = $filter('orderBy');
+    function sortMenuItems(items) {
+      return orderBy(items, 'weight');
+    }
+    angular.forEach(menuItems, function (item) {
+      if (typeof item.weight === 'undefined') {
+        item.weight = 0;
+      }
+      if (typeof item.nav === 'undefined') {
+        item.nav = false;
+      }
+    });
+    return new Drawer(sortMenuItems(menuItems), sortMenuItems);
+  }
+
+  return {
+    $get: getDrawer,
+    register: function register () {
+      menuItems.push.apply(menuItems, arguments);
+      return this;
+    },
+    FIRST: -Infinity,
+    LAST: Infinity,
+    HIGH: -100,
+    LOW: 100,
+    MID: 0
   };
 })
 .directive('prxDrawerToggle', function (PRXDrawer) {
