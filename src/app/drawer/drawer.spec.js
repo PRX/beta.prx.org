@@ -19,23 +19,8 @@ describe('prx.drawer', function () {
     });
 
     it ('returns text', function () {
-      ctrl.item = {text: 'asd'};
+      ctrl.item = {name: 'asd'};
       expect(ctrl.text()).toEqual('asd');
-    });
-  });
-
-  describe ('NavButtonsCtrl', function () {
-    var ctrl, PRXDrawer;
-    beforeEach(inject(function (_PRXDrawer_, $controller) {
-      ctrl = $controller('NavButtonsCtrl');
-      PRXDrawer = _PRXDrawer_;
-    }));
-
-    it ('returns items that are not of type "item"', function () {
-      PRXDrawer.items = [{type:'item'}];
-      expect(ctrl.items().length).toBe(0);
-      PRXDrawer.items = [{type:'item'}, {type:'item'}, {type:'item'}, {type:'one'}];
-      expect(ctrl.items().length).toBe(1);
     });
   });
 
@@ -46,7 +31,7 @@ describe('prx.drawer', function () {
     }));
 
     it ('returns shortText', function () {
-      ctrl.item = {shortText: 'asd'};
+      ctrl.item = {name: 'asd'};
       expect(ctrl.text()).toBe('asd');
     });
 
@@ -129,10 +114,10 @@ describe('prx.drawer', function () {
         }).register({
           name: 'SignUp',
           nav: true,
-          weight: drawerProvider.LAST
+          weight: drawerProvider.BOTTOM
         }).register({
           name: 'Search',
-          weight: drawerProvider.FIRST,
+          weight: drawerProvider.TOP,
           nav: true
         });
 
@@ -152,10 +137,10 @@ describe('prx.drawer', function () {
         }).register({
           name: 'SignUp',
           nav: true,
-          weight: drawerProvider.LAST
+          weight: drawerProvider.BOTTOM
         }).register({
           name: 'Search',
-          weight: drawerProvider.FIRST,
+          weight: drawerProvider.TOP,
           nav: true
         });
 
@@ -192,40 +177,16 @@ describe('prx.drawer', function () {
     });
   });
 
-  describe ('prxDrawerToggle directive', function () {
-    var elem, drawer, scope;
-
-    beforeEach(inject(function ($compile, PRXDrawer, $rootScope) {
-      elem = angular.element('<a prx-drawer-toggle></>');
-      drawer = PRXDrawer;
-      spyOn(PRXDrawer, 'toggle');
-      scope = $rootScope.$new();
-      elem = $compile(elem)(scope);
-    }));
-
-    it ('toggles drawer on click', function () {
-      elem.triggerHandler('click');
-      expect(drawer.toggle).toHaveBeenCalled();
-    });
-
-    it ('cleans up', function () {
-      scope.$emit('$destroy');
-      elem.triggerHandler('click');
-      expect(drawer.toggle).not.toHaveBeenCalled();
-    });
-  });
-
   describe ('prxDrawer directive', function () {
     it ("compiles", inject(function ($compile, $rootScope, PRXDrawer, $window) {
       var elem = $compile('<prx-drawer>')($rootScope.$new());
       $rootScope.$digest();
-      expect(elem.scope().drawer).toBe(PRXDrawer);
     }));
   });
 
   describe ('prxNavButtons directive', function () {
     it ("compiles", inject(function ($compile, $rootScope) {
-      $compile('<prx-nav-buttons>')($rootScope);
+      $compile('<prx-drawer><prx-nav-buttons></prx-drawer>')($rootScope);
     }));
   });
 
