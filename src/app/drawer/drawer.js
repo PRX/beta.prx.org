@@ -5,9 +5,22 @@ angular.module('prx.drawer', [])
     templateUrl: 'drawer/container.html',
     transclude: true,
     replace: true,
-    link: function (scope) {
-      scope.drawer = PRXDrawer;
-    }
+    controller: function prxDrawerController () {
+      this.open = false;
+      this.toggle = function () {
+        this.open = !this.open;
+      };
+      this.drawerItems = PRXDrawer.items;
+      this.maxNavItems = 0;
+      this.setMaxNavItems = function (maxNavItems) {
+        if (this.maxNavItems !== maxNavItems) {
+          this.drawerItems = PRXDrawer.drawerItems(maxNavItems);
+          this.navItems = PRXDrawer.navItems(maxNavItems);
+          this.maxNavItems = maxNavItems;
+        }
+      };
+    },
+    controllerAs: 'drawer'
   };
 })
 .directive('prxDrawerContents', function () {
@@ -28,7 +41,7 @@ angular.module('prx.drawer', [])
     controllerAs: 'drawerItem'
   };
 })
-.controller('DrawerItemCtrl', function () {
+.controller('DrawerItemCtrl', function ($compile) {
   this.classes = function () {
     return [this.item.type];
   };
@@ -36,8 +49,10 @@ angular.module('prx.drawer', [])
     return this.item.href;
   };
   this.text = function () {
-    return this.item.text;
+    return this.item.name;
   };
+
+  // if (this.item.)
 })
 .provider('PRXDrawer', function () {
   var menuItems = [];
@@ -91,7 +106,8 @@ angular.module('prx.drawer', [])
 
   Drawer.prototype.navItems = function navItems (maxItems) {
     if (maxItems >= this.items.length) { return this.items; }
-    return this.sortFn(this.navCache.slice(0, maxItems));
+    var result = this.sortFn(this.navCache.slice(0, maxItems));
+    return result;
   };
 
   Drawer.prototype.drawerItems = function drawerItems (maxNavItems) {
@@ -108,7 +124,7 @@ angular.module('prx.drawer', [])
     }
     angular.forEach(menuItems, function (item) {
       if (typeof item.weight === 'undefined') {
-        item.weight = 0;
+        item.weight = PRXDrawerProvider.MID;
       }
       if (typeof item.nav === 'undefined') {
         item.nav = false;
@@ -117,41 +133,83 @@ angular.module('prx.drawer', [])
     return new Drawer(sortMenuItems(menuItems), sortMenuItems);
   }
 
-  return {
+  var PRXDrawerProvider = {
     $get: getDrawer,
     register: function register () {
       menuItems.push.apply(menuItems, arguments);
       return this;
     },
-    FIRST: -Infinity,
-    LAST: Infinity,
+    TOP: -Infinity,
+    BOTTOM: Infinity,
     HIGH: -100,
     LOW: 100,
     MID: 0
   };
-})
-.directive('prxDrawerToggle', function (PRXDrawer) {
-  return {
-    restrict: 'A',
-    link: function (scope, elem) {
-      function toggleDrawer() {
-        scope.$apply(PRXDrawer.toggle);
-      }
 
-      elem.on('click', toggleDrawer);
-      scope.$on('$destroy', function () {
-        elem.off('click', toggleDrawer);
-      });
+  return PRXDrawerProvider;
+})
+.directive('prxDrawerButton', function () {
+  return {
+    restrict: 'E',
+    replace: true,
+    require: '^prxDrawer',
+    templateUrl:'drawer/toggle_button.html',
+    link: function (scope, elem, attrs, ctrl) {
+      scope.drawer = ctrl;
     }
   };
 })
-.directive('prxNavButtons', function () {
+.factory('quickDebounce', function ($timeout) {
+  return quickDebounce;
+
+  function quickDebounce(fn, duration) {
+    var timeout = -1;
+    duration = duration || 100;
+    function trigger(self, args) {
+      return function () {
+        fn.apply(self, args);
+        timeout = 0;
+      };
+    }
+
+    function debouncedVersion () {
+      if (timeout == -1) {
+        fn.apply(this, arguments);
+        timeout = $timeout(function () { timeout = 0; }, duration);
+      } else {
+        if (timeout) {
+          $timeout.cancel(timeout);
+        }
+        timeout = $timeout(trigger(this, arguments), duration);
+      }
+    }
+
+    debouncedVersion.toString = function () {
+      return fn.toString();
+    };
+
+    return debouncedVersion;
+  }
+})
+.directive('prxNavButtons', function ($window, quickDebounce) {
   return {
     restrict: 'E',
     templateUrl: 'drawer/nav_buttons.html',
-    controller: 'NavButtonsCtrl',
-    controllerAs: 'navButtons',
-    replace: true
+    require: '^prxDrawer',
+    replace: true,
+    link: function (scope, elem, attrs, ctrl) {
+      var debouncedCheckWidth = quickDebounce(checkWidth);
+      checkWidth();
+
+      angular.element($window).on('resize', debouncedCheckWidth);
+      scope.$on('$destroy', function () {
+        angular.element($window).off('resize', debouncedCheckWidth);
+      });
+
+      function checkWidth () {
+        ctrl.setMaxNavItems(~~(elem[0].offsetWidth / 70));
+      }
+    }
   };
 })
 .directive('prxNavItem', function () {
@@ -165,16 +223,9 @@ angular.module('prx.drawer', [])
     bindToController: true
   };
 })
-.controller('NavButtonsCtrl', function (PRXDrawer, $filter) {
-  this.items = function () {
-    return $filter('filter')(PRXDrawer.items, function (item) {
-      return item.type != "item";
-    });
-  };
-})
 .controller('NavItemCtrl', function () {
   this.text = function () {
-    return this.item.shortText;
+    return this.item.name;
   };
   this.href = function () {
     return this.item.href;
