@@ -30,6 +30,8 @@ angular.module('prx.donations', ['prx.bus', 'angulartics',])
   };
 })
 .directive('prxDonate', function(prxDonateURL, $analytics, $window, $timeout, Bus) {
+  // TODO: look into switching to ng-click for binding, and replacing with an A
+  //       tag so that open in new tab is possible
   return {
     restrict: 'E',
     replace: true,
