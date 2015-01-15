@@ -166,7 +166,7 @@ angular.module('prx.stories', [
   this.account = account;
   this.series = series;
   this.audioVersions = audioVersions;
-  console.log(this.audioVersions.length);
+  
   this.cover = prxperiment.get('storyCover');
   this.sound = prxSoundFactory({ story: story, producer: account,
     audioFiles: audioUrls, next: function (sound) {
