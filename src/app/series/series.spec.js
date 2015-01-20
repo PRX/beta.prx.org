@@ -79,19 +79,17 @@ describe('prx.series', function () {
     });
 
     it ('gets the stories based on the series', inject(function (ngHal, $rootScope) {
+      var storiesList = ngHal.mock();
+      storiesList.stubFollow('prx:items', "foo");
+
+      expect($injector.invoke(state.resolve.stories, null, {storiesList: storiesList})).toResolveTo("foo");
+    }));
+
+    it ('gets the stories list based on the series', inject(function (ngHal, $rootScope) {
       var series = ngHal.mock();
-      var stories = ngHal.mock();
-      var items;
-      stories.stubFollow('prx:items', {s:1});
-      series.stubFollow('prx:stories', stories);
+      series.stubFollow('prx:stories', "foo");
 
-      $injector.invoke(state.resolve.stories, null, {series: series}).then(function (s) {
-        items = s;
-      });
-
-      $rootScope.$digest();
-
-      expect(items.s).toBe(1);
+      expect($injector.invoke(state.resolve.storiesList, null, {series: series})).toResolveTo("foo");
     }));
   });
 });

@@ -16,11 +16,11 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
       series: function (ngHal, $stateParams) {
         return ngHal.followOne('prx:series', {id: $stateParams.seriesId});
       },
-      stories: function(series) {
-        return series.follow('prx:stories').follow('prx:items');
-      },
       storiesList: function (series) {
         return series.follow('prx:stories');
+      },
+      stories: function (storiesList) {
+        return storiesList.follow('prx:items');
       },
       recentStories: function (storiesList) {
         return storiesList.follow('prx:items');
