@@ -35,7 +35,7 @@ describe('prx.stories', function () {
     it ('attaches the story and accounts injected to $scope', function () {
       var sigil = ngHal.mock();
       var scope = {};
-      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, audioUrls: [sigil], $scope: scope});
+      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, audioUrls: [sigil], audioVersions: [sigil], $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.account).toBe(sigil);
     });
@@ -43,10 +43,10 @@ describe('prx.stories', function () {
     it ('starts playback of the story if requested', function () {
       var player = jasmine.createSpyObj('player', ['play']);
       var story  = ngHal.mock();
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: []});
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: [], audioVersions: []});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: []});
+      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: [], audioVersions: []});
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
     });
@@ -90,6 +90,15 @@ describe('prx.stories', function () {
         invoke(state.resolve.series, null, {story: story}).
         get('s')).toResolveTo(1);
     }));
+
+    it('gets the versions based on the story', function () {
+      var story = ngHal.mock();
+      story.stubFollow('prx:audio-versions', [{url:'url'}]);
+
+      expect($injector.invoke(state.resolve.audioVersions, null, {
+        story: story
+      }).then(function(s) { return s[0].url; })).toResolveTo('url');
+    });
 
     xit ('gets the audioUrls based on the story', function () {
       var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),

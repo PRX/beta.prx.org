@@ -19,7 +19,11 @@ article.story
             li.duration
               | Length: #{''}
               time(datetime="P{{story.current.duration}}S") {{story.current.duration * 1000 | timeCode: 'short' }}
-          a.content_advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") Content Advisory
+          .badges
+            a.content-advisory(ui-sref=".content_advisory" ng-if="story.current.contentAdvisory") 
+              span Content Advisory
+            a.multiple-versions(ng-if="::story.audioVersions.length > 0")
+              span Multiple Versions
     .toolbar
       section
         prx-donate(account="::story.account")

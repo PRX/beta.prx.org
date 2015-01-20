@@ -6,24 +6,38 @@ article.story .hero {
 
   a { color: inherit; }
 
-  .content_advisory {
-    display: inline-block;
-    background: black;
-    color: white;
-    font-size: 12px;
-    padding-right: 4px;
-    line-height: 20px;
-    font-weight: bold;
+  .badges {
+    display: flex;
+    padding-top: 8px;
 
-    &::before {
-      content: '!'
-      background: $blue;
-      width: 20px;
-      display: inline-block;
+    a {
+      background: $midnight;
       color: white;
-      text-align: center;
-      margin-right: 4px;
+      font-size: 12px;
+      margin: 0 8px 0 0;
+      padding: 0 8px 0 0;
+      line-height: 20px;
       font-weight: bold;
+      display: flex;
+
+      &::before {
+        background: $blue;
+        width: 20px;
+        display: inline-block;
+        color: white;
+        text-align: center;
+        margin-right: 8px;
+        font-weight: bold;
+      }
+
+      &.content-advisory::before {
+        content: '!';
+      }
+
+      &.multiple-versions::before {
+        content: '';
+        font-family: fontello;
+      }
     }
   }
 

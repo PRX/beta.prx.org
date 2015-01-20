@@ -31,10 +31,22 @@
       "src": "fontawesome"
     },
     {
+      "uid": "96ea1be71f597a5bdfc8f791ada4f651",
+      "css": "archive",
+      "code": 59400,
+      "src": "entypo"
+    },
+    {
       "uid": "e126987944593dfee041f8e2a68145db",
       "css": "basket",
       "code": 59397,
       "src": "entypo"
+    },
+    {
+      "uid": "frauy9fser6zk9n5ih3rdpz7zzfjbrvu",
+      "css": "eye",
+      "code": 59399,
+      "src": "modernpics"
     },
     {
       "uid": "d5937c5767642d0336ad599af0e9c992",
