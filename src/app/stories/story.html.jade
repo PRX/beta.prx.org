@@ -76,7 +76,7 @@ article.story
         h2 Timing &amp; Cues
         div(ng-bind-html="story.current.timingAndCues | highlightTimecodes | simpleFormat", limit-to-html="250", html-limited="longCues")
         a.full(ui-sref=".timingCues", ng-if="longCues") (View Full Timing & Cues)
-      section.musical-works
+      section.musical-works(ng-if="story.musicalWorks.length >= 1")
         h2 Musical Works
         table
           thead
