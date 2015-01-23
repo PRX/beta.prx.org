@@ -81,7 +81,7 @@ describe('prx.analyze-audio', function () {
       expect(result.tags.album).toEqual('mister bar');
       expect(result.format.bitRate).toEqual(128);
       expect(result.duration).toEqual(600);
-      expect(result.metadata.artist).toEqual('miss foo');
+      // expect(result.metadata.artist).toEqual('miss foo');
 
     });
 

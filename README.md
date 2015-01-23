@@ -1,29 +1,38 @@
 # PRX.org Version 4
-[![Build Status](https://travis-ci.org/PRX/PRX.org-Frontend.png?branch=master)](https://travis-ci.org/PRX/PRX.org-Frontend)
-[![Coverage Status](https://coveralls.io/repos/PRX/PRX.org-Frontend/badge.png?branch=master)](https://coveralls.io/r/PRX/PRX.org-Frontend?branch=master)
+[![Build Status](https://travis-ci.org/PRX/www.prx.org.png?branch=master)](https://travis-ci.org/PRX/www.prx.org)
+[![Coverage Status](https://coveralls.io/repos/PRX/www.prx.org/badge.png?branch=master)](https://coveralls.io/r/PRX/www.prx.org?branch=master)
 
     Note: This repository houses only the web frontend
     component of PRX.org Version 4. In order to use it,
-    you will need a working version of the API or backend
-    component, available at [PRX/PRX.org-Backend](/PRX/PRX.org-Backend).
+    you will need a working version of the CMS or backend
+    component, available at [PRX/cms.prx.org](/PRX/cms.prx.org).
     If you want to contribute to the frontend without needing
-    to change the backend, you can use our live backend, but
+    to change the backend, you can use our live CMS, but
     may be subject to rate-limiting.
 
+    Additionally, both this application and the cms depend
+    on a working instance of our identification service for
+    login and write support. That service's source code is
+    not currently publicly available, but we are investigating
+    options for documenting the expected protocol or releasing
+    the source code. Until that time, the service is available
+    at [id.prx.org](https://id.prx.org).
+
 ## Getting Started
-The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS and NPM installed.
+The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS, NPM, and pow installed.
 
 ```shell
-git clone git://github.com/PRX/PRX.org-Frontend.git prx4-fe
-cd prx4-fe
+git clone git://github.com/PRX/www.prx.org.git prx.org
+cd prx.org
+echo 8080 > ~/.pow/www.prx
 npm install
 npm run-script devServer
 ```
 
-After executing the above, opening a web browser to `http://localhost:8080/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
+After executing the above, opening a web browser to `http://www.prx.dev/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
 
 ## Architecture
-Version 4 of PRX.org is implemented as a pair of applications – a *backend* which is executed by the server and implemented using Ruby on Rails, and a *frontend* which is executed by web browsers and implemented using AngularJS.
+Version 4 of PRX.org is implemented as a constellation of applications – currently a *CMS API* which is executed by the server and implemented using Ruby on Rails, a *frontend* which is executed by web browsers and implemented using AngularJS, an *Identification Service* supporting user registration and sign-in, and several other small server-side applications which may react to events occurring throughout the system, provide a public HTTP API, or both.
 
 ### General Principles
 The application is built in javascript using AngularJS and Stylus (a CSS-like language which compiles to CSS).
@@ -48,8 +57,8 @@ Tests are automatically run by Travis CI in several circumstances. Generally, th
 Deployment is handled through Capistrano. If you have access to commit directly to this repo, you probably have deploy permissions as well. If you don't, you will likely need to customize the deployment scripts anyway, so it will not be addressed in detail here. The basics are these:
 
 ```shell
-cap production deploy # deploys to m.prx.org, *always* from master
-cap staging deploy    # deploys to m-staging.prx.org, allows specifying the branch
+cap production deploy # deploys to beta.prx.org, *always* from master
+cap staging deploy    # deploys to alpha.prx.org, allows specifying the branch
 ```
 
 If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let chris know.

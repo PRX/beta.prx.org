@@ -11,8 +11,6 @@ angular.module('angular-id3', ['async-loader'])
     });
   };
 
-
-
   var flattenTags = function (tags) {
     var ft = angular.copy(tags);
     for (var i=0; i<=3; i++) {
