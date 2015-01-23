@@ -14,6 +14,7 @@ article.series
             li
               strong Episodes:
               | {{series.current.storyCount}}
+          prx-donate(account="::series.account")
           .description
             div(ng-bind-html="series.current.shortDescription")
             a.unbreakable(ui-sref=".details" ng-if="series.current.description") (View Full Description)

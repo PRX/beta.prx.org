@@ -3,15 +3,21 @@
     padding-top: 30px;
     padding-bottom: 10px;
 
-    .content_advisory { display: inline-block; }
-
     section {
       display: flex;
       flex-flow: row wrap;
+      position: relative;
 
       h1 {
         font-size: 32px;
         line-height: 40px;
+      }
+
+      .badges {
+        position: absolute;
+        top: 0;
+        right: 22px;
+        padding: 0;
       }
 
       .player {

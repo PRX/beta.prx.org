@@ -32,6 +32,27 @@ article.series .hero {
         color: $heading-color;
       }
 
+      .donate {
+        button-orange(true)
+        order: 1;
+        height: 30px;
+        min-width: 145px;
+        line-height: 30px;
+        padding-right: 30px;
+        padding-left: 35px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: left;
+        display: inline-block;
+
+        &::before {
+          font-family: 'fontello';
+          content: '';
+          line-height: 30px;
+          padding: 0 10px 0 3px;
+        }
+      }
+
       .description {
         display: none;
       }

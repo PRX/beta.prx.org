@@ -26,28 +26,40 @@ describe('prx.stories', function () {
   });
 
   describe ('StoryCtrl', function () {
-    var ngHal, $controller;
+    var ngHal, $controller, mock, injects, scope;
     beforeEach(inject(function (_ngHal_, _$controller_) {
       ngHal = _ngHal_;
       $controller = _$controller_;
+      mock = ngHal.mock();
+      scope = {};
+      injects = {
+        story: mock,
+        account: mock,
+        series: mock,
+        audioUrls: [mock],
+        audioVersions: [mock],
+        musicalWorks: [mock],
+        musicalWorksList: mock,
+        $scope: scope
+      };
     }));
 
     it ('attaches the story and accounts injected to $scope', function () {
-      var sigil = ngHal.mock();
-      var scope = {};
-      var controller = $controller('StoryCtrl', {story: sigil, account: sigil, series: sigil, audioUrls: [sigil], $scope: scope, musicalWorks: [sigil], musicalWorksList: sigil});
-      expect(controller.current).toBe(sigil);
-      expect(controller.account).toBe(sigil);
+      var controller = $controller('StoryCtrl', injects);
+      expect(controller.current).toBe(mock);
+      expect(controller.account).toBe(mock);
     });
 
     it ('starts playback of the story if requested', function () {
-      var player = jasmine.createSpyObj('player', ['play']);
-      var story  = ngHal.mock();
-      list = ngHal.mock();
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:null}, $scope: {}, audioUrls: [], musicalWorks: [], musicalWorksList: list});
+      var player = injects.prxPlayer = jasmine.createSpyObj('player', ['play']);
+      var story = injects.story = ngHal.mock();
+      injects.$stateParams = {play: true, s:null};
+      $controller('StoryCtrl', injects);
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
-      $controller('StoryCtrl', {story: story, prxPlayer: player, account: {}, series: {}, $stateParams: {play: true, s:undefined}, $scope: {}, audioUrls: [], musicalWorks: [], musicalWorksList: list});
+
+      injects.$stateParams = {play: true, s:undefined};
+      $controller('StoryCtrl', injects);
       expect(player.play).toHaveBeenCalled();
       expect(player.play.calls.mostRecent().args[0].story).toEqual(story);
     });
@@ -91,6 +103,15 @@ describe('prx.stories', function () {
         invoke(state.resolve.series, null, {story: story}).
         get('s')).toResolveTo(1);
     }));
+
+    it('gets the versions based on the story', function () {
+      var story = ngHal.mock();
+      story.stubFollow('prx:audio-versions', [{url:'url'}]);
+
+      expect($injector.invoke(state.resolve.audioVersions, null, {
+        story: story
+      }).then(function(s) { return s[0].url; })).toResolveTo('url');
+    });
 
     xit ('gets the audioUrls based on the story', function () {
       var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
