@@ -10,8 +10,7 @@
   <link rel="canonical" bind-canonical="href" />
   <meta name="fragment" content="!">
 </head>
-<body ng-controller="appCtrl as app" ng-class="{'with-player': !!app.player.nowPlaying, 'show-target': app.fileTargetVisible}" ng-dragover="app.showFileTarget($event)">
-  <prx-file-target name='files'></prx-file-target>
+<body ng-controller="appCtrl as app" ng-class="{'chromeless': !app.chrome.visible, 'with-player': !!app.player.nowPlaying, 'show-target': app.fileTargetVisible}" ng-dragover="app.showFileTarget($event)">
   <prx-file-target name='files' class="chrome"></prx-file-target>
   <prx-drawer drawer="main" class="_chase">
     <header ng-class="{'loading': loading}" class="chrome">
