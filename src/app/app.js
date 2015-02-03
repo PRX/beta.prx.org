@@ -20,6 +20,7 @@ angular.module('prx', ['ngAnimate',
   'prx.appCtrl',
   'prx.errors',
   'prx.modal',
+  'prx.embed',
   'prx.welcome',
   'prx.modelConfig',
   'ngMobile',
@@ -78,10 +79,11 @@ angular.module('prx.modelConfig', ['angular-hal'])
   }]);
 });
 (function () {
-  var acm = angular.module('prx.appCtrl', ['prx.player', 'prx.url-translate', 'prx.errors', (FEAT.TCF_DEMO ? 'prx.upload' : 'ng')])
-  .controller('appCtrl', function ($scope, $location, prxPlayer, urlTranslate, prxError, UploadTarget) {
+  var acm = angular.module('prx.appCtrl', ['prx.embed', 'prx.player', 'prx.url-translate', 'prx.errors', (FEAT.TCF_DEMO ? 'prx.upload' : 'ng')])
+  .controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, urlTranslate, prxError, UploadTarget) {
     var app = this;
     this.player = prxPlayer;
+    this.chrome = prxChrome;
 
     app.fileTargetVisible = false;
 
