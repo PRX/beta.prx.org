@@ -76,6 +76,18 @@ angular.module('prx.stories', [
       }
     }
   })
+  .state('story.show.embed', {
+    url: '/embed',
+    data: {
+      chromeless: true
+    },
+    views: {
+      '@': {
+        controller: 'StoryEmbedCtrl as story',
+        templateUrl: 'stories/embed.html'
+      }
+    }
+  })
   ;
 
   /* istanbul ignore else */
@@ -222,6 +234,20 @@ angular.module('prx.stories', [
 })
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
+})
+.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer) {
+  var sound = prxSoundFactory({
+    story: story,
+    producer: account,
+    series: series,
+    audioFiles: audioUrls, next: function (sound) {
+      return account.generatePlaylist(sound);
+    }
+  });
+
+  this.currentSound = function () {
+    return prxPlayer.nowPlaying || sound;
+  };
 })
 .directive('prxSocialActions', function($location) {
   return {

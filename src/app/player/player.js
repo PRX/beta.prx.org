@@ -82,15 +82,26 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 .service('prxPlayer', function (Bus) {
   return {
     $lastHeartbeat: 0,
-    play: function (sound) {
-      if (!sound || this.nowPlaying == sound && this.nowPlaying.paused) {
-        return this.resume();
-      } else if (this.nowPlaying != sound) {
+    load: function (sound) {
+      if (this.nowPlaying != sound) {
         this.stop();
         this.nowPlaying = sound;
         this.nowPlaying.onfinish = angular.bind(this, this.finish);
-        Bus.emit('audioPlayer.play', this.nowPlaying);
-        return sound.play();
+        return true;
+      } else {
+        return false;
+      }
+    },
+    play: function (sound) {
+      if (!sound || this.nowPlaying == sound && this.nowPlaying.paused) {
+        return this.resume();
+      } else {
+        if (this.load(sound)) {
+          Bus.emit('audioPlayer.play', this.nowPlaying);
+          return sound.play();
+        } else {
+          return false;
+        }
       }
     },
     sendHeartbeat: function (force) {
