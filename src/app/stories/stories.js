@@ -117,7 +117,7 @@ angular.module('prx.stories', [
       },
       toSoundParams: function () {
         return $q.all([
-          this.follow('prx:audio'),
+          this.follow('prx:audio').follow('prx:items'),
           this.getAccount()
         ]).then(angular.bind(this, generateSoundParams));
       },
