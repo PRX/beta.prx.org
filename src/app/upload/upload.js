@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio'])
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio', 'prx.upload.filepicker'])
   .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
       url: '/upload',
