@@ -103,7 +103,6 @@ angular.module('prx.modelConfig', ['angular-hal'])
     /* istanbul ignore next */
     if (FEAT.TCF_DEMO) {
       app.showFileTarget = function (event) {
-        console.log('dragevent');
         PRXFilePicker.show();
       };
     }

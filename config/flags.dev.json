@@ -13,5 +13,5 @@
   "UPLOADS_AWS_BUCKET": "prx-up",
   "UPLOADS_AWS_URL": "https://dsn15m3yob5tf.cloudfront.net",
   "UPLOADS_CLOUDFRONT": true,
-  "UPLOADS_LOGGING": true
+  "UPLOADS_LOGGING": false
 }

@@ -2,7 +2,6 @@ angular.module('prx.upload.filepicker', ['templates'])
 .factory('PRXFilePicker', function () {
   return {
     show: function () {
-      console.log("happening");
       this.visible = true;
     },
     dismiss: function () {
