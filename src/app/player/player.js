@@ -185,6 +185,17 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     }
   };
 })
+.directive('prxEmbedPlayer', function ($controller, prxSoundFactory) {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'player/embed_player.html',
+    controller: 'PlayerCtrl as player',
+    link: function (scope, elem, attrs, ctrl) {
+      scope.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
+    }
+  };
+})
 .directive('prxPlayerButton', function ($controller, prxSoundFactory) {
   return {
     restrict: 'E',

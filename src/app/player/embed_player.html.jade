@@ -1,0 +1,9 @@
+.embed-player
+  .layer2
+    .progress(ng-style="{width: player.progress() + '%'}")
+  .layer3
+    h1(
+      ng-class="{paused: player.sound.paused}",
+      ng-click="player.toggle()") {{story.currentSound().story.title}}
+  .layer4
+    .scrubber(prx-player-scrubber="player.scrubToPercent(percentage)")
