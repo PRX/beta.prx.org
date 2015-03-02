@@ -1,6 +1,2 @@
 article.embed-story
-  .info
-    h1 {{story.currentSound().story.title}}
-    h2(ng-if="!story.currentSound().series") by {{story.currentSound().producer.name}}
-    h2(ng-if="story.currentSound().series") from {{story.currentSound().series.title}}
-  prx-player(sound="story.currentSound()")
+  prx-embed-player(sound="story.currentSound()")
