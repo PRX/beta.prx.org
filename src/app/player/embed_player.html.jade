@@ -1,4 +1,4 @@
-.embed-player
+.embed-player(ng-class="{share: player.sharing, unattended: player.unattended}")
   .layer2
     .progress(ng-style="{width: player.progress() + '%'}")
   .layer3
@@ -7,3 +7,18 @@
       ng-click="player.toggle()") {{story.currentSound().story.title}}
   .layer4
     .scrubber(prx-player-scrubber="player.scrubToPercent(percentage)")
+  .layer4b
+    a.share(ng-click="player.share()") Share
+  .layer5
+    h1 Are you still listening?
+    div
+      button(ng-click="player.hearMore()") Yes, I want to hear more!
+      button Nope, I'm done for now
+  .layer6
+    div(ng-click="player.share()")
+      h1 Share this story
+      span
+        a.facebook(href="#") 
+        a.twitter(href="#") 
+        a.email(href="#") 
+    a.close(ng-click="player.share()") Close
