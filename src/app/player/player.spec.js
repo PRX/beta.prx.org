@@ -50,13 +50,14 @@ describe('prx.player', function () {
     });
 
     describe ('PlayerCtrl', function () {
-      var ctrl, sound, prxPlayer;
+      var ctrl, sound, prxPlayer, scope;
 
-      beforeEach(inject(function (_prxPlayer_) {
+      beforeEach(inject(function (_prxPlayer_, $rootScope) {
         sound = {};
         prxPlayer = _prxPlayer_;
+        scope = $rootScope.$new();
 
-        ctrl = $controller('PlayerCtrl');
+        ctrl = $controller('PlayerCtrl', { $scope: scope });
         ctrl.setSound(sound);
       }));
 
