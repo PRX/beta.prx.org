@@ -1,5 +1,5 @@
 angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
-.run(function (Bus, $analytics) {
+.run(function (Bus, $analytics, prxPlayerHistory) {
   var category = 'Audio Player';
 
   Bus.on('audioPlayer.stop', function () {
@@ -97,8 +97,9 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         return this.resume();
       } else {
         if (this.load(sound)) {
+          var p = sound.play();
           Bus.emit('audioPlayer.play', this.nowPlaying);
-          return sound.play();
+          return p;
         } else {
           return false;
         }
@@ -212,7 +213,11 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     }
   };
 })
-.controller('PlayerCtrl', function (prxPlayer) {
+.controller('PlayerCtrl', function (prxPlayer, Bus, $scope) {
+  this.share = function () {
+    this.sharing = !this.sharing;
+  };
+
   this.setSound = function (newSound) {
     this.sound = newSound;
   };
@@ -257,6 +262,42 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       prxPlayer.sendHeartbeat(true);
     }
     this.sound.setPosition(position);
+  };
+
+  this.hearMore = function () {
+    prxPlayer.play();
+    this.unattended = false;
+  };
+
+  var _this = this;
+  $scope.$on('audioPlayer.unattended', function (isUnattended) {
+    if (isUnattended) {
+      console.log('!!!!! Pausing unattended player...');
+      _this.unattended = true;
+      prxPlayer.pause();
+    }
+  });
+})
+.service('prxPlayerHistory', function (Bus, $rootScope) {
+
+  this.unattendedStoriesPlayed = -1;
+  var _this = this;
+
+  Bus.on('audioPlayer.resume', function () {
+    _this.unattendedStoriesPlayed = 0;
+  }).on('audioPlayer.pause', function () {
+    console.log('paused');
+    _this.unattendedStoriesPlayed = 0;
+  }).on('audioPlayer.play', function () {
+    _this.unattendedStoriesPlayed += 1;
+
+    if (_this.unattendedStoriesPlayed >= 3) {
+      $rootScope.$broadcast('audioPlayer.unattended', true);
+    }
+  });
+
+  return {
+
   };
 })
 .directive('prxPlayerScrubber', function () {
