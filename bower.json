@@ -18,7 +18,8 @@
     "id3": "~1.0.2",
     "aurora.js": "audiocogs/aurora.js#~0.4.3",
     "mp3.js": "PRX/mp3.js#master",
-    "scriptjs": "~2.5.7"
+    "scriptjs": "~2.5.7",
+    "angular-encode-uri": "~1.0.0"
   },
   "dependencies": {},
   "resolutions": {

@@ -40,7 +40,8 @@
       "vendor/ngstorage/ngStorage.js",
       "vendor/ng-sortable/dist/ng-sortable.js",
       "vendor/scriptjs/dist/script.js",
-      "vendor/node-uuid/uuid.js"
+      "vendor/node-uuid/uuid.js",
+      "vendor/angular-encode-uri/dist/angular-encode-uri.min.js"
     ],
     "copyJs": [
       "vendor/EvaporateJS/evaporate.js",
