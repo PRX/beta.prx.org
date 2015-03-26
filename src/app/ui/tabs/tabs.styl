@@ -1,0 +1,183 @@
+tabs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+
+  > ul {
+    flex: 0 0 auto;
+  }
+
+  > div {
+    flex: 1 0 auto;
+  }
+
+  > ul a {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+tabs:not(.vertical) {
+  > ul {
+    display: flex;
+    background-color: $tab-bed-color;
+    overflow-x: auto;
+    border-radius: $tab-border-radius $tab-border-radius 0 0;
+
+    li {
+      flex: 1 0 auto;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    a {
+      color: $tab-inactive-text-color;
+      padding: 5px 15px;
+      text-align: center;
+      background-color: $tab-inactive-background-color;
+      border-radius: $tab-border-radius $tab-border-radius 0 0;
+      cursor: pointer;
+    }
+
+    .active a {
+      background-color: $tab-active-background-color;
+      color: $tab-active-text-color;
+      cursor: default;
+    }
+
+    .disabled a {
+      cursor: not-allowed;
+    }
+
+    .active-remove,
+    .active-add {
+      transition-duration: 0.2s;
+
+      a {
+        transition: all 0.2s;
+      }
+    }
+  }
+
+  > div {
+    background-color: $tab-body-background-color;
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+
+    > * {
+      transition: transform 0.2s, opacity 0.2s;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+
+      &.ng-leave-active {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+
+      &.ng-enter {
+        transform: translateY(-100%);
+      }
+
+      &.ng-enter-active {
+        transform: none;
+      }
+    }
+  }
+}
+
+tabs.vertical {
+  flex-flow: row nowrap;
+  > ul {
+    margin-top: 35px;
+
+    flex: 0.6 0 0%;
+
+    // &:first-child {
+    //   text-align: right;
+    // }
+
+    text-align: right;
+
+    a {
+      color: $sidebar-inactive-text-color;
+      padding: 10px 25px 10px;
+      transition: color 0.2s linear, padding-right 0.2s ease;
+    }
+
+    li {
+      position: relative;
+      overflow: hidden;
+    }
+
+    li::after {
+      height: 0px;
+      display: block;
+      content: ' ';
+      border: 0px solid transparent;
+      border-right-color: white;
+      margin-top: 0;
+      position: absolute;
+      border-left-width: 0px;
+      top: 50%;
+      right: 0;
+      transition: border-width 0.2s cubic-bezier(0.630, 0.015, 0.680, 1.5),
+        height 0.2s cubic-bezier(0.630, 0.015, 0.680, 1.5),
+        margin-top 0.2s cubic-bezier(0.630, 0.015, 0.680, 1.5);
+    }
+
+    li.active a {
+        color: $sidebar-active-text-color;
+        padding-right: 20px;
+    }
+
+    li.active::after {
+      height: 22px;
+      left: 0;
+      margin-top: -11px;
+      border-width: 11px;
+    }
+
+    li:not(.active):hover {
+      a {
+        padding-right: 23px;
+      }
+      &::after {
+        height: 4px;
+        margin-top: -2px;
+        border-width: 2px;
+      }
+    }
+
+    li.active-remove, li.active-add {
+      transition-duration 0.2s;
+    }
+  }
+
+  > div {
+    flex: 1.8 0 0%;
+    height: 100%;
+    position: relative;
+
+    > * {
+      transition: opacity 0.1s linear;
+      position: absolute;
+      top: 0; left: 0;
+      &.ng-enter, &.ng-leave-active {
+        opacity: 0;
+      }
+
+      &.ng-leave, &.ng-enter-active {
+        opacity: 1;
+      }
+    }
+  }
+}
