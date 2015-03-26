@@ -96,6 +96,7 @@ xi-tabs:not(.vertical) {
 
 xi-tabs.vertical {
   flex-flow: row nowrap;
+  
   > ul {
     margin-top: 35px;
     flex: 0.6 0 0%;
@@ -151,7 +152,8 @@ xi-tabs.vertical {
       }
     }
 
-    li.active-remove, li.active-add {
+    li.active-remove,
+    li.active-add {
       transition-duration 0.2s;
     }
   }
@@ -165,11 +167,14 @@ xi-tabs.vertical {
       transition: opacity 0.1s linear;
       position: absolute;
       top: 0; left: 0;
-      &.ng-enter, &.ng-leave-active {
+
+      &.ng-enter,
+      &.ng-leave-active {
         opacity: 0;
       }
 
-      &.ng-leave, &.ng-enter-active {
+      &.ng-leave,
+      &.ng-enter-active {
         opacity: 1;
       }
     }
