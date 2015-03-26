@@ -1,9 +1,9 @@
-angular.module('prx.ui.tabs', ['ng-animate'])
-.directive('tabs', function () {
+angular.module('prx.ui.tabs', ['ngAnimate', 'ui.router'])
+.directive('xiTabs', function () {
   return {
     restrict: 'E',
     scope: false,
-    require: ['tabs', '^^?tabs'],
+    require: ['xiTabs', '^^?xiTabs'],
     link: function (scope, elem, attrs, ctrls) {
       if (ctrls[1]) {
         ctrls[1].addChild(ctrls[0]);
@@ -137,17 +137,23 @@ angular.module('prx.ui.tabs', ['ng-animate'])
     }
   };
 })
-.directive('tab', function () {
+.directive('xiTab', function () {
   return {
     restrict: 'E',
-    require: ['^^tabs','tab'],
+    require: ['^^xiTabs','xiTab'],
     scope: false,
     link: function (scope, elem, attrs, ctrls) {
       elem.remove();
       ctrls[0].addTab(ctrls[1].tab);
     },
     controller: function ($attrs) {
-      this.tab = {key: $attrs.key, disabled: $attrs.disabled};
+      this.tab = {
+        key: $attrs.key,
+        disabled: $attrs.disabled,
+        content: function (cb) {
+          cb(angular.element('<div>'));
+        }
+      };
       this.setName = function (nameFn) {
         this.tab.name = nameFn;
       };
@@ -157,10 +163,10 @@ angular.module('prx.ui.tabs', ['ng-animate'])
     }
   };
 })
-.directive('tabName', function () {
+.directive('xiTabName', function () {
   return {
     restrict: 'E',
-    require: '^tab',
+    require: '^^xiTab',
     transclude: true,
     scope: false,
     link: function (scope, elem, attrs, ctrl, transclude) {
@@ -168,10 +174,10 @@ angular.module('prx.ui.tabs', ['ng-animate'])
     }
   };
 })
-.directive('tabContent', function () {
+.directive('xiTabContent', function () {
   return {
     restrict: 'E',
-    require: '^tab',
+    require: '^^xiTab',
     transclude: true,
     scope: false,
     link: function (scope, elem, attrs, ctrl, transclude) {
