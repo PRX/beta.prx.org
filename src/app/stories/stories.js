@@ -258,6 +258,32 @@ angular.module('prx.stories', [
     return prxPlayer.nowPlaying || sound;
   };
 })
+.controller('StoryDonationCtrl', function (story, account, series, prxPlayer, $state, $timeout) {
+  this.step = 1;
+
+  this.donation = {};
+
+  this.submitEmail = function () {
+    var exp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var valid = exp.test(this.donation.email);
+
+    if (1||valid) {
+      this.step = 2;
+    }
+  };
+
+  this.submitPayment = function () {
+    this.step = 3;
+  };
+
+  this.submitAmount = function () {
+    this.step = 88;
+    var self = this;
+    $timeout(function () {
+      self.step = 99;
+    }, 1000);
+  };
+})
 .directive('prxSocialActions', function($location) {
   return {
     restrict: 'E',
