@@ -1,0 +1,22 @@
+.embed-donate
+  section
+    span(ng-if="story.step < 10")
+      h2 Hi! I'm Erika and I hope you're enjoying this story
+      h3 I make my stories available for free. Your support helps me make more stories.
+    form.email(novalidate ng-if="story.step == 1")
+      input(type='email' placeholder='Enter your email address to help support Erika' ng-model="story.donation.email")
+      input(type='submit' value='Next' ng-click="story.submitEmail()")
+    form(novalidate).payment(ng-if="story.step == 2")
+      input.cc(type='text' placeholder='Credit Card Number')
+      input.exp(type='text' placeholder='MM/YY')
+      input.cvv(type='text' placeholder='CVV')
+      input.zip(type='text' placeholder='ZIP')
+      input(type='submit' value='Next' ng-click="story.submitPayment()")
+    form(novalidate).amount(ng-if="story.step == 3")
+      input.amount(type='text' pattern="\\$?\\d+(\\.\\d{2})?" placeholder='$5' ng-model="story.donation.amount")
+      input(type='submit' value='Donate' ng-click="story.submitAmount()")
+    .processing(ng-if="story.step == 88")
+      div
+    .thankyou(ng-if="story.step == 99")
+      h4 Thank you for your support!
+      button.close(ui-sref='^') Back to the story

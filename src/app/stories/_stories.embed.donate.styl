@@ -1,0 +1,88 @@
+.embed-donate {
+  // background: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  height: @width;
+
+  section {
+
+  }
+
+  h2 {
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    padding-top: 20px;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+
+  h3 {
+    color: #a0a0a0;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 8px;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+
+  h4 {
+    font-size: 32px;
+    margin: 0 auto;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .close {
+    background: none;
+    margin: 5px auto;
+    text-align: center;
+    color: #aaa;
+    display: block;
+  }
+
+  form {
+    padding: 15px;
+    flex-wrap: nowrap;
+  }
+
+  input[type='text'],
+  input[type='email']
+  input[type='number'] {
+    flex-grow: 7;
+    border: 0;
+
+    &.cc {
+      flex-grow: 6;
+      flex-shrink: 1;
+    }
+
+    &.exp,
+    &.cvv,
+    &.zip, {
+      flex-grow: 1;
+      flex-shrink: 5;
+    }
+  }
+
+  input[type='submit'] {
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+  }
+
+  input.ng-invalid.ng-touched {
+    background: rgba(255, 210, 210, 1.0);
+  }
+
+  .processing {
+    div {
+      height: 80px;
+      @extends $loading-indicator;
+    }
+  }
+}
