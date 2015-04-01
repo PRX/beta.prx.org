@@ -244,7 +244,7 @@ angular.module('prx.stories', [
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
 })
-.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer) {
+.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer, $state) {
   var sound = prxSoundFactory({
     story: story,
     producer: account,
@@ -257,6 +257,9 @@ angular.module('prx.stories', [
   this.currentSound = function () {
     return prxPlayer.nowPlaying || sound;
   };
+
+  this.shareStoryURL = $state.href('story.show', $state.params, {absolute: true});
+  this.shareTitle = this.currentSound().story.title;
 })
 .controller('StoryDonationCtrl', function (story, account, series, prxPlayer, $state, $timeout) {
   this.step = 1;
