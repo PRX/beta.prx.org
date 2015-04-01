@@ -78,7 +78,7 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return this.context.makeConstructor([link.profile(params), rel])({
         _links: {
           create: {
-            href:link.href(params)
+            href:link.url(params)
           }
         }
       }, undefined);
