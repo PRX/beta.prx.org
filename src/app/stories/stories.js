@@ -88,6 +88,15 @@ angular.module('prx.stories', [
       }
     }
   })
+  .state('story.show.embed.donate', {
+    url: '/donate',
+    views: {
+      'modal@': {
+        controller: 'StoryDonationCtrl as story',
+        templateUrl: 'stories/embed_donate.html'
+      }
+    }
+  })
   ;
 
   /* istanbul ignore else */
