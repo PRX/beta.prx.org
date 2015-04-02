@@ -1,7 +1,7 @@
 .persistent-player(ng-class="{show: !!player.global.nowPlaying}").chrome
   .scrubber-track
     .scrubber(ng-style="{width: player.global.progress() }")
-  prx-player-button(sound="player.global.nowPlaying")
+  prx-player-button(prx-sound="player.global.nowPlaying")
   div(ng-if="player.global.nowPlaying")
     a(ui-sref="player.global.nowPlaying.story")
       prx-img.thumb(src="player.global.nowPlaying.story.imageUrl")

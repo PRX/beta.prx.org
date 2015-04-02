@@ -200,10 +200,11 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   return {
     restrict: 'E',
     replace: true,
+    require: ['prxPlayer', 'prxSound'],
     templateUrl: 'player/player.directive.html',
     controller: 'PlayerCtrl as player',
     link: function (scope, elem, attrs, ctrl) {
-      scope.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
+      ctrl[1].soundWatchers.push(ctrl[0]);
     }
   };
 })
@@ -211,10 +212,25 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   return {
     restrict: 'E',
     replace: true,
+    require: ['prxEmbedPlayer', 'prxSound'],
     templateUrl: 'player/embed_player.html',
     controller: 'PlayerCtrl as player',
     link: function (scope, elem, attrs, ctrl) {
-      scope.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
+      ctrl[1].soundWatchers.push(ctrl[0]);
+    }
+  };
+})
+.directive('prxSound', function () {
+  return {
+    restrict: 'A',
+    controller: function ($attrs, $scope) {
+      this.soundWatchers = [];
+      this.setSound = function (sound) {
+        angular.forEach(this.soundWatchers, function (soundWatcher) {
+          soundWatcher.setSound(sound);
+        });
+      };
+      $scope.$watch($attrs.prxSound, angular.bind(this, this.setSound));
     }
   };
 })
@@ -223,13 +239,15 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     restrict: 'E',
     replace: true,
     scope: true,
-    require: '^?prxPlayer',
+    require: ['^?prxPlayer', '^prxSound'],
     templateUrl: 'player/button.html',
     link: function (scope, elem, attrs, ctrl) {
       if (!ctrl) {
         ctrl = $controller('PlayerCtrl', {$scope: scope});
-        scope.$parent.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
+        ctrl[1].soundWatchers.push(ctrl);
       }
+
+      // TODO Need to push to soundWatchers if ctrl is supplied?
       scope.player = ctrl;
     }
   };
@@ -358,31 +376,18 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 .directive('waveform', function ($window, $timeout) {
   return {
     restrict: 'C',
-    require: '^prxPlayer',
+    require: '^prxSound',
     link: function (scope, elem, attrs, ctrl) {
       var animated = false,
           _window = angular.element($window),
-          timeout, setSound = ctrl.setSound,
-          ctx = elem[0].getContext('2d');
+          timeout, sound, ctx = elem[0].getContext('2d');
 
       _window.on('resize', scheduleWaveform);
 
       scope.$on('$destroy', function() {
-        ctrl.setSound = setSound;
+        // ctrl.setSound = setSound;
         _window.off('resize', scheduleWaveform);
       });
-
-      ctrl.setSound = function (sound) {
-        setSound.call(ctrl, sound);
-        if (sound && !sound.$waveform) {
-          sound.$waveform = [];
-
-          for (var i=0; i < 15; i+= 0.3) {
-            sound.$waveform.push(Math.sin(i) * 49 + 51);
-          }
-        }
-        scheduleWaveform();
-      };
 
       function scheduleWaveform () {
         // If the user is continuously resizing,
@@ -394,9 +399,23 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         timeout = $timeout(generateWaveform, 300);
       }
 
+      ctrl.soundWatchers.push({
+        setSound: function (aSound) {
+          if (aSound && !aSound.$waveform) {
+            aSound.$waveform = [];
+
+            for (var i=0; i < 15; i+= 0.3) {
+              aSound.$waveform.push(Math.sin(i) * 49 + 51);
+            }
+          }
+          sound = aSound;
+          scheduleWaveform();
+        }
+      });
+
       function generateWaveform () {
         var count = Math.floor(elem[0].offsetWidth / 5),
-          waveform = ctrl.sound && ctrl.sound.$waveform;
+          waveform = sound && sound.$waveform;
         /* istanbul ignore if: Count will always be 0 in testing (the window does not exist)*/
         if (count && waveform) {
           elem[0].width = elem[0].offsetWidth * 2;
