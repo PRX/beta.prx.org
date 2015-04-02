@@ -1,5 +1,5 @@
 angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
-.run(function (Bus, $analytics, prxPlayerHistory) {
+ .run(function (Bus, $analytics, prxPlayerIdleWatch) {
   var category = 'Audio Player';
 
   Bus.on('audioPlayer.stop', function () {
@@ -166,6 +166,27 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     }
   };
 })
+.service('prxPlayerIdleWatch', function (Bus, $rootScope) {
+  var self = this;
+
+  var threshold = 3;
+
+  // The first play is a user interatice, which will move the counter to 0, and
+  // subsequent plays are passive, so the first 'radio' play will move the
+  // counter to 1, etc.
+  this.playsWhileIdle = -1;
+
+  Bus.on('audioPlayer.resume audioPlayer.pause', function () {
+    // User is no longer idle if the resume or pause the player
+    self.playsWhileIdle = 0;
+  }).on('audioPlayer.play', function () {
+    self.playsWhileIdle += 1;
+
+    if (self.playsWhileIdle >= threshold) {
+      $rootScope.$broadcast('audioPlayer.unattended', true);
+    }
+  });
+})
 .directive('prxGlobalPlayer', function () {
   return {
     restrict: 'E',
@@ -277,28 +298,6 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       prxPlayer.pause();
     }
   });
-})
-.service('prxPlayerHistory', function (Bus, $rootScope) {
-
-  this.unattendedStoriesPlayed = -1;
-  var _this = this;
-
-  Bus.on('audioPlayer.resume', function () {
-    _this.unattendedStoriesPlayed = 0;
-  }).on('audioPlayer.pause', function () {
-    console.log('paused');
-    _this.unattendedStoriesPlayed = 0;
-  }).on('audioPlayer.play', function () {
-    _this.unattendedStoriesPlayed += 1;
-
-    if (_this.unattendedStoriesPlayed >= 3) {
-      $rootScope.$broadcast('audioPlayer.unattended', true);
-    }
-  });
-
-  return {
-
-  };
 })
 .directive('prxPlayerScrubber', function () {
   return {
