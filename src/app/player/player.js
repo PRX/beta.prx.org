@@ -303,6 +303,28 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     this.sound.setPosition(position);
   };
 
+  this.subscribe = function () {
+    var self = this;
+    var after = function () {
+      self.subscribe.email = '';
+      self.showFollow = false;
+      // TODO resume playback
+    };
+
+    if (this.subscribe.email) {
+      prxMailingList.subscribe(this.subscribe.email,
+        '00000',
+        function (success) {
+          after();
+        },
+        function (error) {
+          console.log(error);
+          after();
+        }
+      );
+    }
+  };
+
   this.hearMore = function () {
     prxPlayer.play();
     this.unattended = false;
