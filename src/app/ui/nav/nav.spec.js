@@ -1,5 +1,5 @@
-describe('prx.drawer', function () {
-  beforeEach(module('templates', 'prx.drawer'));
+describe('prx.ui.nav', function () {
+  beforeEach(module('templates', 'prx.ui.nav'));
 
 
   describe('DrawerItemCtrl', function () {

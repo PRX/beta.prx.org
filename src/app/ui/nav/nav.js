@@ -1,8 +1,8 @@
-angular.module('prx.drawer', [])
+angular.module('prx.ui.nav', [])
 .directive('prxDrawer', function (PRXDrawer) {
   return {
     restrict: 'E',
-    templateUrl: 'drawer/container.html',
+    templateUrl: 'ui/nav/container.html',
     transclude: true,
     replace: true,
     controller: function prxDrawerController () {
@@ -17,6 +17,9 @@ angular.module('prx.drawer', [])
           this.drawerItems = PRXDrawer.drawerItems(maxNavItems);
           this.navItems = PRXDrawer.navItems(maxNavItems);
           this.maxNavItems = maxNavItems;
+          if (this.drawerItems.length === 0) {
+            this.open = false;
+          }
         }
       };
     },
@@ -26,14 +29,14 @@ angular.module('prx.drawer', [])
 .directive('prxDrawerContents', function () {
   return {
     restrict: 'E',
-    templateUrl: 'drawer/drawer.html',
+    templateUrl: 'ui/nav/drawer.html',
     replace: true
   };
 })
 .directive('prxDrawerItem', function () {
   return {
     restrict: 'E',
-    templateUrl: 'drawer/drawer_item.html',
+    templateUrl: 'ui/nav/drawer_item.html',
     replace: true,
     scope: {item: '='},
     bindToController: true,
@@ -43,7 +46,7 @@ angular.module('prx.drawer', [])
 })
 .controller('DrawerItemCtrl', function ($compile) {
   this.classes = function () {
-    return [this.item.type];
+    return [this.item.type || 'item'];
   };
   this.href = function () {
     return this.item.href;
@@ -51,8 +54,6 @@ angular.module('prx.drawer', [])
   this.text = function () {
     return this.item.name;
   };
-
-  // if (this.item.)
 })
 .provider('PRXDrawer', function () {
   var menuItems = [];
@@ -63,21 +64,6 @@ angular.module('prx.drawer', [])
     this.href = href;
     this.shortText = shortText || text;
   }
-
-  var legacy = [
-  new DrawerItem("search",
-  "Search for a story, theme, or producer",
-  "http://www.prx.org/search/all", "Search"),
-  new DrawerItem("category",
-  "Stories", "http://www.prx.org/pieces", "Browse"),
-  new DrawerItem("item", "Diary", "http://www.prx.org/format/Diary"),
-  new DrawerItem("item", "Documentary", "http://www.prx.org/format/Documentary"),
-  new DrawerItem("item", "Essay", "http://www.prx.org/format/Essay"),
-  new DrawerItem("item", "Fiction", "http://www.prx.org/format/Fiction"),
-  new DrawerItem("item", "News Reporting", "http://www.prx.org/format/News%20Reporting"),
-  new DrawerItem("item", "Special", "http://www.prx.org/format/Special"),
-  new DrawerItem("category", "Sign In", "http://www.prx.org/sessions/new")
-  ];
 
   function calculateNavCache(items) {
     var result = [], tmp = angular.copy(items);
@@ -153,7 +139,7 @@ angular.module('prx.drawer', [])
     restrict: 'E',
     replace: true,
     require: '^prxDrawer',
-    templateUrl:'drawer/toggle_button.html',
+    templateUrl:'ui/nav/toggle_button.html',
     link: function (scope, elem, attrs, ctrl) {
       scope.drawer = ctrl;
     }
@@ -194,7 +180,7 @@ angular.module('prx.drawer', [])
 .directive('prxNavButtons', function ($window, quickDebounce) {
   return {
     restrict: 'E',
-    templateUrl: 'drawer/nav_buttons.html',
+    templateUrl: 'ui/nav/nav_buttons.html',
     require: '^prxDrawer',
     replace: true,
     link: function (scope, elem, attrs, ctrl) {
@@ -215,7 +201,7 @@ angular.module('prx.drawer', [])
 .directive('prxNavItem', function () {
   return {
     restrict: 'E',
-    templateUrl: 'drawer/nav_item.html',
+    templateUrl: 'ui/nav/nav_item.html',
     replace: true,
     controller: 'NavItemCtrl',
     controllerAs: 'navItem',
