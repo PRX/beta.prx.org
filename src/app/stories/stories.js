@@ -77,7 +77,7 @@ angular.module('prx.stories', [
     }
   })
   .state('story.show.embed', {
-    url: '/embed',
+    url: '/embed?s&play&playlist',
     data: {
       chromeless: true
     },
@@ -250,6 +250,12 @@ angular.module('prx.stories', [
     producer: account,
     series: series,
     audioFiles: audioUrls, next: function (sound) {
+      // console.log("$stateParams.playlist");
+
+      // if ($stateParams.playlist == 'picks') {
+      //
+      // }
+
       return account.generatePlaylist(sound);
     }
   });
