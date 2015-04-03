@@ -93,7 +93,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
         }
       },
       account: function (ngHal) {
-        return ngHal.follow('prx:account', {id: 104304});
+        return ngHal.follow('prx:account', {id: 30890});
       },
       audioVersions: function () {
         return [];
