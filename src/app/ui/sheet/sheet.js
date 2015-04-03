@@ -35,6 +35,9 @@ angular.module('prx.ui.sheet', ['ui.router'])
   $rootScope.$on('$stateChangeSuccess', function (event, toState) {
     if (toState.views && toState.views["sheet@"]) {
       PrxSheet.show = true;
+      if (toState.data && toState.data.openSheet) {
+        PrxSheet.expand = true;
+      }
     }
   });
 })

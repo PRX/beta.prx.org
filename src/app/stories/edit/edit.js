@@ -24,36 +24,24 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
       section: "marketing"
     },
     reloadOnSearch: false,
+    data: {
+      openSheet: true
+    },
     views: {
       '@': {
         templateUrl: 'stories/story.html',
         live: true,
         controllerAs: 'story',
-        controller: function (uploads, account, story) {
-          angular.forEach(uploads, function (upload) {
-            upload.then(function () {
-            }, function () {
-            }, function (progress) {
-              calcProgress();
-            });
-          });
+        controller: function (uploads, account, story, prxSoundFactory) {
 
           this.account = account;
           this.current = story;
+          this.current.duration = 276;
+          this.sound = prxSoundFactory({
+            audioFiles:['https://dl.dropboxusercontent.com/u/125516/02%20Adrianne%20Mathiowetz.mp3'],
+            story: story,
+            producer: account});
           var self = this;
-
-          function calcProgress() {
-            var total = 0, done = 0;
-            angular.forEach(uploads, function (upload) {
-              if (upload.progress > 0) {
-                done += upload.progress  * upload.file.size;
-              }
-              total += upload.file.size;
-            });
-
-            total = done * 100 / total;
-            self.progress = total;
-          }
         }
       },
       'sheet@': {
