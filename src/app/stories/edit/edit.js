@@ -79,6 +79,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
             return ngHal.build('prx:stories').then(function (story) {
               ngSuperGlobals.bind('createStory', story);
               angular.extend(story, data);
+              console.log(JSON.stringify(story.title));
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
@@ -111,40 +112,41 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
 })
 .factory('UploadAnalysis', function (Id3Service, $window, Upload) {
   function dataUri(data) {
-    var input = new Uint8Array(data.data);
-    var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    var output = "";
-    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-    var i = 0;
-
-    while (i < input.length) {
-        chr1 = input[i++];
-        chr2 = i < input.length ? input[i++] : Number.NaN; // Not sure if the index
-        chr3 = i < input.length ? input[i++] : Number.NaN; // checks are needed here
-
-        enc1 = chr1 >> 2;
-        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-        enc4 = chr3 & 63;
-
-        if (isNaN(chr2)) {
-            enc3 = enc4 = 64;
-        } else if (isNaN(chr3)) {
-            enc4 = 64;
-        }
-        output += keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-                  keyStr.charAt(enc3) + keyStr.charAt(enc4);
-    }
-    data.data.type = data.mime;
-    data.data.name = "id3_extraction";
-    Upload.upload(data.data).then(function () {
-      console.log(arguments);
-    }, function () {
-      console.log(arguments);
-    }, function () {
-      console.log(arguments);
-    });
-    return "data:" + data.mime + ";base64," + output;
+    // var input = new Uint8Array(data.data);
+    // var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    // var output = "";
+    // var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    // var i = 0;
+    //
+    // while (i < input.length) {
+    //     chr1 = input[i++];
+    //     chr2 = i < input.length ? input[i++] : Number.NaN; // Not sure if the index
+    //     chr3 = i < input.length ? input[i++] : Number.NaN; // checks are needed here
+    //
+    //     enc1 = chr1 >> 2;
+    //     enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+    //     enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+    //     enc4 = chr3 & 63;
+    //
+    //     if (isNaN(chr2)) {
+    //         enc3 = enc4 = 64;
+    //     } else if (isNaN(chr3)) {
+    //         enc4 = 64;
+    //     }
+    //     output += keyStr.charAt(enc1) + keyStr.charAt(enc2) +
+    //               keyStr.charAt(enc3) + keyStr.charAt(enc4);
+    // }
+    // data.data.type = data.mime;
+    // data.data.name = "id3_extraction";
+    // Upload.upload(data.data).then(function () {
+    //   console.log(arguments);
+    // }, function () {
+    //   console.log(arguments);
+    // });
+    // return "data:" + data.mime + ";base64," + output;
+    // var url = URL.createObjectURL(data);
+    // console.log(url);
+    // return url;
   }
 
   return {
@@ -153,8 +155,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
         return Id3Service.analyze(uploads[0].file).then(function (data) {
 
           return {
-            title: data.title,
-            imageUrl: dataUri(data.image)
+            title: data.title//,
+            // imageUrl: dataUri(data.image)
           };
         });
       }
