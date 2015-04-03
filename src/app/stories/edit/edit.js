@@ -70,6 +70,9 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
               ngSuperGlobals.bind('createStory', story);
+              if (story.title == 'Adrianne Mathiowetz') {
+                story.imageUrl = 'https://dl.dropboxusercontent.com/u/125516/mathiowetz.png';
+              }
               return story;
             });
           });
