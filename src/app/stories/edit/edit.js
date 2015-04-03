@@ -77,18 +77,18 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
         if (uploads.length) {
           return (UploadAnalysis.properties(uploads)).then(function (data) {
             return ngHal.build('prx:stories').then(function (story) {
-              ngSuperGlobals.bind('createStory', story);
               angular.extend(story, data);
-              console.log(JSON.stringify(story.title));
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
+              ngSuperGlobals.bind('createStory', story);
               return story;
             });
           });
         } else {
           return ngHal.build('prx:stories').then(function (story) {
             ngSuperGlobals.bind('createStory', story);
+            return story;
           });
         }
       },
@@ -155,7 +155,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
         return Id3Service.analyze(uploads[0].file).then(function (data) {
 
           return {
-            title: data.title//,
+            title: data.title.replace(/.$/, '')
             // imageUrl: dataUri(data.image)
           };
         });

@@ -12,7 +12,6 @@ angular.module('ngSuperglobal', [])
         var copies = [];
         angular.forEach(bindings, function (binding) {
           if (binding.key === event.key) {
-            console.log(binding);
             copies.push([angular.fromJson(event.newValue), binding.object]);
           }
         });
@@ -34,10 +33,12 @@ angular.module('ngSuperglobal', [])
         } else {
           key = baseKey + '/' + key;
         }
-        angular.copy(
-          angular.extend(angular.fromJson(localStorage[key]) || {}, object),
-          object
-        );
+        if (angular.toJson(object) == "{}" && localStorage[key]) {
+          angular.copy(angular.fromJson(localStorage[key]), object);
+        } else {
+          localStorage.setItem(key, angular.toJson(object));
+        }
+
         $rootScope.$watch(function () {
           return angular.toJson(object);
         }, function (is) {
