@@ -234,7 +234,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   };
 
   this.duration = function () {
-    return (this.sound && this.sound.story.duration) || 1;
+    return (this.sound && this.sound.story && this.sound.story.duration) || 1;
   };
 
   this.scrubToPercent = function (percent) {
