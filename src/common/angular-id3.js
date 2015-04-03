@@ -20,6 +20,9 @@ angular.module('angular-id3', ['async-loader'])
         delete ft['v'+i];
       }
     }
+    if (tags['v2']) {
+      ft.image = tags.v2.image;
+    }
     return ft;
   };
 

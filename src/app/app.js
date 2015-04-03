@@ -1,5 +1,6 @@
 angular.module('prx', ['ngAnimate',
   'ngSanitize',
+  'prx.ui',
   'prxNavigation',
   'ngTouch',
   'ngStorage',
@@ -26,7 +27,8 @@ angular.module('prx', ['ngAnimate',
   'prx.modelConfig',
   'ngMobile',
   'prx.breadcrumbs',
-  'prx.ads'])
+  'prx.ads',
+  'prx.auth'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider, PRXDrawerProvider) {
   $analyticsProvider.firstPageview(false);
@@ -89,11 +91,6 @@ angular.module('prx', ['ngAnimate',
         type: "item"
       },
     ]
-  }, {
-    name: 'Sign In',
-    weight: PRXDrawerProvider.BOTTOM,
-    href: 'http://www.prx.org/sessions/new',
-    nav: true
   });
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
@@ -128,7 +125,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
 });
 (function () {
   var acm = angular.module('prx.appCtrl', ['prx.embed', 'prx.player', 'prx.url-translate', 'prx.errors', (FEAT.TCF_DEMO ? 'prx.upload' : 'ng')])
-  .controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, urlTranslate, prxError, UploadTarget) {
+  .controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, urlTranslate, prxError, PRXFilePicker, Upload, $state) {
     var app = this;
     this.player = prxPlayer;
     this.chrome = prxChrome;
@@ -151,7 +148,15 @@ angular.module('prx.modelConfig', ['angular-hal'])
     /* istanbul ignore next */
     if (FEAT.TCF_DEMO) {
       app.showFileTarget = function (event) {
-        UploadTarget.showTarget('files');
+        PRXFilePicker.selectFiles().then(function (files) {
+          var guids = [];
+          angular.forEach(files, function (file) {
+            guids.push(Upload.upload(file).guid);
+          });
+          $state.go('story.create', {uploadIds: guids});
+        }, function (error) {
+          console.log(error);
+        });
       };
     }
   })
@@ -283,7 +288,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
   });
 
   if (!FEAT.TCF_DEMO) {
-    acm.service('UploadTarget', angular.noop);
+    acm.service('PRXFilePicker', angular.noop).service('Upload', angular.noop);
   }
 })();
 // .directive('quickReturn', function ($window) {

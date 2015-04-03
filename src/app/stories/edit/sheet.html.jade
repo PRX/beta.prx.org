@@ -1,0 +1,138 @@
+h3 {{sheetTitle}}
+xi-tabs.vertical(state-param="version")
+  xi-tab(key="story")
+    xi-tab-name Story
+    xi-tab-content
+      xi-tabs(state-param="section")
+        xi-tab(key="temporary")
+          xi-tab-name Preview
+          xi-tab-content
+            .inlay
+              | During this preview, please make edits through the podcast version of
+              | your story.
+        xi-tab(key="marketing", disabled)
+          xi-tab-name Marketing
+          xi-tab-content
+            form
+              label
+                | Title
+                small Write a short, tweetable title like a newspaper headline. Make people want to click on your story from the title alone.
+                input.large(ng-model="story.current.title", placeholder="{{::story.current.title || 'Are cows really alive?'}}")
+              label
+                | Teaser
+                small A first impression; think of this as the single-line lead of a piece.
+                textarea.small(ng-model="story.current.shortDescription", placeholder="We tested cows to see if they were vampires. The results may surprise you.")
+              label
+                | Description
+                textarea(ng-model="story.current.description")
+              label
+                | Album Image
+                | Foo
+              label
+                | Cover Image
+                | Foo
+        xi-tab(key="audio", disabled)
+          xi-tab-name Audio
+          xi-tab-content
+            div
+              | A placeholder for the great, forthcoming audio control panel which we
+              | really don't need for podcasters because they'll just be uploading the
+              | one file.
+        xi-tab(key="settings", disabled)
+          xi-tab-name Settings
+          xi-tab-content
+            form
+              label
+                | Tags
+                input(ng-model="story.current.tags")
+              label
+                | Category
+                select(ng-model="story.current.category", ng-options="n for n in [1,2,3]")
+  xi-tab(key="podcast")
+    xi-tab-name Podcast
+    xi-tab-content
+      xi-tabs(state-param="section")
+        xi-tab(key="marketing")
+          xi-tab-name Marketing
+          xi-tab-content
+            form
+              label
+                | Title
+                input.large(ng-model="story.current.title", placeholder="{{::story.current.title || 'She Sells Seashells'}}")
+              label
+                | Teaser
+                textarea.small(ng-model="story.current.shortDescription")
+              label
+                | Description
+                textarea(ng-model="story.current.description")
+              label
+                | Album Image
+                | Foo
+              label
+                | Cover Image
+                | Foo
+          xi-tab(key="audio")
+            xi-tab-name Audio
+            xi-tab-content
+              div.inlay
+                | A placeholder for the great, forthcoming audio control panel which we
+                | really don't need for podcasters because they'll just be uploading the
+                | one file.
+        xi-tab(key="settings")
+          xi-tab-name iTunes Settings
+          xi-tab-content
+            form
+              label
+                | Tags
+                input(ng-model="story.current.tags")
+              label
+                | Category
+                select(ng-model="story.current.category", ng-options="n for n in [1,2,3]")
+  xi-tab(key="marketplace")
+    xi-tab-name PRX Marketplace
+    xi-tab-content
+      xi-tabs(state-param="section")
+        xi-tab(key="temporary")
+          xi-tab-name Preview
+          xi-tab-content
+            .inlay
+              | During this preview, please make edits through the podcast version of
+              | your story.
+        xi-tab(key="marketing", disabled)
+          xi-tab-name Marketing
+          xi-tab-content
+            form
+              label
+                | Title
+                small Write a short, tweetable title like a newspaper headline. Make people want to click on your story from the title alone.
+                input.large(ng-model="story.current.title", placeholder="{{::story.current.title || 'Are cows really alive?'}}")
+              label
+                | Teaser
+                small A first impression; think of this as the single-line lead of a piece.
+                textarea.small(ng-model="story.current.shortDescription", placeholder="We tested cows to see if they were vampires. The results may surprise you.")
+              label
+                | Description
+                textarea(ng-model="story.current.description")
+              label
+                | Album Image
+                | Foo
+              label
+                | Cover Image
+                | Foo
+        xi-tab(key="audio", disabled)
+          xi-tab-name Audio
+          xi-tab-content
+            div
+              | A placeholder for the great, forthcoming audio control panel which we
+              | really don't need for podcasters because they'll just be uploading the
+              | one file.
+        xi-tab(key="settings", disabled)
+          xi-tab-name Settings
+          xi-tab-content
+            form
+              label
+                | Tags
+                input(ng-model="story.current.tags")
+              label
+                | Category
+                select(ng-model="story.current.category", ng-options="n for n in [1,2,3]")

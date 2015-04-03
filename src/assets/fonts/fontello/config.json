@@ -55,6 +55,30 @@
       "src": "elusive"
     },
     {
+      "uid": "57776e51a50e3b4d92701bdbbba01588",
+      "css": "resize-full",
+      "code": 59403,
+      "src": "elusive"
+    },
+    {
+      "uid": "8c7e34dcc8cc90ed5f4fd59949201f41",
+      "css": "resize-small",
+      "code": 59404,
+      "src": "elusive"
+    },
+    {
+      "uid": "616b755d0f4c7d2dc7a1dcc2e5427039",
+      "css": "down-open",
+      "code": 59401,
+      "src": "elusive"
+    },
+    {
+      "uid": "b91c0e6aaab5e3146732b69dd418e120",
+      "css": "up-open",
+      "code": 59402,
+      "src": "elusive"
+    },
+    {
       "uid": "8da3ac534210aae9c0f0e13804c1df97",
       "css": "cancel",
       "code": 59398,
