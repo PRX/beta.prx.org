@@ -1,10 +1,10 @@
 .embed-donate
   section
     span(ng-if="story.step < 10")
-      h2 Hi! I'm Erika and I hope you're enjoying this story
-      h3 I make my stories available for free. Your support helps me make more stories.
+      h2 I hope you're enjoying this story
+      h3 Your support helps me make more stories.
     form.email(novalidate ng-if="story.step == 1")
-      input(type='email' placeholder='Enter your email address to help support Erika' ng-model="story.donation.email")
+      input(type='email' placeholder='Enter your email to help support the show' ng-model="story.donation.email")
       input(type='submit' value='Next' ng-click="story.submitEmail()")
     form(novalidate).payment(ng-if="story.step == 2")
       input.cc(type='text' placeholder='Credit Card Number')
