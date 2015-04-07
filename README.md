@@ -1,7 +1,6 @@
 # PRX.org Version 4
 [![Build Status](https://travis-ci.org/PRX/www.prx.org.png?branch=master)](https://travis-ci.org/PRX/www.prx.org)
 [![Coverage Status](https://coveralls.io/repos/PRX/www.prx.org/badge.png?branch=master)](https://coveralls.io/r/PRX/www.prx.org?branch=master)
-[![Stories in Ready](https://badge.waffle.io/prx/www.prx.org.svg?label=ready&title=Ready)](http://waffle.io/prx/www.prx.org)
 
     Note: This repository houses only the web frontend
     component of PRX.org Version 4. In order to use it,
