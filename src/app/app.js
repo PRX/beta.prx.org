@@ -4,6 +4,7 @@ angular.module('prx', ['ngAnimate',
   'ngTouch',
   'ngStorage',
   'ui.router',
+  'prx.ui',
   'ui.sortable',
   'prx.home',
   'prx.stories',
@@ -25,10 +26,9 @@ angular.module('prx', ['ngAnimate',
   'prx.modelConfig',
   'ngMobile',
   'prx.breadcrumbs',
-  'prx.ads',
-  'prx.drawer'])
+  'prx.ads'])
 .config(function (ngFlagProvider,
-  $analyticsProvider, $stateProvider, prxperimentProvider) {
+  $analyticsProvider, $stateProvider, prxperimentProvider, PRXDrawerProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
   prxperimentProvider.base('https://x.prx.org')
@@ -47,6 +47,54 @@ angular.module('prx', ['ngAnimate',
     prxperimentProvider.enabled(false);
   }
   ngFlagProvider.flags(FEAT.JSON);
+
+  PRXDrawerProvider.register({
+    name: 'Search',
+    weight: PRXDrawerProvider.TOP,
+    href: 'http://www.prx.org/search/all',
+    type: 'search'
+  }, {
+    name: 'Browse',
+    href: 'http://www.prx.org/pieces',
+    type: 'category',
+    children: [
+      {
+        name: "Diary",
+        href: "http://www.prx.org/format/Diary",
+        type: "item"
+      },
+      {
+        name: "Documentary",
+        href: "http://www.prx.org/format/Documentary",
+        type: "item"
+      },
+      {
+        name: "Essay",
+        href: "http://www.prx.org/format/Essay",
+        type: "item"
+      },
+      {
+        name: "Fiction",
+        href: "http://www.prx.org/format/Fiction",
+        type: "item"
+      },
+      {
+        name: "News Reporting",
+        href: "http://www.prx.org/format/News%20Reporting",
+        type: "item"
+      },
+      {
+        name: "Special",
+        href: "http://www.prx.org/format/Special",
+        type: "item"
+      },
+    ]
+  }, {
+    name: 'Sign In',
+    weight: PRXDrawerProvider.BOTTOM,
+    href: 'http://www.prx.org/sessions/new',
+    nav: true
+  });
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
     var url = $analytics.settings.pageTracking.basePath + $location.url();

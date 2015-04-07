@@ -1,0 +1,4 @@
+ul.drawer(ng-class="{open: drawer.open}")
+  li(ng-repeat="item in drawer.drawerItems")
+    prx-drawer-item(item="item")
+    prx-drawer-item(ng-repeat="subItem in item.children", item="subItem")
