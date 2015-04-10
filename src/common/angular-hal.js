@@ -700,6 +700,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return this;
     },
     get: function () {
+      if (!this.ctx.origin) {
+        return $q.when({});
+      }
       if (!this._gotten) {
         angular.forEach(this.mixins, function (mixin) {
           this.ctx.mixin(mixin[0], mixin[1]);
