@@ -700,18 +700,24 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       return this;
     },
     get: function () {
-      if (!this._gotten) {
-        angular.forEach(this.mixins, function (mixin) {
-          this.ctx.mixin(mixin[0], mixin[1]);
-        }, this);
-        var self = this, p = new DocumentPromise(this.ctx.get(this.ctx.origin),
-          ['root'], this.ctx);
+      var s, p;
+      if (!this._p) {
+        s = this;
+        angular.forEach(s.mixins, function (mixin) {
+          s.ctx.mixin(mixin[0], mixin[1]);
+        });
+        if (s.ctx.origin) {
+          p = s.ctx.get(s.ctx.origin);
+        } else {
+          p = $q.when($q.reject("No root URL specified."));
+        }
+        p = new DocumentPromise(p, ['root'], s.ctx);
         p.context = function (context) {
-          return self.subProviders[context].get();
+          return s.subProviders[context].get();
         };
-        this._gotten = p;
+        this._p = p;
       }
-      return this._gotten;
+      return this._p;
     },
     context: function context (contextName, def) {
       var provider = this.subProviders[contextName] =

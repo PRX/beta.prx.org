@@ -679,4 +679,28 @@ describe('angular-hal', function () {
       });
     });
   });
+
+  describe('without a root Url specified', function () {
+    var ngHal;
+
+    beforeEach(module('angular-hal', function (ngHalProvider) {
+      ngHalProvider.setRootUrl(undefined);
+    }));
+
+    beforeEach(inject(function (_ngHal_) {
+      ngHal = _ngHal_;
+    }));
+
+    it ('rejects follow', function () {
+      expect(ngHal.follow('')).toReject();
+    });
+
+    it ('rejects build', function () {
+      expect(ngHal.build('')).toReject();
+    });
+
+    it ('rejects generally', function () {
+      expect(ngHal).toReject();
+    });
+  });
 });
