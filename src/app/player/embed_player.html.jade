@@ -1,19 +1,19 @@
-.embed-player(ng-class="{share: player.showShare, donate: player.showDonate, subscribe: player.showSubscribe, idle: player.unattended}")
+.embed-player(ng-class="{share: player.showShare, donate: player.showDonate, subscribe: player.showSubscribe}")
   header
     h1 {{story.currentSound().story.title}}
   section
     button.toggle(ng-click="player.toggle()" ng-class="{paused: player.sound.paused}")
-      img.pause(src='/assets/images/em_pause.svg')
-      img.play(src='/assets/images/em_play.svg')
+      .pause
+      .play
     .track(prx-player-scrubber="player.scrubToPercent(percentage)", ng-class="{active: player.active(), flip: player.progress() > 75}")
-      canvas.xwaveform
+      canvas.waveform
         
       .progress(ng-style="{width: player.progress() + '%'}")
-        canvas.xwaveform
+        canvas.waveform
   footer
-    button(ui-sref=".donate") Donate
+    button(ng-click="player.donate()") Donate
     button(ng-click="player.share()") Share
-    //- button(ng-click="player.subscribe()") Follow
+    //- button(ng-click="player.subscribe()") Subscribe
   .modals
     #idle
       div
@@ -31,11 +31,11 @@
     
     #subscribe
       div
-        h2 Enter your email address to hear this story
+        h2 Enter your email address for more stories
         form(novalidate)
           .error Please use a valid email address
-          input(type='email' ng-model='player.subscribe.email' placeholder='What is your email address?')
-          input(type='submit' value='Start listening' ng-click="player.doSubscribe()")         
+          input(type='email' ng-model='player.subscriber.email' placeholder='What is your email address?')
+          input(type='submit' value='Start listening' ng-click='player.doSubscribe()')
         button.skip(ng-click="player.subscribe()") Skip
 
 //- TODO add tracking to share links

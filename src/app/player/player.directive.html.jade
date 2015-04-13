@@ -1,5 +1,5 @@
 .player
-  prx-player-button(prx-sound="sound")
+  prx-player-button
   .track(prx-player-scrubber="player.scrubToPercent(percentage)", ng-class="{active: player.active(), flip: player.progress() > 75}")
     canvas.waveform
     .scrubber(ng-style="{width: player.progress() + '%'}")

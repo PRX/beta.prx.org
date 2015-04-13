@@ -77,7 +77,7 @@ describe('prx.stories', function () {
     it ('attaches the story injected to $scope', inject(function ($controller) {
       var foo = 'asd', scope = {};
       var ctrl = $controller('StoryDonationCtrl', {story: foo, $scope: scope});
-      expect(ctrl.current).toBe(foo);
+      expect(ctrl.step).toBe(1);
     }));
   });
 

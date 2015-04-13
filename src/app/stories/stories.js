@@ -77,7 +77,7 @@ angular.module('prx.stories', [
     }
   })
   .state('story.show.embed', {
-    url: '/embed?s&play&playlist',
+    url: '/embed?s&play&playlist&p',
     data: {
       chromeless: true
     },
@@ -267,7 +267,7 @@ angular.module('prx.stories', [
   this.shareStoryURL = $state.href('story.show', $state.params, {absolute: true});
   this.shareTitle = this.currentSound().story.title;
 })
-.controller('StoryDonationCtrl', function (story, account, series, prxPlayer, $state, $timeout) {
+.controller('StoryDonationCtrl', function (story, $timeout) {
   this.step = 1;
 
   this.donation = {};

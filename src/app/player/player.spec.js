@@ -1,6 +1,7 @@
 describe('prx.player', function () {
 
   beforeEach(module('prx.player'));
+  beforeEach(module('prx.mailinglists'));
 
   it('has a timeCode filter', inject(function ($filter) {
     expect($filter('timeCode')).toBeDefined();
@@ -46,15 +47,16 @@ describe('prx.player', function () {
 
     it('GlobalPlayerCtrl sets global to prxPlayer', function () {
       var controller = $controller('GlobalPlayerCtrl', {prxPlayer: 'asd'});
-      expect(controller.global).toEqual('asd');
+      expect(controller.player).toEqual('asd');
     });
 
     describe ('PlayerCtrl', function () {
-      var ctrl, sound, prxPlayer, scope;
+      var ctrl, sound, prxPlayer, prxMailingList, scope;
 
-      beforeEach(inject(function (_prxPlayer_, $rootScope) {
+      beforeEach(inject(function (_prxPlayer_, _prxMailingList_, $rootScope) {
         sound = {};
         prxPlayer = _prxPlayer_;
+        prxMailingList = _prxMailingList_;
         scope = $rootScope.$new();
 
         ctrl = $controller('PlayerCtrl', { $scope: scope });
@@ -134,7 +136,7 @@ describe('prx.player', function () {
     describe ('prxPlayer', function () {
       var elem;
       beforeEach(function () {
-        elem = $compile('<prx-player sound="sound"></prx-player>')($rootScope);
+        elem = $compile('<prx-player prx-sound="sound"></prx-player>')($rootScope);
         $rootScope.$digest();
       });
 
@@ -159,7 +161,7 @@ describe('prx.player', function () {
 
     describe ('prxPlayerButton', function () {
       it ('compiles', function () {
-        var elem = $compile('<prx-player-button></prx-player-button>')($rootScope);
+        var elem = $compile('<prx-player-button prx-sound></prx-player-button>')($rootScope);
         $rootScope.$digest();
         expect(elem).toBeDefined();
       });

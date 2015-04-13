@@ -115,6 +115,10 @@ describe('angular-hal-mock', function () {
 
   }));
 
+  it ('can stub builds', inject(function(ngHal, $rootScope) {
+    // TODO
+  }));
+
   it ('has a shorthand to stubFollow on stubbed promises', inject(function (ngHal, $rootScope) {
     var result;
     ngHal.stubFollow('foo', ngHal.mock('http://meta.nghal.org/object', {id:3}));
