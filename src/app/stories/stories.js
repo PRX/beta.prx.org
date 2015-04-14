@@ -244,7 +244,7 @@ angular.module('prx.stories', [
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
 })
-.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer, $state, $stateParams) {
+.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer, $scope, $state, $stateParams, $window) {
   var sound = prxSoundFactory({
     story: story,
     producer: account,
@@ -260,12 +260,79 @@ angular.module('prx.stories', [
     }
   });
 
-  // if ($stateParams.ts) {
-  //   console.log($stateParams.ts);
-  // }
+  this.turnstiled = false;
+  var self = this;
+  if ($stateParams.ts) {
+    if ($stateParams.ts === 'α') {
+      this.displaySubscribe = true;
+    } else {
+       $scope.$watch(function () {
+        return prxPlayer.nowPlaying && prxPlayer.nowPlaying.position;
+      }, function (newValue, oldValue) {
+        if (self.turnstiled || !newValue) { return; }
+
+        var position = Math.round(newValue / 1000);
+        var duration = Math.round(prxPlayer.nowPlaying.duration / 1000);
+
+        if (($stateParams.ts === 'ω' && position == duration) || ($stateParams.ts !== 'ω' && position == $stateParams.ts)) {
+          self.displaySubscribe = true;
+          self.turnstiled = true;
+
+          if ($stateParams.ts === 'ω') {
+            prxPlayer.pause();
+          }
+        }
+      });
+    }
+  }
 
   this.currentSound = function () {
     return prxPlayer.nowPlaying || sound;
+  };
+
+  this.deidle = function () {
+    prxPlayer.resume();
+  };
+
+  this.share = function () {
+    this.displayShare = !this.displayShare;
+  };
+
+  this.donate = function () {
+    $window.open("http://www.prx.org/donate");
+  };
+
+  this.subscribe = function () {
+    this.displaySubscribe = !this.displaySubscribe;
+
+    if (!this.displaySubscribe) {
+      prxPlayer.resume();
+    }
+  };
+
+  this.submitSubscription = function () {
+    var self = this;
+    var after = function () {
+      self.subscriber.email = '';
+
+      self.subscribe();
+      // TODO resume playback
+    };
+
+    if (this.subscriber && this.subscriber.email) {
+      prxMailingList.subscribe(this.subscriber.email,
+        '00000',
+        function (success) {
+          after();
+        },
+        function (error) {
+          console.log(error);
+          after();
+        }
+      );
+    } else {
+      // TODO get the form validation to happen
+    }
   };
 
   this.shareStoryURL = $state.href('story.show', $state.params, {absolute: true});

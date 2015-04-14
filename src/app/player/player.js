@@ -255,7 +255,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus', 'prx.ma
     }
   };
 })
-.controller('PlayerCtrl', function (prxPlayer, prxMailingList, Bus, $scope, $window) {
+.controller('PlayerCtrl', function (prxPlayer, prxMailingList, Bus, $scope) {
   this.setSound = function (newSound) {
     this.sound = newSound;
   };
@@ -300,48 +300,6 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus', 'prx.ma
       prxPlayer.sendHeartbeat(true);
     }
     this.sound.setPosition(position);
-  };
-
-  this.share = function () {
-    this.showShare = !this.showShare;
-  };
-
-  this.donate = function () {
-    $window.open("http://www.prx.org/donate");
-  };
-
-  this.subscribe = function () {
-    this.showSubscribe = !this.showSubscribe;
-
-    if (!this.showSubscribe) {
-      prxPlayer.resume();
-    }
-  };
-
-  this.subscriber = {};
-  this.doSubscribe = function () {
-    var self = this;
-    var after = function () {
-      self.subscriber.email = '';
-
-      self.subscribe();
-      // TODO resume playback
-    };
-
-    if (this.subscriber.email) {
-      prxMailingList.subscribe(this.subscriber.email,
-        '00000',
-        function (success) {
-          after();
-        },
-        function (error) {
-          console.log(error);
-          after();
-        }
-      );
-    } else {
-      // TODO get the form validation to happen
-    }
   };
 
   var self = this;

@@ -5,21 +5,143 @@ article.embed-story {
   background: #fafafa;
   cursor: pointer;
 
+  &.share .modals #share,
+  &.donate .modals #donate,
+  &.subscribe .modals #subscribe,
+  &.idle .modals #subscribe {
+    visibility: visible;
+    opacity: 1.0;
+    transition-delay: 0s;
+  }
+
+  footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+
+    button {
+      background: black;
+      display: inline-block;
+      margin: 0 4px 3px;
+      border: 0;
+      padding: 5px 10px;
+      text-transform: uppercase;
+    }
+  }
+
+  .modals {
+    > div {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 500;
+      background: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      cursor: default;
+      visibility: hidden;
+      opacity: 0.0;
+      transition: visibility 0s ease 0.15s, opacity 0.15s ease;
+
+      button.dismiss {
+        background: none;
+        float: right;
+      }
+
+      &#subscribe {
+        form {
+          position: relative;
+
+          .error {
+            position: absolute;
+            text-align: center;
+            color: red;
+            width: 100%;
+            height: 15px;
+            bottom: -15px;
+            display: none;
+          }
+
+          &.ng-invalid.ng-dirty .error {
+            display: block;
+          }
+
+        }
+
+        input.ng-invalid.ng-touched {
+          background: rgba(255, 210, 210, 1.0);
+        }
+      }
+
+      h2 {
+        color: white;
+        text-align: center;
+        font-size: 24px;
+        padding-top: 20px;
+        margin: 0 auto;
+        max-width: 90%;
+      }
+
+      h3 {
+        color: #a0a0a0;
+        text-align: center;
+        font-size: 16px;
+        padding-top: 8px;
+        margin: 0 auto;
+        max-width: 90%;
+      }
+
+      form {
+        padding: 15px;
+      }
+
+      input[type='text'] {
+        flex-grow: 7;
+      }
+
+      input[type='submit'] {
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .sharables {
+        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 95px;
+
+        a {
+          color: $orange;
+          display: block;
+          font-size: 50px;
+          margin: 0 10px;
+          font-family: 'fontello';
+
+          &.facebook {
+            color: $facebook-blue;
+          }
+
+          &.twitter {
+            color: $twitter-blue;
+          }
+        }
+      }
+    }
+  }
+
   .embed-player {
     width: 100%;
     height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
-
-    &.share .modals #share,
-    &.donate .modals #donate,
-    &.subscribe .modals #subscribe,
-    &.idle .modals #subscribe {
-      visibility: visible;
-      opacity: 1.0;
-      transition-delay: 0s;
-    }
 
     header {
       flex-grow: 1;
@@ -112,123 +234,6 @@ article.embed-story {
             left: 0;
             height: 100%;
             border-color: white;
-          }
-        }
-      }
-    }
-
-    footer {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      z-index: 100;
-
-      button {
-        background: black;
-        display: inline-block;
-        margin: 0 4px 3px;
-        border: 0;
-        padding: 5px 10px;
-        text-transform: uppercase;
-      }
-    }
-
-    .modals {
-      > div {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 500;
-        background: black;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-content: center;
-        cursor: default;
-        visibility: hidden;
-        opacity: 0.0;
-        transition: visibility 0s ease 0.15s, opacity 0.15s ease;
-
-        &#subscribe {
-          form {
-            position: relative;
-
-            .error {
-              position: absolute;
-              text-align: center;
-              color: red;
-              width: 100%;
-              height: 15px;
-              bottom: -15px;
-              display: none;
-            }
-
-            &.ng-invalid.ng-dirty .error {
-              display: block;
-            }
-
-          }
-
-          input.ng-invalid.ng-touched {
-            background: rgba(255, 210, 210, 1.0);
-          }
-        }
-
-        h2 {
-          color: white;
-          text-align: center;
-          font-size: 24px;
-          padding-top: 20px;
-          margin: 0 auto;
-          max-width: 90%;
-        }
-
-        h3 {
-          color: #a0a0a0;
-          text-align: center;
-          font-size: 16px;
-          padding-top: 8px;
-          margin: 0 auto;
-          max-width: 90%;
-        }
-
-        form {
-          padding: 15px;
-        }
-
-        input[type='text'] {
-          flex-grow: 7;
-        }
-
-        input[type='submit'] {
-          text-transform: uppercase;
-          cursor: pointer;
-        }
-
-        .sharables {
-          display: block;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 95px;
-
-          a {
-            color: $orange;
-            display: block;
-            font-size: 50px;
-            margin: 0 10px;
-            font-family: 'fontello';
-
-            &.facebook {
-              color: $facebook-blue;
-            }
-
-            &.twitter {
-              color: $twitter-blue;
-            }
           }
         }
       }
