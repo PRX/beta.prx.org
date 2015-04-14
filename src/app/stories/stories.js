@@ -77,7 +77,7 @@ angular.module('prx.stories', [
     }
   })
   .state('story.show.embed', {
-    url: '/embed?s&play&playlist&p',
+    url: '/embed?s&play&playlist&ts',
     data: {
       chromeless: true
     },
@@ -122,7 +122,7 @@ angular.module('prx.stories', [
     return {
       toString: function () { return this.title; },
       stateParams: function () {
-        return { storyId: this.id, s: null, play: null };
+        return { storyId: this.id, s: null, play: null, ts: null };
       },
       toSoundParams: function () {
         return $q.all([
@@ -244,7 +244,7 @@ angular.module('prx.stories', [
 .controller('StoryDetailCtrl', function (story) {
   this.current = story;
 })
-.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer, $state) {
+.controller('StoryEmbedCtrl', function (story, account, series, audioUrls, prxSoundFactory, prxPlayer, $state, $stateParams) {
   var sound = prxSoundFactory({
     story: story,
     producer: account,
@@ -259,6 +259,10 @@ angular.module('prx.stories', [
       return account.generatePlaylist(sound);
     }
   });
+
+  // if ($stateParams.ts) {
+  //   console.log($stateParams.ts);
+  // }
 
   this.currentSound = function () {
     return prxPlayer.nowPlaying || sound;
