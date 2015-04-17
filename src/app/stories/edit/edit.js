@@ -146,7 +146,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
         return Id3Service.analyze(uploads[0].file).then(function (data) {
 
           return {
-            title: data.title.replace(/.$/, '')
+            title: data.title && data.title.replace(/.$/, '')
             // imageUrl: dataUri(data.image)
           };
         });
