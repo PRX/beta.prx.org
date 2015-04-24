@@ -53,7 +53,7 @@ xi-tabs.vertical(state-param="version")
     xi-tab-content
       xi-tabs(state-param="section")
         xi-tab(key="marketing")
-          xi-tab-name Marketing
+          xi-tab-name Episode Info
           xi-tab-content
             form
               label
@@ -66,28 +66,25 @@ xi-tabs.vertical(state-param="version")
                 | Description
                 textarea(ng-model="story.current.description")
               label
+                | Tags
+                input(ng-model="story.current.tags")
+              label
                 | Album Image
                 | Foo
               label
                 | Cover Image
                 | Foo
-          xi-tab(key="audio")
-            xi-tab-name Audio
-            xi-tab-content
-              div.inlay
-                | A placeholder for the great, forthcoming audio control panel which we
-                | really don't need for podcasters because they'll just be uploading the
-                | one file.
-        xi-tab(key="settings")
-          xi-tab-name iTunes Settings
+        xi-tab(key="audio")
+          xi-tab-name Audio
           xi-tab-content
             form
-              label
-                | Tags
-                input(ng-model="story.current.tags")
-              label
-                | Category
-                select(ng-model="story.current.category", ng-options="n for n in [1,2,3]")
+              div(ng-repeat="audioFile in story.audioFiles")
+                label
+                  | File name
+                  input.large(ng-model="audioFile.upload.name", placeholder="{{::audioFile.upload.name || 'selling_seashells-broadcast.mp2'}}")
+                xi-progress-bar(progress="audioFile.upload.progress")
+                p {{ audioFile.upload.progress * 100 }}%
+                a(ng-click="story.removeAudioFile($index)") Remove
   xi-tab(key="marketplace")
     xi-tab-name PRX Marketplace
     xi-tab-content

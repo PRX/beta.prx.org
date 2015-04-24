@@ -46,30 +46,41 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
       },
       'sheet@': {
         templateUrl: 'stories/edit/sheet.html',
-        controller: function (story, uploads) {
+        controller: function (story, audioFiles) {
           this.current = story;
-          this.uploads = uploads;
+          this.audioFiles = audioFiles;
+
+          this.removeAudioFile = function (idx) {
+            this.audioFiles[idx].upload.cancel();
+            this.audioFiles.splice(idx, 1);
+          };
         },
         controllerAs: 'story'
       }
     },
     resolve: {
-      uploads: function ($stateParams, Upload) {
-        var uploads = [];
+      audioFiles: function ($stateParams, Upload) {
+        var audioFiles = [];
         angular.forEach($stateParams.uploadIds, function (uploadId) {
-          uploads.push(Upload.getUpload(uploadId));
+          audioFiles.push({ upload: Upload.getUpload(uploadId) });
         });
-        return uploads;
+        return audioFiles;
       },
-      story: function (ngHal, uploads, UploadAnalysis, $q, ngSuperGlobals) {
-        if (uploads.length) {
-          return (UploadAnalysis.properties(uploads)).then(function (data) {
+      story: function (ngHal, audioFiles, UploadAnalysis, $q, ngSuperGlobals) {
+        if (audioFiles.length) {
+          return (UploadAnalysis.properties(audioFiles)).then(function (data) {
             return ngHal.build('prx:stories').then(function (story) {
               angular.extend(story, data);
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
-              ngSuperGlobals.bind('createStory', story);
+
+              var obj = {
+                story: story,
+                audioFiles: audioFiles,
+              };
+
+              ngSuperGlobals.bind('createStory', obj);
               if (story.title == 'Adrianne Mathiowetz') {
                 story.imageUrl = 'https://dl.dropboxusercontent.com/u/125516/mathiowetz.png';
               }
@@ -78,7 +89,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
           });
         } else {
           return ngHal.build('prx:stories').then(function (story) {
-            ngSuperGlobals.bind('createStory', story);
+            ngSuperGlobals.bind('createStory', { story: story });
             return story;
           });
         }
@@ -141,9 +152,9 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
   }
 
   return {
-    properties: function (uploads) {
-      if (uploads.length) {
-        return Id3Service.analyze(uploads[0].file).then(function (data) {
+    properties: function (audioFiles) {
+      if (audioFiles.length) {
+        return Id3Service.analyze(audioFiles[0].upload.file).then(function (data) {
 
           return {
             title: data.title && data.title.replace(/.$/, '')
@@ -169,6 +180,26 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
       this.put(uri + live, result);
     }
     return result;
+  };
+})
+.directive('xiProgressBar', function () {
+  return {
+    restict: 'E',
+    template: '<div style="background: red; width: 100%; height: 15px;"></div>',
+    scope: {
+      progress: '='
+    },
+    link: function (scope, element, attr) {
+      scope.percent = function () {
+        return Math.round(this.progress * 1000) / 10;
+      };
+
+      var bar = element.children().eq(0);
+
+      scope.$watch('percent()', function (progress) {
+        bar.css('width', progress + '%');
+      });
+    }
   };
 })
 .directive('lockParentScrolling', function ($timeout) {
