@@ -86,20 +86,20 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     destroy: function destroy () {
       this.context['delete'](this.url());
     },
-    follow: function follow (rel, params) {
+    follow: function follow (rel, params, options) {
       if (params) {
-        return this.followLink(rel, params);
+        return this.followLink(rel, params, options);
       } else {
         return new DocumentPromise(this.followEmbedded(rel)
-          .catch(angular.bind(this, this.followLink, rel, params)));
+          .catch(angular.bind(this, this.followLink, rel, params, options)));
       }
     },
-    followOne: function followOne (rel, params) {
-      return this.links.getDocument(rel, params) ||
+    followOne: function followOne (rel, params, options) {
+      return this.links.getDocument(rel, params, options) ||
         $q.reject('no link with rel ' + rel);
     },
-    followAll: function followAll (rel, params) {
-      return this.links.getDocuments(rel, params);
+    followAll: function followAll (rel, params, options) {
+      return this.links.getDocuments(rel, params, options);
     },
     followEmbedded: function followEmbedded (rel) {
       if (typeof this.$embedded[rel] === 'undefined') {
@@ -116,27 +116,27 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         return $q.all(results);
       }
     },
-    followLink: function followLink (rel, params) {
+    followLink: function followLink (rel, params, options) {
       var links = this.links.all(rel, params);
       if (!links || !links.length) {
         return $q.reject("No link with rel " + rel);
       } else if (links.length == 1) {
-        return this.followOne(rel, params);
+        return this.followOne(rel, params, options);
       } else {
-        return this.followAll(rel, params);
+        return this.followAll(rel, params, options);
       }
     },
     persisted: function persisted () {
       return !!this.link('self');
     },
-    save: function save () {
+    save: function save (options) {
       var self = this;
       if (this.persisted()) {
-        return this.context.put(this.url(), this).then(function () {
+        return this.context.put(this.url(), this, options).then(function () {
           return self;
         });
       } else {
-        return this.context.post(this.link('create').href(), this)
+        return this.context.post(this.link('create').href(), this, options)
           .then(function (response) {
             var protowithlinks = self;
             while (protowithlinks !== Object.prototype &&
@@ -144,8 +144,9 @@ angular.module('angular-hal', ['ng', 'uri-template'])
               protowithlinks = Object.getPrototypeOf(protowithlinks);
             }
             self.context.origin = response.config.url;
-            protowithlinks.link = halLinkCollection(response.data._links,
+            protowithlinks.link = protowithlinks.links = halLinkCollection(response.data._links,
               self.context);
+
             angular.forEach(response.data, function (value, key) {
               if (key != '_links' && key  != '_embedded') {
                 self[key] = angular.copy(value);
@@ -195,13 +196,13 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       links.self = new Link({href: context.origin},
         'self', context);
     }
-    function accessor (rel, opts) {
+    function accessor (rel, opts, x) {
       var link = links[rel];
       if (!link) { return undefined; }
       var obj = {};
       angular.forEach(Link.prototype, function (method, name) {
-        obj[name] = function (params) {
-          return method.call(link, angular.extend({}, opts, params));
+        obj[name] = function (params, y) {
+          return method.call(link, angular.extend({}, opts, params), angular.extend({}, x, y));
         };
       });
       return obj;
@@ -212,10 +213,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     };
 
     angular.forEach(Link.prototype, function (method, name) {
-      accessor[name] = function (rel, params) {
+      accessor[name] = function (rel, params, options) {
         var link = links[rel];
         if (!link) { return undefined; }
-        return method.call(link, params);
+        return method.call(link, params, options);
       };
     });
 
@@ -294,17 +295,17 @@ angular.module('angular-hal', ['ng', 'uri-template'])
     profile: function profile (params) {
       return this.to(params).profile;
     },
-    getDocument: function getDocument (params) {
+    getDocument: function getDocument (params, opts) {
       var spec = this.to(params);
       return new DocumentPromise(
-        this.context.get(spec.template.expand(params)),
+        this.context.get(spec.template.expand(params), opts),
         [spec.profile, this.rel], this.context);
     },
-    getDocuments: function getDocuments (params) {
+    getDocuments: function getDocuments (params, opts) {
       var specs = this.all(params), array = [];
       angular.forEach(specs, function (spec) {
         array.push(new DocumentPromise(
-          this.context.get(spec.template.expand(params)),
+          this.context.get(spec.template.expand(params), opts),
           [spec.profile, this.rel], this.context));
       }, this);
       return $q.all(array);
@@ -356,29 +357,29 @@ angular.module('angular-hal', ['ng', 'uri-template'])
         return document.build(rel);
       });
     },
-    destroy: function destroy () {
+    destroy: function destroy (opts) {
       return this.then(function (document) {
-        return document.destroy();
+        return document.destroy(opts);
       });
     },
-    follow: function follow (rel, opts) {
+    follow: function follow (rel, params, opts) {
       return new DocumentPromise(this.then(function (document) {
-        return document.follow(rel, opts);
+        return document.follow(rel, params, opts);
       }));
     },
-    followOne: function followOne (rel, opts) {
+    followOne: function followOne (rel, params, opts) {
       return new DocumentPromise(this.then(function (document) {
-        return document.followOne(rel, opts);
+        return document.followOne(rel, params, opts);
       }));
     },
-    followAll: function followAll (rel, opts) {
+    followAll: function followAll (rel, params, opts) {
       return new DocumentPromise(this.then(function (document) {
-        return document.follow(rel, opts);
+        return document.follow(rel, params, opts);
       }));
     },
-    link: function link (rel, opts) {
+    link: function link (rel, params, opts) {
       return this.then(function (document) {
-        return document.link(rel, opts) || $q.reject('no such link' + rel);
+        return document.link(rel, params, opts) || $q.reject('no such link' + rel);
       });
     },
     url: function url () {
