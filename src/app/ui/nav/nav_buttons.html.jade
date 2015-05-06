@@ -1,2 +1,4 @@
 nav
-  prx-nav-item(ng-repeat="item in drawer.navItems", item="item")
+  xi-nav-item(ng-repeat="item in drawer.navItems", item="item")
+  nav.alternate
+    xi-nav-item(ng-repeat="item in drawer.moreNavItems", item="item")

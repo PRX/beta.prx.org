@@ -13,5 +13,7 @@
   "UPLOADS_AWS_BUCKET": "prx-up",
   "UPLOADS_AWS_URL": "https://dsn15m3yob5tf.cloudfront.net",
   "UPLOADS_CLOUDFRONT": true,
-  "UPLOADS_LOGGING": false
+  "UPLOADS_LOGGING": false,
+  "ID_SERVER": "https://id.prx.org",
+  "ID_CLIENT_KEY": "mkbKU13rsBTe2bN0T0HXXiFoW27D5dTWBKKieItJ"
 }

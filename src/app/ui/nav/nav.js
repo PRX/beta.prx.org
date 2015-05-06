@@ -10,12 +10,20 @@ angular.module('prx.ui.nav', [])
       this.toggle = function () {
         this.open = !this.open;
       };
+      this.totalItems = PRXDrawer.items.length;
       this.drawerItems = PRXDrawer.items;
       this.maxNavItems = 0;
+      this.moreNavItems = PRXDrawer.navItems(1);
+      this.setMoreNavItems = function (moreNavItems) {
+        if (this.moreNavItems.length != Math.min(this.totalItems, moreNavItems)) {
+          this.moreNavItems = PRXDrawer.navItems(Math.min(this.totalItems, moreNavItems));
+        }
+      };
       this.setMaxNavItems = function (maxNavItems) {
         if (this.maxNavItems !== maxNavItems) {
           this.drawerItems = PRXDrawer.drawerItems(maxNavItems);
           this.navItems = PRXDrawer.navItems(maxNavItems);
+          this.moreNavItems = PRXDrawer.navItems(maxNavItems + 1);
           this.maxNavItems = maxNavItems;
           if (this.drawerItems.length === 0) {
             this.open = false;
@@ -44,7 +52,7 @@ angular.module('prx.ui.nav', [])
     controllerAs: 'drawerItem'
   };
 })
-.controller('DrawerItemCtrl', function ($compile) {
+.controller('DrawerItemCtrl', function () {
   this.classes = function () {
     return [this.item.type || 'item'];
   };
@@ -159,13 +167,14 @@ angular.module('prx.ui.nav', [])
     }
 
     function debouncedVersion () {
-      if (timeout == -1) {
-        fn.apply(this, arguments);
-        timeout = $timeout(function () { timeout = 0; }, duration);
+      if (!timeout) {
+        var it = trigger(this, arguments);
+        timeout = $timeout(function () {
+          it();
+          timeout = $timeout(function () { timeout = 0; }, duration - 1);
+        }, 1);
       } else {
-        if (timeout) {
-          $timeout.cancel(timeout);
-        }
+        $timeout.cancel(timeout);
         timeout = $timeout(trigger(this, arguments), duration);
       }
     }
@@ -177,36 +186,108 @@ angular.module('prx.ui.nav', [])
     return debouncedVersion;
   }
 })
-.directive('prxNavButtons', function ($window, quickDebounce) {
+.directive('prxNavButtons', function ($window, quickDebounce, $timeout) {
   return {
     restrict: 'E',
     templateUrl: 'ui/nav/nav_buttons.html',
     require: '^prxDrawer',
     replace: true,
+    transclude: true,
     link: function (scope, elem, attrs, ctrl) {
-      var debouncedCheckWidth = quickDebounce(checkWidth);
-      checkWidth();
+      var debouncedCheckWidth = quickDebounce(checkWidth, 50);
+      var alternateElem = elem.children().eq(0);
+      var calculating = false;
 
       angular.element($window).on('resize', debouncedCheckWidth);
       scope.$on('$destroy', function () {
         angular.element($window).off('resize', debouncedCheckWidth);
       });
 
-      function checkWidth () {
-        ctrl.setMaxNavItems(~~(elem[0].offsetWidth / 70));
+      scope.$watch(debouncedCheckWidth);
+
+      $timeout(checkWidth, 200);
+
+      function checkWidth() {
+        var isOverflowing = overflowing(elem);
+        var altOverflowing = overflowing(alternateElem);
+        var hitCap = (ctrl.totalItems == ctrl.moreNavItems.length);
+
+        if (calculating) {
+          if (isOverflowing) {
+            if (!altOverflowing) {
+              calculating = false;
+              ctrl.setMaxNavItems(ctrl.moreNavItems.length);
+            } else {
+              ctrl.setMoreNavItems(ctrl.moreNavItems.length - 1);
+            }
+          } else {
+            if (altOverflowing) {
+              calculating = false;
+              ctrl.setMaxNavItems(ctrl.moreNavItems.length - 1);
+            } else if (hitCap) {
+              calculating = false;
+              ctrl.setMaxNavItems(ctrl.moreNavItems.length);
+            } else {
+              ctrl.setMoreNavItems(ctrl.moreNavItems.length + 1);
+            }
+          }
+        } else {
+          if (isOverflowing) {
+            calculating = true;
+            ctrl.setMoreNavItems(ctrl.maxNavItems - 1);
+          } else if (!altOverflowing && !hitCap) {
+            calculating = true;
+            ctrl.setMoreNavItems(ctrl.moreNavItems.length + 1);
+          } else if (!altOverflowing && ctrl.maxNavItems < ctrl.moreNavItems.length) {
+            ctrl.setMaxNavItems(ctrl.moreNavItems.length);
+          }
+        }
+
+        if (calculating) {
+          $timeout(checkWidth, 1);
+        }
+      }
+
+      function overflowing(elem) {
+        var children = elem.children();
+        if (children.length) {
+          return elem[0].getBoundingClientRect().left >
+            children[0].getBoundingClientRect().left;
+        }
+        return false;
       }
     }
   };
 })
-.directive('prxNavItem', function () {
+.directive('xiNavItem', function ($compile) {
   return {
     restrict: 'E',
     templateUrl: 'ui/nav/nav_item.html',
-    replace: true,
     controller: 'NavItemCtrl',
     controllerAs: 'navItem',
     scope: { 'item': '=' },
-    bindToController: true
+    transclude: true,
+    bindToController: true,
+    link: function (scope, elem, _, ctrl) {
+      var holder = elem.children();
+      if (ctrl.item.template) {
+        holder.children().eq(0).replaceWith($compile(ctrl.item.template)(scope.$parent));
+      }
+      if (ctrl.item.dropdownTemplate) {
+        holder.on('click', function (e) {
+
+          if (!holder.hasClass('expanded')) {
+            e.preventDefault();
+            holder.addClass('expanded');
+          }
+        });
+
+        holder.on('mouseleave', function () {
+          holder.removeClass('expanded');
+        });
+        holder.children().eq(1).append($compile(ctrl.item.dropdownTemplate)(scope.$parent));
+      }
+    }
   };
 })
 .controller('NavItemCtrl', function () {

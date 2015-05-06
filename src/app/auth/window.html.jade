@@ -1,0 +1,8 @@
+ng-switch(on="auth.currentUser.loggedIn")
+  div(ng-switch-when="true")
+    h3 Hi, {{auth.currentUser.login}}!
+    p You are seeing a beta version of PRX.org
+    p
+      a(ng-href="{{app.desktopUrl}}") Click here
+      | to go back to the old site.
+  iframe(ng-switch-default, prx-auth-login-frame)

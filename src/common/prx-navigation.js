@@ -1,4 +1,4 @@
-angular.module('prxNavigation', ['ui.router'])
+angular.module('prxNavigation', ['ui.router', 'prx.auth'])
 .directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope, $animate) {
   var modalKey = 'modal@';
 
@@ -12,6 +12,14 @@ angular.module('prxNavigation', ['ui.router'])
   }
 
   function instrument(route, scope) {
+    if (route.data && route.data.loginRequired &&
+      !route.data.$loginInstrumented) {
+      route.resolve = route.resolve || {};
+      route.data.$loginInstrumented = true;
+      route.resolve.currentUser = ['PrxAuth', function (PrxAuth) {
+        return PrxAuth.currentUser(true);
+      }];
+    }
     if (route.views && route.views[modalKey] &&
           !route.views[modalKey].instrumented) {
       var view = route.views[modalKey];
