@@ -151,7 +151,8 @@ gulp.task('jshint', function () {
       if (file == 'length') { return }
       ers = errors[file];
       return file + ": " + ers.length + " errors \n" + ers.map(function (error) {
-        return "    l" + error.line + "c" + error.character + ": " + error.evidence + " – " + error.reason;
+        if (error)
+          return "    l" + error.line + "c" + error.character + ": " + error.evidence + " – " + error.reason;
       }).join("\n");
     }).join("\n"));
   }
