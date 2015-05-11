@@ -23,7 +23,6 @@ angular.module('prx.errors', ['ui.router'])
 .service('prxError', function ($state) {
   var lastError, self = this;
 
-
   function GeneralError (headline, message) {
     if(headline) {
       this.headline = headline;
