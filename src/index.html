@@ -15,6 +15,9 @@
   <prx-drawer drawer="main" class="_chase">
     <header ng-class="{'loading': loading}" class="chrome">
       <prx-loading-bar></prx-loading-bar>
+      <xi-context-menu class="context-menu">
+        <ui-view name="contextMenu"></ui-view>
+      </xi-context-menu>
       <div>
         <prx-drawer-button></prx-drawer-button>
         <h1>
