@@ -6,6 +6,7 @@ angular.module('prx', ['ngAnimate',
   'ngStorage',
   'ui.router',
   'prx.ui',
+  'prx.ui.nav',
   'ui.sortable',
   'prx.home',
   'prx.stories',
@@ -124,7 +125,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
   }]);
 });
 (function () {
-  var acm = angular.module('prx.appCtrl', ['prx.embed', 'prx.player', 'prx.url-translate', 'prx.errors', (FEAT.TCF_DEMO ? 'prx.upload' : 'ng')])
+  var acm = angular.module('prx.appCtrl', ['prx.embed', 'prx.ui.nav', 'prx.player', 'prx.url-translate', 'prx.errors', (FEAT.TCF_DEMO ? 'prx.upload' : 'ng')])
   .controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, urlTranslate, prxError, PRXFilePicker, Upload, $state) {
     var app = this;
     this.player = prxPlayer;
