@@ -15,7 +15,7 @@ div.error.modal
       | If you'd like, you can #{''}
       a(ng-click="error.goBack()") go back
       |  or #{''}
-      a(ng-click="error.tryAgain()") try again
+      a(ng-click="error.retry()") try again
       | .
     p(ng-if="!(error.canGoBack() || error.canRetry())")
       | If you'd like, you can #{''}
