@@ -38,6 +38,9 @@
   h1 {
     width: 62px;
     margin: 0 auto;
+    position: relative;
+    opacity: 0.99;
+    z-index: 900;
 
     a {
       line-height: $action-bar-height;
@@ -63,6 +66,7 @@
     justify-content: flex-end;
     align-items: center;
     height: 100%;
+
     a {
       color: $nav-link-color;
       display: block;
@@ -113,7 +117,8 @@
       }
     }
 
-    xi-nav-item {
+    xi-nav-item,
+    .xi-nav-item {
       flex: 0 0 auto;
       font-size: 14px;
       display: inline-block;
@@ -124,6 +129,10 @@
 
       &:first-of-type {
         border-left: none;
+      }
+
+      &.alert .nav-holder {
+        background: yellow;
       }
     }
   }
