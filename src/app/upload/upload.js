@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio'])
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio', 'prx.upload.filepicker'])
   .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
       url: '/upload',
@@ -130,7 +130,7 @@ if (FEAT.TCF_DEMO) {
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
-  .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q) {
+  .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q, $rootScope) {
 
     var uploads = {};
 
@@ -170,11 +170,9 @@ if (FEAT.TCF_DEMO) {
 
       u.promise = up.then(
         function() {
-          // console.log("complete!");
           return {upload: u};
         },
         function(msg) {
-          // console.log("error!", msg);
           return $q.reject(msg);
         },
         function(p) {
@@ -183,7 +181,7 @@ if (FEAT.TCF_DEMO) {
         }
       );
 
-      uploads[u.uploadId] = u;
+      uploads[u.guid] = u;
     }
 
     Upload.prototype = {

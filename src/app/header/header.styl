@@ -11,7 +11,6 @@
   max-width: 1200px;
   margin: 0 auto;
   height: $action-bar-height;
-  overflow: hidden;
   z-index: 200;
   border-bottom: 1px solid $header-border-color;
   background: $content-fill-color;
@@ -58,25 +57,94 @@
     position: absolute;
     top: 0;
     right: 30px;
-    overflow: hidden;
-    width: 25%;
+    width: calc( 50% - 80px );
     text-align: right;
-
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
     a {
       color: $nav-link-color;
-      border-left: 1px solid $nav-separator-color;
-      padding: 0 25px;
-      font-size: 14px;
-      line-height: $action-bar-height;
+      display: block;
+      padding: 0 3px;
+    }
 
-      &:first-of-type {
-        padding-left: 0;
-        border-left: none;
+    .nav-holder {
+      height: $action-bar-height;
+
+      > *:not(.dropdown) {
+        line-height: $action-bar-height;
       }
 
-      &:last-of-type {
-        padding-right: 0;
+      display: inline-block;
+      position: relative;
+      top: ( $action-bar-height / -2 ) + 7px;
+
+      &:hover, &.expanded {
+        background-color: $orange;
+        border: 0 solid $nav-separator-color;
+        border-width: 0 1px;
+        margin: 0 -1px;
+
+        a {
+          color: $white;
+        }
+      }
+
+      &.expanded {
+        background-color: $offwhite;
+
+        a {
+          color: $nav-link-color;
+        }
+
+        .dropdown {
+          display: block;
+        }
+      }
+
+      > * {
+        cursor: pointer;
+        padding: 0 25px;
+      }
+
+      .dropdown {
+        display: none;
       }
     }
+
+    xi-nav-item {
+      flex: 0 0 auto;
+      font-size: 14px;
+      display: inline-block;
+      height: 14px;
+      overflow: show;
+      border-left: 1px solid $nav-separator-color;
+      line-height: 14px;
+
+      &:first-of-type {
+        border-left: none;
+      }
+    }
+  }
+
+  nav.alternate {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    visibility: hidden;
+  }
+
+  .dropdown {
+    width: 300px;
+    background-color: $white;
+    position: absolute;
+    top: 100%;
+    right: -1px;
+    border: 1px solid $nav-separator-color;
+    border-top-width: 0;
   }
 }

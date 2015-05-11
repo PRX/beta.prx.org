@@ -1,1 +1,3 @@
-a(ng-href="{{::navItem.href()}}", ng-class="::navItem.type()") {{::navItem.text()}}
+.nav-holder
+  a(ng-href="{{::navItem.href()}}", ng-class="::navItem.type()") {{::navItem.text()}}
+  .dropdown()

@@ -71,7 +71,7 @@ angular.module('angular-evaporate', ['async-loader'])
     add: function(config) {
       var e = this;
 
-      var deferred = e.q.defer();
+      var deferred = e.q.defer(), uploadId = e.q.defer();
 
       config.complete = function () {
         e.rootScope.$evalAsync( function() {
@@ -93,13 +93,13 @@ angular.module('angular-evaporate', ['async-loader'])
 
       // add the upload info to the underlying evaporate obj
       // save the returned `id` on the promise itself
-      var promise = deferred.promise;
-
-      // return promise;
-      return e.loadEvaporate().then( function () {
-        promise.uploadId = e._evaporate.add(config);
-        return promise;
+      var promise = e.loadEvaporate().then( function () {
+        uploadId.resolve(e._evaporate.add(config));
+        return deferred.promise;
       });
+
+      promise.uploadId = uploadId.promise;
+      return promise;
     }
   };
 
