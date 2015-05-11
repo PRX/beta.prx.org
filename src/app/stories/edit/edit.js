@@ -112,6 +112,23 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
     }
   });
 })
+.run(function ($templateCache) {
+  var matcher = /#live$/;
+  var dblColon = /::/g;
+  var empty = '';
+  var live = '#live';
+  var origGet = $templateCache.get;
+  $templateCache.get = function (uri) {
+    var result = origGet.apply(this, arguments);
+    if (!result && matcher.test(uri)) {
+      uri = uri.replace(matcher, empty);
+      result = origGet.call(this, uri);
+      result = result.replace(dblColon, empty);
+      this.put(uri + live, result);
+    }
+    return result;
+  };
+})
 .factory('UploadAnalysis', function (Id3Service, $window, Upload) {
   function dataUri(data) {
     // var input = new Uint8Array(data.data);
@@ -163,23 +180,6 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
         });
       }
     }
-  };
-})
-.run(function ($templateCache) {
-  var matcher = /#live$/;
-  var dblColon = /::/g;
-  var empty = '';
-  var live = '#live';
-  var origGet = $templateCache.get;
-  $templateCache.get = function (uri) {
-    var result = origGet.apply(this, arguments);
-    if (!result && matcher.test(uri)) {
-      uri = uri.replace(matcher, empty);
-      result = origGet.call(this, uri);
-      result = result.replace(dblColon, empty);
-      this.put(uri + live, result);
-    }
-    return result;
   };
 })
 .directive('xiProgressBar', function () {
