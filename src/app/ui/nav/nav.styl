@@ -44,7 +44,6 @@
       overflow-x: hidden;
       display: block;
       position: relative;
-      overflow-y: auto;
       height: 100%;
     }
 
@@ -80,4 +79,35 @@
     transform: none;
   }
 
+}
+
+.context-menu {
+  background: $content-fill-color;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 73px;
+  display: none;
+  z-index: 600;
+
+  &.visible,
+  &.visible-add,
+  &.visible-remove-active {
+    display: block;
+  }
+
+  &.visible-add,
+  &.visible-remove {
+    transition: 0.2s transform;
+  }
+
+  &.visible-add,
+  &.visible-remove-active {
+    transform: translateY(-40px);
+  }
+
+  &.visible-add-active {
+    transform: none;
+  }
 }

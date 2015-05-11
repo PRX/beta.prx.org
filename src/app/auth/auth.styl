@@ -1,0 +1,42 @@
+prx-auth-badge {
+  display: inline-block;
+  min-width: 100px;
+
+  .loading-spinner {
+
+    margin-left: 25px; margin-right: 25px;
+
+    @extends $loading-indicator;
+    background-color: $slight-grey;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 31px;
+    height: 31px;
+    margin: auto;
+    border-radius: 50%;
+  }
+}
+
+prx-auth-window {
+  text-align: left;
+
+  h3 {
+    line-height: 24px;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+
+  iframe {
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    height: 200px;
+    border: 1px solid $slight-grey;
+    border-top-width: 0;
+  }
+}

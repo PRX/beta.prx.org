@@ -1,1 +1,1 @@
-angular.module('prx.ui', ['prx.ui.tabs', 'prx.ui.nav']);
+angular.module('prx.ui', ['prx.ui.tabs', 'prx.ui.nav', 'prx.ui.sheet']);

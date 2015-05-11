@@ -1,0 +1,168 @@
+#sheet {
+  fixed: bottom right;
+  width: 40px;
+  height: 40px;
+  display: none;
+
+  &.visible,
+  &.visible-add,
+  &.visible-remove-active {
+    display: block;
+  }
+
+  &.visible-add,
+  &.visible-remove {
+    transition: 0.2s transform;
+  }
+
+  &.visible-add,
+  &.visible-remove-active {
+    transform: translateX(40px);
+  }
+
+  &.visible-add-active {
+    transform: none;
+  }
+
+  background-color: $darkest-blue;
+  z-index: 1000;
+  overflow: hidden;
+
+  > h3 {
+    absolute: top 0 left;
+    right: 40px;
+    padding-left: 10px;
+    line-height: 40px;
+    color: $light-grey;
+    text-align: center;
+    overflow: ellipsis;
+  }
+
+  > button {
+    absolute: top 10px right 10px;
+    background-color: transparent;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    display: block;
+    padding: 0;
+
+    &::before {
+      content: '\e80b';
+      font-family: 'fontello';
+      color: $white;
+      text-align: center;
+      font-size: 18px;
+      line-height: 18px;
+      absolute: top left;
+      width: 100%;
+      height: 100%;
+
+      @media $media-width-tablet {
+        content: '\e80a';
+      }
+    }
+  }
+
+  > ui-view {
+    display: block;
+    padding: 40px 10px 0 10px;
+    height: 100%;
+
+    & > form {
+      height: 100%;
+    }
+  }
+
+  &.expanded,
+  &.expanded-add,
+  &.expanded-remove {
+    width: auto;
+    height: auto;
+    top: $action-bar-height;
+    left: 0;
+
+    > button::before {
+      content: '\e80c';
+    }
+  }
+
+  &.expanded-add,
+  &.expanded-remove.expanded-remove-active {
+    transform: translateY(calc(100% - 40px)) translateX(calc(100% - 40px));
+
+    > button {
+      right: calc(100% - 30px);
+    }
+  }
+
+  &.expanded-add-active,
+  &.expanded-remove {
+    transition: transform 500ms ease-in-out;
+    transform: none;
+
+    > button {
+      transition: right 500ms ease-in-out;
+      right: 10px;
+    }
+  }
+
+  @media $media-width-tablet {
+    fixed: bottom right 25px;
+    top: initial; left: initial;
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 0 2px -1px #000;
+    height: 40px;
+    width: 600px;
+    max-width: 33%;
+
+    &.expanded,
+    &.expanded-add,
+    &.expanded-remove {
+      height: 400px;
+      bottom: 0px;
+      top: auto;
+      left: auto;
+      width: 600px;
+      max-width: 100%;
+
+      > button::before {
+        content: '\e809';
+      }
+    }
+
+    &.expanded-remove > button::before {
+      content: '\e80a';
+    }
+
+    &.expanded-add,
+    &.expanded-remove.expanded-remove-active {
+      transform: translateY(calc(100% - 40px));
+      max-width: 33%;
+      > button {
+        right: 10px;
+      }
+    }
+
+    &.expanded-add-active {
+      transition: color 300ms, max-width 150ms ease-in, transform 150ms ease-out 150ms;
+      max-width: 600px;
+      transform: none;
+    }
+
+    &.expanded-remove {
+      transition: color 300ms, transform 150ms ease-in, max-width 150ms ease-out 150ms;
+      max-width: 600px;
+      transform: none;
+    }
+
+    &.visible-add,
+    &.visible-remove-active {
+      transform: translateY(40px);
+    }
+
+    &.visible-add-active {
+      transform: none;
+    }
+  }
+}

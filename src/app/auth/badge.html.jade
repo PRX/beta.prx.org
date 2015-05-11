@@ -1,0 +1,4 @@
+ng-switch(on="auth.status.loggedIn")
+  a(ng-switch-when="true") {{auth.status.currentUser}}
+  a(ng-switch-when="false") Sign In
+  .loading-spinner(ng-switch-when="loading") 

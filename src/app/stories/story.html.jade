@@ -6,7 +6,7 @@ article.story
         prx-img(src="story.current.imageUrl", default-class="default")
         .media-content
           .category audio story
-          h1 {{story.current.title}}
+          h1 {{::story.current.title}}
           ul.metadata
             li.author(ng-if="::!story.series")
               address.author
