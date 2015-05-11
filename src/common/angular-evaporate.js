@@ -65,8 +65,13 @@ angular.module('angular-evaporate', ['async-loader'])
     loadEvaporate: function() {
       var e = this;
       return e.loader.load('/vendor/EvaporateJS/evaporate.js').then( function(loaded) {
+        // TODO Save the promise so we don't need to worry about doing other
+        // things before load resolves.
         e._evaporate = new e.window.Evaporate(e.opts);
       });
+    },
+    cancel: function(id) {
+      return this._evaporate.cancel(id);
     },
     add: function(config) {
       var e = this;
