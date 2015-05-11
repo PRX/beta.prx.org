@@ -1,4 +1,4 @@
-angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
+angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
 .config(function ($stateProvider) {
   $stateProvider.decorator('views', function (state, parent) {
     var views = parent(state);
@@ -25,30 +25,35 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
     },
     reloadOnSearch: false,
     data: {
-      openSheet: true
+      openSheet: true,
+      edit: {
+
+      }
     },
     views: {
       '@': {
+        controller: 'StoryPreviewCtrl as story',
         templateUrl: 'stories/story.html',
         live: true,
-        controllerAs: 'story',
-        controller: function (uploads, account, story, prxSoundFactory) {
-
-          this.account = account;
+      },
+      'contextMenu@': {
+        templateUrl: 'stories/edit/context_menu.html',
+        controller: function (story) {
           this.current = story;
-          this.current.duration = 276;
-          this.sound = prxSoundFactory({
-            audioFiles:['https://dl.dropboxusercontent.com/u/125516/02%20Adrianne%20Mathiowetz.mp3'],
-            story: story,
-            producer: account});
-          var self = this;
-        }
+        },
+        controllerAs: 'story'
       },
       'sheet@': {
         templateUrl: 'stories/edit/sheet.html',
-        controller: function (story, audioFiles) {
+        controller: function (story, audioFiles, $scope) {
           this.current = story;
           this.audioFiles = audioFiles;
+
+          var self = this;
+
+          $scope.$watch("story_edit.$dirty", function(newValue) {
+            self.current.$dirty = newValue;
+          });
 
           this.removeAudioFile = function (idx) {
             this.audioFiles[idx].upload.cancel();
@@ -128,6 +133,54 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal'])
     }
     return result;
   };
+})
+.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory) {
+  this.account = account;
+  this.current = story;
+
+  // TODO Get actual duration from dropped file(s)
+  this.current.duration = 276;
+
+  var self = this;
+
+  // TODO Should only be active when in Edit Mode
+  // $window.onbeforeunload = function(){
+  //   return "Are you sure you want to leave Edit Mode?";
+  // };
+
+  $scope.$on('dragOver', function (event) {
+    event.preventDefault();
+  });
+
+  var skipStateChangeConfirm = false;
+
+  $scope.$on('$stateChangeStart', function(event, state, _, fromState) {
+    if (!skipStateChangeConfirm) {
+      event.preventDefault();
+
+      var confirm = $window.confirm('Are you sure you want to leave Edit Mode?');
+      if (confirm) {
+        // leave
+        skipStateChangeConfirm = true;
+        $state.go(state);
+      }
+    }
+  });
+
+  var url;
+
+  // TODO Needs to handle multi-segment versions
+  if (audioFiles.length) {
+    url = URL.createObjectURL(audioFiles[0].upload.file);
+  } else {
+    url = 'https://dl.dropboxusercontent.com/u/125516/02%20Adrianne%20Mathiowetz.mp3';
+  }
+
+  this.sound = prxSoundFactory({
+    audioFiles:[url],
+    story: story,
+    producer: account
+  });
 })
 .factory('UploadAnalysis', function (Id3Service, $window, Upload) {
   function dataUri(data) {
