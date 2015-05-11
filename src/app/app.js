@@ -151,15 +151,18 @@ angular.module('prx.modelConfig', ['angular-hal'])
     /* istanbul ignore next */
     if (FEAT.TCF_DEMO) {
       app.showFileTarget = function (event) {
-        PRXFilePicker.selectFiles().then(function (files) {
-          var guids = [];
-          angular.forEach(files, function (file) {
-            guids.push(Upload.upload(file).guid);
+        var ev = $scope.$broadcast('dragOver');
+        if (!ev.defaultPrevented) {
+          PRXFilePicker.selectFiles().then(function (files) {
+            var guids = [];
+            angular.forEach(files, function (file) {
+              guids.push(Upload.upload(file).guid);
+            });
+            $state.go('story.create', {uploadIds: guids});
+          }, function (error) {
+            console.log(error);
           });
-          $state.go('story.create', {uploadIds: guids});
-        }, function (error) {
-          console.log(error);
-        });
+        }
       };
     }
   })
