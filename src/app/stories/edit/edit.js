@@ -144,9 +144,13 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
   var self = this;
 
   // TODO Should only be active when in Edit Mode
-  // $window.onbeforeunload = function(){
-  //   return "Are you sure you want to leave Edit Mode?";
-  // };
+  $window.onbeforeunload = function(){
+    return "Are you sure you want to leave Edit Mode?";
+  };
+
+  $scope.$on('$destroy', function () {
+    $window.onbeforeunload = undefined;
+  });
 
   $scope.$on('dragOver', function (event) {
     event.preventDefault();
