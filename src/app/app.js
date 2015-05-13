@@ -1,5 +1,6 @@
 angular.module('prx', ['ngAnimate',
   'ngSanitize',
+  'prx.ui',
   'prxNavigation',
   'ngTouch',
   'ngStorage',
@@ -26,7 +27,8 @@ angular.module('prx', ['ngAnimate',
   'prx.modelConfig',
   'ngMobile',
   'prx.breadcrumbs',
-  'prx.ads'])
+  'prx.ads',
+  'prx.auth'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider, PRXDrawerProvider) {
   $analyticsProvider.firstPageview(false);
@@ -89,11 +91,6 @@ angular.module('prx', ['ngAnimate',
         type: "item"
       },
     ]
-  }, {
-    name: 'Sign In',
-    weight: PRXDrawerProvider.BOTTOM,
-    href: 'http://www.prx.org/sessions/new',
-    nav: true
   });
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
@@ -105,6 +102,9 @@ angular.module('prx.base',['prx'])
 .config(/* istanbul ignore next */
   function ($locationProvider) {
     $locationProvider.html5Mode(true);
+}).run(/* istanbul ignore next */
+  function (PrxAuth) {
+    PrxAuth.$checkLoggedIn();
 });
 angular.module('prx.modelConfig', ['angular-hal'])
 .config(function (ngHalProvider) {

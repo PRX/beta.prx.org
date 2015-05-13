@@ -20,8 +20,14 @@
 
     nav {
       width: 50%;
-      a {
-        line-height: $tall-action-bar-height;
+
+      .nav-holder {
+        height: $tall-action-bar-height;
+        top: ( $tall-action-bar-height / -2 ) + 7px;
+
+        > *:not(.dropdown) {
+          line-height: $tall-action-bar-height;
+        }
       }
     }
   }

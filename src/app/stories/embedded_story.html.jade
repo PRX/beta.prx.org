@@ -3,6 +3,6 @@ section.story
     prx-img(src="story.imageUrl", default-class="default", ng-class="{playing: story.playing()}")
   .category audio story
   h3(overflow-class)
-    a(ui-sref="story") {{story.title}}
+    a(ui-sref="story.show({storyId:story.id})") {{story.title}}
   time(datetime="P{{story.duration}}S") {{story.duration * 1000 | timeCode }}
   .desc(ng-bind-html="story.shortDescription", limit-to-html="150")
