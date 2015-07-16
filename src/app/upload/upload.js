@@ -42,6 +42,12 @@ if (FEAT.TCF_DEMO) {
     .cloudfront(FEAT.UPLOADS_CLOUDFRONT)
     .options({ logging: FEAT.UPLOADS_LOGGING });
   })
+  .factory('_$URL', function ($window) {
+    return $window.URL;
+  })
+  .factory('URL', function ($window) {
+    return $window.URL;
+  })
   .service('UploadTarget', function ($rootScope) {
     var targets = [],
         active  = {};

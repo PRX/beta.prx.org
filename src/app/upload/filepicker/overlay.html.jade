@@ -5,6 +5,10 @@
       xi-tab
         xi-tab-name File Upload
         xi-tab-content
+          .alert-container(ng-show="overlay.picker.alert")
+            .alert
+              p There was an upload error.
+              p {{ overlay.picker.alert }}
           prx-local-file-upload-tab
       xi-tab(disabled)
         xi-tab-name PRX Dropbox

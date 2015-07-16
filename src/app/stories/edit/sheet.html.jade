@@ -70,22 +70,33 @@ form(name="story_edit")
                   | Tags
                   input(ng-model="story.current.tags")
                 label
-                  | Album Image
-                  | Foo
-                label
-                  | Cover Image
-                  | Foo
+                  | Episode Image
+                  div.no-image-file(ng-if="story.imageFiles.length == 0")
+                    button(ng-click="story.selectImage()")
+                      | Upload Image File
+                  div(class="image-file", ng-repeat="imageFile in story.imageFiles")
+                    a.delete(ng-click="story.removeImageFile($index)") Delete Image
+                    div.image-wrapper(ng-class="{'uploading': imageFile.upload.progress < 1}")
+                      .loading
+                      img(src="{{imageFile.url}}")
           xi-tab(key="audio")
             xi-tab-name Audio
             xi-tab-content
               form
-                div(ng-repeat="audioFile in story.audioFiles")
+                div(ng-if="story.audioFiles.length == 0")
+                  button(ng-click="story.selectAudioFile()")
+                    | Upload Audio File
+                div(class="audio-file", ng-repeat="audioFile in story.audioFiles")
+                  a(ng-click="story.removeAudioFile($index)") Delete Audio
                   label
-                    | File name
-                    input.large(ng-model="audioFile.upload.name", placeholder="{{::audioFile.upload.name || 'selling_seashells-broadcast.mp2'}}")
-                  xi-progress-bar(progress="audioFile.upload.progress")
-                  p {{ audioFile.upload.progress * 100 }}%
-                  a(ng-click="story.removeAudioFile($index)") Remove
+                    | Upload Progress ({{ audioFile.upload.progress * 100 | number:0 }}%)
+                    xi-progress-bar(progress="audioFile.upload.progress")
+                  label
+                    | Label
+                    input.large(ng-model="audioFile.label", placeholder="{{::audioFile.label || audioFile.filename}}")
+                  
+                  div
+                    prx-player(sound="audioFile.getSound(story.account, story.current)", class="small")
     xi-tab(key="marketplace")
       xi-tab-name PRX Marketplace
       xi-tab-content

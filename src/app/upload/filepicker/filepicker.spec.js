@@ -32,6 +32,20 @@ describe('prx.upload.filepicker', function () {
     });
   });
 
+  describe('prxFileSelectButton', function () {
+    beforeEach(inject(function ($rootScope, $compile) {
+      $scope = $rootScope.$new();
+      elem = $compile('<div prx-file-select-button accept="audio/*" multiple></div>')($scope);
+    }));
+
+    it ('compiles', function () {
+      expect(elem).toBeDefined();
+    });
+
+    // TODO Should make sure `accept` and `multiple` attrs are passed to
+    // internal `input` element
+  });
+
   describe('prxFilePickerOverlay directive', function () {
     var elem, $scope, filePickerService;
 

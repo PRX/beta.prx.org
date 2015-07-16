@@ -612,15 +612,10 @@ angular.module('angular-hal', ['ng', 'uri-template'])
       }
     },
     construct: function construct (doc, uris, url) {
-      var links = halLinkCollection(doc._links, this),
-          selfLink = links('self'),
-          profileLink = links('profile');
+      var selfLink = halLinkCollection(doc._links, this)('self');
       if (selfLink) {
         url = url || selfLink.href();
         uris = [].concat(uris, selfLink.profile());
-      }
-      if (profileLink) {
-        uris = [].concat(uris, profileLink.profile());
       }
       return this.makeConstructor(uris)(doc, url);
     },

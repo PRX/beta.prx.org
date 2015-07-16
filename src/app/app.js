@@ -101,7 +101,8 @@ angular.module('prx', ['ngAnimate',
 });
 angular.module('prx.base',['prx'])
 .config(/* istanbul ignore next */
-  function ($locationProvider) {
+  function ($locationProvider, ngHalProvider) {
+    ngHalProvider.setRootUrl(FEAT.apiServer);
     $locationProvider.html5Mode(true);
 }).run(/* istanbul ignore next */
   function (PrxAuth) {

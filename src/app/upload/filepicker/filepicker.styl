@@ -19,10 +19,34 @@
     padding: 20px 50px 0 10px;
   }
 
+  .alert-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .alert {
+      margin: 0 30px;
+      padding: 6px 0;
+      background: rgba(black, .7);
+      text-align: center;
+      color: $contrast-body-copy-color;
+
+      p {
+        margin: 0;
+        padding: 0;
+        line-height: 125%;
+      }
+    }
+  }
+
   .dismiss {
     flex: 0;
     absolute: top right 20px;
     font-size: 0;
+    background: transparent;
+    width: 20px; height: 20px;
+
     &::before {
       content: '';
       font-family: 'fontello';
@@ -34,9 +58,8 @@
       width: 100%;
       height: 100%;
     }
-    background: transparent;
-    width: 20px; height: 20px;
   }
+
   .tabs {
     flex: 0 0 auto;
     margin: -20px -20px 10px -20px;
@@ -71,18 +94,22 @@
     padding: 20px;
     margin-top: 10px;
     align-items: center;
+
     small {
       display: block;
       font-style: italic;
       margin: 10px 0;
+
       &::before, &::after {
         content: ' – ';
       }
     }
+
     span {
       font-size: 2em;
       line-height: 1.2em;
       position: relative;
+
       &::after {
         opacity: 0;
         min-width: 100%;
@@ -94,24 +121,30 @@
         background-color: #FFF;
       }
     }
+
     button {
       flex-grow: 0;
       width: auto;
     }
 
-
-    &.hovering-add, &.hovering-remove {
+    &.hovering-add,
+    &.hovering-remove {
       transition: 0.3s border-color;
-      small, button, span::after {
+
+      small,
+      button,
+      span::after {
         transition: 0.3s opacity;
       }
     }
 
     &.hovering {
       border-color: $light-grey;
+
       small, button {
         opacity: 0;
       }
+
       span::after {
         opacity: 1;
       }

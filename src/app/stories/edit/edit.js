@@ -1,4 +1,4 @@
-angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
+angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 'prx.upload', 'prx.stories', 'prx.upload.filepicker'])
 .config(function ($stateProvider) {
   $stateProvider.decorator('views', function (state, parent) {
     var views = parent(state);
@@ -20,15 +20,12 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
     url: '^/stories/create?version&section',
     params: {
       uploadIds: [],
-      version: "podcast",
-      section: "marketing"
+      version: 'podcast',
+      section: 'marketing'
     },
     reloadOnSearch: false,
     data: {
-      openSheet: true,
-      edit: {
-
-      }
+      openSheet: true
     },
     views: {
       '@': {
@@ -45,9 +42,10 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
       },
       'sheet@': {
         templateUrl: 'stories/edit/sheet.html',
-        controller: function (story, audioFiles, $scope) {
+        controller: function (story, audioFiles, imageFiles, $scope, Upload, PRXFilePicker, $stateParams, prxAudioFileFactory, prxImageFileFactory) {
           this.current = story;
           this.audioFiles = audioFiles;
+          this.imageFiles = imageFiles;
 
           var self = this;
 
@@ -59,36 +57,63 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
             this.audioFiles[idx].upload.cancel();
             this.audioFiles.splice(idx, 1);
           };
+
+          this.selectAudioFile = function (files) {
+            PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.audio, false).then(function(files) {
+              var upload = Upload.upload(files[0]);
+              var audioFile = prxAudioFileFactory(upload);
+              self.audioFiles = [audioFile];
+            });
+          };
+
+          this.selectImage = function () {
+            PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.image, false).then(function(files) {
+              var upload = Upload.upload(files[0]);
+              var imageFile = prxImageFileFactory(upload);
+              self.imageFiles = [imageFile];
+            });
+          };
+
+          this.removeImageFile = function (idx) {
+            this.imageFiles[idx].upload.cancel();
+            this.imageFiles.splice(idx, 1);
+          };
         },
         controllerAs: 'story'
       }
     },
     resolve: {
-      audioFiles: function ($stateParams, Upload) {
-        var audioFiles = [];
-        angular.forEach($stateParams.uploadIds, function (uploadId) {
-          audioFiles.push({ upload: Upload.getUpload(uploadId) });
-        });
-        return audioFiles;
+      imageFiles: function () {
+        return [];
       },
-      story: function (ngHal, audioFiles, UploadAnalysis, $q, ngSuperGlobals) {
+      audioFiles: function ($stateParams, Upload, AudioFile, $q) {
+        var audioFiles = [];
+
+        angular.forEach($stateParams.uploadIds, function (uploadId) {
+          var audioFile = AudioFile.forUpload(Upload.getUpload(uploadId));
+          audioFiles.push(audioFile);
+        });
+
+        return $q.all(audioFiles);
+      },
+      story: function (ngHal, audioFiles, imageFiles, UploadAnalysis, $q, ngSuperGlobals, Story) {
+        // return Story.forAudioFiles(audioFiles);
         if (audioFiles.length) {
-          return (UploadAnalysis.properties(audioFiles)).then(function (data) {
+          return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
             return ngHal.build('prx:stories').then(function (story) {
-              angular.extend(story, data);
+              angular.extend(story, data.properties);
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
+              story.duration = data.duration;
 
               var obj = {
                 story: story,
                 audioFiles: audioFiles,
+                imageFiles: imageFiles,
               };
 
               ngSuperGlobals.bind('createStory', obj);
-              if (story.title == 'Adrianne Mathiowetz') {
-                story.imageUrl = 'https://dl.dropboxusercontent.com/u/125516/mathiowetz.png';
-              }
               return story;
             });
           });
@@ -117,6 +142,40 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
     }
   });
 })
+.factory('prxImageFileFactory', function (prxSoundFactory, _$URL) {
+
+  function PrxImageFile(upload) {
+    this.upload = upload;
+    this.url = _$URL.createObjectURL(upload.file);
+  }
+
+  return function (upload) {
+    return new PrxImageFile(upload);
+  };
+})
+.factory('prxAudioFileFactory', function (prxSoundFactory, _$URL) {
+
+  function PrxAudioFile(upload) {
+    this.upload = upload;
+    this.url = _$URL.createObjectURL(upload.file);
+  }
+
+  PrxAudioFile.prototype.getSound = function (account, story) {
+    if (!this.sound) {
+      this.sound = prxSoundFactory({
+        audioFiles: [this.url],
+        story: story,
+        producer: account
+      });
+    }
+
+    return this.sound;
+  };
+
+  return function (upload) {
+    return new PrxAudioFile(upload);
+  };
+})
 .run(function ($templateCache) {
   var matcher = /#live$/;
   var dblColon = /::/g;
@@ -134,19 +193,16 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
     return result;
   };
 })
-.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory) {
+.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story) {
   this.account = account;
   this.current = story;
-
-  // TODO Get actual duration from dropped file(s)
-  this.current.duration = 276;
 
   var self = this;
 
   // TODO Should only be active when in Edit Mode
-  $window.onbeforeunload = function(){
-    return "Are you sure you want to leave Edit Mode?";
-  };
+  // $window.onbeforeunload = function(){
+  //   return "Are you sure you want to leave Edit Mode?";
+  // };
 
   $scope.$on('$destroy', function () {
     $window.onbeforeunload = undefined;
@@ -170,26 +226,11 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
       }
     }
   });
-
-  var url;
-
-  // TODO Needs to handle multi-segment versions
-  if (audioFiles.length) {
-    url = URL.createObjectURL(audioFiles[0].upload.file);
-  } else {
-    url = 'https://dl.dropboxusercontent.com/u/125516/02%20Adrianne%20Mathiowetz.mp3';
-  }
-
-  this.sound = prxSoundFactory({
-    audioFiles:[url],
-    story: story,
-    producer: account
-  });
 })
-.factory('UploadAnalysis', function (Id3Service, $window, Upload) {
+.factory('UploadAnalysis', function (Id3Service, $window, Upload, $q, AuroraService) {
   function dataUri(data) {
     // var input = new Uint8Array(data.data);
-    // var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    // var keyStr = "FARSKIGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     // var output = "";
     // var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
     // var i = 0;
@@ -242,7 +283,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
 .directive('xiProgressBar', function () {
   return {
     restict: 'E',
-    template: '<div style="background: red; width: 100%; height: 15px;"></div>',
+    template: '<div></div>',
     scope: {
       progress: '='
     },
@@ -306,4 +347,53 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav'])
      }
     }
   };
+}).factory('Story', function ($q) {
+  function Story(document) {
+    this.$document = document;
+  }
+
+  Story.totalDuration = function (audioFiles) {
+    return audioFiles.reduce(function (collector, audioFile) {
+      return collector + audioFile.duration;
+    }, 0);
+  };
+  return Story;
+})
+.factory("AudioFile", function (URL, AuroraService, $q, PrxAuth, ngHal, Id3Service) {
+  function AudioFile(document) {
+    this.$document = document;
+  }
+
+  AudioFile.forUpload = function (upload) {
+    var token = PrxAuth.currentUser(true).then(function (user) {
+      return user.token;
+    });
+    var file = PrxAuth.currentUser(true).then(function (user) {
+      return user.account.build('prx:audio-files');
+    });
+    var metadata = $q.all({
+      label: Id3Service.analyze(upload.file).then(function (data) {
+        return data.title.replace("\u0000", '');
+      }),
+      duration: AuroraService.duration(upload.file).then(function (duration) {
+        return duration / 1000;
+      })
+    });
+    var doc = $q.all([file, metadata]).then(function (args) {
+      var file = args[0];
+      var metadata = args[1];
+      angular.extend(file, metadata, {
+        filename: upload.file.filename,
+        url: URL.createObjectURL(upload.file),
+        upload: upload
+      });
+      return file;
+    });
+    $q.all({doc: doc, upload: upload, token: token}).then(function (data) {
+      data.doc.upload = 's3://' + FEAT.UPLOADS_AWS_BUCKET + '/' + upload.path;
+      data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
+    });
+    return doc;
+  };
+  return AudioFile;
 });

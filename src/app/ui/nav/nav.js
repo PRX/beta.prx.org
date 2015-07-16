@@ -319,7 +319,7 @@ angular.module('prx.ui.nav', [])
         });
 
         holder.on('mouseleave', function () {
-          holder.removeClass('expanded');
+          // holder.removeClass('expanded');
         });
         holder.children().eq(1).append($compile(ctrl.item.dropdownTemplate)(scope.$parent));
       }
