@@ -156,7 +156,7 @@ if (FEAT.TCF_DEMO) {
       u.guid = $uuid.v4();
       u.name = safeName(u.file.name);
       u.path = uploadKey(u.guid, u.name);
-      u.type = MimeType.lookup(file);
+      u.type = MimeType.lookup(file).full();
 
       u.progress = 0;
 
