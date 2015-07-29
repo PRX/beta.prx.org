@@ -1,7 +1,11 @@
 ng-switch(on="auth.currentUser.loggedIn")
   div(ng-switch-when="true")
     b
-      a(ui-sref="") {{auth.currentUser.login}}!
+      a.account(ui-sref="auth.currentUser.account") {{auth.currentUser.login}}!
+    h4 My Series
+    ul.series
+      li(ng-repeat="series in auth.currentUser.series")
+         a(ui-sref="series") {{series.title}}
     
     //- h3 Hi, {{auth.currentUser.login}}!
     //- p You are seeing a beta version of PRX.org
