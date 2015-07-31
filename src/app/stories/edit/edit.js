@@ -17,7 +17,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   });
 
   $stateProvider.state('story.create', {
-    url: '^/stories/create?version&section',
+    url: '^/stories/create?version&section&series',
     params: {
       uploadIds: [],
       version: 'podcast',

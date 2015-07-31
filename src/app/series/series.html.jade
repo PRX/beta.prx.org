@@ -26,7 +26,7 @@ article.series
           a(ui-sref=".allStories", ng-show="::series.stories.length > 3") View All &raquo;
         div
           section.story.blank(ng-if="::series.isEditable")
-            a(ui-sref="story.create") ➕
+            a(ui-sref="story.create({ series: series.current.link.url('self') })") ➕
           prx-story(ng-repeat="story in ::series.stories" story="::story")
   .content      
     .main
