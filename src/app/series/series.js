@@ -65,7 +65,10 @@ ngHalProvider.setRootUrl(FEAT.apiServer)
   this.stories = stories;
   this.account = account;
 
-  this.isEditable = (account.id == currentUser.account.id);
+  this.isEditable = false;
+  if (currentUser && currentUser.account) {
+    this.isEditable = account.id == currentUser.account.id;
+  }
 })
 .controller('SeriesStoriesCtrl', function (list, stories, series) {
   this.current = series;
