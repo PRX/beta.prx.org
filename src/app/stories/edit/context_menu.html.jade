@@ -1,13 +1,13 @@
-nav
+nav(ng-class="{'alert': story.current.$dirty}")
   .xi-nav-item
     .nav-holder
       a Help
   .xi-nav-item
     .nav-holder
-      a View Story As..
+      a Save
   .xi-nav-item
     .nav-holder
-      a Preflight
-  .xi-nav-item(ng-class="{'alert': story.current.$dirty}")
+      a Save and Publish
+  .xi-nav-item
     .nav-holder
-      a Save
+      a(ui-sref="story.current") Discard

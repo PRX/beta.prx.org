@@ -21,7 +21,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     params: {
       uploadIds: [],
       version: 'podcast',
-      section: 'marketing'
+      section: 'marketing',
+      series: null
     },
     reloadOnSearch: false,
     data: {
@@ -96,36 +97,23 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
         return $q.all(audioFiles);
       },
-      story: function (ngHal, audioFiles, imageFiles, UploadAnalysis, $q, ngSuperGlobals, Story) {
+      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story) {
         // return Story.forAudioFiles(audioFiles);
-        if (audioFiles.length) {
-          return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
-            return ngHal.build('prx:stories').then(function (story) {
+        return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
+          return ngHal.build('prx:stories').then(function (story) {
               angular.extend(story, data.properties);
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
               story.duration = data.duration;
-
-              var obj = {
-                story: story,
-                audioFiles: audioFiles,
-                imageFiles: imageFiles,
-              };
-
-              ngSuperGlobals.bind('createStory', obj);
               return story;
             });
           });
-        } else {
-          return ngHal.build('prx:stories').then(function (story) {
-            ngSuperGlobals.bind('createStory', { story: story });
-            return story;
-          });
-        }
       },
-      account: function (ngHal) {
-        return ngHal.follow('prx:account', {id: 30890});
+      account: function (PrxAuth) {
+        return PrxAuth.currentUser(true).then(function (user) {
+          return user.account;
+        });
       },
       audioVersions: function () {
         return [];
@@ -193,9 +181,14 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return result;
   };
 })
-.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story) {
+.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory) {
   this.account = account;
   this.current = story;
+  this.sound = prxSoundFactory({
+    audioFiles: audioFiles.map(function (x) { return x.url; }),
+    story: story,
+    producer: account
+  });
 
   var self = this;
 
