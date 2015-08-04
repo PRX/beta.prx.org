@@ -3,9 +3,7 @@ ng-switch(on="auth.currentUser.loggedIn")
     b
       a.account(ui-sref="auth.currentUser.account") {{auth.currentUser.login}}!
     h4 My Series
-    ul.series
-      li(ng-repeat="series in auth.currentUser.series")
-         a(ui-sref="series") {{series.title}}
+    prx-auth-series-list  
     
     //- h3 Hi, {{auth.currentUser.login}}!
     //- p You are seeing a beta version of PRX.org

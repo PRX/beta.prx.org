@@ -115,6 +115,13 @@ angular.module('prx.auth', ['prx.ui.nav'])
     }
     ctrl.currentUser = user;
   });
+}).directive('prxAuthSeriesList', function () {
+  return {
+    restrict: 'E',
+    templateUrl: 'auth/series.html',
+    controller: 'PrxAuthBadgeCtrl',
+    controllerAs: 'auth'
+  };
 }).directive('prxAuthWindow', function () {
   return {
     restrict: 'E',
