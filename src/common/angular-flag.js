@@ -1,8 +1,6 @@
 (function (undefined) {
   var flags, def, strict;
 
-  function noop () { }
-
   angular.module('ngFlag', [])
   .provider('ngFlag', function () {
     flags = {};
@@ -60,7 +58,7 @@
           flagVal = def;
         } else if (flagVal === undefined) {
           tAttrs.$set('ngIf', flag);
-          return noop();
+          return angular.noop();
         }
 
         if (!flagVal) {
@@ -70,7 +68,7 @@
           };
         }
 
-        return noop();
+        return angular.noop();
       }
     };
   });

@@ -366,7 +366,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     });
     var metadata = $q.all({
       label: Id3Service.analyze(upload.file).then(function (data) {
-        return data.title.replace("\u0000", '');
+        return data.title && data.title.replace("\u0000", '');
       }),
       duration: AuroraService.duration(upload.file).then(function (duration) {
         return duration / 1000;

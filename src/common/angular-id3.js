@@ -30,6 +30,7 @@ angular.module('angular-id3', ['async-loader'])
     var deferred = $q.defer();
 
     loadId3().then( function () {
+      try {
       Id3Service.$id3(file, function(err, tags) {
         $rootScope.$evalAsync( function() {
           if (angular.isDefined(tags)) {
@@ -40,6 +41,10 @@ angular.module('angular-id3', ['async-loader'])
           }
         });
       });
+    } catch (e) {
+      console.log("GOT ERR");
+      console.log(e);
+    }
     });
 
     return deferred.promise;
