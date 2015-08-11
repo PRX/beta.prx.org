@@ -19,7 +19,7 @@ describe('prx.series', function () {
     it ('attaches the series, stories, and accounts injected to controller', inject(function ($controller) {
       var sigil = 'sigil';
       var scope = {};
-      var controller = $controller('SeriesCtrl', {series: sigil, stories: sigil, account: sigil, $scope: scope});
+      var controller = $controller('SeriesCtrl', {series: sigil, stories: sigil, account: sigil, currentUser: sigil, $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.stories).toBe(sigil);
       expect(controller.account).toBe(sigil);

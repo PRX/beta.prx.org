@@ -113,15 +113,15 @@ describe('prx.stories', function () {
       }).then(function(s) { return s[0].url; })).toResolveTo('url');
     });
 
-    xit ('gets the audioUrls based on the story', function () {
-      var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
-        file1 = ngHal.mockEnclosure('file1.mp3'),
-        file2 = ngHal.mockEnclosure('file2.mp3');
-      story.stubFollow('prx:audio', [file1, file2]);
-      expect($injector.invoke(state.resolve.audioUrls, null, {
-        story: story
-      }).then(function(d) { return d[1].url; })).toResolveTo('file2.mp3');
-    });
+    // xit ('gets the audioUrls based on the story', function () {
+    //   var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
+    //     file1 = ngHal.mockEnclosure('file1.mp3'),
+    //     file2 = ngHal.mockEnclosure('file2.mp3');
+    //   story.stubFollow('prx:audio', [file1, file2]);
+    //   expect($injector.invoke(state.resolve.audioUrls, null, {
+    //     story: story
+    //   }).then(function(d) { return d[1].url; })).toResolveTo('file2.mp3');
+    // });
 
     it ('sets the title appropriately', function () {
       expect($injector.invoke(state.title, null, {story: "story", account: "account"})).toEqual("story by account");

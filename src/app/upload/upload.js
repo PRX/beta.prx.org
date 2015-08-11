@@ -1,6 +1,6 @@
 /* istanbul ignore next */
 if (FEAT.TCF_DEMO) {
-  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio'])
+  angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio', 'prx.upload.filepicker'])
   .config(function ($stateProvider, evaporateProvider) {
     $stateProvider.state('upload', {
       url: '/upload',
@@ -41,6 +41,12 @@ if (FEAT.TCF_DEMO) {
     .awsUrl(FEAT.UPLOADS_AWS_URL)
     .cloudfront(FEAT.UPLOADS_CLOUDFRONT)
     .options({ logging: FEAT.UPLOADS_LOGGING });
+  })
+  .factory('_$URL', function ($window) {
+    return $window.URL;
+  })
+  .factory('URL', function ($window) {
+    return $window.URL;
   })
   .service('UploadTarget', function ($rootScope) {
     var targets = [],
@@ -130,7 +136,7 @@ if (FEAT.TCF_DEMO) {
       return $timeout(angular.noop, Math.random() * 1500 + 500).then(validationResult(file));
     };
   })
-  .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q) {
+  .service('Upload', function UploadService(evaporate, $uuid, MimeType, $q, $rootScope) {
 
     var uploads = {};
 
@@ -150,7 +156,7 @@ if (FEAT.TCF_DEMO) {
       u.guid = $uuid.v4();
       u.name = safeName(u.file.name);
       u.path = uploadKey(u.guid, u.name);
-      u.type = MimeType.lookup(file);
+      u.type = MimeType.lookup(file).full();
 
       u.progress = 0;
 
@@ -170,11 +176,9 @@ if (FEAT.TCF_DEMO) {
 
       u.promise = up.then(
         function() {
-          // console.log("complete!");
           return {upload: u};
         },
         function(msg) {
-          // console.log("error!", msg);
           return $q.reject(msg);
         },
         function(p) {
@@ -183,7 +187,7 @@ if (FEAT.TCF_DEMO) {
         }
       );
 
-      uploads[u.uploadId] = u;
+      uploads[u.guid] = u;
     }
 
     Upload.prototype = {

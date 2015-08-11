@@ -8,3 +8,13 @@ set :default_env, {
   tcf_demo: true,
   id_client_key: 'X5rYnqHGVBpqPTfHKYQyxG6PYfVj0l8nostkQzTC',
   path: '/opt/node/current/bin:/opt/python/current/bin:$PATH' }
+
+  set :slack_webhook, -> {
+    webhook = nil
+    on roles(:web) do
+      cmd = "cat #{fetch(:deploy_to)}/shared/config/slack_webhook.txt"
+      webhook = capture cmd
+    end
+    webhook
+  }
+  set :slack_username, -> { 'capistrano' }

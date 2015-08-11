@@ -65,13 +65,18 @@ angular.module('angular-evaporate', ['async-loader'])
     loadEvaporate: function() {
       var e = this;
       return e.loader.load('/vendor/EvaporateJS/evaporate.js').then( function(loaded) {
+        // TODO Save the promise so we don't need to worry about doing other
+        // things before load resolves.
         e._evaporate = new e.window.Evaporate(e.opts);
       });
+    },
+    cancel: function(id) {
+      return this._evaporate.cancel(id);
     },
     add: function(config) {
       var e = this;
 
-      var deferred = e.q.defer();
+      var deferred = e.q.defer(), uploadId = e.q.defer();
 
       config.complete = function () {
         e.rootScope.$evalAsync( function() {
@@ -93,13 +98,13 @@ angular.module('angular-evaporate', ['async-loader'])
 
       // add the upload info to the underlying evaporate obj
       // save the returned `id` on the promise itself
-      var promise = deferred.promise;
-
-      // return promise;
-      return e.loadEvaporate().then( function () {
-        promise.uploadId = e._evaporate.add(config);
-        return promise;
+      var promise = e.loadEvaporate().then( function () {
+        uploadId.resolve(e._evaporate.add(config));
+        return deferred.promise;
       });
+
+      promise.uploadId = uploadId.promise;
+      return promise;
     }
   };
 
