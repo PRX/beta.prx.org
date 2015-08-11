@@ -15,6 +15,31 @@
   max-width: @width;
   color: $contrast-body-copy-color;
 
+  &.blank {
+    a {
+      display: block;
+      text-align: center;
+      background: $content-placeholder-fill-color;
+      width: 100%;
+      height: 100%;
+      font-size: 50px;
+      line-height: 192px;
+      position: relative;
+
+      &:after {
+        content: 'New story';
+        text-transform: uppercase;
+        color: $heading-color;
+        font-size: 10px;
+        position: absolute;
+        width: 192px;
+        left: 0;
+        top: 30px;
+        text-align: center;
+      }
+    }
+  }
+
   .category { display: none; }
 
   & > a {
