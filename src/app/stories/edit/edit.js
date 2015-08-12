@@ -17,7 +17,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   });
 
   $stateProvider.state('story.create', {
-    url: '^/stories/create?version&section&series',
+    url: '^/stories/create?version&section',
     params: {
       uploadIds: [],
       version: 'podcast',
@@ -36,8 +36,27 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       },
       'contextMenu@': {
         templateUrl: 'stories/edit/context_menu.html',
-        controller: function (story) {
+        controller: function (story, audioFiles, $q) {
           this.current = story;
+          var token = PrxAuth.currentUser(true).then(function (user) {
+            return user.token;
+          });
+
+          this.save = function () {
+            return token.then(function (t) {
+              return story.save({headers: {'Authorization' : 'Bearer ' + t}}).then(function () {
+                return story;
+              });
+            });
+          };
+
+          this.publish = function () {
+            $q.all([this.save(), token]).then(function (d) {
+              d[0].build('prx:publish').then(function (pub) {
+                pub.save({headers: {'Authorization' : 'Bearer ' + d[1]}});
+              });
+            });
+          };
         },
         controllerAs: 'story'
       },
@@ -100,11 +119,11 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
         return $q.all(audioFiles);
       },
-      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story) {
-        // return Story.forAudioFiles(audioFiles);
+      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story, $stateParams) {
         return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
           return ngHal.build('prx:stories').then(function (story) {
               angular.extend(story, data.properties);
+              story.setSeriesUri = $stateParams.series;
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
@@ -129,6 +148,13 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       },
       musicalWorks: function () {
         return [];
+      },
+      series: function (ngHal, $stateParams) {
+        if ($stateParams.series) {
+          var chunks = $stateParams.series.split('/');
+          return ngHal.follow('prx:series', {id: chunks[chunks.length-1]});
+        }
+        return false;
       }
     }
   });
@@ -184,7 +210,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return result;
   };
 })
-.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory) {
+.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory, series) {
   this.account = account;
   this.current = story;
   this.sound = prxSoundFactory({
@@ -194,6 +220,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   });
 
   var self = this;
+  this.series = series;
 
   // TODO Should only be active when in Edit Mode
   // $window.onbeforeunload = function(){
