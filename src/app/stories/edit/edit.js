@@ -119,11 +119,12 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
         return $q.all(audioFiles);
       },
-      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story, $stateParams) {
+      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story, $stateParams, account) {
         return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
           return ngHal.build('prx:stories').then(function (story) {
               angular.extend(story, data.properties);
-              story.setSeriesUri = $stateParams.series;
+              story.set_series_uri = $stateParams.series;
+              story.set_account_uri = account.links.url('self');
               story.title = story.title || "Add a short, meaningful title which will grab attention";
               story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
               story.publishedAt = new Date();
@@ -152,7 +153,6 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       series: function (ngHal, $stateParams) {
         if ($stateParams.series) {
           var chunks = $stateParams.series.split('/');
-          console.log(chunks[chunks.length-1]);
           return ngHal.followOne('prx:series', {id: chunks[chunks.length-1]});
         }
         return false;
