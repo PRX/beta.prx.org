@@ -27,7 +27,8 @@ describe('prx.stories.edit', function () {
         audioVersions: [mock],
         musicalWorks: [mock],
         musicalWorksList: mock,
-        $scope: scope
+        $scope: scope,
+        series: false
       };
     }));
 
