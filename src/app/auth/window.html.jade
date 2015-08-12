@@ -1,7 +1,8 @@
 ng-switch(on="auth.currentUser.loggedIn")
   div(ng-switch-when="true")
     b
-      a.account(ui-sref="auth.currentUser.account") {{auth.currentUser.login}}!
+      a.account(ui-sref="auth.currentUser.account") {{auth.currentUser.login}}
+    a(ng-click="auth.log()") clicky click
     h4 My Series
     prx-auth-series-list
   iframe(ng-switch-default, prx-auth-login-frame)

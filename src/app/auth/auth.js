@@ -107,20 +107,25 @@ angular.module('prx.auth', ['prx.ui.nav'])
   };
 }).controller('PrxAuthBadgeCtrl', function (PrxAuth) {
   var ctrl = this;
+  this.log = function () {
+    console.log(ctrl.currentUser);
+  };
   PrxAuth.currentUser().then(function (user) {
-    if (user.loggedIn) {
-      user.account.follow('prx:series').follow('prx:items').then(function (items) {
-        user.series = items;
-      });
-    }
     ctrl.currentUser = user;
   });
 }).directive('prxAuthSeriesList', function () {
   return {
     restrict: 'E',
     templateUrl: 'auth/series.html',
-    controller: 'PrxAuthBadgeCtrl',
-    controllerAs: 'auth'
+    controller: function (PrxAuth) {
+      var ctrl = this;
+      PrxAuth.currentUser(true).then(function (user) {
+        return user.account.follow('prx:series').follow('prx:items');
+      }).then(function (items) {
+        ctrl.series = items;
+      });
+    },
+    controllerAs: 'authSeriesList'
   };
 }).directive('prxAuthWindow', function () {
   return {
