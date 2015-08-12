@@ -223,6 +223,10 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   var self = this;
   this.series = series;
 
+  angular.forEach(audioFiles, function (file) {
+    file.$story = story;
+  });
+
   // TODO Should only be active when in Edit Mode
   // $window.onbeforeunload = function(){
   //   return "Are you sure you want to leave Edit Mode?";
@@ -419,7 +423,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
             data.doc.set_story_uri = story.links.url('self');
             return data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}}).then($q.when(story));
           });
-        }
+        };
       }
     });
     return doc;
