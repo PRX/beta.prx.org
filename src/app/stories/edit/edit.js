@@ -236,18 +236,12 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     event.preventDefault();
   });
 
-  var skipStateChangeConfirm = false;
-
   $scope.$on('$stateChangeStart', function(event, state, _, fromState) {
-    if (!skipStateChangeConfirm) {
+    var confirm = $window.confirm('Are you sure you want to leave Edit Mode?');
+    if (!confirm) {
       event.preventDefault();
-
-      var confirm = $window.confirm('Are you sure you want to leave Edit Mode?');
-      if (confirm) {
-        // leave
-        skipStateChangeConfirm = true;
-        $state.go(state);
-      }
+      event.stopPropagation();
+      try { event.stopImmediatePropagation(); }  catch (e) { console.log(error); }
     }
   });
 })
@@ -415,7 +409,18 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     });
     $q.all({doc: doc, upload: upload, token: token}).then(function (data) {
       data.doc.upload = 's3://' + FEAT.UPLOADS_AWS_BUCKET + '/' + upload.path;
-      data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
+      if (data.doc.$story && data.doc.$story.links.all('self').length) {
+        data.doc.set_story_uri = data.doc.story.links.url('self');
+        data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
+      } else if (data.doc.$story) {
+        var sv = data.doc.$story.save;
+        data.doc.$story.save = function () {
+          return sv.apply(data.doc.$story, arguments).then(function (story) {
+            data.doc.set_story_uri = story.links.url('self');
+            return data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}}).then($q.when(story));
+          });
+        }
+      }
     });
     return doc;
   };
