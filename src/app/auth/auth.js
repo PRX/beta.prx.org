@@ -107,9 +107,6 @@ angular.module('prx.auth', ['prx.ui.nav'])
   };
 }).controller('PrxAuthBadgeCtrl', function (PrxAuth) {
   var ctrl = this;
-  this.log = function () {
-    console.log(ctrl.currentUser);
-  };
   PrxAuth.currentUser().then(function (user) {
     ctrl.currentUser = user;
   });
