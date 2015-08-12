@@ -43,7 +43,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       },
       'sheet@': {
         templateUrl: 'stories/edit/sheet.html',
-        controller: function (story, audioFiles, imageFiles, $scope, Upload, PRXFilePicker, $stateParams, prxAudioFileFactory, prxImageFileFactory) {
+        controller: function (story, audioFiles, imageFiles, $scope, Upload, PRXFilePicker, $stateParams, prxAudioFileFactory, prxImageFileFactory, $window) {
           this.current = story;
           this.audioFiles = audioFiles;
           this.imageFiles = imageFiles;
@@ -55,8 +55,11 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
           });
 
           this.removeAudioFile = function (idx) {
-            this.audioFiles[idx].upload.cancel();
-            this.audioFiles.splice(idx, 1);
+            var confirm = $window.confirm('Are you sure you want to remove this file?');
+            if (confirm) {
+              this.audioFiles[idx].upload.cancel();
+              this.audioFiles.splice(idx, 1);
+            }
           };
 
           this.selectAudioFile = function (files) {
