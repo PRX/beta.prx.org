@@ -152,7 +152,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       series: function (ngHal, $stateParams) {
         if ($stateParams.series) {
           var chunks = $stateParams.series.split('/');
-          return ngHal.follow('prx:series', {id: chunks[chunks.length-1]});
+          console.log(chunks[chunks.length-1])
+          return ngHal.followOne('prx:series', {id: chunks[chunks.length-1]});
         }
         return false;
       }
