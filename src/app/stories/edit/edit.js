@@ -36,7 +36,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       },
       'contextMenu@': {
         templateUrl: 'stories/edit/context_menu.html',
-        controller: function (story, audioFiles, $q) {
+        controller: function (story, audioFiles, $q, PrxAuth) {
           this.current = story;
           var token = PrxAuth.currentUser(true).then(function (user) {
             return user.token;
