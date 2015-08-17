@@ -432,7 +432,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
           }).then(function (versionUri) {
             data.doc.set_audio_version_uri = versionUri;
             return data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
-          }).then($q.when(story));
+          }).then($q.when(data.doc.$story));
         };
       }
     });
