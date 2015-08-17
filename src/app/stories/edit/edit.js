@@ -417,16 +417,22 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     $q.all({doc: doc, upload: upload, token: token}).then(function (data) {
       data.doc.upload = 's3://' + FEAT.UPLOADS_AWS_BUCKET + '/' + upload.path;
       if (data.doc.$story && data.doc.$story.links.all('self')) {
-        data.doc.set_story_uri = data.doc.story.links.url('self');
-        data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
+        data.doc.$story.followOne('prx:audio-versions').follow('prx:items').
+          get(0).get('links').call('url', 'self').then(function (versionUri) {
+            data.doc.set_audio_version_uri = versionUri;
+            data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
+          });
       } else if (data.doc.$story) {
         var sv = data.doc.$story.save;
         data.doc.$story.save = function () {
-          console.log("HIJACKED SAVE");
           return sv.apply(data.doc.$story, arguments).then(function (story) {
-            data.doc.set_story_uri = story.links.url('self');
-            return data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}}).then($q.when(story));
-          });
+            return data.doc.$story.followOne('prx:audio-versions').follow('prx:items');
+          }).then(function (versions) {
+            return versions[0].links.url('self');
+          }).then(function (versionUri) {
+            data.doc.set_audio_version_uri = versionUri;
+            return data.doc.save({headers: {'Authorization' : 'Bearer ' + data.token}});
+          }).then($q.when(story));
         };
       }
     });
