@@ -84,10 +84,11 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
           this.selectAudioFile = function (files) {
             PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.audio, false).then(function(files) {
-              var upload = Upload.upload(files[0]);
-              var audioFile = AudioFile.forUpload(upload);
-              audioFile.$story = story;
-              self.audioFiles = [audioFile];
+              self.audioFiles = [];
+              AudioFile.forUpload(Upload.upload(files[0])).then(function (af) {
+                af.$story = story;
+                self.audioFiles.push(af);
+              });
             });
           };
 
