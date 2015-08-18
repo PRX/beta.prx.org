@@ -9,8 +9,10 @@ form(name="story_edit")
             xi-tab-name Preview
             xi-tab-content
               .inlay
-                | During this preview, please make edits through the podcast version of
-                | your story.
+                | The Story and PRX Marketplace distribution options are
+                | disabled during the podcast publishing BETA period. Please go
+                | to https://www.prx.org and upload your story to make it
+                | available to the PRX Marketplace.
           xi-tab(key="marketing", disabled)
             xi-tab-name Marketing
             xi-tab-content
@@ -94,7 +96,7 @@ form(name="story_edit")
                   label
                     | Label
                     input.large(ng-model="audioFile.label", placeholder="{{::audioFile.label || audioFile.filename}}")
-                  
+
                   div
                     prx-player(sound="audioFile.getSound(story.account, story.current)", class="small")
     xi-tab(key="marketplace")
@@ -105,8 +107,10 @@ form(name="story_edit")
             xi-tab-name Preview
             xi-tab-content
               .inlay
-                | During this preview, please make edits through the podcast version of
-                | your story.
+                | The Story and PRX Marketplace distribution options are
+                | disabled during the podcast publishing BETA period. Please go
+                | to https://www.prx.org and upload your story to make it
+                | available to the PRX Marketplace.
           xi-tab(key="marketing", disabled)
             xi-tab-name Marketing
             xi-tab-content
