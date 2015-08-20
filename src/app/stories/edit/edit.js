@@ -214,7 +214,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return result;
   };
 })
-.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory, series) {
+.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory, series, prxPlayer) {
   this.account = account;
   this.current = story;
   this.sound = prxSoundFactory({
@@ -237,6 +237,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
   $scope.$on('$destroy', function () {
     $window.onbeforeunload = undefined;
+
+    prxPlayer.stop();
   });
 
   $scope.$on('dragOver', function (event) {
