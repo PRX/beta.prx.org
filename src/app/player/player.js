@@ -42,7 +42,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     if (prxPlayer.nowPlaying && options.story.id == prxPlayer.nowPlaying.story.id) {
       sound = prxPlayer.nowPlaying;
     } else {
-      sound = smSound.createList(options.audioFiles, {
+      sound = smSound.createList(options.audioFiles||[], {
         onfinish: function () {
           if (angular.isFunction(sound.onfinish)) {
             sound.onfinish();
@@ -53,6 +53,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
 
     sound.producer = options.producer;
     sound.story = options.story;
+    sound.data = options.data || {};
     sound.next = sound.next || (options.next ? mkNextFun(options.next) : undefined);
 
     return sound;

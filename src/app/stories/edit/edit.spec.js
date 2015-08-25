@@ -2,13 +2,42 @@ describe('prx.stories.edit', function () {
   beforeEach(module('prx.stories.edit', 'angular-hal-mock'));
 
   describe ('story state', function () {
-    var state, $injector, ngHal;
-    beforeEach(inject(function ($state, _$injector_, _ngHal_) {
+    var state, $injector, ngHal, prxPlayer, prxSoundFactory;
+    beforeEach(inject(function ($state, _$injector_, _ngHal_, _prxPlayer_, _prxSoundFactory_) {
       state = $state.get('story.create');
       $injector = _$injector_;
       ngHal = _ngHal_;
+      prxPlayer = _prxPlayer_;
+      prxSoundFactory = _prxSoundFactory_;
     }));
 
+    it ('stops the player when exiting state and preview is playing', function () {
+      var sound = prxSoundFactory({
+        data: { preview: true }
+      });
+
+      prxPlayer.nowPlaying = sound;
+      spyOn(prxPlayer, "stop");
+      $injector.invoke(state.onExit);
+      expect(prxPlayer.stop).toHaveBeenCalled();
+    });
+
+    it ('does not stop the player when exiting state and preview is not playing', function () {
+      var sound = prxSoundFactory({
+        data: { preview: false }
+      });
+
+      prxPlayer.nowPlaying = sound;
+      spyOn(prxPlayer, "stop");
+      $injector.invoke(state.onExit);
+      expect(prxPlayer.stop).not.toHaveBeenCalled();
+    });
+
+    it ('does nothing to the player when leaving state and nothing is playing', function () {
+      spyOn(prxPlayer, "stop");
+      $injector.invoke(state.onExit);
+      expect(prxPlayer.stop).not.toHaveBeenCalled();
+    });
   });
 
   describe ('StoryPreviewCtrl', function () {
