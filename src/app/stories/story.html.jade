@@ -55,7 +55,7 @@ article.story
             | For Broadcast:
             .value {{ ::story.current.episodeDate | date : 'mediumDate'}}
         ul.tags(ng-show="::story.current.tags.length > 0")
-          li(ng-repeat="tag in ::story.current.tags.split(' ')", ng-bind="tag")
+          li(ng-repeat="tag in ::story.current.tags track by $index", ng-bind="tag")
       section.licensing(ng-show="story.license")
         h2 Licensing
         ul
