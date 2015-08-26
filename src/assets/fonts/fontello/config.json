@@ -43,15 +43,33 @@
       "src": "entypo"
     },
     {
+      "uid": "2dabd0ee753bedbc9c1c52990d204403",
+      "css": "upload",
+      "code": 59406,
+      "src": "iconic"
+    },
+    {
       "uid": "frauy9fser6zk9n5ih3rdpz7zzfjbrvu",
       "css": "eye",
       "code": 59399,
       "src": "modernpics"
     },
     {
+      "uid": "ce7452abce8b55ded1c393997a51e6b3",
+      "css": "ok",
+      "code": 59407,
+      "src": "elusive"
+    },
+    {
       "uid": "d5937c5767642d0336ad599af0e9c992",
       "css": "share",
       "code": 59396,
+      "src": "elusive"
+    },
+    {
+      "uid": "3ab2abf6f936d3e53ee8c184cedaed82",
+      "css": "trash",
+      "code": 59405,
       "src": "elusive"
     },
     {
