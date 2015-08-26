@@ -19,6 +19,9 @@
 <glyph glyph-name="up-open" unicode="&#xe80a;" d="m0 174l352 352 148 148 148-148 352-352-148-148-352 351-352-351z" horiz-adv-x="1000" />
 <glyph glyph-name="resize-full" unicode="&#xe80b;" d="m0-150l0 441 148-148 202 201 144-144-201-202 148-148-441 0z m506 650l201 202-148 148 441 0 0-441-148 148-202-201z" horiz-adv-x="1000" />
 <glyph glyph-name="resize-small" unicode="&#xe80c;" d="m0-4l201 202-148 146 441 0 0-441-146 148-201-201z m506 360l0 441 146-148 202 201 146-146-201-202 148-146-441 0z" horiz-adv-x="1000" />
+<glyph glyph-name="trash" unicode="&#xe80d;" d="m0 633l0 141 289 0 0 76 246 0 0-76 289 0 0-141-824 0z m43-783l0 676 738 0 0-676-738 0z" horiz-adv-x="824" />
+<glyph glyph-name="upload" unicode="&#xe80e;" d="m18 670l0 127 670 0 0-127-670 0z m223-256l-111 0 223 256 223-256-112 0 0-511-223 0 0 511z" horiz-adv-x="705" />
+<glyph glyph-name="ok" unicode="&#xe80f;" d="m0 260l162 162 166-164 508 510 164-164-510-510-162-162-162 164z" horiz-adv-x="1000" />
 </font>
 </defs>
 </svg>
