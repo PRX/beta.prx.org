@@ -188,6 +188,19 @@ div.inlay {
   border-radius: $border-radius;
 }
 
+input, textarea {
+  color: $grey;
+}
+
+textarea {
+  background-color: $offwhite;
+  border: 1px solid $slight-grey;
+}
+
+input.large {
+  font-size: 1.26em;
+}
+
 label {
   display: block;
   font-size: 1.4em;
@@ -196,18 +209,16 @@ label {
     display: block;
     width: 100%;
     font-size: 0.7em;
-    color: $grey;
     margin-top: 15px;
   }
   input.large {
     font-size: 0.9em;
   }
   textarea {
-    background-color: $offwhite;
-    border: 1px solid $slight-grey;
     height: 65px;
     padding: 10px;
   }
+
   textarea.small {
     height: 53px;
   }

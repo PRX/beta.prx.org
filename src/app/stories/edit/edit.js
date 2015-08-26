@@ -82,7 +82,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
           this.removeAudioFile = function (idx) {
             var confirm = $window.confirm('Are you sure you want to remove this file?');
             if (confirm) {
-              this.audioFiles[idx].upload.cancel();
+              this.audioFiles[idx].$fileUpload.cancel();
               this.audioFiles[idx].$story = undefined;
               this.audioFiles.splice(idx, 1);
             }
@@ -410,7 +410,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
         return data.title && data.title.replace("\u0000", '');
       }),
       duration: AuroraService.duration(upload.file).then(function (duration) {
-        return duration / 1000;
+        return Math.floor(duration / 1000);
       })
     });
     var doc = $q.all([file, metadata]).then(function (args) {
@@ -418,8 +418,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       var metadata = args[1];
       angular.extend(file, metadata, {
         filename: upload.file.filename,
-        url: URL.createObjectURL(upload.file),
-        upload: upload
+        $url: URL.createObjectURL(upload.file),
+        $fileUpload: upload
       });
       return file;
     });
@@ -448,4 +448,28 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return doc;
   };
   return AudioFile;
+})
+.directive('prxUploadAudioFile', function (prxSoundFactory) {
+  return {
+    restrict: 'E',
+    scope: {
+      audioFile: '=',
+      onRemove: '&'
+    },
+    bindToController: true,
+    controller: function () {
+      var ctrl = this;
+      this.sound = prxSoundFactory({
+        audioFiles: [this.audioFile.$url],
+        story: this.audioFile.$story,
+        duration: this.audioFile.duration
+      });
+      this.status = 'uploading';
+      this.audioFile.$fileUpload.then(function () {
+        ctrl.status = 'success';
+      });
+    },
+    controllerAs: 'uploadAudio',
+    templateUrl: 'stories/edit/upload_audio_file.html'
+  };
 });

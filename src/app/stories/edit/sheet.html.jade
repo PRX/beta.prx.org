@@ -86,19 +86,8 @@ form(name="story_edit")
             xi-tab-content
               form
                 div(ng-if="story.audioFiles.length == 0")
-                  button(ng-click="story.selectAudioFile()")
-                    | Upload Audio File
-                div(class="audio-file", ng-repeat="audioFile in story.audioFiles")
-                  a(ng-click="story.removeAudioFile($index)") Delete Audio
-                  label
-                    | Upload Progress ({{ audioFile.upload.progress * 100 | number:0 }}%)
-                    xi-progress-bar(progress="audioFile.upload.progress")
-                  label
-                    | Label
-                    input.large(ng-model="audioFile.label", placeholder="{{::audioFile.label || audioFile.filename}}")
-
-                  div
-                    prx-player(sound="audioFile.getSound(story.account, story.current)", class="small")
+                  button(ng-click="story.selectAudioFile()") Upload Audio File
+                prx-upload-audio-file(ng-repeat='audioFile in story.audioFiles', audio-file='audioFile', on-remove="story.removeAudioFile($index)")
     xi-tab(key="marketplace")
       xi-tab-name PRX Marketplace
       xi-tab-content
