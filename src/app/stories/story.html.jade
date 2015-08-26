@@ -27,6 +27,7 @@ article.story
     .toolbar
       section
         prx-donate(account="::story.account")
+        .edit(ng-if="::story.appVersion === 'v4'") Edit
         prx-social-actions(text="story.current.title")
   .content
     .main
