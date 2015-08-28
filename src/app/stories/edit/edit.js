@@ -17,6 +17,12 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   });
 
   $stateProvider.state('story.create', {
+    onExit: ['prxPlayer', function (prxPlayer) {
+      // Unload the preview from the player if it's loaded
+      if (prxPlayer.nowPlaying && prxPlayer.nowPlaying.data.preview) {
+        prxPlayer.stop();
+      }
+    }],
     url: '^/stories/create?version&section',
     params: {
       uploadIds: [],
@@ -214,13 +220,16 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return result;
   };
 })
-.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory, series) {
+.controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory, series, prxPlayer) {
   this.account = account;
   this.current = story;
   this.sound = prxSoundFactory({
     audioFiles: audioFiles.map(function (x) { return x.url; }),
     story: story,
-    producer: account
+    producer: account,
+    data: {
+      preview: true
+    }
   });
 
   var self = this;
