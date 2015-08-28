@@ -68,7 +68,7 @@ form(name="story_edit")
                   textarea(ng-model="story.current.description")
                 label
                   | Tags
-                  input(ng-model="story.current.tags")
+                  input(ng-model="story.current.tags" ng-list=" " ng-trim="false")
                 label
                   | Episode Image
                   div.no-image-file(ng-if="story.imageFiles.length == 0")
