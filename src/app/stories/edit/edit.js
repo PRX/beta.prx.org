@@ -16,8 +16,9 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return views;
   });
 
-  $stateProvider.state('story.create', {
-    url: '^/stories/create?version&section',
+  $stateProvider
+  .state('story.edit', {
+    url: '^/stories/:storyId/edit?version&section',
     params: {
       uploadIds: [],
       version: 'podcast',
@@ -36,76 +37,11 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
       },
       'contextMenu@': {
         templateUrl: 'stories/edit/context_menu.html',
-        controller: function (story, audioFiles, $q, PrxAuth) {
-          this.current = story;
-          var token = PrxAuth.currentUser(true).then(function (user) {
-            return user.token;
-          });
-
-          this.save = function () {
-            return token.then(function (t) {
-              return story.save({headers: {'Authorization' : 'Bearer ' + t}}).then(function () {
-                return story;
-              });
-            });
-          };
-
-          this.publish = function () {
-            $q.all([this.save(), token]).then(function (d) {
-              d[0].build('prx:publish').then(function (pub) {
-                pub.save({headers: {'Authorization' : 'Bearer ' + d[1]}});
-              });
-            });
-          };
-        },
-        controllerAs: 'story'
+        controller: "StoryEditContextMenuCtrl as story"
       },
       'sheet@': {
         templateUrl: 'stories/edit/sheet.html',
-        controller: function (story, audioFiles, imageFiles, $scope, Upload, PRXFilePicker, $stateParams, AudioFile, prxImageFileFactory, $window) {
-          this.current = story;
-          this.audioFiles = audioFiles;
-          this.imageFiles = imageFiles;
-
-          var self = this;
-
-          $scope.$watch("story_edit.$dirty", function(newValue) {
-            self.current.$dirty = newValue;
-          });
-
-          this.removeAudioFile = function (idx) {
-            var confirm = $window.confirm('Are you sure you want to remove this file?');
-            if (confirm) {
-              this.audioFiles[idx].upload.cancel();
-              this.audioFiles[idx].$story = undefined;
-              this.audioFiles.splice(idx, 1);
-            }
-          };
-
-          this.selectAudioFile = function (files) {
-            PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.audio, false).then(function(files) {
-              self.audioFiles = [];
-              AudioFile.forUpload(Upload.upload(files[0])).then(function (af) {
-                af.$story = story;
-                self.audioFiles.push(af);
-              });
-            });
-          };
-
-          this.selectImage = function () {
-            PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.image, false).then(function(files) {
-              var upload = Upload.upload(files[0]);
-              var imageFile = prxImageFileFactory(upload);
-              self.imageFiles = [imageFile];
-            });
-          };
-
-          this.removeImageFile = function (idx) {
-            this.imageFiles[idx].upload.cancel();
-            this.imageFiles.splice(idx, 1);
-          };
-        },
-        controllerAs: 'story'
+        controller: "StoryEditCtrl as story"
       }
     },
     resolve: {
@@ -122,19 +58,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
         return $q.all(audioFiles);
       },
-      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story, $stateParams, account) {
-        return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
-          return ngHal.build('prx:stories').then(function (story) {
-              angular.extend(story, data.properties);
-              story.set_series_uri = $stateParams.series;
-              story.set_account_uri = account.links.url('self');
-              story.title = story.title || "Add a short, meaningful title which will grab attention";
-              story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
-              story.publishedAt = new Date();
-              story.duration = data.duration;
-              return story;
-            });
-          });
+      story: function (ngHal, $stateParams) {
+        return ngHal.followOne('prx:story', {id: $stateParams.storyId});
       },
       account: function (PrxAuth) {
         return PrxAuth.currentUser(true).then(function (user) {
@@ -159,6 +84,57 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
           return ngHal.followOne('prx:series', {id: chunks[chunks.length-1]});
         }
         return false;
+      }
+    }
+  })
+  .state('story.edit.create', {
+    url: '^/stories/create?version&section',
+    params: {
+      uploadIds: [],
+      version: 'podcast',
+      section: 'marketing',
+      series: null
+    },
+    reloadOnSearch: false,
+    views: {
+      '@': {
+        controller: 'StoryPreviewCtrl as story',
+        templateUrl: 'stories/story.html',
+        live: true,
+      },
+      'contextMenu@': {
+        templateUrl: 'stories/edit/context_menu.html',
+        controller: "StoryEditContextMenuCtrl as story"
+      },
+      'sheet@': {
+        templateUrl: 'stories/edit/sheet.html',
+        controller: "StoryEditCtrl as story"
+      }
+    },
+    resolve: {
+      audioFiles: function ($stateParams, Upload, AudioFile, $q) {
+        var audioFiles = [];
+
+        angular.forEach($stateParams.uploadIds, function (uploadId) {
+          var audioFile = AudioFile.forUpload(Upload.getUpload(uploadId));
+          audioFiles.push(audioFile);
+        });
+
+        return $q.all(audioFiles);
+      },
+      story: function (ngHal, UploadAnalysis, audioFiles, $q, Story, $stateParams, account) {
+        return $q.all({properties: UploadAnalysis.properties(audioFiles), duration: Story.totalDuration(audioFiles)}).then(function (data) {
+          return ngHal.build('prx:stories').then(function (story) {
+            angular.extend(story, data.properties);
+            story.set_series_uri = $stateParams.series;
+            story.set_account_uri = account.links.url('self');
+            story.title = story.title || "Add a short, meaningful title which will grab attention";
+            story.shortDescription = story.shortDescription || "Grab listener's attention in tweet (<140 characters) form. Make listeners want to hit the play button.";
+            story.publishedAt = new Date();
+            story.duration = data.duration;
+            return story;
+          });
+        });
       }
     }
   });
@@ -214,6 +190,71 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     return result;
   };
 })
+.controller("StoryEditContextMenuCtrl", function (story, audioFiles, $q, PrxAuth) {
+  this.current = story;
+  var token = PrxAuth.currentUser(true).then(function (user) {
+    return user.token;
+  });
+
+  this.save = function () {
+    return token.then(function (t) {
+      return story.save({headers: {'Authorization' : 'Bearer ' + t}}).then(function () {
+        return story;
+      });
+    });
+  };
+
+  this.publish = function () {
+    $q.all([this.save(), token]).then(function (d) {
+      d[0].build('prx:publish').then(function (pub) {
+        pub.save({headers: {'Authorization' : 'Bearer ' + d[1]}});
+      });
+    });
+  };
+})
+.controller("StoryEditCtrl", function (story, audioFiles, imageFiles, $scope, Upload, PRXFilePicker, $stateParams, AudioFile, prxImageFileFactory, $window) {
+  this.current = story;
+  this.audioFiles = audioFiles;
+  this.imageFiles = imageFiles;
+
+  var self = this;
+
+  $scope.$watch("story_edit.$dirty", function(newValue) {
+    self.current.$dirty = newValue;
+  });
+
+  this.removeAudioFile = function (idx) {
+    var confirm = $window.confirm('Are you sure you want to remove this file?');
+    if (confirm) {
+      this.audioFiles[idx].upload.cancel();
+      this.audioFiles[idx].$story = undefined;
+      this.audioFiles.splice(idx, 1);
+    }
+  };
+
+  this.selectAudioFile = function (files) {
+    PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.audio, false).then(function(files) {
+      self.audioFiles = [];
+      AudioFile.forUpload(Upload.upload(files[0])).then(function (af) {
+        af.$story = story;
+        self.audioFiles.push(af);
+      });
+    });
+  };
+
+  this.selectImage = function () {
+    PRXFilePicker.selectFiles(PRXFilePicker.mediaTypes.image, false).then(function(files) {
+      var upload = Upload.upload(files[0]);
+      var imageFile = prxImageFileFactory(upload);
+      self.imageFiles = [imageFile];
+    });
+  };
+
+  this.removeImageFile = function (idx) {
+    this.imageFiles[idx].upload.cancel();
+    this.imageFiles.splice(idx, 1);
+  };
+})
 .controller('StoryPreviewCtrl', function ($scope, $window, $state, audioFiles, account, story, prxSoundFactory, series) {
   this.account = account;
   this.current = story;
@@ -225,6 +266,8 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
 
   var self = this;
   this.series = series;
+
+  this.preview = true;
 
   angular.forEach(audioFiles, function (file) {
     file.$story = story;

@@ -27,8 +27,8 @@ article.story
     .toolbar
       section
         prx-donate(account="::story.account")
-        .edit(ng-if="::story.appVersion === 'v4'") Edit
         prx-social-actions(text="story.current.title")
+        .edit(ng-if="story.account.id === currentUser.account.id && !story.preview" ng-click="::story.edit()") Edit
   .content
     .main
       prx-ad(slot="/41755363/visitor_story_view_less_than_800",

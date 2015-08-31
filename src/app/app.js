@@ -105,8 +105,11 @@ angular.module('prx.base',['prx'])
     ngHalProvider.setRootUrl(FEAT.apiServer);
     $locationProvider.html5Mode(true);
 }).run(/* istanbul ignore next */
-  function (PrxAuth) {
+  function (PrxAuth, $rootScope) {
     PrxAuth.$checkLoggedIn();
+    PrxAuth.currentUser().then(function (user) {
+      $rootScope.currentUser = user;
+    });
 });
 angular.module('prx.modelConfig', ['angular-hal'])
 .config(function (ngHalProvider) {
@@ -160,7 +163,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
             angular.forEach(files, function (file) {
               guids.push(Upload.upload(file).guid);
             });
-            $state.go('story.create', {uploadIds: guids});
+            $state.go('story.edit.create', {uploadIds: guids});
           }, function (error) {
             console.log(error);
           });
