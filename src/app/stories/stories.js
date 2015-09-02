@@ -214,7 +214,7 @@ angular.module('prx.stories', [
   this.edit = function () {
     // if (story.account.id != currentUser.account.id) { return; }
 
-    if (story.appVersion === "v4") {
+    if (1||story.appVersion === "v4") {
       $state.go("story.edit", { storyId: story.id });
     } else {
       var url = "http://www.prx.org" + urlTranslate($location.path()) + "/edit?m=false";

@@ -290,8 +290,6 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     var confirm = $window.confirm('Are you sure you want to leave Edit Mode?');
     if (!confirm) {
       event.preventDefault();
-      event.stopPropagation();
-      try { event.stopImmediatePropagation(); }  catch (e) { console.log(error); }
     }
   });
 })
