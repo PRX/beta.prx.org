@@ -61,7 +61,14 @@ prx-auth-badge {
 
     li {
       a {
-        padding: 0;
+        padding: 5px 0;
+
+        &:hover {
+          // hax because this UI is temporary and Matt has trouble mousing
+          background: $orange;
+          color: white;
+          padding-left: 10px;
+        }
       }
     }
   }
