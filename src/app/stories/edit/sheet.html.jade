@@ -90,11 +90,11 @@ form(name="story_edit")
                     | Upload Audio File
                 div(class="audio-file", ng-repeat="audioFile in story.audioFiles")
                   a(ng-click="story.removeAudioFile($index)") Delete Audio
-                  label
+                  label(ng-if="audioFile.upload.progress")
                     | Upload Progress ({{ audioFile.upload.progress * 100 | number:0 }}%)
                     xi-progress-bar(progress="audioFile.upload.progress")
                   label
-                    | Label
+                    | File Label
                     input.large(ng-model="audioFile.label", placeholder="{{::audioFile.label || audioFile.filename}}")
 
                   div
