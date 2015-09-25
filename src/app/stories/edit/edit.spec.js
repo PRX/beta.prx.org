@@ -1,10 +1,21 @@
 describe('prx.stories.edit', function () {
   beforeEach(module('prx.stories.edit', 'angular-hal-mock'));
 
-  describe ('story state', function () {
+  describe ('story create state', function () {
     var state, $injector, ngHal, prxPlayer, prxSoundFactory;
     beforeEach(inject(function ($state, _$injector_, _ngHal_, _prxPlayer_, _prxSoundFactory_) {
-      state = $state.get('story.create');
+      state = $state.get('story.edit.create');
+      $injector = _$injector_;
+      ngHal = _ngHal_;
+      prxPlayer = _prxPlayer_;
+      prxSoundFactory = _prxSoundFactory_;
+    }));
+  });
+
+  describe ('story edit state', function () {
+    var state, $injector, ngHal, prxPlayer, prxSoundFactory;
+    beforeEach(inject(function ($state, _$injector_, _ngHal_, _prxPlayer_, _prxSoundFactory_) {
+      state = $state.get('story.edit');
       $injector = _$injector_;
       ngHal = _ngHal_;
       prxPlayer = _prxPlayer_;

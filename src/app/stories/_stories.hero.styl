@@ -93,7 +93,8 @@ article.story .hero {
     section {
       display: flex;
 
-      .donate {
+      .donate,
+      .edit {
         button-orange(false)
         line-height: 35px;
         order: 2;
@@ -102,11 +103,13 @@ article.story .hero {
 
         &::before {
           font-family: 'fontello';
-          content: '';
           line-height: 32px;
           padding: 0 10px 0 0;
         }
       }
+
+      .donate::before { content: ''; }
+      .edit::before { content: ''; }
 
       .share {
         display: flex;
