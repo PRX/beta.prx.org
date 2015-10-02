@@ -1,14 +1,9 @@
-angular.module('prx.upload.filepicker', ['templates'])
-.factory('PRXFilePicker', function ($q) {
+angular.module('prx.upload.filepicker', ['templates', 'prx.dsp'])
+.factory('PRXFilePicker', function ($q, UploadValidator, BulkTypeValidator) {
   function PRXFilePickerService () {
     this.visible = false;
     this.$pending = undefined;
     this.alert = undefined;
-    this.mediaTypes = {
-      image: 'image',
-      audio: 'audio',
-      multimedia: 'multimedia',
-    };
   }
 
   PRXFilePickerService.prototype.selectFiles = function (accept, multiple) {
@@ -35,31 +30,39 @@ angular.module('prx.upload.filepicker', ['templates'])
 
   PRXFilePickerService.prototype.filesSelected = function (files) {
     var self = this;
+
+    var validateMediaFiles = function (files) {
+      var all = [];
+
+      angular.forEach(files, function (file) {
+        all.push(UploadValidator.validate(file));
+      });
+
+      $q.all(all).then(function () {
+        self.$pending.resolve(files);
+        self.dismiss();
+        this.$pending = undefined;
+      }).catch(function (msg) {
+        self.alert = 'One or more files did not meet the minimum requirements.';
+      });
+    };
+
     if (this.$pending && files) {
-      if (this.acceptedTypes) {
-
-        // Make sure files are all acceptable
-        angular.forEach(files, function (file) {
-          var ext = file.name.substr((~-file.name.lastIndexOf(".") >>> 0) + 2);
-          if (ext) { ext = ext.toLowerCase(); }
-
-          if (self.acceptedTypes == self.mediaTypes.image && !(ext == 'jpg' || ext == 'jpeg' || ext == 'png')) {
-            self.alert = 'Please select either a JPEG or PNG image file.';
-          } else if (self.acceptedTypes == self.mediaTypes.audio && !(ext == 'mp3' || ext == 'wav')) {
-            self.alert = 'Please select either a WAV or MP3 audio file.';
-          } else {
-            self.$pending.resolve(files);
-            self.dismiss();
-          }
-        });
-        
+      if (files.length > 1 && !this.allowMultipleSelections) {
+        self.alert = 'Please only upload a single file.';
         return;
       }
 
-      this.$pending.resolve(files);
-      this.$pending = undefined;
+      if (this.acceptedTypes) {
+        BulkTypeValidator.validate(files, this.acceptedTypes).then(function () {
+          validateMediaFiles(files);
+        }).catch(function () {
+          self.alert = 'One or more files are not an acceptable type.';
+        });
+      } else {
+        validateMediaFiles(files);
+      }
     }
-    this.dismiss();
   };
 
   function filePickerDeferred(svc) {
@@ -128,15 +131,8 @@ angular.module('prx.upload.filepicker', ['templates'])
           input.removeAttr('multiple');
         }
 
-        var acceptClass = PRXFilePicker.acceptedTypes;
-
-        if (acceptClass == PRXFilePicker.mediaTypes.image) {
-          input.attr('accept', '.jpg,.jpeg,.png');
-        } else if (acceptClass == PRXFilePicker.mediaTypes.audio) {
-          // TODO Accept other types
-          input.attr('accept', 'audio/mp3');
-        } else if (acceptClass == PRXFilePicker.mediaTypes.multimedia) {
-          input.attr('accept', 'image/*,audio/*');
+        if (PRXFilePicker.acceptedTypes) {
+          input.attr('accept', PRXFilePicker.acceptedTypes.join(''));
         } else {
           input.removeAttr('accept');
         }

@@ -26,6 +26,7 @@ angular.module('prx', ['ngAnimate',
   'prx.embed',
   'prx.welcome',
   'prx.modelConfig',
+  'prx.dsp',
   'ngMobile',
   'prx.breadcrumbs',
   'prx.ads',
@@ -155,7 +156,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
       app.showFileTarget = function (event) {
         var ev = $scope.$broadcast('dragOver');
         if (!ev.defaultPrevented) {
-          PRXFilePicker.selectFiles().then(function (files) {
+          PRXFilePicker.selectFiles(['audio/*'], false).then(function (files) {
             var guids = [];
             angular.forEach(files, function (file) {
               guids.push(Upload.upload(file).guid);
