@@ -92,80 +92,80 @@ angular.module('prx.analyze-audio', ['angular-id3', 'angular-aurora'])
     return $q.all(all);
   };
 })
-.service('ID3Validator', function ($q, Id3Service) {
-  this.validate = function (file, requiredTags) {
-    var deferred = $q.defer();
-
-    Id3Service.analyze(file).then(function (tags) {
-      // TODO
-      if (true) {
-         deferred.resolve();
-      } else {
-        deferred.reject('Missing required ID3 tags');
-      }
-    });
-
-    return deferred.promise;
-  };
-})
-.service('DurationValidator', function (AuroraService, $q) {
-  this.validate = function (file, min, max) {
-    var deferred = $q.defer();
-    var minDuration = min;
-    var maxDuration = max;
-
-    if (!min) { minDuration = 0.0; }
-    if (!max) { maxDuration = Infinity; }
-
-    AuroraService.duration(file).then(function (duration) {
-      if (duration >= minDuration && duration <= maxDuration) {
-         deferred.resolve();
-      } else {
-        deferred.reject('File duration outside allowed bounds');
-      }
-    });
-
-    return deferred.promise;
-  };
-})
-.service('FormatValidator', function (AuroraService, $q) {
-  this.validate = function (file, params) {
-    var deferred = $q.defer();
-
-    AuroraService.format(file).then(function (format) {
-      var error;
-      for (var key in params) {
-        if (params.hasOwnProperty(key) && format.hasOwnProperty(key)) {
-          if (typeof params[key] === 'number' && params[key] !== format[key]) {
-            error = true;
-            break;
-          } else if (typeof params[key] === 'string' && params[key] !== format[key]) {
-            error = true;
-            break;
-          } else if (Array.isArray(params[key])) {
-            var min, max;
-
-            min = params[key][0] ? params[key][0] : 0;
-            max = params[key][1] ? params[key][1] : Infinity;
-
-            if (format[key] < min || format[key] > max) {
-              error = true;
-              break;
-            }
-          }
-        }
-      }
-
-      if (error) {
-        deferred.reject('File format is invalid');
-      } else {
-        deferred.resolve();
-      }
-    });
-
-    return deferred.promise;
-  };
-})
+// .service('ID3Validator', function ($q, Id3Service) {
+//   this.validate = function (file, requiredTags) {
+//     var deferred = $q.defer();
+//
+//     Id3Service.analyze(file).then(function (tags) {
+//       // TODO
+//       if (true) {
+//          deferred.resolve();
+//       } else {
+//         deferred.reject('Missing required ID3 tags');
+//       }
+//     });
+//
+//     return deferred.promise;
+//   };
+// })
+// .service('DurationValidator', function (AuroraService, $q) {
+//   this.validate = function (file, min, max) {
+//     var deferred = $q.defer();
+//     var minDuration = min;
+//     var maxDuration = max;
+//
+//     if (!min) { minDuration = 0.0; }
+//     if (!max) { maxDuration = Infinity; }
+//
+//     AuroraService.duration(file).then(function (duration) {
+//       if (duration >= minDuration && duration <= maxDuration) {
+//          deferred.resolve();
+//       } else {
+//         deferred.reject('File duration outside allowed bounds');
+//       }
+//     });
+//
+//     return deferred.promise;
+//   };
+// })
+// .service('FormatValidator', function (AuroraService, $q) {
+//   this.validate = function (file, params) {
+//     var deferred = $q.defer();
+//
+//     AuroraService.format(file).then(function (format) {
+//       var error;
+//       for (var key in params) {
+//         if (params.hasOwnProperty(key) && format.hasOwnProperty(key)) {
+//           if (typeof params[key] === 'number' && params[key] !== format[key]) {
+//             error = true;
+//             break;
+//           } else if (typeof params[key] === 'string' && params[key] !== format[key]) {
+//             error = true;
+//             break;
+//           } else if (Array.isArray(params[key])) {
+//             var min, max;
+//
+//             min = params[key][0] ? params[key][0] : 0;
+//             max = params[key][1] ? params[key][1] : Infinity;
+//
+//             if (format[key] < min || format[key] > max) {
+//               error = true;
+//               break;
+//             }
+//           }
+//         }
+//       }
+//
+//       if (error) {
+//         deferred.reject('File format is invalid');
+//       } else {
+//         deferred.resolve();
+//       }
+//     });
+//
+//     return deferred.promise;
+//   };
+// })
 .service('AnalyzeAudio', function AnalyzeAudio($q, MimeType, Id3Service, AuroraService) {
 
   this.analyze = function (file) {

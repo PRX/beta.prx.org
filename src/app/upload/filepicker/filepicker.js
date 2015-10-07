@@ -1,5 +1,5 @@
 angular.module('prx.upload.filepicker', ['templates', 'prx.dsp'])
-.factory('PRXFilePicker', function ($q, UploadValidator, BulkTypeValidator) {
+.factory('PRXFilePicker', function ($q, BulkTypeValidator, $rootScope) {
   function PRXFilePickerService () {
     this.visible = false;
     this.$pending = undefined;
@@ -35,7 +35,7 @@ angular.module('prx.upload.filepicker', ['templates', 'prx.dsp'])
       var all = [];
 
       angular.forEach(files, function (file) {
-        all.push(UploadValidator.validate(file));
+        // all.push(UploadValidator.validate(file));
       });
 
       $q.all(all).then(function () {
@@ -46,6 +46,11 @@ angular.module('prx.upload.filepicker', ['templates', 'prx.dsp'])
         self.alert = 'One or more files did not meet the minimum requirements.';
       });
     };
+
+    if ($rootScope.currentUser && !$rootScope.currentUser.loggedIn) {
+      self.alert = 'Please log in before uploading files.';
+      return;
+    }
 
     if (this.$pending && files) {
       if (files.length > 1 && !this.allowMultipleSelections) {
