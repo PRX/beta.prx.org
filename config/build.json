@@ -3,6 +3,7 @@
   "compileDir": "bin",
   "app": {
     "js": [
+      "src/**/*.module.js",
       "src/**/*.js",
       "!src/**/*.spec.js",
       "!src/assets/**/*.js",
