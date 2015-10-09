@@ -1,7 +1,7 @@
-ng-switch(on="auth.currentUser.loggedIn")
+ng-switch(on="currentUser.loggedIn")
   div(ng-switch-when="true")
     b
-      a.account(ui-sref="auth.currentUser.account") {{auth.currentUser.login}}
+      a.account(ui-sref="currentUser.account") {{currentUser.login}}
     h4 My Series
     prx-auth-series-list
   iframe(ng-switch-default, prx-auth-login-frame)

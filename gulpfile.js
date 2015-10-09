@@ -226,7 +226,11 @@ gulp.task('html', function (cb) {
       if (stat.name.match(/\.css$/)) {
         ctx.styles.push(root + '/' + stat.name);
       } else if (stat.name.match(/\.js$/)) {
-        ctx.scripts.push(root + '/' + stat.name);
+        if (stat.name.match(/module\.js$/)) {
+          ctx.scripts.splice(32, 0, root + '/' + stat.name)
+        } else {
+          ctx.scripts.push(root + '/' + stat.name);
+        }
       }
     }
     next();
