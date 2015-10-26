@@ -15,6 +15,7 @@ angular.module('prx.auth', ['prx.ui.nav'])
       currentUser = {loggedIn: false};
   this.$$loginPromise = deferred.promise;
 
+  /* istanbul ignore next */
   this.$checkLoggedIn = function () {
     var iframe = angular.element('<iframe>'),
         $body = angular.element($window.document.body),
@@ -152,6 +153,7 @@ angular.module('prx.auth', ['prx.ui.nav'])
   };
 })
 .directive('prxAuthLoginFrame', function (PrxAuth) {
+  /* istanbul ignore next */
   return function (scope, elem, attrs) {
     var uri = [FEAT.ID_SERVER, '/authorize?client_id=', FEAT.ID_CLIENT_KEY];
     var nonce = [];
