@@ -1,5 +1,6 @@
 describe('prx.upload.filepicker', function () {
   beforeEach(module('prx.upload.filepicker'));
+  beforeEach(module('prx.analyze-audio'));
 
   it('includes the filepicker service', inject(function (PRXFilePicker) {
     expect(PRXFilePicker).toBeDefined();
