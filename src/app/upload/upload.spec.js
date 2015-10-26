@@ -94,6 +94,12 @@ describe('prx.upload', function () {
       expect(upload.upload).toBeDefined();
     });
 
+    it('can pull upload by guid', function () {
+      var mockFile = {name: 'foo', testId: 123};
+      var u = uploadSvc.upload(mockFile);
+      expect(uploadSvc.getUpload(u.guid)).toEqual(u);
+    });
+
   });
 
 });
