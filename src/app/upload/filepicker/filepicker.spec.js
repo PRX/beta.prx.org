@@ -42,9 +42,6 @@ describe('prx.upload.filepicker', function () {
     it ('compiles', function () {
       expect(elem).toBeDefined();
     });
-
-    // TODO Should make sure `accept` and `multiple` attrs are passed to
-    // internal `input` element
   });
 
   describe('prxFilePickerOverlay directive', function () {
@@ -64,16 +61,24 @@ describe('prx.upload.filepicker', function () {
       expect(elem).toBeDefined();
     });
 
-    it('is invisible when the service is invisible', function() {
+    it('is invisible when the service is invisible', function () {
       filePickerService.visible = false;
       $scope.$digest();
       expect(elem.hasClass('ng-hide')).toBeTruthy();
     });
 
-    it('is visible when the service is visible', function() {
+    it('is visible when the service is visible', function () {
       filePickerService.visible = true;
       $scope.$digest();
       expect(elem.hasClass('ng-hide')).toBeFalsy();
+    });
+
+    it ('has the hovering class when drag starts', function () {
+      // $scope.$digest();
+      // var tab = angular.element(elem[0].querySelector('.tab-content'));
+      // tab.triggerHandler('dragover');
+      // $scope.$digest();
+      // expect(tab.hasClass('hovering')).toBeTruthy();
     });
   });
 });
