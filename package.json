@@ -2,15 +2,15 @@
   "author": "PRX",
   "name": "prx.org-frontend",
   "version": "0.0.1",
-  "homepage": "http://github.com/prx/prx.org-frontend",
+  "homepage": "https://github.com/prx/www.prx.org",
   "licenses": {
     "type": "AGPL",
-    "url": "https://raw.github.com/prx/prx.org-frontend/master/LICENSE"
+    "url": "https://raw.githubusercontent.com/PRX/www.prx.org/master/LICENSE"
   },
-  "bugs": "https://github.com/prx/prx.org-frontend/issues",
+  "bugs": "https://github.com/prx/www.prx.org/issues",
   "repository": {
     "type": "git",
-    "url": "git@github.com:prx/prx.org-frontend.git"
+    "url": "git@github.com:PRX/www.prx.org.git"
   },
   "dependencies": {
     "express": "~3.3.7",
