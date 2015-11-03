@@ -3,6 +3,7 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   $stateProvider.decorator('views', function (state, parent) {
     var views = parent(state);
 
+    // `live` views remove one-time bindings from their tempates
     angular.forEach(views, function (view) {
       if (view.live) {
         if (view.templateUrl) {

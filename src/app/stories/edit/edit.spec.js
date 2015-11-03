@@ -1,5 +1,22 @@
-describe('prx.stories.edit', function () {
+describe ('prx.stories.edit', function () {
   beforeEach(module('prx.stories.edit', 'angular-hal-mock'));
+
+  describe ('state provider decorator', function () {
+    beforeEach(inject(function ($stateProvider) {
+      $stateProvider.state('livestate', {
+        views: {
+          '@': {
+            template: 'stories/story.html',
+            live: true
+          }
+        }
+      });
+    }));
+
+    it ('', function () {
+
+    });
+  });
 
   describe ('story create state', function () {
     var state, $injector, ngHal, prxPlayer, prxSoundFactory;
