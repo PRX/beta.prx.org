@@ -1,21 +1,34 @@
 {
-  "author": "PRX",
   "name": "prx.org-frontend",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "AngularJS App for PRX ",
+  "keywords": [
+    "PRX"
+  ],
   "homepage": "https://github.com/prx/www.prx.org",
-  "licenses": {
-    "type": "AGPL",
-    "url": "https://raw.githubusercontent.com/PRX/www.prx.org/master/LICENSE"
+  "bugs": {
+    "url": "https://github.com/prx/www.prx.org/issues",
+    "email": "help@prx.org"
   },
-  "bugs": "https://github.com/prx/www.prx.org/issues",
+  "license": "AGPL-1.0",
+  "author": "PRX <help@prx.org> (https://www.prx.org)",
+  "contributors": [
+    {
+      "name": "Chris Rhodan",
+      "email": "chris@prx.org"
+    },
+    {
+      "name": "Chris Kalafarski",
+      "email": "chris.kalafarski@prx.org"
+    },
+    {
+      "name": "Andrew Kuklewicz",
+      "email": "andrew@prx.org"
+    }
+  ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:PRX/www.prx.org.git"
-  },
-  "dependencies": {
-    "express": "~3.3.7",
-    "gzippo": "~0.2.0",
-    "optipng-bin": "^2.0.1"
+    "url": "https://github.com/PRX/www.prx.org.git"
   },
   "scripts": {
     "install": "bower install || bower install || bower install",
@@ -23,6 +36,11 @@
     "test": "gulp ci",
     "compile": "gulp compile",
     "devServer": "npm install --quiet && apiServer=https://cms.prx.org/api/v1 gulp"
+  },
+  "dependencies": {
+    "express": "~3.3.7",
+    "gzippo": "~0.2.0",
+    "optipng-bin": "^2.0.1"
   },
   "devDependencies": {
     "bower": "^1.3.3",
