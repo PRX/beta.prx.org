@@ -26,6 +26,10 @@ describe('prx.ads', function () {
           };
         }
       };
+      $window.googletag = undefined;
+      xelem = $compile('<prx-ad slot="/foo"></prx-ad>')($rootScope).children().eq(0);
+      $rootScope.$digest();
+
       $window.googletag = googletag;
       displaySpy = spyOn(googletag, 'display');
       elem = $compile('<prx-ad slot="/foo"></prx-ad>')($rootScope).children().eq(0);
@@ -55,6 +59,10 @@ describe('prx.ads', function () {
       controller.reload = jasmine.createSpy('reload');
       angular.element($window).triggerHandler('resize');
       expect(controller.reload).toHaveBeenCalled();
+    }));
+
+    it ('fills space when googletag is missing', inject(function ($window, $rootScope) {
+      expect(xelem.css('background-color')).toBe('grey');
     }));
 
     it('can perform a reload if ad element size changes', inject(function($timeout) {
