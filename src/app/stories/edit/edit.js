@@ -152,22 +152,22 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
     }
   });
 })
-.factory('prxImageFileFactory', function (prxSoundFactory, _$URL) {
+.factory('prxImageFileFactory', function (prxSoundFactory, URL) {
 
   function PrxImageFile(upload) {
     this.upload = upload;
-    this.url = _$URL.createObjectURL(upload.file);
+    this.url = URL.createObjectURL(upload.file);
   }
 
   return function (upload) {
     return new PrxImageFile(upload);
   };
 })
-.factory('prxAudioFileFactory', function (prxSoundFactory, _$URL) {
+.factory('prxAudioFileFactory', function (prxSoundFactory, URL) {
 
   function PrxAudioFile(upload) {
     this.upload = upload;
-    this.url = _$URL.createObjectURL(upload.file);
+    this.url = URL.createObjectURL(upload.file);
   }
 
   PrxAudioFile.prototype.getSound = function (account, story) {
@@ -237,7 +237,10 @@ angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 
   });
 
   this.removeAudioFile = function (idx) {
+    /* istanbul ignore next */
     var confirm = $window.confirm('Are you sure you want to remove this file?');
+    // TODO This should be refactored away from the confirm and tested
+    /* istanbul ignore next */
     if (confirm) {
       this.audioFiles[idx].upload.cancel();
       this.audioFiles[idx].$story = undefined;
