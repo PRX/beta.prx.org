@@ -5,7 +5,7 @@
     Note: This repository houses only the web frontend
     component of PRX.org Version 4. In order to use it,
     you will need a working version of the CMS or backend
-    component, available at [PRX/cms.prx.org](/PRX/cms.prx.org).
+    component, available at https://github.com/PRX/cms.prx.org.
     If you want to contribute to the frontend without needing
     to change the backend, you can use our live CMS, but
     may be subject to rate-limiting.
@@ -16,7 +16,7 @@
     not currently publicly available, but we are investigating
     options for documenting the expected protocol or releasing
     the source code. Until that time, the service is available
-    at [id.prx.org](https://id.prx.org).
+    at https://id.prx.org.
 
 ## Getting Started
 The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS, NPM, and pow installed.
@@ -40,13 +40,13 @@ The application is built in javascript using AngularJS and Stylus (a CSS-like la
 #### Compiled
 Because of the nature of optimizations which need to take place when serving rich web applications, this project has a build process which performs these optimizations before and during deployment.
 
-Most of this process is handled by Gulp. During development, gulp continuously `build`s the project and runs the tests to ensure that they continue to pass. On the integration server, after these tests have passed, those assets are further compressed and optimized (`compile`d) and the same tests are executed against the new assets. During deployment, assets are `compile`d and tested on the deployment server. Deployments fail if these tests do not pass.
+Most of this process is handled by Gulp. During development, gulp continuously builds the project and runs the tests to ensure that they continue to pass. On the integration server, after these tests have passed, those assets are further compressed and optimized (compiled) and the same tests are executed against the new assets. During deployment, assets are compiled and tested on the deployment server. Deployments fail if these tests do not pass.
 
 #### Dependencies
 Dependencies on libraries are handled using `npm` and dependencies on browser packages are handled using `bower`. NPM will automatically invoke bower correctly as part of the `npm install` process.
 
 #### Testing
-This project should be well unit tested. There are (fairly low) code coverage requirements on the suites that will cause them to fail integration if they are not met. Tests are written with Jasmine.
+This project should have well-written unit tests. There are (fairly low) code coverage requirements on the suites that will cause them to fail integration if they are not met. Tests are written with Jasmine.
 
 End to End tests are useful but because they are coupled to both the frontend and backend simultaneously they can largely be ignored for the time being. A solution is being devised that will more fully work to continuously integrate this process.
 
@@ -61,7 +61,7 @@ cap production deploy # deploys to beta.prx.org, *always* from master
 cap staging deploy    # deploys to alpha.prx.org, allows specifying the branch
 ```
 
-If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let chris know.
+If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let Chris know.
 
 ##### Master is Always Deployable
 We're able to make very little ceremony out of deploying because master is always deployable (and, in fact, will likely be automatically deployed in the future). We maintain this state of affairs by ensuring that our code is well-tested ([automatically](#testing), with help from [Travis CI](#Travis-CI)) and by following a code review process that uses Github Pull Requests to ensure that at least two people have looked at each set of changes.
