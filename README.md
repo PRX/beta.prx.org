@@ -40,7 +40,7 @@ The application is built in javascript using AngularJS and Stylus (a CSS-like la
 #### Compiled
 Because of the nature of optimizations which need to take place when serving rich web applications, this project has a build process which performs these optimizations before and during deployment.
 
-Most of this process is handled by Gulp. During development, gulp continuously builds the project and runs the tests to ensure that they continue to pass. On the integration server, after these tests have passed, those assets are further compressed and optimized (compiled) and the same tests are executed against the new assets. During deployment, assets are compiled and tested on the deployment server. Deployments fail if these tests do not pass.
+Most of this process is handled by Gulp. During development, gulp continuously `build`s the project and runs the tests to ensure that they continue to pass. On the integration server, after these tests have passed, those assets are further compressed and optimized (`compile`d) and the same tests are executed against the new assets. During deployment, assets are `compile`d and tested on the deployment server. Deployments fail if these tests do not pass.
 
 #### Dependencies
 Dependencies on libraries are handled using `npm` and dependencies on browser packages are handled using `bower`. NPM will automatically invoke bower correctly as part of the `npm install` process.
