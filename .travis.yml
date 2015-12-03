@@ -15,6 +15,7 @@ notifications:
   slack:
     secure: cRLVag8O4sV61KNPuFve1UHzo3g6wwT+8z5tFRItXY+FrZ92fu4hCHjSdEHwgxblZmlsAXIgGxGvJPxDX6XRvV+j4bI52tS44u+OGsnwPB5DqUEnpRcD4HnXIIdQ8bFs4QlT7umD5U6cEQaUY0JU/uvFTUyUzy8yTa/bYCCF8lA=
 addons:
+  firefox: latest
 env:
   global:
     secure: NbiuAcWkmBYRych4+6k/zYRBS3YAp7UUSDnlNSyivkvQkHeHCQ7CkZxUj170juk++ONl8L4mHB0/+Cez7ytwD4kNHuvrP9NLrDMyLZZ354nkE8z5RuDGCEXPfNwFjl/BjkiIRUs/1J97iT3MA42zmQP6Qy+mc5nmuuKRHUAG41M=
