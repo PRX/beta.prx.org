@@ -62,7 +62,7 @@ describe('prx.ads', function () {
     }));
 
     it ('fills space when googletag is missing', inject(function ($window, $rootScope) {
-      expect(xelem.css('background-color')).toBe('grey');
+      expect(xelem.hasClass('empty-ad')).toBe(true);
     }));
 
     it('can perform a reload if ad element size changes', inject(function($timeout) {
