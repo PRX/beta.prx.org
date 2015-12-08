@@ -139,7 +139,7 @@ gulp.task('compileCss', ['compressCss', 'compressAssets'], function () {
 gulp.task('spec', ['templates', 'buildJs', 'helperJs'], function () {
   var cfg = {};
   if (process.env.TRAVIS) {
-    cfg.browsers = ['PhantomJS', 'Firefox'];
+    cfg.browsers = ['Firefox'];
   }
   return karma.once(cfg);
 });
