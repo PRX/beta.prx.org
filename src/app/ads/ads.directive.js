@@ -60,7 +60,7 @@
             ctrl.win.off('resize', ctrl.doReload);
           });
         } else {
-          elem.css('background-color', 'grey');
+          elem.addClass('empty-ad');
         }
       }
     };

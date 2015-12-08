@@ -54,8 +54,8 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
       stories: function (recentStories) { return recentStories; }
     }
   });
-
-ngHalProvider.setRootUrl(FEAT.apiServer)
+  
+  ngHalProvider.setRootUrl(FEAT.apiServer)
   .mixin('http://meta.prx.org/model/series', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url').or(null);
   }]);

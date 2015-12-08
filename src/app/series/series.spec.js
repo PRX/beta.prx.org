@@ -26,11 +26,27 @@ describe('prx.series', function () {
     }));
   });
 
-  describe ('SeriesDetailCtrl', function () {
-    it ('attaches the series injected to $scope', inject(function ($controller) {
-      var foo = 'asd', scope = {};
-      var ctrl = $controller('SeriesDetailCtrl', {series: foo, $scope: scope});
-      expect(ctrl.current).toBe(foo);
+  describe ('SeriesStoriesCtrl', function () {
+    it ('attaches the series injected to $scope', inject(function ($controller, _ngHal_) {
+      var ngHal = _ngHal_;
+      var sigil = 'sigil';
+      var scope = {};
+      var list = ngHal.mock({a: 1});
+      var ctrl = $controller('SeriesStoriesCtrl', {series: sigil, stories: sigil, list: list, $scope: scope});
+      expect(ctrl.current).toBe(sigil);
+      expect(ctrl.stories).toBe(sigil);
+    }));
+
+    it ('does not load more stories if they are already loading', inject(function ($controller, _ngHal_) {
+      var ngHal = _ngHal_;
+      var sigil = 'sigil';
+      var scope = {};
+      var list = ngHal.mock({a: 1});
+      var ctrl = $controller('SeriesStoriesCtrl', {series: sigil, stories: sigil, list: list, $scope: scope});
+      ctrl.loadingMore = true;
+      spyOn(list, 'follow');
+      ctrl.loadMore();
+      expect(list.follow).not.toHaveBeenCalled();
     }));
   });
 
@@ -38,14 +54,6 @@ describe('prx.series', function () {
     it ('attaches the series injected to $scope', inject(function ($controller) {
       var foo = 'asd', scope = {};
       var ctrl = $controller('SeriesDetailCtrl', {series: foo, $scope: scope});
-      expect(ctrl.current).toBe(foo);
-    }));
-  });
-
-  describe ('StoryDetailCtrl', function () {
-    it ('attaches the story injected to controller', inject(function ($controller) {
-      var foo = 'asd', scope = {};
-      var ctrl = $controller('StoryDetailCtrl', {story: foo, $scope: scope});
       expect(ctrl.current).toBe(foo);
     }));
   });
@@ -67,6 +75,10 @@ describe('prx.series', function () {
       });
       $rootScope.$digest();
       expect(result.a).toBe(1);
+    }));
+
+    it ('gets the series title', inject(function (ngHal) {
+      expect($injector.invoke(state.title, null, {series: {title: "test"}})).toEqual('test Series');
     }));
 
     it ('resolves recent stories', function () {
