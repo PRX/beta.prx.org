@@ -279,7 +279,7 @@ gulp.task('distJs', ['buildJs', 'templates'], function () {
       .pipe(plugin.ngAnnotate())
       .pipe(feats(featDist, {strict: true, default: false}))
   )
-  .pipe(plugin.order(['**/angular?(.min).js', '*']))
+  .pipe(plugin.order(c.jsOrderCfg))
   .pipe(plugin.concat(fileName+'.js'))
   .pipe(gulp.dest(complDir + '/assets'))
   .pipe(plugin.uglify({preserveComments: 'some', outSourceMap: true}))
