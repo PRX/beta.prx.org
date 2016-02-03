@@ -25,6 +25,7 @@ The quickest way to get started is to check out the repository and execute it ag
 git clone git://github.com/PRX/www.prx.org.git prx.org
 cd prx.org
 echo 8080 > ~/.pow/www.prx
+ulimit -S -n 2048 # for osx
 npm install
 npm run-script devServer
 ```
