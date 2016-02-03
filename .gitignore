@@ -13,3 +13,5 @@ log
 .cache
 npm-debug.log
 .ruby-version
+*.sublime-project
+*.sublime-workspace
