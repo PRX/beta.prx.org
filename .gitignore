@@ -12,4 +12,4 @@ log
 .assets
 .cache
 npm-debug.log
-
+.ruby-version
