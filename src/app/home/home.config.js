@@ -22,8 +22,11 @@
         }
       },
       resolve: {
-        picks: function (ngHal, $filter) {
-          return ngHal.follow('prx:picks').follow('prx:items').then(function (picks) {
+        pickList: function(ngHal) {
+          return ngHal.follow('prx:picks');
+        },
+        pickItems: function(pickList, $filter) {
+          return pickList.follow('prx:items').then(function (picks) {
             return $filter('groupStandalonePicks')(picks);
           });
         }
@@ -46,8 +49,11 @@
         }
       },
       resolve: {
-        picks: function (ngHal, $filter) {
-          return ngHal.follow('prx:picks').follow('prx:items').then(function (picks) {
+        pickList: function(ngHal) {
+          return ngHal.follow('prx:picks');
+        },
+        pickItems: function(pickList, $filter) {
+          return pickList.follow('prx:items').then(function (picks) {
             return $filter('groupStandalonePicks')(picks);
           });
         }
