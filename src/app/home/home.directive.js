@@ -11,7 +11,8 @@
       restrict: 'A',
       scope: {
         onScrollIn: '&',
-        scrollInBuffer: '@'
+        scrollInBuffer: '@',
+        scrollInLimit: '@'
       },
       link: function (scope, elem, attrs) {
         var buffer = 0;
@@ -19,9 +20,19 @@
           buffer = parseInt(is, 10) || 0;
         });
 
+        var limit = 0;
+        scope.$watch('scrollInLimit', function(val) {
+          limit = parseInt(val, 10) || 0;
+        });
+
+        var count = 0;
         function windowScrolled(event) {
           if ((elem[0].getBoundingClientRect().top - buffer) < $window.innerHeight) {
-            scope.onScrollIn({$event: event});
+            if (limit <= 0 || count < limit) {
+              if (scope.onScrollIn({$event: event}) !== false) {
+                count++;
+              }
+            }
           }
         }
 

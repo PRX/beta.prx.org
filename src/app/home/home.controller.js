@@ -41,7 +41,10 @@
 
     ctrl.loadingMore = false;
     ctrl.loadMore = function () {
-      if (!ctrl.loadingMore) {
+      if (ctrl.loadingMore) {
+        return false; // debounce
+      }
+      else {
         ctrl.loadingMore = true;
         pickList.follow('next').then(function (nextList) {
           pickList = nextList;

@@ -105,6 +105,41 @@ describe('prx.home', function () {
       $window.document.body.removeChild(elem[0]);
       scope.$destroy();
     }));
+
+    it ('debounces and limits', inject(function ($compile, $rootScope, $window) {
+      var elem = angular.element("<div style='height:1px' on-scroll-in='counter()' scroll-in-limit='{{limit}}'></div>");
+      var scope = $rootScope.$new();
+      var count = 0, debounce = false;
+      scope.counter = function () {
+        count++;
+        if (debounce) { return false; }
+      };
+      scope.limit = 2;
+
+      elem = $compile(elem)(scope);
+      win = angular.element($window);
+      $window.document.body.appendChild(elem[0]);
+      scope.$digest();
+
+      win.triggerHandler('scroll');
+      expect(count).toBe(1);
+
+      debounce = true;
+      win.triggerHandler('scroll');
+      expect(count).toBe(2);
+      debounce = false;
+      win.triggerHandler('scroll');
+      expect(count).toBe(3);
+
+      win.triggerHandler('scroll');
+      win.triggerHandler('scroll');
+      expect(count).toBe(3);
+
+      scope.limit = 9;
+      scope.$digest();
+      win.triggerHandler('scroll');
+      expect(count).toBe(4);
+    }));
   });
 
   describe ('continuous playback', function () {
