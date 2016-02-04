@@ -9,13 +9,19 @@
   function onScrollIn($window) {
     return {
       restrict: 'A',
+      scope: {
+        onScrollIn: '&',
+        scrollInBuffer: '@'
+      },
       link: function (scope, elem, attrs) {
-        var buffer = parseInt(attrs.scrollInBuffer, 10);
-        buffer = isNaN(buffer) ? 0 : buffer;
+        var buffer = 0;
+        scope.$watch('scrollInBuffer', function(is) {
+          buffer = parseInt(is, 10) || 0;
+        });
 
         function windowScrolled(event) {
           if ((elem[0].getBoundingClientRect().top - buffer) < $window.innerHeight) {
-            scope.$eval(attrs.onScrollIn);
+            scope.onScrollIn({$event: event});
           }
         }
 
