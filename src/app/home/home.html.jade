@@ -6,7 +6,7 @@ article.home
         header
           h2 Staff Picks
         div
-          prx-pick(ng-repeat="pick in home.pickItems", pick="pick")
+          prx-pick(ng-repeat="pick in home.picks", pick="pick")
         footer
           button.more(ng-click="home.loadMore()", ng-show="home.hasMore"
             on-scroll-in="home.loadMore()",

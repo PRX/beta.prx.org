@@ -4,10 +4,12 @@
     .module('prx.home')
     .controller('HomeCtrl', HomeCtrl);
 
-  HomeCtrl.$inject = ['pickList', 'pickItems', '$scope', '$filter'];
+  HomeCtrl.$inject = ['pickList', 'picks', '$scope', '$filter'];
 
-  function HomeCtrl(pickList, pickItems, $scope, $filter) {
-    this.pickItems = pickItems;
+  function HomeCtrl(pickList, picks, $scope, $filter) {
+    var ctrl = this;
+
+    ctrl.picks = picks;
     $scope.$on('$play', function (event, params) {
       if (!angular.isDefined(params.next)) {
         params.next = mkNext;
@@ -16,23 +18,29 @@
 
     function mkNext () {
       var i=-1;
-      angular.forEach(pickItems, function (pick, index) {
+      angular.forEach(picks, function (pick, index) {
         if (i == -1 && pick.story.id == this.story.id) {
           i = index + 1;
         }
       }, this);
-      if (i != -1 && i < pickItems.length) {
-        return pickItems[i].story.toSoundParams().then(function (sp) {
+      if (i != -1 && i < picks.length) {
+        return picks[i].story.toSoundParams().then(function (sp) {
           sp.next = mkNext;
           return sp;
         });
       }
     }
 
-    this.loadingMore = false;
-    this.hasMore = angular.isDefined(pickList.link('next'));
-    this.loadMore = function () {
-      var ctrl = this;
+    ctrl.hasMore = false;
+    function setHasMore() {
+      ctrl.hasMore = pickList &&
+        angular.isFunction(pickList.link) &&
+        angular.isDefined(pickList.link('next'));
+    }
+    setHasMore();
+
+    ctrl.loadingMore = false;
+    ctrl.loadMore = function () {
       if (!ctrl.loadingMore) {
         ctrl.loadingMore = true;
         pickList.follow('next').then(function (nextList) {
@@ -42,10 +50,10 @@
               return $filter('groupStandalonePicks')(picks);
             })
             .then(function (groupedItems) {
-              Array.prototype.push.apply(ctrl.pickItems, groupedItems);
+              Array.prototype.push.apply(ctrl.picks, groupedItems);
             });
         })['finally'](function () {
-          ctrl.hasMore = angular.isDefined(pickList.link('next'));
+          setHasMore();
           ctrl.loadingMore = false;
         });
       }

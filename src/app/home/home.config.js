@@ -25,7 +25,7 @@
         pickList: function(ngHal) {
           return ngHal.follow('prx:picks');
         },
-        pickItems: function(pickList, $filter) {
+        picks: function(pickList, $filter) {
           return pickList.follow('prx:items').then(function (picks) {
             return $filter('groupStandalonePicks')(picks);
           });
@@ -52,7 +52,7 @@
         pickList: function(ngHal) {
           return ngHal.follow('prx:picks');
         },
-        pickItems: function(pickList, $filter) {
+        picks: function(pickList, $filter) {
           return pickList.follow('prx:items').then(function (picks) {
             return $filter('groupStandalonePicks')(picks);
           });
