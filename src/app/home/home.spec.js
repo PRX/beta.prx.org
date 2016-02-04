@@ -81,20 +81,21 @@ describe('prx.home', function () {
 
   describe ('onScrollIn', function () {
     it ('triggers when an element scrolls into view', inject(function ($compile, $rootScope, $window) {
-      var elem = angular.element("<div style='padding-top:1000px'><div style='height:10px' on-scroll-in='triggered=true'></div></div>");
+      var elem = angular.element("<div style='padding-top:10000px'><div style='height:10px' on-scroll-in='triggered=true'></div></div>");
       var scope = $rootScope.$new();
       elem = $compile(elem)(scope);
       win = angular.element($window);
       $window.document.body.appendChild(elem[0]);
+      console.log('window.innerHeight = ' + $window.innerHeight);
 
       win.triggerHandler('scroll');
       expect(scope.triggered).toBeFalsy();
 
-      $window.scroll(0, 1000 - $window.innerHeight - 20);
+      $window.scroll(0, 10000 - $window.innerHeight - 100);
       win.triggerHandler('scroll');
       expect(scope.triggered).toBeFalsy();
 
-      $window.scroll(0, 1000 - $window.innerHeight + 20);
+      $window.scroll(0, 10000 - $window.innerHeight + 100);
       win.triggerHandler('scroll');
       expect(scope.triggered).toBeTruthy();
 
