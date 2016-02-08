@@ -1,6 +1,12 @@
-angular.module('async-loader', [])
-.factory('$scriptjs', function ($window) {
-  return $window.$script;
+var angular = require('angular');
+var scriptjs = require('scriptjs');
+
+// load files asynchronously
+var app = angular.module('async-loader', []);
+module.exports = app.name;
+
+app.factory('$scriptjs', function ($window) {
+  return scriptjs;
 })
 .service('AsyncLoader', function ($scriptjs, $rootScope, $q) {
 

@@ -1,5 +1,12 @@
-angular.module('prx.auth', ['prx.ui.nav'])
-.config(function (PRXDrawerProvider) {
+var angular = require('angular');
+
+// prx auth service
+var app = angular.module('prx.auth', [
+  require('../ui/nav/nav')
+]);
+module.exports = app.name;
+
+app.config(function (PRXDrawerProvider) {
   PRXDrawerProvider.register({
     name: 'Sign In',
     weight: PRXDrawerProvider.BOTTOM,

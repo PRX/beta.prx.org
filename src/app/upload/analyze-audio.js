@@ -1,5 +1,13 @@
-angular.module('prx.analyze-audio', ['angular-id3', 'angular-aurora'])
-.factory('MimeDefinition', function() {
+var angular = require('angular');
+
+// analyzing uploaded audio
+var app = angular.module('prx.analyze-audio', [
+  require('../../common/angular-id3'),
+  require('../../common/angular-aurora')
+]);
+module.exports = app.name;
+
+app.factory('MimeDefinition', function() {
 
   function MimeDefinition (type) {
     this.type = type;

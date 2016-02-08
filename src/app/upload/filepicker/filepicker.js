@@ -1,5 +1,13 @@
-angular.module('prx.upload.filepicker', ['templates', 'prx.dsp'])
-.factory('PRXFilePicker', function ($q, BulkTypeValidator, $rootScope) {
+var angular = require('angular');
+
+// file picker component
+var app = angular.module('prx.upload.filepicker', [
+  'templates', // TODO: this is different
+  require('../../dsp/dsp')
+]);
+module.exports = app.name;
+
+app.factory('PRXFilePicker', function ($q, BulkTypeValidator, $rootScope) {
   function PRXFilePickerService () {
     this.visible = false;
     this.$pending = undefined;
@@ -72,7 +80,7 @@ angular.module('prx.upload.filepicker', ['templates', 'prx.dsp'])
       }
     }
   };
-  
+
   /* istanbul ignore next */
   function filePickerDeferred(svc) {
     var deferred = $q.defer();

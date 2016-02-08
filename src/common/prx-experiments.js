@@ -1,5 +1,10 @@
-angular.module('prx.experiments', [])
-.provider('prxperiment', function () {
+var angular = require('angular');
+
+// crazy crazy ideas
+var app = angular.module('prx.experiments', []);
+module.exports = app.name;
+
+app.provider('prxperiment', function () {
   var config = { enabled: true }, http, q, $injector;
   var Provider = {
     base: function (base) {

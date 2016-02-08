@@ -1,5 +1,9 @@
-angular.module('prx.ui.sheet', ['ui.router'])
-.service('PrxSheet', function ($rootScope, $timeout) {
+var app = require('angular').module('prx.ui.tabs', [
+  require('angular-ui-router')
+]);
+module.exports = app.name;
+
+app.service('PrxSheet', function ($rootScope, $timeout) {
   var PrxSheet = this;
   this.show = false;
   this.expand = false;

@@ -1,5 +1,10 @@
-angular.module('ngSuperglobal', [])
-.provider('ngSuperGlobals', {
+var angular = require('angular');
+
+// suuuuper
+var app = angular.module('ngSuperglobal', []);
+module.exports = app.name;
+
+app.provider('ngSuperGlobals', {
   key: 'ngSuperGlobals',
   setKey: function (key) {
     this.key = key;

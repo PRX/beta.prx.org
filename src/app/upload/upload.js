@@ -1,5 +1,18 @@
-angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio', 'prx.upload.filepicker', 'prx.dsp'])
-.config(function (evaporateProvider) {
+var angular = require('angular');
+
+// uploading files
+var app = angular.module('prx.upload', [
+  require('angular-ui-router'),
+  require('../../common/angular-dnd'),
+  require('../../common/angular-evaporate'),
+  require('../../common/angular-uuid'),
+  require('./analyze-audio'),
+  require('./filepicker/filepicker'),
+  require('../dsp/dsp')
+]);
+module.exports = app.name;
+
+app.config(function (evaporateProvider) {
   evaporateProvider
   .signerUrl(FEAT.UPLOADS_SIGNER_URL)
   .awsKey(FEAT.UPLOADS_AWS_KEY)

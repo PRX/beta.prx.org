@@ -1,5 +1,17 @@
-angular.module('prx.stories.edit', ['ui.router', 'ngSuperglobal', 'prx.ui.nav', 'prx.upload', 'prx.stories', 'prx.upload.filepicker'])
-.config(function ($stateProvider) {
+var angular = require('angular');
+
+// editing stories
+var app = angular.module('prx.stories.edit', [
+  require('angular-ui-router'),
+  require('../../../common/angular-superglobals'),
+  require('../../ui/nav/nav'),
+  require('../../upload/upload'),
+  // require('../stories'), TODO: circular dependency
+  require('../../upload/filepicker/filepicker')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider) {
   $stateProvider.decorator('views', function (state, parent) {
     var views = parent(state);
 

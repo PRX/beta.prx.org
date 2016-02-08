@@ -1,7 +1,12 @@
-// simple service to get uuids using node-uuid project
+var angular = require('angular');
 
-angular.module('angular-id3', ['async-loader'])
-.service('Id3Service', function ($rootScope, $q, $window, AsyncLoader) {
+// get id3 tags
+var app = angular.module('angular-id3', [
+  require('./async-loader')
+]);
+module.exports = app.name;
+
+app.service('Id3Service', function ($rootScope, $q, $window, AsyncLoader) {
 
   var Id3Service = this;
 

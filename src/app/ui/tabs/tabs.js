@@ -1,5 +1,10 @@
-angular.module('prx.ui.tabs', ['ngAnimate', 'ui.router'])
-.directive('xiTabs', function () {
+var app = require('angular').module('prx.ui.tabs', [
+  require('angular-animate'),
+  require('angular-ui-router')
+]);
+module.exports = app.name;
+
+app.directive('xiTabs', function () {
   return {
     restrict: 'E',
     scope: false,

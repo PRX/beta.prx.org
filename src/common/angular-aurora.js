@@ -1,5 +1,12 @@
-angular.module('angular-aurora', ['async-loader'])
-.service('AuroraService', function ($rootScope, $q, $window, AsyncLoader) {
+var angular = require('angular');
+
+// audio decoding
+var app = angular.module('angular-aurora', [
+  require('./async-loader')
+]);
+module.exports = app.name;
+
+app.service('AuroraService', function ($rootScope, $q, $window, AsyncLoader) {
 
   var AuroraService = this;
 

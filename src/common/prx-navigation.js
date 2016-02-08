@@ -1,5 +1,13 @@
-angular.module('prxNavigation', ['ui.router', 'prx.auth'])
-.directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope, $animate) {
+var angular = require('angular');
+
+// handle global nav
+var app = angular.module('prxNavigation', [
+  require('angular-ui-router'),
+  require('../app/auth/auth')
+]);
+module.exports = app.name;
+
+app.directive('prxLoadingBar', function ($state, $stateParams, $injector, $q, $timeout, $rootScope, $animate) {
   var modalKey = 'modal@';
 
   if (typeof window.callPhantom !== 'undefined') {

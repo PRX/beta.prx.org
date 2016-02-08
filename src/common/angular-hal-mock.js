@@ -1,5 +1,13 @@
-angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
-.config(function ($provide, ngHalProvider) {
+var angular = require('angular');
+
+// mocking HAL responses
+var app = angular.module('angular-hal-mock', [
+  require('./angular-hal'),
+  require('./angular-mocks'),
+]);
+module.exports = app.name;
+
+app.config(function ($provide, ngHalProvider) {
   var $q, $rootScope, FAKE_ROOT = 'http://nghal.org/fake_root';
 
   function unfolded(doc) {

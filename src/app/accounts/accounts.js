@@ -1,5 +1,15 @@
-angular.module('prx.accounts', ['ui.router', 'prx.modelConfig', 'prx.url-translate', 'angulartics'])
-.config(function ($stateProvider, ngHalProvider) {
+var angular = require('angular');
+
+// accounts module
+var app = angular.module('prx.accounts', [
+  require('angular-ui-router'),
+  require('../../common/prx-model-config'),
+  require('../../common/url-translater'),
+  require('angulartics')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('account', {
     abstract: true,
     title: 'Accounts',

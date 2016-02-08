@@ -1,6 +1,13 @@
-angular
-.module('prx.dsp', ['angular-id3', 'angular-aurora'])
-// .service('UploadValidator', function (MimeType, UploadValidatorMP3) {
+var angular = require('angular');
+
+// TODO: is this module needed?
+var app = angular.module('prx.dsp', [
+  require('../../common/angular-id3'),
+  require('../../common/angular-aurora')
+]);
+module.exports = app.name;
+
+// app.service('UploadValidator', function (MimeType, UploadValidatorMP3) {
 //   this.validate = function (file) {
 //     if (!file) { return; }
 //     var mimeType = MimeType.lookup(file);
@@ -31,5 +38,4 @@ angular
 //
 //     return deferred.promise;
 //   };
-// })
-;
+// });

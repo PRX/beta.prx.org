@@ -1,5 +1,17 @@
-angular.module('angulartics.prx.count', ['angulartics', 'prx.url-translate'])
-.config(['$provide', function ($provide) {
+var angular = require('angular');
+var TheCount = require('./count');
+
+// TODO: make require'able
+TheCount = window.TheCount;
+
+// the count analytics
+var app = angular.module('angulartics.prx.count', [
+  require('angulartics'),
+  require('./url-translater')
+]);
+module.exports = app.name;
+
+app.config(['$provide', function ($provide) {
   $provide.decorator('$analytics', ['$delegate', '$window', 'urlTranslate', function ($delegate, $window, urlTranslate) {
     var pageTrack = $delegate.pageTrack;
     var eventTrack = $delegate.eventTrack;

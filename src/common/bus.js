@@ -1,5 +1,10 @@
-angular.module('prx.bus', [])
-.service('Bus', function () {
+var angular = require('angular');
+
+// global event bus
+var app = angular.module('prx.bus', []);
+module.exports = app.name;
+
+app.service('Bus', function () {
   this.listeners = {};
 
   this.on = function (eventName, callback) {

@@ -1,5 +1,12 @@
-angular.module('angular-evaporate', ['async-loader'])
-.provider('evaporate', function () {
+var angular = require('angular');
+
+// direct upload to s3
+var app = angular.module('angular-evaporate', [
+  require('./async-loader')
+]);
+module.exports = app.name;
+
+app.provider('evaporate', function () {
 
   var injector;
 

@@ -1,5 +1,7 @@
-angular.module('prx.ui.nav', [])
-.service('XiContextMenu', function ($rootScope, $timeout) {
+var app = require('angular').module('prx.ui.nav', []);
+module.exports = app.name;
+
+app.service('XiContextMenu', function ($rootScope, $timeout) {
   var ContextMenu = this;
   this.show = false;
   $rootScope.$on("$stateChangeStart", function (event, toState) {
