@@ -134,7 +134,7 @@ app.config(function ($provide, ngHalProvider) {
         $rootScope.$digest();
       }
       return p;
-    }
+    };
     return doc;
   }
 

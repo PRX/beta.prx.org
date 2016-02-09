@@ -1,17 +1,10 @@
 {
-  "buildDir": "public",
+  "buildDir": "build",
   "compileDir": "bin",
   "app": {
-    "js": [
-      "src/**/*.module.js",
-      "src/**/*.js",
-      "!src/**/*.spec.js",
-      "!src/assets/**/*.js",
-      "!src/common/angular-hal-mock.js",
-      "!src/common/sound-manager-mock.js",
-      "!src/common/spec-helper.js"
-    ],
+    "js":     [ "src/app/index.js" ],
     "specs":  [ "src/**/*.spec.js" ],
+    "lint":   [ "src/**/*.js"      ],
     "html":   [ "src/index.html" ],
     "stylus": [ "src/stylesheets/main.styl" ],
     "jade":   [ "src/**/*.html.jade" ],
