@@ -10,7 +10,7 @@ module.exports = function (gulp, config) {
   var devFile = __dirname + '/../config/flags.dev.json';
   var devFeatures = fflags(devFile, {strict: false, default: true});
 
-  var inputs = [config.buildDir + '/app.js', config.buildDir + '/templates.js'];
+  var inputs = [config.buildDir + '/assets/app.js', config.buildDir + '/assets/templates.js'];
 
   return function () {
     return gulp.src(inputs)
@@ -19,7 +19,7 @@ module.exports = function (gulp, config) {
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(uglify())
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(config.buildDir));
+      .pipe(gulp.dest(config.buildDir + '/assets'));
   };
 
 };

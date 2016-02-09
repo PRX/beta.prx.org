@@ -27,7 +27,7 @@ module.exports = function (gulp, config) {
   return function () {
     return flagStream
       .pipe(vsource('flags.js'))
-      .pipe(gulp.dest(config.buildDir));
+      .pipe(gulp.dest(config.buildDir + '/assets'));
   };
 
 };

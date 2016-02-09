@@ -17,7 +17,7 @@ module.exports = function (gulp, config) {
       .pipe(vsource('app.js'))
       .pipe(vbuffer())
       .on('error', gutil.log)
-      .pipe(gulp.dest(config.buildDir));
+      .pipe(gulp.dest(config.buildDir + '/assets'));
   };
 
 };

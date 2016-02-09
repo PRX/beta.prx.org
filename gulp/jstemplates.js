@@ -18,7 +18,7 @@ module.exports = function (gulp, config) {
       .pipe(rename(normalizeTemplateName))
       .pipe(jade())
       .pipe(templateCache('templates.js', {standalone: true}))
-      .pipe(gulp.dest(config.buildDir));
+      .pipe(gulp.dest(config.buildDir + '/assets'));
   };
 
 };
