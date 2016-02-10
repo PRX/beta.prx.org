@@ -14,9 +14,9 @@ module.exports = function (gulp, config) {
     return gulp.src(config.app.stylus)
       .pipe(sourcemaps.init())
       .pipe(stylus({
-        set: ['linenos'],
-        use: [nib],
-        paths: [__dirname + '/../src/app']
+        use: [nib()],
+        import: ['nib'],
+        paths: ['src/app']
       }))
       .pipe(rework(movemedia()))
       .pipe(concat('app.css'))
