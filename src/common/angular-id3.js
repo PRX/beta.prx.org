@@ -11,7 +11,7 @@ app.service('Id3Service', function ($rootScope, $q, $window, AsyncLoader) {
   var Id3Service = this;
 
   var loadId3 = function () {
-    return AsyncLoader.load('/vendor/id3/dist/id3.js').then(function() {
+    return AsyncLoader.load('/vendor/id3.js').then(function() {
       Id3Service.$id3 = $window.id3;
     });
   };

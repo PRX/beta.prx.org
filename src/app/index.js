@@ -9,7 +9,6 @@ var app = angular.module('prx', [
   require('./ui/ui'),
   require('../common/prx-navigation'),
   require('angular-touch'),
-  require('ngstorage').name, // TODO: not exporting the name
   require('angular-ui-router'),
   require('./ui/ui'),
   require('./ui/nav/nav'),

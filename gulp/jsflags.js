@@ -19,6 +19,13 @@ module.exports = function (gulp, config) {
       break;
   }
 
+  // merge in ENV
+  Object.keys(flags).forEach(function (key) {
+    if (typeof process.env[key] !== 'undefined') {
+      flags[key] = process.env[key];
+    }
+  });
+
   var flagStream = new Readable();
   flagStream._read = function noop() {};
   flagStream.push('window.FEAT = ' + JSON.stringify(flags, null, 2) + ';');

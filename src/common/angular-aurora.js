@@ -12,8 +12,8 @@ app.service('AuroraService', function ($rootScope, $q, $window, AsyncLoader) {
 
   var loadAV = function () {
     // load codecs or other libs that need to be available before loading aurora.js
-    return AsyncLoader.load('/vendor/aurora.js/build/aurora.js').then( function() {
-      return AsyncLoader.load(['/vendor/mp3.js/build/mp3.js']).then( function () {
+    return AsyncLoader.load('/vendor/aurora.js').then( function() {
+      return AsyncLoader.load(['/vendor/mp3.js']).then( function () {
         // AV is loaded on the window now.
         AuroraService.$AV = $window.AV;
       });

@@ -71,7 +71,7 @@ app.provider('evaporate', function () {
   NgEvaporate.prototype = {
     loadEvaporate: function() {
       var e = this;
-      return e.loader.load('/vendor/EvaporateJS/evaporate.js').then( function(loaded) {
+      return e.loader.load('/vendor/evaporate.js').then( function(loaded) {
         // TODO Save the promise so we don't need to worry about doing other
         // things before load resolves.
         e._evaporate = new e.window.Evaporate(e.opts);

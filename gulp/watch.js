@@ -17,6 +17,7 @@ module.exports = function (gulp, config) {
     lr.listen(35729);
     gutil.log('LiveReload server started on port 35729');
     gulp.watch(config.buildDir + '/**/*', function (e) {
+      gutil.log('--reloading ' + path.relative(config.buildDir, e.path));
       lr.changed({ body: { files: [path.relative(config.buildDir, e.path)] } });
     });
 
@@ -24,8 +25,9 @@ module.exports = function (gulp, config) {
     gulp.watch('./gulp/html.js',        ['html']);
     gulp.watch(config.app.assets,       ['assets']);
     gulp.watch('./gulp/assets.js',      ['assets']);
-    gulp.watch(config.app.js,           ['js:app']);
+    gulp.watch('./src/**/*.js',         ['js:app']);
     gulp.watch('./gulp/jsapp.js',       ['js:app']);
+    gulp.watch('./package.json',        ['js:app']);
     gulp.watch(config.app.jade,         ['js:templates']);
     gulp.watch('./gulp/jstemplates.js', ['js:templates']);
     gulp.watch('./config/flags.*.json', ['js:flags']);

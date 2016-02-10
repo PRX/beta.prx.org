@@ -11,7 +11,7 @@ module.exports = function (gulp, config) {
   };
 
   return function () {
-    gulp.src(config.app.html)
+    return gulp.src(config.app.html)
       .pipe(template(context))
       .pipe(gulp.dest(config.buildDir));
   };

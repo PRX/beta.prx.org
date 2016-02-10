@@ -8,7 +8,7 @@
     "html":   [ "src/index.html" ],
     "stylus": [ "src/stylesheets/main.styl" ],
     "jade":   [ "src/**/*.html.jade" ],
-    "assets": [ "src/assets/**/*", "node_modules/soundmanager2/swf/soundmanager2.swf" ],
+    "assets": [ "src/assets/**/*" ],
     "server": "lib/server.js"
   },
   "test": {

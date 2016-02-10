@@ -9,7 +9,10 @@ var gutil      = require('gulp-util');
 module.exports = function (gulp, config) {
   var browserified = browserify({
     entries: config.app.js,
-    debug: true
+    fullPaths: true,
+    debug: true,
+    builtins: [/* don't need 'em */]
+    // transform: [ngannotate, shim] happen IMPLICITLY due to package.json
   });
 
   return function () {

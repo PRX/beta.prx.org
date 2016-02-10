@@ -8,6 +8,10 @@ var config = require( './config/build.json' );
 gulpTask('html',   []);
 gulpTask('assets', []);
 
+gulpTask('vendor:aurora', []);
+gulpTask('vendor:mp3',    []);
+gulpTask('vendor',        ['vendor:aurora', 'vendor:mp3']);
+
 gulpTask('js:hint',       []);
 gulpTask('js:app',        ['js:hint']);
 gulpTask('js:templates',  []);
@@ -18,8 +22,9 @@ gulp.task('js',           ['js:min']);
 gulpTask('css:app',    []);
 gulpTask('css:min',    ['css:app']);
 gulpTask('css:assets', ['css:min', 'assets']);
-gulp.task('css',       ['css:min']);
+gulp.task('css',       ['css:assets']);
 
+gulp.task('build', ['js', 'css', 'html', 'vendor']);
 gulpTask('watch', ['html', /*'assets',*/ 'js:app', 'js:templates', 'js:flags', 'css:app']);
 
 // require a task from the gulp sub-dir
