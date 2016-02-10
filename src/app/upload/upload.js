@@ -5,7 +5,7 @@ var app = angular.module('prx.upload', [
   require('angular-ui-router'),
   require('../../common/angular-dnd'),
   require('../../common/angular-evaporate'),
-  require('../../common/angular-uuid'),
+  require('angular-uuid').name || 'angular-uuid',
   require('./analyze-audio'),
   require('./filepicker/filepicker'),
   require('../dsp/dsp')
@@ -24,7 +24,7 @@ app.config(function (evaporateProvider) {
 .factory('URL', function ($window) {
   return $window.URL;
 })
-.service('Upload', function UploadService(evaporate, $uuid, MimeType, $q, $rootScope) {
+.service('Upload', function UploadService(evaporate, uuid, MimeType, $q, $rootScope) {
 
   var uploads = {};
 
