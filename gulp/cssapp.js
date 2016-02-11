@@ -4,6 +4,7 @@ var rework     = require('gulp-rework');
 var movemedia  = require('rework-move-media');
 var concat     = require('gulp-concat');
 var nib        = require('nib');
+var pleeease   = require('gulp-pleeease');
 
 /**
  * Compile stylus into browser-ready css
@@ -18,8 +19,8 @@ module.exports = function (gulp, config) {
         import: ['nib'],
         paths: ['src/app']
       }))
-      .pipe(rework(movemedia()))
       .pipe(concat('app.css'))
+      .pipe(pleeease({mqpacker: true}))
       .pipe(sourcemaps.write())
       .pipe(gulp.dest(config.buildDir + '/assets'));
   };
