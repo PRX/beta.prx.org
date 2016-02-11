@@ -4,9 +4,9 @@ var angular = require('angular');
 var app = angular.module('prx.stories.edit', [
   require('angular-ui-router'),
   require('../../../common/angular-superglobals'),
-  require('../../ui/nav/nav'),
+  require('../../ui/sheet/sheet'),
   require('../../upload/upload'),
-  // require('../stories'), TODO: circular dependency
+  // require('../stories'), TODO: 'prx.stories' circular dependency
   require('../../upload/filepicker/filepicker')
 ]);
 module.exports = app.name;
@@ -163,22 +163,22 @@ app.config(function ($stateProvider) {
     }
   });
 })
-.factory('prxImageFileFactory', function (prxSoundFactory, _$URL) {
+.factory('prxImageFileFactory', function (prxSoundFactory, URL) {
 
   function PrxImageFile(upload) {
     this.upload = upload;
-    this.url = _$URL.createObjectURL(upload.file);
+    this.url = URL.createObjectURL(upload.file);
   }
 
   return function (upload) {
     return new PrxImageFile(upload);
   };
 })
-.factory('prxAudioFileFactory', function (prxSoundFactory, _$URL) {
+.factory('prxAudioFileFactory', function (prxSoundFactory, URL) {
 
   function PrxAudioFile(upload) {
     this.upload = upload;
-    this.url = _$URL.createObjectURL(upload.file);
+    this.url = URL.createObjectURL(upload.file);
   }
 
   PrxAudioFile.prototype.getSound = function (account, story) {

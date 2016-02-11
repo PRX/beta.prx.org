@@ -18,7 +18,7 @@ article.series
           .description
             div(ng-bind-html="series.current.shortDescription")
             a.unbreakable(ui-sref=".details" ng-if="series.current.description") (View Full Description)
-  .content 
+  .content
     .main
       section.gallery.panels.stories
         header
@@ -26,11 +26,11 @@ article.series
           a(ui-sref=".allStories", ng-show="::series.stories.length > 3") View All &raquo;
         div
           section.story.blank(ng-if="::series.isEditable")
-            a(ui-sref="story.create({ series: series.current.link.url('self') })") ➕
+            a(ui-sref="story.edit.create({ series: series.current.link.url('self') })") ➕
           prx-story(ng-repeat="story in ::series.stories" story="::story")
-  .content      
+  .content
     .main
       section.details
         h3 About
         p(ng-bind-html="series.current.description")
-          
+

@@ -1,4 +1,4 @@
-var app = require('angular').module('prx.ui.tabs', [
+var app = require('angular').module('prx.ui.sheet', [
   require('angular-ui-router')
 ]);
 module.exports = app.name;
