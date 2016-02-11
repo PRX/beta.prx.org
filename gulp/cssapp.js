@@ -1,7 +1,5 @@
 var stylus     = require('gulp-stylus');
 var sourcemaps = require('gulp-sourcemaps');
-var rework     = require('gulp-rework');
-var movemedia  = require('rework-move-media');
 var concat     = require('gulp-concat');
 var nib        = require('nib');
 var pleeease   = require('gulp-pleeease');
