@@ -1,6 +1,10 @@
+var helper     = require('../../../common/spec-helper');
+var prxanalyze = require('../analyze-audio');
+var prxpicker  = require('./filepicker');
+
 describe('prx.upload.filepicker', function () {
-  beforeEach(module('prx.upload.filepicker'));
-  beforeEach(module('prx.analyze-audio'));
+
+  beforeEach(helper.module(prxpicker, prxanalyze));
 
   it('includes the filepicker service', inject(function (PRXFilePicker) {
     expect(PRXFilePicker).toBeDefined();
@@ -47,7 +51,7 @@ describe('prx.upload.filepicker', function () {
   describe('prxFilePickerOverlay directive', function () {
     var elem, $scope, filePickerService;
 
-    beforeEach(module(function ($provide) {
+    beforeEach(helper.module(function ($provide) {
       filePickerService = {};
       $provide.constant('PRXFilePicker', filePickerService);
     }));

@@ -1,10 +1,14 @@
-if (FEAT.TCF_DEMO) {
+var helper     = require('../../common/spec-helper');
+var prxanalyze = require('./analyze-audio');
+
 describe('prx.analyze-audio', function () {
+
+  beforeEach(helper.setflag('TCF_DEMO', true));
 
   describe('MimeType', function() {
     var MimeType;
 
-    beforeEach(module('prx.analyze-audio'));
+    beforeEach(helper.module(prxanalyze));
 
     beforeEach(inject(function (_MimeType_) {
       MimeType = _MimeType_;
@@ -39,7 +43,7 @@ describe('prx.analyze-audio', function () {
   describe('AnalyzeAudio', function() {
     var AnalyzeAudio, $q, $rs, mv, pr, MockAuroraService, MockId3Service;
 
-    beforeEach(module('angular-aurora', function ($provide) {
+    beforeEach(helper.module('angular-aurora', function ($provide) {
       mv = {};
       MockAuroraService = {};
       MockAuroraService.mock     = function (md, val) { mv[md] = val;    return MockAuroraService; };
@@ -50,14 +54,14 @@ describe('prx.analyze-audio', function () {
       $provide.value('AuroraService', MockAuroraService);
     }));
 
-    beforeEach(module('angular-id3', function ($provide) {
+    beforeEach(helper.module('angular-id3', function ($provide) {
       MockId3Service = {};
       MockId3Service.analyze     = function(file) { return MockId3Service; };
       MockId3Service.then        = function(f) { return f({album: 'mister bar'}); };
       $provide.value('Id3Service', MockId3Service);
     }));
 
-    beforeEach(module('prx.analyze-audio'));
+    beforeEach(helper.module(prxanalyze));
 
     beforeEach(inject(function (_AnalyzeAudio_, _$rootScope_) {
       AnalyzeAudio = _AnalyzeAudio_;
@@ -90,7 +94,7 @@ describe('prx.analyze-audio', function () {
   describe('ValidateAudio', function () {
     var _fn, _file;
 
-    beforeEach(module('prx.analyze-audio', function ($provide) {
+    beforeEach(helper.module(prxanalyze, function ($provide) {
       MockAnalyzeAudio = {};
       MockAnalyzeAudio.mock     = function(fun)  { _fn = fun; return MockAnalyzeAudio; };
       MockAnalyzeAudio.analyze  = function(file) { _file = file; _fn(_file); return MockAnalyzeAudio; };
@@ -116,5 +120,3 @@ describe('prx.analyze-audio', function () {
 
 
 });
-
-} // FEAT.TCF_DEMO

@@ -1,7 +1,10 @@
+var helper = require('../common/spec-helper');
+var prxapp = require('./app');
+
 describe('templates', function () {
   var $scope, $compile;
   beforeEach(function () {
-    angular.module('prx').directive('transcludeabilibuddy', function () {
+    angular.module(prxapp).directive('transcludeabilibuddy', function () {
       return {
         restrict: 'E',
         transclude: true
@@ -10,7 +13,7 @@ describe('templates', function () {
   });
 
 
-  beforeEach(module('prx', 'templates', function ($provide, $stateProvider) {
+  beforeEach(helper.module(prxapp, 'templates', function ($provide, $stateProvider) {
     $stateProvider.state('fakeState', {});
 
     $provide.decorator('$templateCache', function ($delegate) {

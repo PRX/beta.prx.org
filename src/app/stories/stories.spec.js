@@ -1,5 +1,10 @@
+var helper     = require('../../common/spec-helper');
+var halmock    = require('../../common/angular-hal-mock');
+var prxstories = require('./stories');
+
 describe('prx.stories', function () {
-  beforeEach(module('prx.stories', 'angular-hal-mock'));
+
+  beforeEach(helper.module(prxstories, halmock));
 
   describe ('Story mixin', function () {
     var  ngHal, mock;
@@ -130,7 +135,7 @@ describe('prx.stories', function () {
 
   describe('prxSocialActions directive', function () {
     var elem;
-    beforeEach(module('templates'));
+    beforeEach(helper.module('templates'));
 
     beforeEach(inject(function ($compile, $rootScope) {
       elem = $compile('<prx-social-actions text="sigil"></prx-social-actions>')($rootScope);

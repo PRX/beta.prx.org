@@ -1,14 +1,19 @@
+var helper  = require('../../common/spec-helper');
+var halmock = require('../../common/angular-hal-mock');
+var prxhome = require('./home');
+
 describe('prx.home', function () {
 
-  beforeEach(module('prx.home', 'angular-hal-mock'));
+  beforeEach(helper.module(prxhome, halmock));
 
-  if (!FEAT.HOME_PAGE) {
+  describe ('FEAT.HOME_PAGE', function() {
+    beforeEach(helper.setflag('HOME_PAGE', false));
     it ('redirects from home to home.nxt', inject(function ($rootScope, $state) {
       spyOn($state, 'go');
       $rootScope.$broadcast('$stateChangeStart', {name: 'home'});
       expect($state.go).toHaveBeenCalled();
     }));
-  }
+  });
 
   describe ('HomeCtrl', function () {
     it ('attaches the picks injected to $scope', inject(function ($controller) {

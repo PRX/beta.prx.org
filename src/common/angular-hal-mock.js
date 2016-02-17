@@ -3,7 +3,7 @@ var angular = require('angular');
 // mocking HAL responses
 var app = angular.module('angular-hal-mock', [
   require('./angular-hal'),
-  require('./angular-mocks'),
+  require('angular-mocks/ngMock')
 ]);
 module.exports = app.name;
 

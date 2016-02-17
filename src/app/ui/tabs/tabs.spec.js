@@ -1,6 +1,10 @@
-describe('tabs', function () {
+var helper  = require('../../../common/spec-helper');
+var prxtabs = require('./tabs');
+
+describe('prx.ui.tabs', function () {
+
   var $compile, $scope;
-  beforeEach(module('prx.ui.tabs', function ($stateProvider) {
+  beforeEach(helper.module(prxtabs, function ($stateProvider) {
     $stateProvider.state('root', {
       url: '/?key'
     }).state('noreloadonsearch', {

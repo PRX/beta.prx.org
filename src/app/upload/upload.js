@@ -40,7 +40,7 @@ app.config(function (evaporateProvider) {
     var u = this;
     u.file = file;
 
-    u.guid = $uuid.v4();
+    u.guid = uuid.v4();
     u.name = safeName(u.file.name);
     u.path = uploadKey(u.guid, u.name);
     u.type = MimeType.lookup(file).full();

@@ -1,32 +1,36 @@
-describe('donations', function () {
-  beforeEach(module('prx.donations', 'angular-hal-mock', 'prx.bus'));
+var helper       = require('../../common/spec-helper');
+var halmock      = require('../../common/angular-hal-mock');
+var prxbus       = require('../../common/bus');
+var prxdonations = require('./donations');
 
-  describe('prxDonate URL service', function () {
-    beforeEach(inject(function ($compile, $rootScope, ngHal, _prxDonateURL_) {
-      prxDonateURL = _prxDonateURL_;
-      radiotopiaAaccount = ngHal.mock('http://meta.prx.org/model/account', {id: 45139});
-      miscAccount = ngHal.mock('http://meta.prx.org/model/account', {id: 0});
+describe('prx.donations', function () {
+
+  beforeEach(helper.module(prxdonations, halmock, prxbus));
+
+  describe('prxDonateURL service', function () {
+
+    it('returns a URL for Radiotopia accounts', inject(function (ngHal, prxDonateURL) {
+      var acct = ngHal.mock('http://meta.prx.org/model/account', {id: 45139});
+      expect(prxDonateURL.forAccount(acct)).toMatch(/^http:/);
     }));
 
-    it('returns a URL for Radiotopia accounts', function () {
-      expect(prxDonateURL.forAccount(radiotopiaAaccount)).toMatch(/^http:/);
-    });
+    it('not returns a URL for non Radiotopia accounts', inject(function (ngHal, prxDonateURL) {
+      var acct = ngHal.mock('http://meta.prx.org/model/account', {id: 0});
+      expect(prxDonateURL.forAccount(acct)).toBeUndefined();
+    }));
 
-    it('not returns a URL for non Radiotopia accounts', function () {
-      expect(prxDonateURL.forAccount(miscAccount)).toBeUndefined();
-    });
   });
 
   describe('prxDonate directive', function () {
-    var $analytics;
 
-    beforeEach(module(function ($provide) {
+    beforeEach(helper.module(function ($provide) {
       $provide.decorator('$analytics', function ($delegate) {
         spyOn($delegate, 'eventTrack');
         return $delegate;
       });
     }));
 
+    var $analytics, prxDonateURL;
     beforeEach(inject(function (_$analytics_, _prxDonateURL_) {
       $analytics = _$analytics_;
       prxDonateURL = _prxDonateURL_;
@@ -51,6 +55,7 @@ describe('donations', function () {
       return matched;
     }
 
+    var scope, elem, span, elem2, emptySpan, elem3, button, busProxy;
     beforeEach(inject(function ($compile, $rootScope, ngHal, Bus) {
       scope = $rootScope.$new();
 
@@ -89,18 +94,17 @@ describe('donations', function () {
     it('binds to clicks when in the DOM', function () {
       spyOn(busProxy, 'click');
       button.triggerHandler('click');
-
       expect(busProxy.click).toHaveBeenCalled();
     });
 
     it('tracks an event when clicked', function () {
       button.triggerHandler('click');
-
       account = scope.radiotopiaAaccount;
       url = prxDonateURL.forAccount(account);
       label = 'Account-' + account.id.toString() + '-' + url;
-
       expect(eventTracked('Donate', {label: label})).toBe(true);
     });
+
   });
+
 });

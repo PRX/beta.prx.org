@@ -1,5 +1,11 @@
+var helper  = require('../../../common/spec-helper');
+var halmock = require('../../../common/angular-hal-mock');
+var prxplayer = require('../../player/player');
+var prxedit   = require('./edit');
+
 describe('prx.stories.edit', function () {
-  beforeEach(module('prx.stories.edit', 'angular-hal-mock'));
+
+  beforeEach(helper.module(prxedit, halmock, prxplayer));
 
   describe ('story create state', function () {
     var state, $injector, ngHal, prxPlayer, prxSoundFactory;

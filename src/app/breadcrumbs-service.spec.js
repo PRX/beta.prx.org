@@ -1,7 +1,10 @@
+var helper = require('../common/spec-helper');
+var prxbread = require('./breadcrumbs-service');
+
 describe('breadcrumb service', function () {
   var stateCrumbs, $state, $rootScope, $timeout;
 
-  beforeEach(module('prx.breadcrumbs', function ($stateProvider) {
+  beforeEach(helper.module(prxbread, function ($stateProvider) {
     $stateProvider.state('base', {
       url: '/base',
       title: 'base'

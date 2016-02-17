@@ -1,5 +1,9 @@
+var helper   = require('../../../common/spec-helper');
+var prxsheet = require('./sheet');
+
 describe('prx.ui.sheet', function () {
-  beforeEach(module('prx.ui.sheet'));
+
+  beforeEach(helper.module(prxsheet));
 
   describe('PrxSheet service', function () {
     var $rootScope;

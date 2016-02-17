@@ -1,8 +1,11 @@
-if (FEAT.TCF_DEMO) {
+var helper    = require('../../common/spec-helper');
+var prxupload = require('./upload');
+
 describe('prx.upload', function () {
 
+  beforeEach(helper.setflag('TCF_DEMO', true));
 
-  beforeEach(module('async-loader', function ($provide) {
+  beforeEach(helper.module('async-loader', function ($provide) {
     mf = [];
     MockAsyncLoader = {};
     MockAsyncLoader._a_mock     = true;
@@ -11,7 +14,7 @@ describe('prx.upload', function () {
     $provide.value('AsyncLoader', MockAsyncLoader);
   }));
 
-  beforeEach(module('angular-evaporate', function (evaporateProvider, $provide) {
+  beforeEach(helper.module('angular-evaporate', function (evaporateProvider, $provide) {
 
     evaporateProvider.awsKey('AKIRAISAGREATMOVIE');
 
@@ -36,7 +39,7 @@ describe('prx.upload', function () {
 
   }));
 
-  beforeEach(module('prx.upload'));
+  beforeEach(helper.module(prxupload));
 
   describe ('Upload', function () {
     var uploadSvc;
@@ -103,4 +106,3 @@ describe('prx.upload', function () {
   });
 
 });
-}

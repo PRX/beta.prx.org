@@ -1,6 +1,9 @@
-describe('prx.ui.nav', function () {
-  beforeEach(module('templates', 'prx.ui.nav'));
+var helper = require('../../../common/spec-helper');
+var prxnav = require('./nav');
 
+describe('prx.ui.nav', function () {
+
+  beforeEach(helper.module('templates', prxnav));
 
   describe('DrawerItemCtrl', function () {
     var ctrl;
@@ -50,7 +53,7 @@ describe('prx.ui.nav', function () {
     describe ('provider', function () {
       var drawerProvider;
       var PRXDrawer;
-      beforeEach(module(function (PRXDrawerProvider) {
+      beforeEach(helper.module(function (PRXDrawerProvider) {
         drawerProvider = PRXDrawerProvider;
       }));
 

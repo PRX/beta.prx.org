@@ -1,5 +1,9 @@
+var helper    = require('../../common/spec-helper');
+var prxerrors = require('./errors');
+
 describe('prx.errors', function () {
-  beforeEach(module('prx.errors'));
+
+  beforeEach(helper.module(prxerrors));
 
   describe('directive', function () {
     it ('compiles', inject(function ($compile) {
