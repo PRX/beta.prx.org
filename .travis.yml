@@ -1,14 +1,11 @@
 language: node_js
 node_js:
-- '0.10'
-before_install:
-- npm install -g npm@2.1.4
+- '5.1.1'
 before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 cache:
   directories:
-  - vendor
   - node_modules
 notifications:
   slack:
