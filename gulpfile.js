@@ -35,3 +35,15 @@ function gulpTask(name, deps) {
   var loc = './gulp/' + name.replace(':', '');
   gulp.task(name, deps || [], require(loc)(gulp, config));
 }
+
+// global error handler
+gulp.on('err', function (e) {
+  if (!this.tasks['watch'].running) {
+    process.exit(1);
+  }
+  else {
+    gutil.log(gutil.colors.red('Error in build. Continuing execution for `watch` task.'));
+    console.log('');
+    gutil.beep();
+  }
+});

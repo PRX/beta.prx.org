@@ -68,21 +68,6 @@ describe('prx', function () {
     });
   });
 
-  describe ('route mixin', function () {
-    it('sets a correct stateName and stateParams by default', inject(function (ngHal) {
-      var anything = ngHal.mock('http://meta.prx.org/model/anything', {id: 'asdf'});
-      var something = ngHal.mock('http://meta.prx.org/model/something/different');
-
-      expect(anything.stateName).toEqual('anything.show');
-      expect(something.stateName).toEqual('something.show');
-
-      var params = anything.stateParams();
-
-      expect(params).toEqual({anythingId: 'asdf'});
-      expect(anything.stateParams()).toBe(params);
-    }));
-  });
-
   describe ('timeAgo filter', function () {
     var timeAgo;
 
@@ -122,4 +107,5 @@ describe('prx', function () {
       });
     });
   });
+
 });

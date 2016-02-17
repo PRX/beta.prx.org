@@ -6,7 +6,7 @@ var app = angular.module('prx.stories.edit', [
   require('../../../common/angular-superglobals'),
   require('../../ui/sheet/sheet'),
   require('../../upload/upload'),
-  // require('../stories'), TODO: 'prx.stories' circular dependency
+  'prx.stories', // require('../stories'), TODO: circular dependency
   require('../../upload/filepicker/filepicker')
 ]);
 module.exports = app.name;

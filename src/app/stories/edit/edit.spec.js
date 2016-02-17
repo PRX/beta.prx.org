@@ -1,11 +1,14 @@
-var helper  = require('../../../common/spec-helper');
-var halmock = require('../../../common/angular-hal-mock');
-var prxplayer = require('../../player/player');
-var prxedit   = require('./edit');
+var helper     = require('../../../common/spec-helper');
+var halmock    = require('../../../common/angular-hal-mock');
+var prxplayer  = require('../../player/player');
+var prxedit    = require('./edit');
+
+// also need stories, due to a circular require in edit.js
+var prxstories = require('../stories');
 
 describe('prx.stories.edit', function () {
 
-  beforeEach(helper.module(prxedit, halmock, prxplayer));
+  beforeEach(helper.module(prxedit, halmock, prxplayer, prxstories));
 
   describe ('story create state', function () {
     var state, $injector, ngHal, prxPlayer, prxSoundFactory;
