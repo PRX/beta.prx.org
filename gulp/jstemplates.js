@@ -1,3 +1,4 @@
+var newer         = require('gulp-newer');
 var jade          = require('gulp-jade');
 var rename        = require('gulp-rename');
 var templateCache = require('gulp-angular-templatecache');
@@ -15,6 +16,7 @@ module.exports = function (gulp, config) {
 
   return function () {
     return gulp.src(config.app.jade)
+      .pipe(newer(config.buildDir + '/assets/templates.js'))
       .pipe(rename(normalizeTemplateName))
       .pipe(jade())
       .pipe(templateCache('templates.js', {standalone: true}))

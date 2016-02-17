@@ -1,3 +1,4 @@
+var newer    = require('gulp-newer');
 var imagemin = require('gulp-imagemin');
 var pngcrush = require('imagemin-pngcrush');
 var pngquant = require('imagemin-pngquant');
@@ -16,6 +17,7 @@ module.exports = function (gulp, config) {
 
   return function () {
     return gulp.src(config.app.assets)
+      .pipe(newer(config.buildDir + '/assets'))
       .pipe(minifier)
       .pipe(gulp.dest(config.buildDir + '/assets'));
   };
