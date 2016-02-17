@@ -1,7 +1,10 @@
+var helper   = require('./spec-helper');
+var prxcount = require('./angulartics-prx-count');
+
 describe ('angulartics prx count', function () {
   var $analytics, args;
 
-  beforeEach(module('angulartics.prx.count'));
+  beforeEach(helper.module(prxcount));
   beforeEach(inject(function (_$analytics_) {
     spyOn(TheCount, 'logAction');
     $analytics = _$analytics_;

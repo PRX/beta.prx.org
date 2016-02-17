@@ -1,8 +1,12 @@
+var helper   = require('./spec-helper');
+var playhate = require('./angular-player-hater');
+var soundman = require('./sound-manager-mock');
+
 describe('soundManager', function () {
   'use strict';
   var soundManager, onready, windowSm, $scope;
 
-  beforeEach(module('ngPlayerHater', 'soundManagerMock',
+  beforeEach(helper.module(playhate, soundman,
     function (soundManagerProvider, $provide) {
       onready = jasmine.createSpy('onready');
       soundManagerProvider.options.onready = onready;

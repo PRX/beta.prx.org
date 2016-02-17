@@ -5,7 +5,7 @@ var scriptjs = require('scriptjs');
 var app = angular.module('async-loader', []);
 module.exports = app.name;
 
-app.factory('$scriptjs', function ($window) {
+app.factory('$scriptjs', function () {
   return scriptjs;
 })
 .service('AsyncLoader', function ($scriptjs, $rootScope, $q) {

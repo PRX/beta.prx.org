@@ -1,9 +1,12 @@
+var helper = require('./spec-helper');
+var aurora = require('./angular-aurora');
+
 describe('angular-aurora', function () {
 
   describe ('AuroraService', function() {
     var AuroraService, $rootScope;
 
-    beforeEach(module('async-loader', function ($provide) {
+    beforeEach(helper.module('async-loader', function ($provide) {
       mf = [];
       MockAsyncLoader = {};
       MockAsyncLoader._a_mock     = true;
@@ -13,7 +16,7 @@ describe('angular-aurora', function () {
     }));
 
     beforeEach(function() {
-      module('angular-aurora', function ($provide) {
+      helper.module(aurora, function ($provide) {
 
         $provide.decorator('$window', ['$delegate', function($delegate) {
           var MockAsset = function (file) { this.file = file; };

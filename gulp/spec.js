@@ -4,9 +4,9 @@ var karma = require('karma');
  * Run specs
  */
 module.exports = function (gulp, config) {
+  var files = ['src/**/*.spec.js'];
 
   // optional "--file" globs
-  var files = ['src/app/**/*.spec.js'];
   if (process.argv.indexOf('--file') > -1) {
     files = [];
     for (var i = 0; i < process.argv.length; i++) {
@@ -37,7 +37,7 @@ module.exports = function (gulp, config) {
       files: files,
       exclude: [ '**/*.e2e.spec.js' ],
       preprocessors: preprocessors,
-      browserify: { debug: true, builtins: [/* don't need 'em */] },
+      browserify: { fullpaths: true, debug: true, builtins: [/* don't need 'em */] },
       reporters: ['dots']
     }, done).start();
   };
