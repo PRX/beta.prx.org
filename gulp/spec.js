@@ -4,7 +4,7 @@ var gutil = require('gulp-util');
 /**
  * Run specs
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
   var files = ['src/**/*.spec.js'];
 
   // optional "--file" globs

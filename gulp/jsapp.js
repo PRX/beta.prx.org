@@ -6,9 +6,9 @@ var gutil      = require('gulp-util');
 /**
  * Build the browser-ready application js
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
   var browserified = browserify({
-    entries: config.app.js,
+    entries: 'src/app/index.js',
     fullPaths: true,
     debug: true,
     builtins: [/* don't need 'em */]
@@ -20,7 +20,7 @@ module.exports = function (gulp, config) {
       .pipe(vsource('app.js'))
       .pipe(vbuffer())
       .on('error', gutil.log)
-      .pipe(gulp.dest(config.buildDir + '/assets'));
+      .pipe(gulp.dest('build/assets'));
   };
 
 };

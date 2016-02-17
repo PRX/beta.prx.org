@@ -4,7 +4,7 @@ var gutil = require('gulp-util');
 /**
  * Browserify mp3.js
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
 
   return function () {
     try {

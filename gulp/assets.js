@@ -6,7 +6,7 @@ var pngquant = require('imagemin-pngquant');
 /**
  * Compress and copy assets
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
   var minifier = imagemin({
     progressive: true,
     use: [
@@ -16,10 +16,10 @@ module.exports = function (gulp, config) {
   });
 
   return function () {
-    return gulp.src(config.app.assets)
-      .pipe(newer(config.buildDir + '/assets'))
+    return gulp.src('src/assets/**/*')
+      .pipe(newer('build/assets'))
       .pipe(minifier)
-      .pipe(gulp.dest(config.buildDir + '/assets'));
+      .pipe(gulp.dest('build/assets'));
   };
 
 };

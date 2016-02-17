@@ -1,6 +1,5 @@
-var gulp   = require('gulp');
-var gutil  = require('gulp-util');
-var config = require( './config/build.json' );
+var gulp  = require('gulp');
+var gutil = require('gulp-util');
 
 /**
  * Ye olde tasks (name - deps - args)
@@ -33,7 +32,7 @@ gulpTask('spec', ['js:templates']);
 // require a task from the gulp sub-dir
 function gulpTask(name, deps) {
   var loc = './gulp/' + name.replace(':', '');
-  gulp.task(name, deps || [], require(loc)(gulp, config));
+  gulp.task(name, deps || [], require(loc)(gulp));
 }
 
 // global error handler

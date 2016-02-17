@@ -3,7 +3,7 @@ var template = require('gulp-template');
 /**
  * Compile index html
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
   var context = {
     styles:  ['assets/app.css'],
     scripts: ['assets/flags.js', 'assets/app.js', 'assets/templates.js'],
@@ -11,9 +11,9 @@ module.exports = function (gulp, config) {
   };
 
   return function () {
-    return gulp.src(config.app.html)
+    return gulp.src('src/index.html')
       .pipe(template(context))
-      .pipe(gulp.dest(config.buildDir));
+      .pipe(gulp.dest('build'));
   };
 
 };

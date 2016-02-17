@@ -5,15 +5,15 @@ var sourcemaps = require('gulp-sourcemaps');
 /**
  * Compress css files
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
 
   return function () {
-    return gulp.src(config.buildDir + '/assets/app.css')
+    return gulp.src('build/assets/app.css')
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(csso())
       .pipe(rename('app.css.min'))
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest(config.buildDir + '/assets'));
+      .pipe(gulp.dest('build/assets'));
   };
 
 };

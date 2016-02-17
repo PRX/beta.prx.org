@@ -5,7 +5,7 @@ var Readable   = require('stream').Readable;
 /**
  * Bundle the flags into window.globals
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
   var flags;
   switch (process.env.NODE_ENV) {
     case 'production':
@@ -14,6 +14,8 @@ module.exports = function (gulp, config) {
       break;
     case 'staging':
       flags = require('../config/flags.staging.json');
+    case 'test':
+      flags = require('../config/flags.test.json');
     default:
       flags = require('../config/flags.dev.json');
       break;
@@ -34,7 +36,7 @@ module.exports = function (gulp, config) {
   return function () {
     return flagStream
       .pipe(vsource('flags.js'))
-      .pipe(gulp.dest(config.buildDir + '/assets'));
+      .pipe(gulp.dest('build/assets'));
   };
 
 };

@@ -3,7 +3,7 @@ var expect = require('gulp-expect-file');
 /**
  * Copy non-bundled vendor files to the build directory
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
 
   var files = [
     "node_modules/av/build/aurora.js",
@@ -16,7 +16,7 @@ module.exports = function (gulp, config) {
   return function () {
     return gulp.src(files)
       .pipe(expect({errorOnFailure: true}, files))
-      .pipe(gulp.dest(config.buildDir + '/vendor'));
+      .pipe(gulp.dest('build/vendor'));
   };
 
 };

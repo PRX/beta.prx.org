@@ -4,7 +4,7 @@ var gutil = require('gulp-util');
 /**
  * Browserify aurora.js
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
 
   return function () {
     try {

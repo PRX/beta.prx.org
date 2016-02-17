@@ -7,10 +7,10 @@ var pleeease   = require('gulp-pleeease');
 /**
  * Compile stylus into browser-ready css
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
 
   return function () {
-    return gulp.src(config.app.stylus)
+    return gulp.src('src/stylesheets/main.styl')
       .pipe(sourcemaps.init())
       .pipe(stylus({
         use: [nib()],
@@ -20,7 +20,7 @@ module.exports = function (gulp, config) {
       .pipe(concat('app.css'))
       .pipe(pleeease({mqpacker: true}))
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest(config.buildDir + '/assets'));
+      .pipe(gulp.dest('build/assets'));
   };
 
 };

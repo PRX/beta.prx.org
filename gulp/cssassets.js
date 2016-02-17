@@ -5,7 +5,7 @@ var gutil  = require('gulp-util');
 /**
  * Base64-encode assets into the minified css
  */
-module.exports = function (gulp, config) {
+module.exports = function (gulp) {
 
   return function () {
     var oldconsole = {
@@ -25,15 +25,15 @@ module.exports = function (gulp, config) {
       gutil.log(gutil.colors.underline('WARN: ' + msg));
     }
 
-    return gulp.src(config.buildDir + '/assets/app.css.min')
-      .pipe(base64({ baseDir: config.buildDir, debug: true }))
+    return gulp.src('build/assets/app.css.min')
+      .pipe(base64({ baseDir: 'build', debug: true }))
       .on('end', function() {
         console.log = oldconsole.log;
         console.info = oldconsole.info;
         console.warn = oldconsole.warn;
       })
       .pipe(rename('app.css.min.assets'))
-      .pipe(gulp.dest(config.buildDir + '/assets'));
+      .pipe(gulp.dest('build/assets'));
   };
 
 };
