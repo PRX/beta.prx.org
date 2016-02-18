@@ -23,7 +23,6 @@ module.exports = function (gulp) {
     function replaceFeats(file, enc, next) {
       var oldStr = String(file.contents);
       var newStr = oldStr.replace(flagExp, function (s, b, feat) {
-        console.log('match', s, b, feat);
         if (typeof flags[feat] !== 'undefined') {
           return b + JSON.stringify(flags[feat]);
         }

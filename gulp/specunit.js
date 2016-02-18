@@ -2,7 +2,7 @@ var karma = require('karma');
 var gutil = require('gulp-util');
 
 /**
- * Run specs
+ * Run jasmine specs via karma
  */
 module.exports = function (gulp) {
   var files = ['src/**/*.spec.js'];

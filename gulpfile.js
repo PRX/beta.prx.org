@@ -27,7 +27,9 @@ gulp.task('css',       ['css:assets']);
 gulp.task('build',     ['js', 'css', 'html', 'vendor']);
 gulpTask('watch',      ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
 
-gulpTask('spec', ['js:templates']);
+gulpTask('spec:unit',  ['js:templates']);
+gulpTask('spec:e2e',   ['build']);
+gulp.task('spec',      ['spec:unit', 'spec:e2e']);
 
 // require a task from the gulp sub-dir
 function gulpTask(name, deps) {
