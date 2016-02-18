@@ -34,6 +34,7 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
     link: function (scope, elem, attrs) {
       scope.menu = XiContextMenu;
       scope.$watch('menu.show', function (show) {
+        console.log('$watch.nav.menushow');
         if (show) {
           $animate.addClass(elem, 'visible');
         } else {
@@ -197,7 +198,7 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
     }
   };
 })
-.factory('quickDebounce', function ($timeout) {
+.factory('quickDebounce', function () {
   return quickDebounce;
 
   function quickDebounce(fn, duration) {
@@ -213,13 +214,13 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
     function debouncedVersion () {
       if (!timeout) {
         var it = trigger(this, arguments);
-        timeout = $timeout(function () {
+        timeout = setTimeout(function () {
           it();
-          timeout = $timeout(function () { timeout = 0; }, duration - 1);
+          timeout = setTimeout(function () { timeout = 0; }, duration - 1);
         }, 1);
       } else {
-        $timeout.cancel(timeout);
-        timeout = $timeout(trigger(this, arguments), duration);
+        clearTimeout(timeout);
+        timeout = setTimeout(trigger(this, arguments), duration);
       }
     }
 
@@ -230,7 +231,7 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
     return debouncedVersion;
   }
 })
-.directive('prxNavButtons', function ($window, quickDebounce, $timeout) {
+.directive('prxNavButtons', function ($window, quickDebounce) {
   return {
     restrict: 'E',
     templateUrl: 'ui/nav/nav_buttons.html',
@@ -249,7 +250,7 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
 
       scope.$watch(debouncedCheckWidth);
 
-      $timeout(checkWidth, 200);
+      setTimeout(checkWidth, 200);
 
       function checkWidth() {
         var isOverflowing = overflowing(elem);
@@ -288,7 +289,7 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
         }
 
         if (calculating) {
-          $timeout(checkWidth, 1);
+          setTimeout(checkWidth, 1);
         }
       }
 

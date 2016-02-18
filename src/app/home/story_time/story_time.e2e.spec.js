@@ -1,4 +1,7 @@
+var helper = require('../../../common/spec-e2e-helper');
+
 describe ('story time', function () {
+
   beforeEach(function () {
     browser.addMockModule('fakeMailchimp', function () {
       angular.module('fakeMailchimp', ['ngAnimate'])
@@ -31,6 +34,7 @@ describe ('story time', function () {
     var button = $('form[name=subscribe] button[type=submit]');
     element(by.model('storyTime.email')).sendKeys('fail@example.com');
     button.click();
-    expect($('.modal').getText()).toMatch(/no/);
+    expect($('.modal:not(.error)').getText()).toMatch(/no/);
   });
+
 });
