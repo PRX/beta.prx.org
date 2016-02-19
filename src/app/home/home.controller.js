@@ -4,10 +4,12 @@
     .module('prx.home')
     .controller('HomeCtrl', HomeCtrl);
 
-  HomeCtrl.$inject = ['picks', '$scope'];
+  HomeCtrl.$inject = ['pickList', 'picks', '$scope', '$filter'];
 
-  function HomeCtrl(picks, $scope) {
-    this.picks = picks;
+  function HomeCtrl(pickList, picks, $scope, $filter) {
+    var ctrl = this;
+
+    ctrl.picks = picks;
     $scope.$on('$play', function (event, params) {
       if (!angular.isDefined(params.next)) {
         params.next = mkNext;
@@ -28,6 +30,37 @@
         });
       }
     }
+
+    ctrl.hasMore = false;
+    function setHasMore() {
+      ctrl.hasMore = pickList &&
+        angular.isFunction(pickList.link) &&
+        angular.isDefined(pickList.link('next'));
+    }
+    setHasMore();
+
+    ctrl.loadingMore = false;
+    ctrl.loadMore = function () {
+      if (ctrl.loadingMore) {
+        return false; // debounce
+      }
+      else {
+        ctrl.loadingMore = true;
+        pickList.follow('next').then(function (nextList) {
+          pickList = nextList;
+          return nextList.follow('prx:items')
+            .then(function (picks) {
+              return $filter('groupStandalonePicks')(picks);
+            })
+            .then(function (groupedItems) {
+              Array.prototype.push.apply(ctrl.picks, groupedItems);
+            });
+        })['finally'](function () {
+          setHasMore();
+          ctrl.loadingMore = false;
+        });
+      }
+    };
   }
 
 }());
