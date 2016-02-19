@@ -1,18 +1,13 @@
-var protractor = require('gulp-protractor').protractor;
-var webdriver  = require('gulp-protractor').webdriver_update;
+var protractor    = require('gulp-protractor').protractor;
+var webdriver     = require('gulp-protractor').webdriver_update;
+var gutil         = require('gulp-util');
+var config        = require('../config/protractor.conf').config;
 
 /**
  * Run e2e specs via protractor
  */
 module.exports = function (gulp) {
-  var port  = process.env.PORT || 8080;
   var files = ['src/**/*.e2e.spec.js'];
-  var args  = [
-    '--capabilities.browserName=chrome',
-    '--baseUrl=http://localhost:' + port,
-    '--jasmineNodeOpts.showColors=true',
-    '--jasmineNodeOpts.defaultTimeoutInterval=5000'
-  ];
 
   // optional "--file" globs
   if (process.argv.indexOf('--file') > -1) {
@@ -24,31 +19,29 @@ module.exports = function (gulp) {
     }
   }
 
-  // ensure webdriver is around
-  function installWebDriver (cb) {
-    process.env['TRAVIS'] ? cb() : webdriver(cb);
+  // run locally (webdriver) or remotely (sauce labs)
+  function startServer (callback) {
+    if (config.sauceUser) {
+      gutil.log(gutil.colors.green('Running remotely via sauce labs...'));
+      callback(null, require('../lib/server').listen(config.port, 'build'));
+    }
+    else {
+      gutil.log(gutil.colors.green('Running locally via chromedriver...'));
+      webdriver(function(err) {
+        callback(err, require('../lib/server').listen(config.port, 'build'));
+      });
+    }
   }
 
-  // test server
-  var server;
-  function startServer () {
-    if (server) server.close();
-    server = require('../lib/server').listen(port, 'build');
-  }
-  function stopServer () {
-    if (server) { server.close(); server = null; }
-  }
-
-  return function (cb) {
-    installWebDriver(function(err) {
+  return function (done) {
+    startServer(function(err, server) {
       if (err) {
-        cb(err);
+        done(err);
       }
       else {
-        startServer();
         gulp.src(files)
-          .pipe(protractor({ args: args }))
-          .on('end', function () { stopServer(); cb(); });
+          .pipe(protractor({ configFile: 'config/protractor.conf' }))
+          .on('end', function () { server.close(); done(); });
       }
     });
   };

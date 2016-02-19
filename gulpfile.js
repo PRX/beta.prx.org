@@ -1,5 +1,6 @@
 var gulp  = require('gulp');
 var gutil = require('gulp-util');
+var gseq  = require('gulp-sequence');
 
 /**
  * Ye olde tasks (name - deps - args)
@@ -29,7 +30,7 @@ gulpTask('watch',      ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
 
 gulpTask('spec:unit',  ['js:templates']);
 gulpTask('spec:e2e',   ['build']);
-gulp.task('spec',      ['spec:unit', 'spec:e2e']);
+gulp.task('spec',      gseq('spec:unit', 'spec:e2e'));
 
 // require a task from the gulp sub-dir
 function gulpTask(name, deps) {
