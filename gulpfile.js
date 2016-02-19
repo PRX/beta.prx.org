@@ -13,11 +13,11 @@ gulpTask('vendor:mp3',    []);
 gulpTask('vendor',        ['vendor:aurora', 'vendor:mp3']);
 
 gulpTask('js:hint',       []);
-gulpTask('js:app',        ['js:hint']);
+gulpTask('js:app',        []);
 gulpTask('js:templates',  []);
 gulpTask('js:flags',      []);
-gulpTask('js:min',        ['js:app', 'js:templates', 'js:flags']);
-gulp.task('js:dev',       ['js:app', 'js:templates', 'js:flags']);
+gulpTask('js:min',        ['js:hint', 'js:app', 'js:templates', 'js:flags']);
+gulp.task('js:dev',       ['js:hint', 'js:app', 'js:templates', 'js:flags']);
 gulp.task('js',           ['js:min']);
 
 gulpTask('css:app',    []);

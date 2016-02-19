@@ -3,6 +3,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var concat     = require('gulp-concat');
 var nib        = require('nib');
 var pleeease   = require('gulp-pleeease');
+var newer      = require('gulp-newer');
+var through    = require('through2');
 
 /**
  * Compile stylus into browser-ready css
@@ -10,7 +12,18 @@ var pleeease   = require('gulp-pleeease');
 module.exports = function (gulp) {
 
   return function () {
-    return gulp.src('src/stylesheets/main.styl')
+
+    // newer will select all files - filter to just the manifest
+    function onlyManifest(file, enc, next) {
+      if (file.path.match(/src\/stylesheets\/main\.styl$/)) {
+        this.push(file);
+      }
+      return next();
+    }
+
+    return gulp.src('src/**/*.styl')
+      .pipe(newer('build/assets/app.css'))
+      .pipe(through.obj(onlyManifest))
       .pipe(sourcemaps.init())
       .pipe(stylus({
         use: [nib()],
