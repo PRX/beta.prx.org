@@ -11,4 +11,5 @@ module.exports = app.name;
 // configure
 app.config(require('./home.config'));
 app.controller('HomeCtrl', require('./home.controller'));
+app.directive('onScrollIn', require('./home.directive'));
 app.run(require('./home.run'));

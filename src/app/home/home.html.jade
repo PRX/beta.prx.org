@@ -7,3 +7,11 @@ article.home
           h2 Staff Picks
         div
           prx-pick(ng-repeat="pick in home.picks", pick="pick")
+        footer
+          button.more(ng-click="home.loadMore()", ng-show="home.hasMore"
+            on-scroll-in="home.loadMore()",
+            scroll-in-buffer="100",
+            scroll-in-limit="1",
+            ng-disabled="home.loadingMore")
+              span(ng-show="home.loadingMore") Loading...
+              span(ng-hide="home.loadingMore") More

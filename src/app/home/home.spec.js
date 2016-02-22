@@ -17,10 +17,27 @@ describe('prx.home', function () {
 
   describe ('HomeCtrl', function () {
     it ('attaches the picks injected to $scope', inject(function ($controller) {
-      var sigil = 'sigil';
-      var scope = {};
-      var controller = $controller('HomeCtrl', {picks: sigil, $scope: {$on: function () {}}});
-      expect(controller.picks).toBe(sigil);
+      var controller = $controller('HomeCtrl', {
+        picks: 'sigil',
+        pickList: {},
+        $scope: {$on: function () {}},
+        $filter: null
+      });
+      expect(controller.picks).toBe('sigil');
+      expect(controller.hasMore).toBeFalsy();
+      expect(controller.loadingMore).toBeFalsy();
+    }));
+
+    it ('checks the pickList for hasMore', inject(function ($controller) {
+      var controller = $controller('HomeCtrl', {
+        picks: 'sigil',
+        pickList: {link: function() {return true;}},
+        $scope: {$on: function () {}},
+        $filter: null
+      });
+      expect(controller.picks).toBe('sigil');
+      expect(controller.hasMore).toBeTruthy();
+      expect(controller.loadingMore).toBeFalsy();
     }));
   });
 
@@ -32,11 +49,102 @@ describe('prx.home', function () {
       ngHal = _ngHal_;
     }));
 
-    it ('gets the picks', function () {
+    it ('gets the pickList', function () {
       var spy = ngHal.stubFollow('prx:picks', ngHal.mock());
-      $injector.invoke(state.resolve.picks, null, {});
+      $injector.invoke(state.resolve.pickList, null, {});
       expect(spy).toHaveBeenCalled();
     });
+
+    it ('gets the picks from the pickList', function () {
+      var mock = ngHal.mock();
+      var spy = mock.stubFollow('prx:items');
+      $injector.invoke(state.resolve.picks, null, {pickList: mock});
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe ('loadMore', function () {
+    it ('loads the next page', inject(function ($controller, _ngHal_) {
+      var pickList = _ngHal_.mock();
+      var nextPicks = _ngHal_.mock();
+      var spy = pickList.stubFollow('next', nextPicks);
+      var spy2 = nextPicks.stubFollow('prx:items', ['bar']);
+      var controller = $controller('HomeCtrl', {
+        picks: ['foo'],
+        pickList: pickList,
+        $scope: {$on: function () {}},
+        $filter: function() { return function(a) {return a;}; }
+      });
+      controller.loadMore();
+      expect(spy).toHaveBeenCalled();
+      expect(spy2).toHaveBeenCalled();
+      expect(controller.picks).toEqual(['foo', 'bar']);
+      expect(controller.hasMore).toBeFalsy();
+      expect(controller.loadingMore).toBeFalsy();
+    }));
+  });
+
+  describe ('onScrollIn', function () {
+    it ('triggers when an element scrolls into view', inject(function ($compile, $rootScope, $window) {
+      if ($window.parent._phantom) {
+        return; // window scroll detection doesn't work here
+      }
+
+      var elem = angular.element("<div style='padding-top:1000px'><div style='height:10px' on-scroll-in='triggered=true'></div></div>");
+      var scope = $rootScope.$new();
+      elem = $compile(elem)(scope);
+      win = angular.element($window);
+      $window.document.body.appendChild(elem[0]);
+
+      win.triggerHandler('scroll');
+      expect(scope.triggered).toBeFalsy();
+
+      $window.scroll(0, 1000 - $window.innerHeight - 100);
+      win.triggerHandler('scroll');
+      expect(scope.triggered).toBeFalsy();
+
+      $window.scroll(0, 1000 - $window.innerHeight + 100);
+      win.triggerHandler('scroll');
+      expect(scope.triggered).toBeTruthy();
+
+      $window.document.body.removeChild(elem[0]);
+      scope.$destroy();
+    }));
+
+    it ('debounces and limits', inject(function ($compile, $rootScope, $window) {
+      var elem = angular.element("<div style='height:1px' on-scroll-in='counter()' scroll-in-limit='{{limit}}'></div>");
+      var scope = $rootScope.$new();
+      var count = 0, debounce = false;
+      scope.counter = function () {
+        count++;
+        if (debounce) { return false; }
+      };
+      scope.limit = 2;
+
+      elem = $compile(elem)(scope);
+      win = angular.element($window);
+      $window.document.body.appendChild(elem[0]);
+      scope.$digest();
+
+      win.triggerHandler('scroll');
+      expect(count).toBe(1);
+
+      debounce = true;
+      win.triggerHandler('scroll');
+      expect(count).toBe(2);
+      debounce = false;
+      win.triggerHandler('scroll');
+      expect(count).toBe(3);
+
+      win.triggerHandler('scroll');
+      win.triggerHandler('scroll');
+      expect(count).toBe(3);
+
+      scope.limit = 9;
+      scope.$digest();
+      win.triggerHandler('scroll');
+      expect(count).toBe(4);
+    }));
   });
 
   describe ('continuous playback', function () {
@@ -59,7 +167,11 @@ describe('prx.home', function () {
     beforeEach(inject(function ($controller, $rootScope, _$q_) {
       $q = _$q_;
       $scope = $rootScope.$new();
-      controller = $controller('HomeCtrl', {picks: [], $scope: $scope});
+      controller = $controller('HomeCtrl', {
+        pickList: {link: function() {}},
+        picks: [],
+        $scope: $scope
+      });
     }));
 
     it ('sets next on $play event', function () {
