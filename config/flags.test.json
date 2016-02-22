@@ -1,8 +1,8 @@
 {
-  "apiServer": "http://cms.prx.dev/api/v1",
+  "apiServer": "https://cms.prx.org/api/v1",
   "showMenu": true,
   "lovesharebuy": false,
-  "COUNT_HOST":"http://localhost",
+  "COUNT_HOST": "https://count.prx.org",
   "LISTEN_LATER": true,
   "HOME_PAGE": true,
   "APPLICATION_VERSION": "development",
@@ -14,6 +14,6 @@
   "UPLOADS_AWS_URL": "https://dsn15m3yob5tf.cloudfront.net",
   "UPLOADS_CLOUDFRONT": true,
   "UPLOADS_LOGGING": false,
-  "ID_SERVER": "http://id.prx.dev",
+  "ID_SERVER": "https://id.prx.org",
   "ID_CLIENT_KEY": "FJb4CAROsm7IeCCBZGWhPFaF1uwBKpMEzqyNzqyt"
 }
