@@ -50,7 +50,7 @@ module.exports = function (gulp) {
         '/assets/images/': '/base/src/assets/images/'
       },
       frameworks: [ 'browserify', 'jasmine' ],
-      plugins:    [ 'karma-browserify', 'karma-jasmine', 'karma-mocha-reporter', 'karma-chrome-launcher' ],
+      plugins:    [ 'karma-browserify', 'karma-jasmine', 'karma-chrome-launcher' ],
       browsers:   ['Chrome'],
       files: files,
       exclude: [ '**/*.e2e.spec.js' ],
