@@ -1,5 +1,12 @@
-angular.module('prx.url-translate', ['angular-hal'])
-.provider('urlTranslate', function () {
+var angular = require('angular');
+
+// translate urls
+var app = angular.module('prx.url-translate', [
+  require('./angular-hal')
+]);
+module.exports = app.name;
+
+app.provider('urlTranslate', function () {
   var mappings = [];
 
   getTranslator.$inject = ['halUriMatcher', 'UriTemplate'];
@@ -10,7 +17,7 @@ angular.module('prx.url-translate', ['angular-hal'])
     });
 
     translate.addTranslation = addTranslation;
-    
+
     return translate;
 
     function translate (uri) {

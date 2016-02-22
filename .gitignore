@@ -1,6 +1,7 @@
 tmp
 coverage
 node_modules
+build
 public
 vendor
 bin

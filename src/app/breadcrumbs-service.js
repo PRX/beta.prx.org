@@ -1,5 +1,12 @@
-angular.module('prx.breadcrumbs', ['ui.router'])
-.factory('stateCrumbs', function ($rootScope, $state, $injector, $window, $timeout) {
+var angular = require('angular');
+
+// breadcrumbs
+var app = angular.module('prx.breadcrumbs', [
+  require('angular-ui-router')
+]);
+module.exports = app.name;
+
+app.factory('stateCrumbs', function ($rootScope, $state, $injector, $window, $timeout) {
   var stateCrumbs = {
     crumbs: [],
     title: "",

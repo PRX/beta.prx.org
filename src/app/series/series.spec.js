@@ -1,5 +1,10 @@
+var helper  = require('../../common/spec-helper');
+var halmock = require('../../common/angular-hal-mock');
+var prxseries = require('./series');
+
 describe('prx.series', function () {
-  beforeEach(module('prx.series', 'angular-hal-mock'));
+
+  beforeEach(helper.module(prxseries, halmock));
 
   describe ('Series mixin', function () {
     var  ngHal, mock;

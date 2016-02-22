@@ -1,5 +1,14 @@
-angular.module('prx.home.storytime', ['ui.router', 'prx.url-translate', 'angulartics'])
-.config(function ($stateProvider, urlTranslateProvider) {
+var angular = require('angular');
+
+// story time at home
+var app = angular.module('prx.home.storytime', [
+  require('angular-ui-router'),
+  require('../../../common/url-translater'),
+  require('angulartics')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider, urlTranslateProvider) {
   urlTranslateProvider.translate('/storytime', '/');
 
   $stateProvider.state('home.storyTime', {

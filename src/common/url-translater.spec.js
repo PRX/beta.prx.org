@@ -1,15 +1,18 @@
+var helper = require('./spec-helper');
+var urltrans = require('./url-translater');
+
 describe('url translater', function () {
-  beforeEach(module('prx.url-translate'));
+  beforeEach(helper.module(urltrans));
 
   it ('can define translations', function () {
-    module(function (urlTranslateProvider) {
+    helper.module(function (urlTranslateProvider) {
       urlTranslateProvider.translate('/foo', '/bar');
     });
     inject(function (urlTranslate) {});
   });
 
   it ('can use the translations it has defined', function () {
-    module(function (urlTranslateProvider) {
+    helper.module(function (urlTranslateProvider) {
       urlTranslateProvider.translate('/foo', '/bar');
     });
     inject(function (urlTranslate) {
@@ -24,7 +27,7 @@ describe('url translater', function () {
   });
 
   it ('can use uri matchers', function () {
-    module(function (urlTranslateProvider) {
+    helper.module(function (urlTranslateProvider) {
       urlTranslateProvider.translate('/foo/*splat', '/test');
     });
     inject(function (urlTranslate) {
@@ -33,7 +36,7 @@ describe('url translater', function () {
   });
 
   it ('can use uri templates', function () {
-    module(function (urlTranslateProvider) {
+    helper.module(function (urlTranslateProvider) {
       urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
     });
     inject(function (urlTranslate) {
@@ -42,7 +45,7 @@ describe('url translater', function () {
   });
 
   it ('matches once', function () {
-    module(function (urlTranslateProvider) {
+    helper.module(function (urlTranslateProvider) {
       urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}')
       .translate('/stories/:storyId/*splat', '/pieces/{storyId}/more{/splat*}');
     });

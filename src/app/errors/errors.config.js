@@ -1,15 +1,7 @@
-(function () {
+module.exports = function errorsConfig($urlRouterProvider) {
+  'ngInject';
 
-  angular
-    .module('prx.errors')
-    .config(config);
-
-  config.$inject = ['$urlRouterProvider'];
-
-  function config($urlRouterProvider) {
-    $urlRouterProvider.otherwise(function ($injector, $location) {
-      $injector.get('prxError').routerError($location.url());
-    });
-  }
-
-}());
+  $urlRouterProvider.otherwise(function ($injector, $location) {
+    $injector.get('prxError').routerError($location.url());
+  });
+};

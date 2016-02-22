@@ -1,5 +1,8 @@
-describe('storytime', function () {
-  beforeEach(module('prx.home.storytime'));
+var helper       = require('../../../common/spec-helper');
+var prxstorytime = require('./story_time');
+
+describe('prx.home.storytime', function () {
+  beforeEach(helper.module(prxstorytime));
 
   describe('MailChimp service', function () {
     var MailChimp, $httpBackend;

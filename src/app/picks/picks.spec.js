@@ -1,6 +1,10 @@
+var helper   = require('../../common/spec-helper');
+var halmock  = require('../../common/angular-hal-mock');
+var prxpicks = require('./picks');
+
 describe('prx.picks', function () {
 
-  beforeEach(module('prx.picks', 'angular-hal-mock'));
+  beforeEach(helper.module(prxpicks, halmock));
 
   describe ('Pick mixin', function () {
 
@@ -20,7 +24,7 @@ describe('prx.picks', function () {
     var $compile, $scope, element, ngHal;
     var pick;
 
-    beforeEach(module('templates'));
+    beforeEach(helper.module('templates'));
 
     beforeEach(inject(function (_$compile_, $rootScope, _ngHal_) {
       $compile = _$compile_;

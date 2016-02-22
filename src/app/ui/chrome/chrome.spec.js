@@ -1,6 +1,10 @@
+var helper    = require('../../../common/spec-helper');
+var prxchrome = require('./chrome');
+
 describe('ui.chrome', function () {
+
   var prxChrome, $scope, $state;
-  beforeEach(module('prx.ui.chrome', function ($stateProvider) {
+  beforeEach(helper.module(prxchrome, function ($stateProvider) {
     $stateProvider.state('root', {
       url: '/'
     }).state('chromeless', {

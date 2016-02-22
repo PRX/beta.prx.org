@@ -1,26 +1,15 @@
-beforeEach(function () {
-  browser.addMockModule('noAnimate', function () {
-    angular.module('noAnimate', ['ngAnimate'])
-    .run(['$animate', function ($animate) {
-      $animate.enabled(false);
-    }]);
-  });
-});
+var helper = require('../common/spec-e2e-helper');
 
 describe('application', function () {
-
-  var FEAT = require('../../config/flags.release.json');
 
   describe('home page', function () {
     beforeEach(function () {
       browser.get('/');
     });
 
-    if (!FEAT.HOME_PAGE) {
-      it ('redirects to the /nxt modal', function () {
-        expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
-      });
-    }
+    helper.featit('redirects to the /nxt modal', '!HOME_PAGE', function() {
+      expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
+    });
   });
 
   describe('any page', function () {
@@ -45,25 +34,24 @@ describe('application', function () {
       browser.get('/fake');
     });
 
-    if (FEAT.HOME_PAGE) {
-      it ('takes you to the / page when you tap the prx logo', function () {
-        $('h1 a').click();
-        expect(browser.getCurrentUrl()).toMatch(/\//);
-      });
-    } else {
-      it ('takes you to the /nxt page when you tap the prx logo', function () {
-        $('h1 a').click();
-        expect(browser.getCurrentUrl()).toMatch(/\/nxt/);
-      });
-    }
+    helper.featit('takes you to the / page when you tap the prx logo', 'HOME_PAGE', function() {
+      $('h1 a').click();
+      expect(browser.getCurrentUrl()).toMatch(/\//);
+    });
+
+    helper.featit('takes you to the /nxt page when you tap the prx logo', '!HOME_PAGE', function() {
+      $('h1 a').click();
+      expect(browser.getCurrentUrl()).toMatch(/\/nxt/);
+    });
 
     it ('opens modals', function () {
-      var modal = $('.modal');
+      var modal = $('.modal:not(.error)');
+      var dismiss = $('.modal:not(.error) .dismiss');
 
       expect(modal.isDisplayed()).toBe(false);
       element(by.linkText('modal')).click();
       expect(modal.isDisplayed()).toBe(true);
-      $('.dismiss').click();
+      dismiss.click();
       expect(modal.isDisplayed()).toBe(false);
     });
   });

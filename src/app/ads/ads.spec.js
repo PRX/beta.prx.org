@@ -1,9 +1,15 @@
+var helper  = require('../../common/spec-helper');
+var halmock = require('../../common/angular-hal-mock');
+var prxads  = require('./ads');
+
 describe('prx.ads', function () {
-  beforeEach(module('prx.ads'));
+
+  beforeEach(helper.module(prxads));
 
   describe('prxAd directive', function () {
     var elem, googletag, displaySpy, gSlot;
-    beforeEach(module('templates'));
+
+    beforeEach(helper.module('templates'));
 
     beforeEach(inject(function ($compile, $rootScope, $window) {
       gSlot = jasmine.createSpyObj('gSlot', ['defineSizeMapping']);

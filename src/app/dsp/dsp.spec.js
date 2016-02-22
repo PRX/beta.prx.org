@@ -1,6 +1,10 @@
+var helper  = require('../../common/spec-helper');
+var analyze = require('../upload/analyze-audio');
+var prxdsp  = require('./dsp');
+
 describe('prx.dsp', function () {
-  beforeEach(module('prx.dsp'));
-  beforeEach(module('prx.analyze-audio'));
+
+  beforeEach(helper.module(prxdsp, analyze));
 
   // it('includes the upload validator service', inject(function (UploadValidator) {
   //   expect(UploadValidator).toBeDefined();

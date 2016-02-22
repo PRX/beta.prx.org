@@ -1,7 +1,20 @@
-angular.module('prx.stories', [
-  'ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate',
-  'prx.accounts', 'prx.experiments', 'angulartics', 'prx.stories.edit', 'prx.auth'])
-.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
+var angular = require('angular');
+
+// story module
+var app = angular.module('prx.stories', [
+  require('angular-ui-router'),
+  require('../../common/prx-model-config'),
+  require('../player/player'),
+  require('../../common/url-translater'),
+  require('../accounts/accounts'),
+  require('../../common/prx-experiments'),
+  require('angulartics'),
+  require('./edit/edit'),
+  require('../auth/auth')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
     abstract: true,

@@ -1,9 +1,12 @@
+var helper = require('./spec-helper');
+var evap   = require('./angular-evaporate');
+
 describe('angular-evaporate', function () {
 
   describe ('configuration', function () {
 
     it ('can configure the awsKey', function () {
-      module('angular-evaporate', function (evaporateProvider, $provide) {
+      helper.module(evap, function (evaporateProvider, $provide) {
         evaporateProvider.awsKey('AKIRAISAGREATMOVIE');
 
         $provide.decorator('$window', ['$delegate', function($delegate) {
@@ -38,7 +41,7 @@ describe('angular-evaporate', function () {
   describe ('when configured', function () {
     var evaporate, $q, $rs;
 
-    beforeEach(module('async-loader', function ($provide) {
+    beforeEach(helper.module('async-loader', function ($provide) {
       mf = [];
       MockAsyncLoader = {};
       MockAsyncLoader._a_mock     = true;
@@ -50,7 +53,7 @@ describe('angular-evaporate', function () {
       $provide.value('AsyncLoader', MockAsyncLoader);
     }));
 
-    beforeEach(module('angular-evaporate', function (evaporateProvider) {
+    beforeEach(helper.module(evap, function (evaporateProvider) {
       evaporateProvider.options({});
     }));
 

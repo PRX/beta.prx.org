@@ -1,9 +1,12 @@
+var helper = require('./spec-helper');
+var ngid3  = require('./angular-id3');
+
 describe('angular-id3', function () {
 
   describe ('Id3Service', function() {
     var Id3Service, $rootScope;
 
-    beforeEach(module('async-loader', function ($provide) {
+    beforeEach(helper.module('async-loader', function ($provide) {
       mf = [];
       MockAsyncLoader = {};
       MockAsyncLoader._a_mock     = true;
@@ -13,7 +16,7 @@ describe('angular-id3', function () {
     }));
 
     beforeEach(function() {
-      module('angular-id3', function ($provide) {
+      helper.module(ngid3, function ($provide) {
 
         $provide.decorator('$window', ['$delegate', function($delegate) {
           var mockId3 = function (file, callback) {

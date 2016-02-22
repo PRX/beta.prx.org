@@ -1,5 +1,14 @@
-angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
-.config(function ($stateProvider, ngHalProvider) {
+var angular = require('angular');
+
+// series module
+var app = angular.module('prx.series', [
+  require('angular-ui-router'),
+  require('../../common/angular-hal'),
+  require('../stories/stories')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('series', {
     abstract: true,
     title: 'Series',

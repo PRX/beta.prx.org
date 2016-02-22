@@ -1,29 +1,29 @@
+/**
+ * Protractor tests can run against sauce labs or locally
+ */
 exports.config = {
-  capabilities: {
-    'browserName': 'chrome'
-  },
-
-  baseUrl: 'http://localhost:8080',
-
+  port:    (process.env['PORT'] || 8080),
+  baseUrl: 'http://localhost:' + (process.env['PORT'] || 8080),
   jasmineNodeOpts: {
-    showColors: true,
-    defaultTimeoutInterval: 30000
-  },
-
-  specs: [ '../src/**/*.e2e.spec.js' ]
+    showColors: true
+  }
 };
 
-if (process.env['TRAVIS']) {
+if (process.env['SAUCE_USERNAME'] && process.env['SAUCE_ACCESS_KEY']) {
+  exports.config.jasmineNodeOpts.defaultTimeoutInterval = 20000;
   exports.config.sauceUser = process.env['SAUCE_USERNAME'];
   exports.config.sauceKey  = process.env['SAUCE_ACCESS_KEY'];
-  exports.config.multiCapabilities =  [{
-    'browserName': 'firefox'
+  exports.config.multiCapabilities = [{
+    'browserName':       'firefox',
+    'tunnel-identifier': (process.env['TRAVIS_JOB_NUMBER'] || null)
+  },{
+    'browserName':       'chrome',
+    'tunnel-identifier': (process.env['TRAVIS_JOB_NUMBER'] || null)
   }];
-
-  for(var i=0; i<exports.config.multiCapabilities.length; i++) {
-    exports.config.multiCapabilities[i]['tunnel-identifier'] = process.env['TRAVIS_JOB_NUMBER'];
-  }
-
-} else {
-  exports.config.seleniumServerJar = '../node_modules/protractor/selenium/selenium-server-standalone-2.43.1.jar';
+}
+else {
+  exports.config.jasmineNodeOpts.defaultTimeoutInterval = 10000;
+  exports.config.capabilities = {
+    'browserName': 'chrome'
+  };
 }

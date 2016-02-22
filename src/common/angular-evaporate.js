@@ -1,5 +1,12 @@
-angular.module('angular-evaporate', ['async-loader'])
-.provider('evaporate', function () {
+var angular = require('angular');
+
+// direct upload to s3
+var app = angular.module('angular-evaporate', [
+  require('./async-loader')
+]);
+module.exports = app.name;
+
+app.provider('evaporate', function () {
 
   var injector;
 
@@ -64,7 +71,7 @@ angular.module('angular-evaporate', ['async-loader'])
   NgEvaporate.prototype = {
     loadEvaporate: function() {
       var e = this;
-      return e.loader.load('/vendor/EvaporateJS/evaporate.js').then( function(loaded) {
+      return e.loader.load('/vendor/evaporate.js').then( function(loaded) {
         // TODO Save the promise so we don't need to worry about doing other
         // things before load resolves.
         e._evaporate = new e.window.Evaporate(e.opts);

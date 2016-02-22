@@ -1,5 +1,10 @@
-describe('accounts', function () {
-  beforeEach(module('prx.accounts', 'angular-hal-mock'));
+var helper  = require('../../common/spec-helper');
+var halmock = require('../../common/angular-hal-mock');
+var prxaccounts = require('./accounts');
+
+describe('prx.accounts', function () {
+
+  beforeEach(helper.module(prxaccounts, halmock));
 
   describe ('account mixin', function () {
     it ('prefetches the image url and address', inject(function (ngHal, $rootScope) {
@@ -133,7 +138,7 @@ describe('accounts', function () {
   describe('accountRecentStories directive', function () {
     var $compile, $scope, element, ngHal;
 
-    beforeEach(module('templates'));
+    beforeEach(helper.module('templates'));
 
     beforeEach(inject(function (_$compile_, $rootScope, _ngHal_) {
       $compile = _$compile_;

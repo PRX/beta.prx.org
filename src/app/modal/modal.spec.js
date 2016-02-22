@@ -1,10 +1,14 @@
+var helper   = require('../../common/spec-helper');
+var prxmodal = require('./modal');
+
 describe('prx.modal', function () {
-  beforeEach(module('prx.modal'));
+
+  beforeEach(helper.module(prxmodal));
 
   describe('state instrumentation', function () {
     var $scope, instrumentableState, $state, $compile;
 
-    beforeEach(module(function ($provide) {
+    beforeEach(helper.module(function ($provide) {
       $provide.value('$state', jasmine.createSpyObj('$state', ['href']));
     }));
 

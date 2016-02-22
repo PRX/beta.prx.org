@@ -1,5 +1,18 @@
-angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', 'angular-uuid', 'prx.analyze-audio', 'prx.upload.filepicker', 'prx.dsp'])
-.config(function (evaporateProvider) {
+var angular = require('angular');
+
+// uploading files
+var app = angular.module('prx.upload', [
+  require('angular-ui-router'),
+  require('../../common/angular-dnd'),
+  require('../../common/angular-evaporate'),
+  require('angular-uuid').name || 'angular-uuid',
+  require('./analyze-audio'),
+  require('./filepicker/filepicker'),
+  require('../dsp/dsp')
+]);
+module.exports = app.name;
+
+app.config(function (evaporateProvider) {
   evaporateProvider
   .signerUrl(FEAT.UPLOADS_SIGNER_URL)
   .awsKey(FEAT.UPLOADS_AWS_KEY)
@@ -11,7 +24,7 @@ angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', '
 .factory('URL', function ($window) {
   return $window.URL;
 })
-.service('Upload', function UploadService(evaporate, $uuid, MimeType, $q, $rootScope) {
+.service('Upload', function UploadService(evaporate, uuid, MimeType, $q, $rootScope) {
 
   var uploads = {};
 
@@ -27,7 +40,7 @@ angular.module('prx.upload', ['ui.router', 'angular-dnd', 'angular-evaporate', '
     var u = this;
     u.file = file;
 
-    u.guid = $uuid.v4();
+    u.guid = uuid.v4();
     u.name = safeName(u.file.name);
     u.path = uploadKey(u.guid, u.name);
     u.type = MimeType.lookup(file).full();

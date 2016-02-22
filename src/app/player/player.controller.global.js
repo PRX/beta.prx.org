@@ -1,13 +1,5 @@
-(function () {
+module.exports = function playerControllerGlobal(prxPlayer) {
+  'ngInject';
 
-  angular
-    .module('prx.player')
-    .controller('GlobalPlayerCtrl', GlobalPlayerCtrl);
-
-  GlobalPlayerCtrl.$inject = ['prxPlayer'];
-
-  function GlobalPlayerCtrl(prxPlayer) {
-    this.global = prxPlayer;
-  }
-
-}());
+  this.global = prxPlayer;
+};

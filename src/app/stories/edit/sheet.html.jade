@@ -80,7 +80,7 @@ form(name="story_edit")
                     a.delete(ng-click="story.removeImageFile($index)") Delete Image
                     div.image-wrapper(ng-class="{'uploading': imageFile.upload.progress < 1}")
                       .loading
-                      img(src="{{imageFile.url}}")
+                      prx-img(src="imageFile.url", default-class="default")
           xi-tab(key="audio")
             xi-tab-name Audio
             xi-tab-content

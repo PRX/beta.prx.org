@@ -1,6 +1,9 @@
+var helper  = require('./spec-helper');
+var halmock = require('./angular-hal-mock');
+
 describe('angular-hal-mock', function () {
 
-  beforeEach(module('angular-hal-mock', function (ngHalProvider) {
+  beforeEach(helper.module(halmock, function (ngHalProvider) {
     ngHalProvider.defineModule('http://meta.nghal.org/object', {
       getId: function () { return this.id; },
       name: 'foo'
@@ -19,7 +22,7 @@ describe('angular-hal-mock', function () {
   }));
 
   describe ('with real ngHal requests', function () {
-    beforeEach(module(function (ngHalProvider) {
+    beforeEach(helper.module(function (ngHalProvider) {
       ngHalProvider.setRootUrl('/');
     }));
 
@@ -124,7 +127,7 @@ describe('angular-hal-mock', function () {
   }));
 
   it ('does not interfere with contexts', function () {
-    module(function (ngHalProvider) {
+    helper.module(function (ngHalProvider) {
       ngHalProvider.context('foo').setRootUrl('/asd');
     });
 
@@ -150,7 +153,7 @@ describe('angular-hal-mock', function () {
   describe ('transformation', function () {
     var ngHal;
 
-    beforeEach(module(function (ngHalProvider) {
+    beforeEach(helper.module(function (ngHalProvider) {
       ngHalProvider.mixin('type', function () {
         return function (obj) { obj.value += 1; };
       });

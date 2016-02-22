@@ -1,5 +1,10 @@
-angular.module('uri-template', [])
-.service('UriTemplate', function () {
+var angular = require('angular');
+
+// uri template implementation
+var app = angular.module('uri-template', []);
+module.exports = app.name;
+
+app.service('UriTemplate', function () {
 
   var operators = ['+', '#', '.', '/', ';', '?', '&'];
 

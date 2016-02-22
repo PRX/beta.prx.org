@@ -1,8 +1,11 @@
+var helper = require('./spec-helper');
+var loader = require('./async-loader');
+
 describe('async-loader', function () {
 
   describe ('$scriptjs', function () {
 
-    beforeEach(module('async-loader'));
+    beforeEach(helper.module(loader));
 
     beforeEach(inject(function (_$scriptjs_, _AsyncLoader_) {
       $scriptjs = _$scriptjs_;
@@ -20,16 +23,11 @@ describe('async-loader', function () {
     var $scriptjs, AsyncLoader, $rootScope;
 
     beforeEach(function() {
-      module('async-loader', function ($provide) {
+      helper.module(loader, function ($provide) {
 
-        $provide.decorator('$window', ['$delegate', function($delegate) {
-
-          var mockScriptjs  = function (files, success, fail) {
-            return success(files);
-          };
-          $delegate.$script = mockScriptjs;
-          return $delegate;
-        }]);
+        $provide.value('$scriptjs', function (files, success, fail) {
+          return success(files);
+        });
 
       });
     });
