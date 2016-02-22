@@ -9,6 +9,6 @@ var app = angular.module('prx.home', [
 module.exports = app.name;
 
 // configure
-app.config(                ['$stateProvider', '$urlRouterProvider', require('./home.config')]);
-app.controller('HomeCtrl', ['picks', '$scope', require('./home.controller')]);
-app.run(                   ['$rootScope', '$state', require('./home.run')]);
+app.config(require('./home.config'));
+app.controller('HomeCtrl', require('./home.controller'));
+app.run(require('./home.run'));

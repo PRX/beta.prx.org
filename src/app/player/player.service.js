@@ -1,4 +1,6 @@
 module.exports = function playerService(Bus) {
+  'ngInject';
+
   return {
     $lastHeartbeat: 0,
     load: function (sound) {

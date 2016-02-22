@@ -1,4 +1,6 @@
 module.exports = function playerDirectiveWaveform($window, $timeout) {
+  'ngInject';
+
   return {
     restrict: 'C',
     require: '^prxPlayer',

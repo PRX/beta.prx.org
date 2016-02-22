@@ -1,4 +1,6 @@
 module.exports = function donationsService() {
+  'ngInject';
+
   this.forAccount = function (account) {
     var map = {
       '45139': 'http://themoth.org/support?utm_source=PRX&utm_medium=Donate%20Button&utm_campaign=PRX%20-%20Moth%20-%20Donate',

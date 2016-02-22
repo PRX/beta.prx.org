@@ -1,4 +1,6 @@
 module.exports = function playerController(prxPlayer) {
+  'ngInject';
+
   this.setSound = function (newSound) {
     this.sound = newSound;
   };

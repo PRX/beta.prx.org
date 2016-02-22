@@ -1,4 +1,6 @@
 module.exports = function donationsRun(Bus, $analytics) {
+  'ngInject';
+
   var category = 'Outbound';
 
   Bus.on('donate.outbound', function (account, url) {

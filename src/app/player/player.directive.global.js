@@ -1,4 +1,6 @@
 module.exports = function playerDirectiveGlobal() {
+  'ngInject';
+
   return {
     restrict: 'E',
     replace: true,

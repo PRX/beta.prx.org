@@ -1,4 +1,6 @@
 module.exports = function donationsDirective(prxDonateURL, $analytics, $window, $timeout, Bus) {
+  'ngInject';
+
   // TODO: look into switching to ng-click for binding, and replacing with an A
   //       tag so that open in new tab is possible
   return {

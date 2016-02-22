@@ -1,4 +1,6 @@
 module.exports = function playerFilters () {
+  'ngInject';
+
   var zero = timeCode(0);
 
   function dd(num) {

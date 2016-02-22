@@ -1,4 +1,6 @@
 module.exports = function playerDirectiveScrubber() {
+  'ngInject';
+
   return {
     restrict: 'A',
     scope: {'prxPlayerScrubber': '&'},

@@ -1,4 +1,6 @@
 module.exports = function adsDirective($window, $timeout) {
+  'ngInject';
+
   return {
     restrict: 'E',
     replace: true,

@@ -1,4 +1,6 @@
 module.exports = function errorsService($state) {
+  'ngInject';
+
   var lastError, self = this;
 
   function GeneralError (headline, message) {

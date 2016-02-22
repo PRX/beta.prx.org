@@ -8,6 +8,6 @@ var app = angular.module('prx.donations', [
 module.exports = app.name;
 
 // configure
-app.directive('prxDonate',  ['prxDonateURL', '$analytics', '$window', '$timeout', 'Bus', require('./donations.directive')]);
-app.run(                    ['Bus', '$analytics', require('./donations.run')]);
-app.service('prxDonateURL', [require('./donations.service')]);
+app.directive('prxDonate', require('./donations.directive'));
+app.service('prxDonateURL', require('./donations.service'));
+app.run(require('./donations.run'));

@@ -1,4 +1,6 @@
 module.exports = function playerDirective($controller, prxSoundFactory) {
+  'ngInject';
+
   return {
     restrict: 'E',
     replace: true,

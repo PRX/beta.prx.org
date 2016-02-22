@@ -1,4 +1,6 @@
 module.exports = function homeController(picks, $scope) {
+  'ngInject';
+
   this.picks = picks;
   $scope.$on('$play', function (event, params) {
     if (!angular.isDefined(params.next)) {

@@ -1,4 +1,6 @@
 module.exports = function prxSoundFactory(smSound, prxPlayer, $q) {
+  'ngInject';
+
   function soundFactory (options) {
     var sound;
 

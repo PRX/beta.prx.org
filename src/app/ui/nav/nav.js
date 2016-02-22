@@ -34,7 +34,6 @@ app.service('XiContextMenu', function ($rootScope, $timeout) {
     link: function (scope, elem, attrs) {
       scope.menu = XiContextMenu;
       scope.$watch('menu.show', function (show) {
-        console.log('$watch.nav.menushow');
         if (show) {
           $animate.addClass(elem, 'visible');
         } else {

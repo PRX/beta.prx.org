@@ -1,4 +1,6 @@
 module.exports = function playerRun(Bus, $analytics) {
+  'ngInject';
+
   var category = 'Audio Player';
 
   Bus.on('audioPlayer.stop', function () {

@@ -5,4 +5,4 @@ var app = angular.module('prx.ads', []);
 module.exports = app.name;
 
 // configure
-app.directive('prxAd', ['$window', '$timeout', require('./ads.directive')]);
+app.directive('prxAd', require('./ads.directive'));

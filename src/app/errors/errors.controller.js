@@ -1,4 +1,6 @@
 module.exports = function errorsController(prxError) {
+  'ngInject';
+
   this.show = prxError.hasError;
   this.canRetry = prxError.canRetry;
   this.canGoBack = prxError.canGoBack;

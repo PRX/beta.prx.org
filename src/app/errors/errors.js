@@ -7,8 +7,8 @@ var app = angular.module('prx.errors', [
 module.exports = app.name;
 
 // configure
-app.config(                    ['$urlRouterProvider', require('./errors.config')]);
-app.controller('ErrorCtrl',    ['prxError', require('./errors.controller')]);
-app.directive('prxErrorModal', [require('./errors.directive')]);
-app.run(                       ['$rootScope', 'prxError', '$log', require('./errors.run')]);
-app.service('prxError',        ['$state', require('./errors.service')]);
+app.config(require('./errors.config'));
+app.controller('ErrorCtrl', require('./errors.controller'));
+app.directive('prxErrorModal', require('./errors.directive'));
+app.service('prxError', require('./errors.service'));
+app.run(require('./errors.run'));

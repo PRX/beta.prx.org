@@ -1,4 +1,6 @@
 module.exports = function homeConfig($stateProvider, $urlRouterProvider) {
+  'ngInject';
+
   /* istanbul ignore next */
   if (!FEAT.HOME_PAGE) {
     $urlRouterProvider.when('/', '/nxt');
