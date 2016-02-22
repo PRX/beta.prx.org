@@ -18,9 +18,11 @@ module.exports = function (gulp) {
       else {
         done();
         // TODO: the text-summary reporter seems to hang here!
-        process.nextTick(function() {
-          process.exit(0);
-        })
+        if (!gulp.tasks['spec'].running) {
+          process.nextTick(function() {
+            process.exit(0);
+          });
+        }
       }
     }
 
