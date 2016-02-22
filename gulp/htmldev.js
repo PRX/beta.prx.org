@@ -1,7 +1,8 @@
 var template = require('gulp-template');
+var rename   = require('gulp-rename');
 
 /**
- * Compile index html
+ * Compile dev.html (non-minified)
  */
 module.exports = function (gulp) {
   var context = {
@@ -13,6 +14,7 @@ module.exports = function (gulp) {
   return function () {
     return gulp.src('src/index.html')
       .pipe(template(context))
+      .pipe(rename('dev.html'))
       .pipe(gulp.dest('build'));
   };
 

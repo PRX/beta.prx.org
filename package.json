@@ -35,11 +35,7 @@
     "url": "https://github.com/PRX/www.prx.org.git"
   },
   "scripts": {
-    "test": "gulp spec",
-    "old-postinstall": "(cd vendor/mp3.js && npm install && make clean browser) && (cd vendor/aurora.js && npm install && make clean browser)",
-    "old-test": "gulp ci",
-    "old-compile": "gulp compile",
-    "old-devServer": "npm install --quiet && apiServer=https://cms.prx.org/api/v1 gulp"
+    "test": "gulp spec"
   },
   "engines": {
     "node": "~5.1.1",
@@ -100,7 +96,6 @@
     "imagemin-pngcrush": "^4.1.0",
     "imagemin-pngquant": "^4.2.0",
     "jasmine": "^2.4.1",
-    "jsdom": "^8.0.2",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.1.0",
     "karma": "^0.13.19",

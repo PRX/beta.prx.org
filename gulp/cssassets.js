@@ -25,14 +25,14 @@ module.exports = function (gulp) {
       gutil.log(gutil.colors.underline('WARN: ' + msg));
     }
 
-    return gulp.src('build/assets/app.css.min')
+    return gulp.src('build/assets/app.min.css')
       .pipe(base64({ baseDir: 'build', debug: true }))
       .on('end', function() {
         console.log = oldconsole.log;
         console.info = oldconsole.info;
         console.warn = oldconsole.warn;
       })
-      .pipe(rename('app.css.min.assets'))
+      .pipe(rename('app.min.assets.css'))
       .pipe(gulp.dest('build/assets'));
   };
 

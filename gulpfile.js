@@ -5,7 +5,10 @@ var gseq  = require('gulp-sequence');
 /**
  * Ye olde tasks (name - deps - args)
  */
-gulpTask('html',   []);
+gulpTask('html:dev',  []);
+gulpTask('html:dist', ['js:flags']);
+gulp.task('html',     ['html:dev', 'html:dist']);
+
 gulpTask('assets', []);
 
 gulpTask('vendor:aurora', []);

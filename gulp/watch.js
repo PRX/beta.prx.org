@@ -9,7 +9,7 @@ module.exports = function (gulp) {
   var port = process.env.PORT || 8080;
 
   return function () {
-    var server = require('../lib/server').listen(port, 'build');
+    var server = require('../lib/server').listen(port, 'dev.html');
     gutil.log('Listening on port ' + port);
 
     var lr = tinylr();
@@ -20,8 +20,9 @@ module.exports = function (gulp) {
       lr.changed({ body: { files: [path.relative('build', e.path)] } });
     });
 
+    // only care about non-minified tasks here
     gulp.watch('src/index.html',        ['html']);
-    gulp.watch('src/**/*.js',           ['js:app']);
+    gulp.watch('src/**/*.js',           ['js:hint', 'js:app']);
     gulp.watch('package.json',          ['js:app']);
     gulp.watch('src/**/*.html.jade',    ['js:templates']);
     gulp.watch('config/flags.*.json',   ['js:flags']);
