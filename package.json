@@ -68,6 +68,7 @@
     "angulartics-google-analytics": "^0.1.4",
     "av": "^0.4.8",
     "browserify": "^13.0.0",
+    "browserify-istanbul": "^0.2.1",
     "browserify-ngannotate": "^2.0.0",
     "browserify-shim": "^3.8.12",
     "evaporate": "0.0.2",
