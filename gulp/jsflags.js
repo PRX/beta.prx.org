@@ -15,8 +15,10 @@ module.exports = function (gulp) {
       break;
     case 'staging':
       flagFile = 'config/flags.staging.json';
+      break;
     case 'test':
       flagFile = 'config/flags.test.json';
+      break;
     default:
       flagFile = 'config/flags.dev.json';
       break;
