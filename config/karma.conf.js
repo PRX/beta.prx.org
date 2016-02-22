@@ -36,10 +36,10 @@ module.exports = function(config) {
       'karma-browserify',
       'karma-jasmine',
       'karma-coverage',
-      'karma-chrome-launcher'
-      // 'karma-firefox-launcher',
-      // 'karma-safari-launcher',
-      // 'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
+      'karma-firefox-launcher',
+      'karma-safari-launcher',
+      'karma-phantomjs-launcher'
     ],
 
     browsers:   ['Chrome'],
