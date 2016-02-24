@@ -30,6 +30,7 @@ gulp.task('css',       ['css:assets']);
 
 gulp.task('build',     ['js', 'css', 'html', 'vendor']);
 gulpTask('watch',      ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
+gulpTask('watchdist',  ['build']);
 
 gulpTask('spec:unit',  ['js:templates']);
 gulpTask('spec:e2e',   ['build']);

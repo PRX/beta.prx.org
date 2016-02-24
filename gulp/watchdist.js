@@ -3,7 +3,7 @@ var tinylr = require('tiny-lr');
 var path   = require('path');
 
 /**
- * Run dev live-reload server
+ * Run dist live-reload server
  */
 module.exports = function (gulp) {
   var port = process.env.PORT || 8080;
@@ -11,7 +11,7 @@ module.exports = function (gulp) {
   return function () {
     gulp.isWatchingStuff = true; // prevent exit
 
-    var server = require('../lib/server').listen(port, 'dev.html');
+    var server = require('../lib/server').listen(port, 'index.html');
     gutil.log('Listening on port ' + port);
 
     var lr = tinylr();
@@ -23,12 +23,12 @@ module.exports = function (gulp) {
     });
 
     // only care about non-minified tasks here
-    gulp.watch('src/index.html',        ['html']);
-    gulp.watch('src/**/*.js',           ['js:hint', 'js:app']);
-    gulp.watch('package.json',          ['js:app']);
-    gulp.watch('src/**/*.html.jade',    ['js:templates']);
-    gulp.watch('config/flags.*.json',   ['js:flags', 'html']);
-    gulp.watch('src/**/*.styl',         ['css:app']);
+    gulp.watch('src/index.html',      ['html']);
+    gulp.watch('src/**/*.js',         ['js']);
+    gulp.watch('package.json',        ['js']);
+    gulp.watch('src/**/*.html.jade',  ['js']);
+    gulp.watch('config/flags.*.json', ['js', 'html']);
+    gulp.watch('src/**/*.styl',       ['css']);
   };
 
 };

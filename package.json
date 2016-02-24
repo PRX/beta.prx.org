@@ -38,6 +38,7 @@
     "start": "node lib/server.js",
     "build": "gulp build",
     "watch": "gulp watch",
+    "watchdist": "gulp watchdist",
     "test": "gulp spec"
   },
   "engines": {
