@@ -83,4 +83,9 @@ module.exports = function(config) {
     }
 
   });
+
+  if (process.env.SNAP_CI) {
+    config.chromeDriver = '/usr/local/bin/chromedriver';
+  }
+
 };
