@@ -25,7 +25,7 @@ module.exports = function (gulp) {
     gulp.watch('src/**/*.js',           ['js:hint', 'js:app']);
     gulp.watch('package.json',          ['js:app']);
     gulp.watch('src/**/*.html.jade',    ['js:templates']);
-    gulp.watch('config/flags.*.json',   ['js:flags']);
+    gulp.watch('config/flags.*.json',   ['js:flags', 'html']);
     gulp.watch('src/**/*.styl',         ['css:app']);
   };
 

@@ -8,7 +8,7 @@ module.exports = function (gulp) {
 
   return function () {
     try {
-      require.resolve('../node_modules/mp3/build/mp3.js');
+      require.resolve('../build/vendor/mp3.js');
       gutil.log('Already built mp3.js');
     }
     catch (e) {

@@ -1,4 +1,5 @@
-var expect = require('gulp-expect-file');
+var gutil   = require('gulp-util');
+var through = require('through2');
 
 /**
  * Copy non-bundled vendor files to the build directory
@@ -14,8 +15,40 @@ module.exports = function (gulp) {
   ];
 
   return function () {
+    var copied = [];
+
+    // record which files we're about to copy
+    function copiedFiles(file, enc, next) {
+      var name = file.path.split('/')[file.path.split('/').length - 1];
+      copied.push(name);
+      this.push(file);
+      return next();
+    }
+
+    // check for missing files
+    function alertMissing(next) {
+      var missed = files.filter(function(path) {
+        var name = path.split('/')[path.split('/').length - 1];
+        if (copied.indexOf(name) > -1) {
+          return false; // copied it
+        }
+        else {
+          try {
+            require.resolve('../build/vendor/' + name);
+            return false; // already got it
+          }
+          catch (e) {}
+        }
+      });
+      if (missed.length) {
+        var msg = 'Missing required vendor files: ' + missed.join(', ');
+        throw new gutil.PluginError('vendor', {message: msg});
+      }
+      return next();
+    }
+
     return gulp.src(files)
-      .pipe(expect({errorOnFailure: true}, files))
+      .pipe(through({objectMode: true}, copiedFiles, alertMissing))
       .pipe(gulp.dest('build/vendor'));
   };
 
