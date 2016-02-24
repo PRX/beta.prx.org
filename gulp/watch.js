@@ -9,6 +9,8 @@ module.exports = function (gulp) {
   var port = process.env.PORT || 8080;
 
   return function () {
+    gulp.isWatchingStuff = true; // prevent exit
+
     var server = require('../lib/server').listen(port, 'dev.html');
     gutil.log('Listening on port ' + port);
 
