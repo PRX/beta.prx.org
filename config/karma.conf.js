@@ -15,10 +15,7 @@ module.exports = function(config) {
   }
 
   // preprocess for browserify and coverage
-  var preprocessors = {};
-  files.forEach(function (file) {
-    preprocessors[file] = ['browserify', 'coverage'];
-  });
+  var preprocessors = {}; files.forEach(function (file) { preprocessors[file] = ['browserify', 'coverage']; });
 
   // TODO: this is a bit hacky
   files.push('build/assets/templates.js');
@@ -84,8 +81,9 @@ module.exports = function(config) {
 
   });
 
+  // just use phantomjs for now, as the others don't want to work here
   if (process.env.SNAP_CI) {
-    config.chromeDriver = '/usr/local/bin/chromedriver';
+    config.browsers = ['PhantomJS'];
   }
 
 };
