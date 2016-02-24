@@ -1,0 +1,14 @@
+server:
+  build: .
+  volumes:
+    - ./config:/app/config
+    - ./gulp:/app/gulp
+    - ./lib:/app/lib
+    - ./node_modules:/app/node_modules
+    - ./src:/app/src
+    - ./test:/app/test
+    - ./gulpfile.js:/app/gulpfile.js
+    - ./package.json:/app/package.json
+  command: watch
+  ports:
+    - "8080:8080"
