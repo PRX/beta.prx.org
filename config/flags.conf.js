@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 /**
  * Configurations and feature flags
  *
@@ -28,7 +30,7 @@ module.exports = {
   COUNT_HOST:         'https://count.prx.org',
   GA_KEY:             '',
   ID_HOST:            'https://id.prx.org',
-  ID_CLIENT_KEY:      'mkbKU13rsBTe2bN0T0HXXiFoW27D5dTWBKKieItJ',
+  ID_CLIENT_KEY:      'FJb4CAROsm7IeCCBZGWhPFaF1uwBKpMEzqyNzqyt',
   PRXPERIMENTS_HOST:  '',
   SUMO_SITE_ID:       '',
   UPLOADS_AWS_BUCKET: 'prx-up',

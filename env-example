@@ -1,0 +1,28 @@
+# -- www.prx.org configuration (uncomment the one you want) --
+# -- see config/flags.conf.js for default values --
+#
+# NODE_ENV=development
+# API_HOST=https://cms.prx.dev/api/v1
+# COUNT_HOST=https://count.prx.dev
+# ID_HOST=https://id.prx.dev
+# ID_CLIENT_KEY=FJb4CAROsm7IeCCBZGWhPFaF1uwBKpMEzqyNzqyt
+#
+# NODE_ENV=staging
+# GA_KEY=UA-164824-46
+# ID_CLIENT_KEY=X5rYnqHGVBpqPTfHKYQyxG6PYfVj0l8nostkQzTC
+# PRXPERIMENTS_HOST=https://x.prx.org
+# SUMO_SITE_ID=52f6d15ee6e307ab8824cb3ed20440c1d57991cfac67626e1f8c915ef81eb714
+#
+# NODE_ENV=production
+# GA_KEY=UA-164824-46
+# ID_CLIENT_KEY=mkbKU13rsBTe2bN0T0HXXiFoW27D5dTWBKKieItJ
+# PRXPERIMENTS_HOST=https://x.prx.org
+# SUMO_SITE_ID=52f6d15ee6e307ab8824cb3ed20440c1d57991cfac67626e1f8c915ef81eb714
+#
+# -- feature flags --
+#
+# SHOW_HOMEPAGE=true
+# SHOW_LISTENLATER=false
+# SHOW_LOVESHAREBUY=false
+# SHOW_TCFDEMO=false
+# SHOW_WELCOMEMAT=false
