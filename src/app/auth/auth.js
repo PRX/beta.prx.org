@@ -26,7 +26,7 @@ app.config(function (PRXDrawerProvider) {
   this.$checkLoggedIn = function () {
     var iframe = angular.element('<iframe>'),
         $body = angular.element($window.document.body),
-        uri = [FEAT.ID_SERVER + '/authorize?client_id=' + FEAT.ID_CLIENT_KEY],
+        uri = [FEAT.ID_HOST + '/authorize?client_id=' + FEAT.ID_CLIENT_KEY],
         nonce = [];
 
     for (var i = 0; i < 8; i++) {
@@ -162,7 +162,7 @@ app.config(function (PRXDrawerProvider) {
 .directive('prxAuthLoginFrame', function (PrxAuth) {
   /* istanbul ignore next */
   return function (scope, elem, attrs) {
-    var uri = [FEAT.ID_SERVER, '/authorize?client_id=', FEAT.ID_CLIENT_KEY];
+    var uri = [FEAT.ID_HOST, '/authorize?client_id=', FEAT.ID_CLIENT_KEY];
     var nonce = [];
 
     for(var i = 0; i < 8; i++) {

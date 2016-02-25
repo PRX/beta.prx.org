@@ -6,8 +6,8 @@ describe('prx.home', function () {
 
   beforeEach(helper.module(prxhome, halmock));
 
-  describe ('FEAT.HOME_PAGE', function() {
-    beforeEach(helper.setflag('HOME_PAGE', false));
+  describe ('FEAT.SHOW_HOMEPAGE', function() {
+    beforeEach(helper.setflag('SHOW_HOMEPAGE', false));
     it ('redirects from home to home.nxt', inject(function ($rootScope, $state) {
       spyOn($state, 'go');
       $rootScope.$broadcast('$stateChangeStart', {name: 'home'});

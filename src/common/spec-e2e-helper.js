@@ -17,11 +17,8 @@ module.exports = {
 
 };
 
-// load FEATs from the last built flags
-global.window = {};
-require('../../build/assets/flags.js');
-var FEAT = global.window.FEAT;
-delete global.window;
+// load FEATs
+var FEAT = require('../../build/flags.conf.js').toJSON();
 
 // disable animations
 beforeEach(function () {

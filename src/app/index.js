@@ -45,21 +45,26 @@ app.config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, prxperimentProvider, PRXDrawerProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
-  prxperimentProvider.base('https://x.prx.org')
-  .clientId(['$q', '$window', function ($q, $window) {
-    /* istanbul ignore if */
-    if (angular.isDefined($window.ga)) {
-      var deferred = $q.defer();
-      $window.ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
-      return deferred.promise;
-    } else {
-      return 'tests';
-    }
-  }]);
+
   /* istanbul ignore next */
-  if (!(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration' && !window.callPhantom)) {
+  if (FEAT.PRXPERIMENTS_HOST) {
+    prxperimentProvider.base('https://x.prx.org')
+    .clientId(['$q', '$window', function ($q, $window) {
+      /* istanbul ignore if */
+      if (angular.isDefined($window.ga)) {
+        var deferred = $q.defer();
+        $window.ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
+        return deferred.promise;
+      } else {
+        return 'tests';
+      }
+    }]);
+    prxperimentProvider.enabled(true);
+  }
+  else {
     prxperimentProvider.enabled(false);
   }
+
   ngFlagProvider.flags(FEAT);
 
   PRXDrawerProvider.register({
@@ -113,7 +118,7 @@ app.config(function (ngFlagProvider,
 angular.module('prx.base',['prx'])
 .config(/* istanbul ignore next */
   function ($locationProvider, ngHalProvider) {
-    ngHalProvider.setRootUrl(FEAT.apiServer);
+    ngHalProvider.setRootUrl(FEAT.API_HOST);
     $locationProvider.html5Mode(true);
 }).run(/* istanbul ignore next */
   function (PrxAuth, $rootScope) {

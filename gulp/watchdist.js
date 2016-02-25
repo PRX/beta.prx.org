@@ -11,7 +11,7 @@ module.exports = function (gulp) {
   return function () {
     gulp.isWatchingStuff = true; // prevent exit
 
-    var server = require('../lib/server').listen(port, 'index.html');
+    require('../lib/server').listen(port, 'index', true);
     gutil.log('Listening on port ' + port);
 
     var lr = tinylr();
@@ -23,12 +23,12 @@ module.exports = function (gulp) {
     });
 
     // only care about non-minified tasks here
-    gulp.watch('src/index.html',      ['html']);
-    gulp.watch('src/**/*.js',         ['js']);
-    gulp.watch('package.json',        ['js']);
-    gulp.watch('src/**/*.html.jade',  ['js']);
-    gulp.watch('config/flags.*.json', ['js', 'html']);
-    gulp.watch('src/**/*.styl',       ['css']);
+    gulp.watch('src/index.html',       ['html']);
+    gulp.watch('src/**/*.js',          ['js']);
+    gulp.watch('package.json',         ['js']);
+    gulp.watch('src/**/*.html.jade',   ['js']);
+    gulp.watch('config/flags.conf.js', ['html']);
+    gulp.watch('src/**/*.styl',        ['css']);
   };
 
 };

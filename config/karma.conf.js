@@ -18,6 +18,7 @@ module.exports = function(config) {
   var preprocessors = {}; files.forEach(function (file) { preprocessors[file] = ['browserify', 'coverage']; });
 
   // TODO: this is a bit hacky
+  files.unshift('build/flags.test.js');
   files.push('build/assets/templates.js');
 
   // prevent annoying 404 errors

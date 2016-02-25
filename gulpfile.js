@@ -5,10 +5,7 @@ var gseq  = require('gulp-sequence');
 /**
  * Ye olde tasks (name - deps - args)
  */
-gulpTask('html:dev',  []);
-gulpTask('html:dist', ['js:flags']);
-gulp.task('html',     ['html:dev', 'html:dist']);
-
+gulpTask('html',   []);
 gulpTask('assets', []);
 
 gulpTask('vendor:aurora', []);
@@ -18,9 +15,8 @@ gulpTask('vendor',        ['vendor:aurora', 'vendor:mp3']);
 gulpTask('js:hint',       []);
 gulpTask('js:app',        []);
 gulpTask('js:templates',  []);
-gulpTask('js:flags',      []);
-gulpTask('js:min',        ['js:hint', 'js:app', 'js:templates', 'js:flags']);
-gulp.task('js:dev',       ['js:hint', 'js:app', 'js:templates', 'js:flags']);
+gulpTask('js:min',        ['js:hint', 'js:app', 'js:templates']);
+gulp.task('js:dev',       ['js:hint', 'js:app', 'js:templates']);
 gulp.task('js',           ['js:min']);
 
 gulpTask('css:app',    []);

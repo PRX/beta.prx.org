@@ -11,7 +11,7 @@ module.exports = function (gulp) {
   return function () {
     gulp.isWatchingStuff = true; // prevent exit
 
-    var server = require('../lib/server').listen(port, 'dev.html');
+    require('../lib/server').listen(port, 'dev', true);
     gutil.log('Listening on port ' + port);
 
     var lr = tinylr();
@@ -27,7 +27,7 @@ module.exports = function (gulp) {
     gulp.watch('src/**/*.js',           ['js:hint', 'js:app']);
     gulp.watch('package.json',          ['js:app']);
     gulp.watch('src/**/*.html.jade',    ['js:templates']);
-    gulp.watch('config/flags.*.json',   ['js:flags', 'html']);
+    gulp.watch('config/flags.conf.js',  ['html']);
     gulp.watch('src/**/*.styl',         ['css:app']);
   };
 

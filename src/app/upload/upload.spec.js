@@ -3,7 +3,7 @@ var prxupload = require('./upload');
 
 describe('prx.upload', function () {
 
-  beforeEach(helper.setflag('TCF_DEMO', true));
+  beforeEach(helper.setflag('SHOW_TCFDEMO', true));
 
   beforeEach(helper.module('async-loader', function ($provide) {
     mf = [];

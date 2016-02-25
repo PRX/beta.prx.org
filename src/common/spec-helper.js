@@ -15,12 +15,11 @@ module.exports = {
 };
 
 // reset feature flags between tests
-var originalFlags = require('../../config/flags.test.json');
+var originalFlags = JSON.stringify(window.FEAT);
 function resetFlags() {
-  window.FEAT = JSON.parse(JSON.stringify(originalFlags));
+  window.FEAT = JSON.parse(originalFlags);
 }
 beforeEach(resetFlags);
-resetFlags();
 
 // custom jasmine promise-matchers
 beforeEach(function () {

@@ -33,7 +33,7 @@ app.config(function (evaporateProvider) {
   };
 
   var uploadKey = function (guid, name) {
-    return [FEAT.APPLICATION_VERSION, guid, name].join('/');
+    return [FEAT.NODE_ENV, guid, name].join('/');
   };
 
   function Upload(file) {
