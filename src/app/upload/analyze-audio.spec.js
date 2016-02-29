@@ -3,7 +3,7 @@ var prxanalyze = require('./analyze-audio');
 
 describe('prx.analyze-audio', function () {
 
-  beforeEach(helper.setflag('TCF_DEMO', true));
+  beforeEach(helper.setflag('SHOW_TCFDEMO', true));
 
   describe('MimeType', function() {
     var MimeType;

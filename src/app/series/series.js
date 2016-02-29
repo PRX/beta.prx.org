@@ -64,7 +64,7 @@ app.config(function ($stateProvider, ngHalProvider) {
     }
   });
 
-ngHalProvider.setRootUrl(FEAT.apiServer)
+ngHalProvider.setRootUrl(FEAT.API_HOST)
   .mixin('http://meta.prx.org/model/series', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url').or(null);
   }]);

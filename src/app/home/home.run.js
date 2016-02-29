@@ -2,7 +2,7 @@ module.exports = function homeRun($rootScope, $state) {
   'ngInject';
 
   /* istanbul ignore next */
-  if (!FEAT.HOME_PAGE) {
+  if (!FEAT.SHOW_HOMEPAGE) {
     $rootScope.$on('$stateChangeStart', function (event, toState) {
       if (toState.name == 'home') {
         event.preventDefault();

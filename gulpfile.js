@@ -5,10 +5,7 @@ var gseq  = require('gulp-sequence');
 /**
  * Ye olde tasks (name - deps - args)
  */
-gulpTask('html:dev',  []);
-gulpTask('html:dist', ['js:flags']);
-gulp.task('html',     ['html:dev', 'html:dist']);
-
+gulpTask('html',   []);
 gulpTask('assets', []);
 
 gulpTask('vendor:aurora', []);
@@ -18,9 +15,8 @@ gulpTask('vendor',        ['vendor:aurora', 'vendor:mp3']);
 gulpTask('js:hint',       []);
 gulpTask('js:app',        []);
 gulpTask('js:templates',  []);
-gulpTask('js:flags',      []);
-gulpTask('js:min',        ['js:hint', 'js:app', 'js:templates', 'js:flags']);
-gulp.task('js:dev',       ['js:hint', 'js:app', 'js:templates', 'js:flags']);
+gulpTask('js:min',        ['js:hint', 'js:app', 'js:templates']);
+gulp.task('js:dev',       ['js:hint', 'js:app', 'js:templates']);
 gulp.task('js',           ['js:min']);
 
 gulpTask('css:app',    []);
@@ -30,6 +26,7 @@ gulp.task('css',       ['css:assets']);
 
 gulp.task('build',     ['js', 'css', 'html', 'vendor']);
 gulpTask('watch',      ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
+gulpTask('watchdist',  ['build']);
 
 gulpTask('spec:unit',  ['js:templates']);
 gulpTask('spec:e2e',   ['build']);
@@ -43,12 +40,12 @@ function gulpTask(name, deps) {
 
 // global error handler
 gulp.on('err', function (e) {
-  if (!this.tasks['watch'].running) {
-    process.exit(1);
-  }
-  else {
+  if (gulp.isWatchingStuff) {
     gutil.log(gutil.colors.red('Error in build. Continuing execution for `watch` task.'));
     console.log('');
     gutil.beep();
+  }
+  else {
+    process.exit(1);
   }
 });

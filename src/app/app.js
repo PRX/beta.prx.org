@@ -7,7 +7,7 @@ var app = angular.module('prx.appCtrl', [
   require('./player/player'),
   require('../common/url-translater'),
   require('./errors/errors'),
-  (FEAT.TCF_DEMO ? require('./upload/upload') : 'ng')
+  (FEAT.SHOW_TCFDEMO ? require('./upload/upload') : 'ng')
 ]);
 module.exports = app.name;
 
@@ -32,7 +32,7 @@ app.controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, url
   });
 
   /* istanbul ignore next */
-  if (FEAT.TCF_DEMO) {
+  if (FEAT.SHOW_TCFDEMO) {
     app.showFileTarget = function (event) {
       var ev = $scope.$broadcast('dragOver');
       if (!ev.defaultPrevented) {
@@ -176,6 +176,6 @@ app.controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, url
   };
 });
 
-if (!FEAT.TCF_DEMO) {
+if (!FEAT.SHOW_TCFDEMO) {
   app.service('PRXFilePicker', angular.noop).service('Upload', angular.noop);
 }

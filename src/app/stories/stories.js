@@ -104,7 +104,7 @@ app.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTrans
   ;
 
   /* istanbul ignore else */
-  if (FEAT.LISTEN_LATER) {
+  if (FEAT.SHOW_LISTENLATER) {
     $stateProvider.state('story.remindMe', {
       views: {
         'modal@': {
@@ -118,7 +118,7 @@ app.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTrans
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
   urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
 
-  ngHalProvider.setRootUrl(FEAT.apiServer)
+  ngHalProvider.setRootUrl(FEAT.API_HOST)
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
   }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', '$q',

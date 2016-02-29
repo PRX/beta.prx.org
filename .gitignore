@@ -5,6 +5,7 @@ build
 public
 vendor
 bin
+.env
 .DS_Store
 .powder
 src/common/.*

@@ -3,7 +3,7 @@ article(ng-bind-html="story.current.description", lock-parent-scrolling)
 ul.actions
   li
     a.listen(ui-sref="story.show({storyId:story.current.id, play: true})") Listen Now
-  li(ng-flag="LISTEN_LATER")
+  li(ng-flag="SHOW_LISTENLATER")
     a.schedule(ui-sref="story.remindMe({storyId: story.current.id})") Listen Later
   li
     a.view(ui-sref="story.show({storyId: story.current.id})") View

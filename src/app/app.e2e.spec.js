@@ -7,7 +7,7 @@ describe('application', function () {
       browser.get('/');
     });
 
-    helper.featit('redirects to the /nxt modal', '!HOME_PAGE', function() {
+    helper.featit('redirects to the /nxt modal', '!SHOW_HOMEPAGE', function() {
       expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
     });
   });
@@ -34,12 +34,12 @@ describe('application', function () {
       browser.get('/fake');
     });
 
-    helper.featit('takes you to the / page when you tap the prx logo', 'HOME_PAGE', function() {
+    helper.featit('takes you to the / page when you tap the prx logo', 'SHOW_HOMEPAGE', function() {
       $('h1 a').click();
       expect(browser.getCurrentUrl()).toMatch(/\//);
     });
 
-    helper.featit('takes you to the /nxt page when you tap the prx logo', '!HOME_PAGE', function() {
+    helper.featit('takes you to the /nxt page when you tap the prx logo', '!SHOW_HOMEPAGE', function() {
       $('h1 a').click();
       expect(browser.getCurrentUrl()).toMatch(/\/nxt/);
     });

@@ -8,7 +8,7 @@ module.exports = function (gulp) {
 
   return function () {
     try {
-      require.resolve('../node_modules/av/build/aurora.js');
+      require.resolve('../build/vendor/aurora.js');
       gutil.log('Already built aurora.js');
     }
     catch (e) {
