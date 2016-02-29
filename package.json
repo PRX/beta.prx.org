@@ -80,6 +80,7 @@
     "browserify-istanbul": "^0.2.1",
     "browserify-ngannotate": "^2.0.0",
     "browserify-shim": "^3.8.12",
+    "css-mqpacker": "^4.0.0",
     "evaporate": "0.0.2",
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
@@ -90,7 +91,7 @@
     "gulp-jade": "^1.1.0",
     "gulp-jshint": "^2.0.0",
     "gulp-newer": "^1.1.0",
-    "gulp-pleeease": "^2.0.2",
+    "gulp-postcss": "^6.1.0",
     "gulp-protractor": "^2.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sequence": "^0.4.5",
@@ -116,7 +117,8 @@
     "soundmanager2": "^2.97.20150601",
     "tiny-lr": "^0.2.1",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   },
   "optionalDependencies": {
     "karma-chrome-launcher": "^0.2.2",

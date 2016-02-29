@@ -2,7 +2,8 @@ var stylus     = require('gulp-stylus');
 var sourcemaps = require('gulp-sourcemaps');
 var concat     = require('gulp-concat');
 var nib        = require('nib');
-var pleeease   = require('gulp-pleeease');
+var postcss    = require('gulp-postcss');
+var mqpacker   = require('css-mqpacker');
 var newer      = require('gulp-newer');
 var through    = require('through2');
 
@@ -31,7 +32,7 @@ module.exports = function (gulp) {
         paths: ['src/app']
       }))
       .pipe(concat('app.css'))
-      .pipe(pleeease({mqpacker: true}))
+      .pipe(postcss([mqpacker]))
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('build/assets'));
   };
