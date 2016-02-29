@@ -22,6 +22,7 @@ ADD . ./
 RUN apk --update add --virtual build-dependencies libpng-dev make bash g++ ca-certificates && \
     wget https://github.com/andyshinn/alpine-pkg-glibc/releases/download/2.22-r5/glibc-2.22-r5.apk -P /root && \
     apk --allow-untrusted add /root/glibc-2.22-r5.apk && \
+    npm set progress=false && \
     npm install --no-optional --ignore-scripts --loglevel error && \
     (cd node_modules/pngcrush-bin && npm run postinstall) && \
     (cd node_modules/pngquant-bin && npm run postinstall) && \
