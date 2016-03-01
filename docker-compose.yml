@@ -11,5 +11,8 @@ server:
     - ./package.json:/app/package.json
   env_file: .env
   command: watch
+  environment:
+    VIRTUAL_HOST: www.docker
   ports:
     - "8080:8080"
+    - "35729:35729"

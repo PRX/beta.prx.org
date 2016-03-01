@@ -17,18 +17,19 @@ module.exports = function (gulp) {
     var lr = tinylr();
     lr.listen(35729);
     gutil.log('LiveReload server started on port 35729');
-    gulp.watch('build/**/*', function (e) {
+    gulp.watch('build/**/*', {interval: 100}, function (e) {
       gutil.log('--reloading ' + path.relative('build', e.path));
       lr.changed({ body: { files: [path.relative('build', e.path)] } });
     });
 
     // only care about non-minified tasks here
-    gulp.watch('src/index.html',        ['html']);
-    gulp.watch('src/**/*.js',           ['js:hint', 'js:app']);
-    gulp.watch('package.json',          ['js:app']);
-    gulp.watch('src/**/*.html.jade',    ['js:templates']);
-    gulp.watch('config/flags.conf.js',  ['html']);
-    gulp.watch('src/**/*.styl',         ['css:app']);
+    gulp.watch('src/index.jade',       ['html']);
+    gulp.watch('config/flags.conf.js', ['html']);
+    gulp.watch('src/**/*.js',          ['js:hint', 'js:app']);
+    gulp.watch('package.json',         ['js:app']);
+    gulp.watch('src/**/*.html.jade',   ['js:templates']);
+    gulp.watch('src/**/*.styl',        ['css:app']);
+    gulp.watch('build/*/!(*.gz)',      ['gzip']);
   };
 
 };

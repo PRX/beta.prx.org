@@ -7,6 +7,7 @@ var gseq  = require('gulp-sequence');
  */
 gulpTask('html',   []);
 gulpTask('assets', []);
+gulpTask('gzip',   []);
 
 gulpTask('vendor:aurora', []);
 gulpTask('vendor:mp3',    []);
@@ -24,10 +25,13 @@ gulpTask('css:min',    ['css:app']);
 gulpTask('css:assets', ['css:min', 'assets']);
 gulp.task('css',       ['css:assets']);
 
-gulpTask('gzip',       ['js', 'css', 'html', 'vendor']);
-gulp.task('build',     ['js', 'css', 'html', 'vendor', 'gzip']);
-gulpTask('watch',      ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
-gulpTask('watchdist',  ['build']);
+gulp.task('build:dev',  gseq(['html', 'assets', 'vendor', 'js:dev', 'css:app'], 'gzip'));
+gulp.task('build:dist', gseq(['js', 'css', 'html', 'vendor'], 'gzip'));
+gulp.task('build',      ['build:dist']);
+
+gulpTask('watch:dev',  [/*'build:dev'*/]);
+gulpTask('watch:dist', ['build:dist']);
+gulp.task('watch',     ['watch:dev']);
 
 gulpTask('spec:unit',  ['js:templates']);
 gulpTask('spec:e2e',   ['build']);
