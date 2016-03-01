@@ -24,7 +24,8 @@ gulpTask('css:min',    ['css:app']);
 gulpTask('css:assets', ['css:min', 'assets']);
 gulp.task('css',       ['css:assets']);
 
-gulp.task('build',     ['js', 'css', 'html', 'vendor']);
+gulpTask('gzip',       ['js', 'css', 'html', 'vendor']);
+gulp.task('build',     ['js', 'css', 'html', 'vendor', 'gzip']);
 gulpTask('watch',      ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
 gulpTask('watchdist',  ['build']);
 
