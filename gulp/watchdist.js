@@ -17,9 +17,14 @@ module.exports = function (gulp) {
     var lr = tinylr();
     lr.listen(35729);
     gutil.log('LiveReload server started on port 35729');
-    gulp.watch('build/**/*', {interval: 100}, function (e) {
-      gutil.log('--reloading ' + path.relative('build', e.path));
-      lr.changed({ body: { files: [path.relative('build', e.path)] } });
+    gulp.watch('build/**/*', function (e) {
+      var file = path.relative('build', e.path);
+      if (!file.match(/\.gz$/)) {
+        setTimeout(function waitForGzip() {
+          gutil.log('--reloading ' + file, file.match(/\/.gz$/));
+          lr.changed({ body: { files: [file] } });
+        }, 10);
+      }
     });
 
     // only care about non-minified tasks here
