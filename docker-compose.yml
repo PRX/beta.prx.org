@@ -9,6 +9,7 @@ server:
     - ./test:/app/test
     - ./gulpfile.js:/app/gulpfile.js
     - ./package.json:/app/package.json
+  env_file: .env
   command: watch
   ports:
     - "8080:8080"
