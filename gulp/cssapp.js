@@ -29,7 +29,7 @@ module.exports = function (gulp) {
       .pipe(stylus({
         use: [nib()],
         import: ['nib'],
-        paths: ['src/app']
+        paths: ['src/app', 'src/stylesheets']
       }))
       .pipe(concat('app.css'))
       .pipe(postcss([mqpacker]))
