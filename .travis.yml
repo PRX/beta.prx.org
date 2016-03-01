@@ -7,7 +7,6 @@ before_script:
 cache:
   directories:
   - build/assets/images
-  - node_modules
 notifications:
   slack:
     secure: cRLVag8O4sV61KNPuFve1UHzo3g6wwT+8z5tFRItXY+FrZ92fu4hCHjSdEHwgxblZmlsAXIgGxGvJPxDX6XRvV+j4bI52tS44u+OGsnwPB5DqUEnpRcD4HnXIIdQ8bFs4QlT7umD5U6cEQaUY0JU/uvFTUyUzy8yTa/bYCCF8lA=
