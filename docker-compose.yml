@@ -1,4 +1,4 @@
-server:
+www:
   build: .
   volumes:
     - ./config:/app/config
