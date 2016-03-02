@@ -29,6 +29,8 @@ else {
 
   // get the correct chromedriver in snap
   if (process.env['SNAP_CI']) {
+    console.log('Running snap-ci protractor via chromedriver...');
+    exports.config.directConnect = true;
     exports.config.chromeDriver = '/usr/local/bin/chromedriver';
   }
 }
