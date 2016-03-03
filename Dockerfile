@@ -7,7 +7,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-stati
 RUN chmod +x /tini
 
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 8080 8443
 
 ENTRYPOINT ["/tini", "--", "npm", "run-script"]
 CMD [ "start" ]
