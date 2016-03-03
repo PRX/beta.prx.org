@@ -23,12 +23,12 @@ module.exports = function (gulp) {
   function startServer (callback) {
     if (config.sauceUser) {
       gutil.log(gutil.colors.green('Running remotely via sauce labs...'));
-      callback(null, require('../lib/server').listen(config.port, 'index.html'));
+      callback(null, require('../lib/server').listen(config.port));
     }
     else {
       gutil.log(gutil.colors.green('Running locally via chromedriver...'));
       webdriver(function(err) {
-        callback(err, require('../lib/server').listen(config.port, 'index.html'));
+        callback(err, require('../lib/server').listen(config.port));
       });
     }
   }

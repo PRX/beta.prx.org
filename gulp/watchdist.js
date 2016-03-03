@@ -11,7 +11,7 @@ module.exports = function (gulp) {
   return function () {
     gulp.isWatchingStuff = true; // prevent exit
 
-    require('../lib/server').listen(port, 'index', true);
+    require('../lib/server').listen(port, null, 'index', true);
     gutil.log('Listening on port ' + port);
 
     var lr = tinylr();
