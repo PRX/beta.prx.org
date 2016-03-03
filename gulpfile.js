@@ -25,17 +25,19 @@ gulpTask('css:min',    ['css:app']);
 gulpTask('css:assets', ['css:min', 'assets']);
 gulp.task('css',       ['css:assets']);
 
-gulp.task('build:dev',  gseq(['html', 'assets', 'vendor', 'js:dev', 'css:app'], 'gzip'));
-gulp.task('build:dist', gseq(['js', 'css', 'html', 'vendor'], 'gzip'));
-gulp.task('build',      ['build:dist']);
+gulp.task('build:dev',  ['html', 'assets', 'vendor', 'js:dev', 'css:app']);
+gulp.task('build:dist', ['js', 'css', 'html', 'vendor']);
+gulp.task('build',      gseq('build:dist', 'gzip'));
 
-gulpTask('watch:dev',  [/*'build:dev'*/]);
-gulpTask('watch:dist', ['build:dist']);
+gulpTask('watch:dev',  ['clean:gzip', 'build:dev']);
+gulpTask('watch:dist', ['clean:gzip', 'build:dist']);
 gulp.task('watch',     ['watch:dev']);
 
 gulpTask('spec:unit',  ['js:templates']);
 gulpTask('spec:e2e',   ['build']);
 gulp.task('spec',      gseq('spec:unit', 'spec:e2e'));
+
+gulpTask('clean:gzip', []);
 
 // require a task from the gulp sub-dir
 function gulpTask(name, deps) {

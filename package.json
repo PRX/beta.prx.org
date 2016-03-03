@@ -38,8 +38,10 @@
     "start": "node lib/server.js",
     "build": "gulp build",
     "watch": "gulp watch",
-    "watchdist": "gulp watchdist",
-    "test": "gulp spec"
+    "watchdist": "gulp watch:dist",
+    "test": "gulp spec",
+    "testunit": "gulp spec:unit",
+    "teste2e": "gulp spec:e2e"
   },
   "engines": {
     "node": "~5.1.1",
@@ -88,6 +90,7 @@
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
     "gulp-base64": "^0.1.3",
+    "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",
     "gulp-csso": "^1.0.1",
     "gulp-gzip": "^1.2.0",
