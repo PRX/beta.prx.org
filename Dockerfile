@@ -12,6 +12,14 @@ EXPOSE 8080 8443
 ENTRYPOINT ["/tini", "--", "npm", "run-script"]
 CMD [ "start" ]
 
+# s3fs for letsencrypt shared directory
+ENV S3FS_VERSION 1.79
+RUN apk --update add fuse libxml2-dev curl-dev && \
+    apk --update add --virtual build-dependencies alpine-sdk automake autoconf fuse-dev && \
+    wget -qO- https://github.com/s3fs-fuse/s3fs-fuse/archive/v${S3FS_VERSION}.tar.gz | tar xz && \
+    (cd s3fs-fuse-${S3FS_VERSION} && ./autogen.sh && ./configure --prefix=/usr && make && make install) && \
+    apk del build-dependencies && rm -rf s3fs-fuse-${S3FS_VERSION} && rm -rf /var/cache/apk/*
+
 ADD . ./
 
 # we've got 4 node_modules to build:
