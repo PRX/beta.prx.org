@@ -19,8 +19,8 @@ ADD . ./
 #   pngquant-bin -> libpng-dev, make (build), bash (build), g++ (build)
 #   av           -> make
 #   mp3          -> make
-RUN apk --update add --virtual build-dependencies libpng-dev make bash g++ ca-certificates && \
-    wget https://github.com/andyshinn/alpine-pkg-glibc/releases/download/2.22-r5/glibc-2.22-r5.apk -P /root && \
+RUN apk --update add --virtual build-dependencies libpng-dev make bash g++ wget && \
+    wget --quiet --no-check-certificate https://github.com/andyshinn/alpine-pkg-glibc/releases/download/2.22-r5/glibc-2.22-r5.apk -P /root && \
     apk --allow-untrusted add /root/glibc-2.22-r5.apk && \
     npm set progress=false && \
     npm install --no-optional --ignore-scripts --loglevel error && \

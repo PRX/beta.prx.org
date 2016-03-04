@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({silent: true});
 
 /**
  * Configurations and feature flags

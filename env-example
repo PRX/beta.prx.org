@@ -7,6 +7,9 @@
 # ID_HOST=https://id.prx.dev
 # ID_CLIENT_KEY=FJb4CAROsm7IeCCBZGWhPFaF1uwBKpMEzqyNzqyt
 #
+# -- if running at www.docker --
+# ID_CLIENT_KEY=MjhLVeeqFFB8SpLxZnfOAKGjzk0fcZ5rCRFv9y4w
+#
 # NODE_ENV=staging
 # GA_KEY=UA-164824-46
 # ID_CLIENT_KEY=X5rYnqHGVBpqPTfHKYQyxG6PYfVj0l8nostkQzTC
