@@ -8,6 +8,7 @@ www:
     - ./src:/app/src
     - ./gulpfile.js:/app/gulpfile.js
     - ./package.json:/app/package.json
+  privileged: true
   env_file: .env
   command: watch
   environment:

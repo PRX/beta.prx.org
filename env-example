@@ -10,6 +10,12 @@
 # -- if running at www.docker --
 # ID_CLIENT_KEY=MjhLVeeqFFB8SpLxZnfOAKGjzk0fcZ5rCRFv9y4w
 #
+# -- for letsencrypt s3-bucketizing support (won't work in dev) --
+# LETSENCRYPT_BUCKET=my-bucket-name:/optional-subdirectory
+# AWSACCESSKEYID=s3-user-access-key
+# AWSSECRETACCESSKEY=s3-user-secret
+# SSL_PORT=8443
+#
 # NODE_ENV=staging
 # GA_KEY=UA-164824-46
 # ID_CLIENT_KEY=X5rYnqHGVBpqPTfHKYQyxG6PYfVj0l8nostkQzTC
