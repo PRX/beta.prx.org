@@ -1,7 +1,7 @@
 require 'json'
 role :web, %w{deploy@alpha.prx.org}
 set :deploy_to, '/var/www/domains/prx.org/m.staging'
-set :branch, :master
+set :branch, 'old/alphaprxorg_eol'
 
 set :default_env, -> {
   filename = File.expand_path('../../flags.staging.json' , __FILE__)
