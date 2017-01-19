@@ -47,6 +47,11 @@ angular.module('prx.picks', ['prx.modelConfig'])
 
   angular.element($window).on('resize', checkOverflows);
 
+  this.checkOverflows = checkOverflows;
+  this.getWatches = function () {
+    return watches;
+  };
+
   this.watch = function (elem, cb) {
     if (watches.indexOf(elem) != -1) {
       cbs[watches.indexOf(elem)].push(cb);

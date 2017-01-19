@@ -1,6 +1,6 @@
-ng-switch(on="auth.currentUser.loggedIn")
+ng-switch(on="currentUser.loggedIn")
   a(ng-switch-when="true")
-    span.name {{auth.currentUser.login}}
-    prx-img(src="auth.currentUser.imageUrl")
+    span.name {{currentUser.login}}
+    prx-img(src="currentUser.imageUrl")
   a(ng-switch-when="false") Sign In
-  .loading-spinner(ng-switch-default) 
+  .loading-spinner(ng-switch-default)

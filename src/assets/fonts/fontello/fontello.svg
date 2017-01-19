@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2014 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2015 by original authors @ fontello.com</metadata>
 <defs>
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -15,6 +15,11 @@
 <glyph glyph-name="cancel" unicode="&#xe806;" d="m654 349l346-346-154-154-346 346-346-346-154 154 346 346-346 346 154 154 346-346 346 346 154-154z" horiz-adv-x="1000" />
 <glyph glyph-name="eye" unicode="&#xe807;" d="m488 695c291 0 487-340 487-340s-196-339-487-339-488 339-488 339 196 340 488 340z m0-579c131 0 238 108 238 239s-107 239-238 239-239-108-239-239 107-239 239-239z m107 239c0-59-50-106-107-106-59 0-107 47-107 106 0 57 48 107 107 107 57 0 107-50 107-107z" horiz-adv-x="975" />
 <glyph glyph-name="archive" unicode="&#xe808;" d="m840 600l0-50-696 0 0 50q0 22 13 35t25 15l608 0q6 0 14-1t22-14 14-35z m-148 150q6 0 14-1t22-14 14-35l-498 0q0 22 13 35t25 15l410 0z m248-200q34-32 38-46 6-18 0-54l-76-450q-4-22-20-35t-28-15l-710 0q-52 0-60 50-6 26-39 223t-39 227q-10 22-3 44t10 26 21 20l10 10 30 30 0-80 836 0 0 80z m-248-270l0 100-70 0 0-80-260 0 0 80-68 0 0-100q0-50 48-50l300 0q22 0 35 12t13 24z" horiz-adv-x="981" />
+<glyph glyph-name="down-open" unicode="&#xe809;" d="m0 526l148 148 352-351 352 351 148-148-352-352-148-148-148 148z" horiz-adv-x="1000" />
+<glyph glyph-name="up-open" unicode="&#xe80a;" d="m0 174l352 352 148 148 148-148 352-352-148-148-352 351-352-351z" horiz-adv-x="1000" />
+<glyph glyph-name="resize-full" unicode="&#xe80b;" d="m0-150l0 441 148-148 202 201 144-144-201-202 148-148-441 0z m506 650l201 202-148 148 441 0 0-441-148 148-202-201z" horiz-adv-x="1000" />
+<glyph glyph-name="resize-small" unicode="&#xe80c;" d="m0-4l201 202-148 146 441 0 0-441-146 148-201-201z m506 360l0 441 146-148 202 201 146-146-201-202 148-146-441 0z" horiz-adv-x="1000" />
+<glyph glyph-name="pencil" unicode="&#xe80d;" d="m203-7l50 51-131 131-51-51v-60h72v-71h60z m291 518q0 12-12 12-5 0-9-4l-303-302q-4-4-4-10 0-12 13-12 5 0 9 4l303 302q3 4 3 10z m-30 107l232-232-464-465h-232v233z m381-54q0-29-20-50l-93-93-232 233 93 92q20 21 50 21 29 0 51-21l131-131q20-22 20-51z" horiz-adv-x="857.1" />
 </font>
 </defs>
 </svg>

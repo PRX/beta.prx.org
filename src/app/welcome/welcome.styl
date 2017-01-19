@@ -1,111 +1,111 @@
-.welcomeContainer {
-  position: relative;
-  background: rgb(42, 89, 102) url('/assets/images/tl_blue_radios.png');
-  color: white;
-  text-align: center;
-  width: 100%;
-  max-width: 1200px;
-
-  * {
-    color: inherit;
-  }
-
-  a.dismiss {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 42px;
-    height: @width;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 30;
-
-    &::after {
-      content: '';
-      width: 20px;
-      height: @width;
-      position: absolute;
-      top: 0;
-      left: 0;
-      image: '/assets/images/cancel_white.png' 20px;
-      top: 11px;
-      left: @top;
-    }
-
-    @media multi-column {
-      top: 30px;
-      right: @top;
-    }
-  }
-}
-
-.welcome {
-  padding: 35px tiny-horizontal-padding 25px;
-  max-width: 650px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 10;
-
-  h3 {
-    line-height: 1.25em;
-  }
-
-  h1 {
-    padding-bottom: 15px;
-  }
-
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-top: 10px;
-
-    section {
-      flex-basis: 100%;
-      padding: 15px 10px 0;
-
-      @media multi-column {
-        flex-basis: 50%;
-      }
-
-      h4 {
-        font-size: 14px;
-      }
-
-      a {
-        display: block;
-        background: orange;
-        font-size: 16px;
-        padding: 12px 0;
-        margin-top: 10px;
-        cursor: pointer;
-        min-width: 250px;
-
-        &.listen {
-          &::before {
-            content: '';
-            display: inline-block;
-            width: 18px;
-            height: 15px;
-            background: url('/assets/images/icons/headphones_sm@2x.png');
-            background-size: @width @height;
-            margin-right: 5px;
-          }
-        }
-
-        &.browse {
-          &::before {
-            content: '';
-            display: inline-block;
-            width: 17px;
-            height: @width;
-            background: url('/assets/images/icons/cart_sm@2x.png');
-            background-size: @width @height;
-            margin-right: 5px;
-            position: relative;
-            top: 3px;
-          }
-        }
-      }
-    }
-  }
-}
+// .welcomeContainer {
+//   position: relative;
+//   background: rgb(42, 89, 102) url('/assets/images/tl_blue_radios.png');
+//   color: white;
+//   text-align: center;
+//   width: 100%;
+//   max-width: 1200px;
+//
+//   * {
+//     color: inherit;
+//   }
+//
+//   a.dismiss {
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+//     width: 42px;
+//     height: @width;
+//     background: rgba(0, 0, 0, 0.3);
+//     z-index: 30;
+//
+//     &::after {
+//       content: '';
+//       width: 20px;
+//       height: @width;
+//       position: absolute;
+//       top: 0;
+//       left: 0;
+//       image: '/assets/images/cancel_white.png' 20px;
+//       top: 11px;
+//       left: @top;
+//     }
+//
+//     @media multi-column {
+//       top: 30px;
+//       right: @top;
+//     }
+//   }
+// }
+//
+// .welcome {
+//   padding: 35px tiny-horizontal-padding 25px;
+//   max-width: 650px;
+//   margin: 0 auto;
+//   position: relative;
+//   z-index: 10;
+//
+//   h3 {
+//     line-height: 1.25em;
+//   }
+//
+//   h1 {
+//     padding-bottom: 15px;
+//   }
+//
+//   div {
+//     display: flex;
+//     flex-wrap: wrap;
+//     justify-content: center;
+//     padding-top: 10px;
+//
+//     section {
+//       flex-basis: 100%;
+//       padding: 15px 10px 0;
+//
+//       @media multi-column {
+//         flex-basis: 50%;
+//       }
+//
+//       h4 {
+//         font-size: 14px;
+//       }
+//
+//       a {
+//         display: block;
+//         background: orange;
+//         font-size: 16px;
+//         padding: 12px 0;
+//         margin-top: 10px;
+//         cursor: pointer;
+//         min-width: 250px;
+//
+//         &.listen {
+//           &::before {
+//             content: '';
+//             display: inline-block;
+//             width: 18px;
+//             height: 15px;
+//             background: url('/assets/images/icons/headphones_sm@2x.png');
+//             background-size: @width @height;
+//             margin-right: 5px;
+//           }
+//         }
+//
+//         &.browse {
+//           &::before {
+//             content: '';
+//             display: inline-block;
+//             width: 17px;
+//             height: @width;
+//             background: url('/assets/images/icons/cart_sm@2x.png');
+//             background-size: @width @height;
+//             margin-right: 5px;
+//             position: relative;
+//             top: 3px;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

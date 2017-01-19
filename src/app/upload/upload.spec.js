@@ -53,7 +53,7 @@ describe('prx.upload', function () {
       var mockFile = {name: 'foo', testId: 123};
       var up = uploadSvc.upload(mockFile);
       expect(up.file).toEqual(mockFile);
-      expect(up.uploadId).toEqual(123);
+      expect(up.uploadId).toResolveTo(123);
       expect(up.progress).toEqual(0);
     });
 
@@ -92,6 +92,12 @@ describe('prx.upload', function () {
       $rs.$apply( function() { completeFn(); } );
       expect(upload).toBeDefined();
       expect(upload.upload).toBeDefined();
+    });
+
+    it('can pull upload by guid', function () {
+      var mockFile = {name: 'foo', testId: 123};
+      var u = uploadSvc.upload(mockFile);
+      expect(uploadSvc.getUpload(u.guid)).toEqual(u);
     });
 
   });

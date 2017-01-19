@@ -1,4 +1,46 @@
 angular.module('prx.ui.nav', [])
+.service('XiContextMenu', function ($rootScope, $timeout) {
+  var ContextMenu = this;
+  this.show = false;
+  $rootScope.$on("$stateChangeStart", function (event, toState) {
+    $timeout(function () {
+      if (!event.defaultPrevented) {
+        if (!toState.views || !toState.views["contextMenu@"]) {
+          ContextMenu.show = false;
+        }
+      }
+    }, 0);
+  });
+  $rootScope.$on("$stateChangeError", function (event, toState, _, fromState) {
+    $timeout(function () {
+      if (fromState.views && fromState.views["contextMenu@"]) {
+        ContextMenu.show = true;
+      }
+    }, 0);
+  });
+  $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+    $timeout(function () {
+      if (toState.views && toState.views["contextMenu@"]) {
+        ContextMenu.show = true;
+      }
+    }, 0);
+  });
+})
+.directive('xiContextMenu', function (XiContextMenu, $animate) {
+  return {
+    restrict: 'E',
+    link: function (scope, elem, attrs) {
+      scope.menu = XiContextMenu;
+      scope.$watch('menu.show', function (show) {
+        if (show) {
+          $animate.addClass(elem, 'visible');
+        } else {
+          $animate.removeClass(elem, 'visible');
+        }
+      });
+    }
+  };
+})
 .directive('prxDrawer', function (PRXDrawer) {
   return {
     restrict: 'E',

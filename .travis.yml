@@ -11,19 +11,9 @@ cache:
   - vendor
   - node_modules
 notifications:
-  hipchat:
-    rooms:
-      secure: QD5mL+SG+V3gSV8CKPK8oMh+ga9oygOJwxnIev3ik5dA7G5eH81penO9wSMeypyUp66RbVaJrp5tKTmBWFdI+HTIT7cNYGeujUxOn+GJ51c02lLjEHmNKja/VU+CzSOd42nhPPNGib3WRhFYKiGolBnePeoe83jF76W7zkFcslY=
-    template:
-    - <strong>%{repository_name}#%{commit} on %{branch} by %{author}</strong> <a href="%{build_url}">build</a>
-      / <a href="%{compare_url}">changes</a>
-    format: html
+  slack:
+    secure: cRLVag8O4sV61KNPuFve1UHzo3g6wwT+8z5tFRItXY+FrZ92fu4hCHjSdEHwgxblZmlsAXIgGxGvJPxDX6XRvV+j4bI52tS44u+OGsnwPB5DqUEnpRcD4HnXIIdQ8bFs4QlT7umD5U6cEQaUY0JU/uvFTUyUzy8yTa/bYCCF8lA=
 addons:
-  # sauce_connect:
-  #   username:
-  #     secure: ZjhXedIYs8hLKqfqJ3v9fqJB78p28pIs0/iz1kRspfZ8fpQ8twQ+ViPKB98FjhiLDR9vKFOHa23vpMmJNIjFYaD9gem4J9A7OtadMVkIUiHw6L5KljEZu+Tnu+IWpqV2xEUXpjYEjcXAyVRU0qhrL5qOba4yyJipNLQhaQzTsLw=
-  #   access_key:
-  #     secure: KNEVg8+zXX7ZuYYaxRtJCkw81hoSzmGcCr5AwqOJUZ69kBzxVvleMTQUujhrVBGvTHsb/clpZj1TBWWf7PSsNiXYga/fO66RVoagonkO/U6ZSNMxk9S3bWs7Gm9p8DLG6m78PUn4kGRStaJ4+tAdTPlgN6COyvx3o7JOb6jeuG0=
 env:
   global:
     secure: NbiuAcWkmBYRych4+6k/zYRBS3YAp7UUSDnlNSyivkvQkHeHCQ7CkZxUj170juk++ONl8L4mHB0/+Cez7ytwD4kNHuvrP9NLrDMyLZZ354nkE8z5RuDGCEXPfNwFjl/BjkiIRUs/1J97iT3MA42zmQP6Qy+mc5nmuuKRHUAG41M=

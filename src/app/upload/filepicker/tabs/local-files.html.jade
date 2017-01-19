@@ -1,0 +1,10 @@
+.tab-content(
+  ng-dragover="overlay.filesHovering($event)",
+  ng-drop="overlay.filesDropped($event)",
+  ng-dragleave="overlay.filesLeave($event)",
+  prx-file-select-button,
+  on-files-selected="overlay.selectFiles($files)",
+  ng-class="{hovering: overlay.hovering}")
+  span Drag Files Here to Upload
+  small or
+  button Select Files
