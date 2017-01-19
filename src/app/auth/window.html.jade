@@ -1,8 +1,7 @@
 ng-switch(on="auth.currentUser.loggedIn")
   div(ng-switch-when="true")
-    h3 Hi, {{auth.currentUser.login}}!
-    p You are seeing a beta version of PRX.org
-    p
-      a(ng-href="{{app.desktopUrl}}") Click here
-      | to go back to the old site.
+    b
+      a.account(ui-sref="auth.currentUser.account") {{auth.currentUser.login}}
+    h4 My Series
+    prx-auth-series-list
   iframe(ng-switch-default, prx-auth-login-frame)

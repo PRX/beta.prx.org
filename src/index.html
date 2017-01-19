@@ -15,6 +15,9 @@
   <prx-drawer drawer="main" class="_chase">
     <header ng-class="{'loading': loading}" class="chrome">
       <prx-loading-bar></prx-loading-bar>
+      <xi-context-menu class="context-menu">
+        <ui-view name="contextMenu"></ui-view>
+      </xi-context-menu>
       <div>
         <prx-drawer-button></prx-drawer-button>
         <h1>
@@ -65,7 +68,13 @@
       </ul>
     </footer>
     <prx-global-player></prx-global-player>
+    <prx-file-picker-overlay></prx-file-picker-overlay>
   </prx-drawer>
+  <div id="sheet" lock-parent-scrolling xi-sheet>
+    <xi-sheet-title></xi-sheet-title>
+    <button xi-sheet-dismiss></button>
+    <ui-view name="sheet"></ui-view>
+  </div>
 <% if (!compile) { %><script>
   var z = document.createElement('script');
   z.src = "http://"+window.location.hostname+":35729/livereload.js";
@@ -95,7 +104,7 @@
   })();
 </script>
 <% } scripts.forEach(function(file) { %>
-<script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
-<script src="//load.sumome.com/" data-sumo-site-id="52f6d15ee6e307ab8824cb3ed20440c1d57991cfac67626e1f8c915ef81eb714" async></script>
+<script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %><% if (compile) { %>
+<script src="//load.sumome.com/" data-sumo-site-id="52f6d15ee6e307ab8824cb3ed20440c1d57991cfac67626e1f8c915ef81eb714" async></script><% } %>
 </body>
 </html>

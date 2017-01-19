@@ -4,8 +4,9 @@ angular.module('prx.errors', ['ui.router'])
     $injector.get('prxError').routerError($location.url());
   });
 })
-.run(function ($rootScope, prxError) {
+.run(function ($rootScope, prxError, $log) {
   $rootScope.$on('$stateChangeError', function (event, toState, stateParams, fromState, fromParams, error) {
+    $log.error(arguments);
     prxError.stateChangeError(toState, stateParams, fromState, fromParams, error);
   });
   $rootScope.$on('$stateChangeStart', prxError.dismiss);
@@ -21,7 +22,6 @@ angular.module('prx.errors', ['ui.router'])
 })
 .service('prxError', function ($state) {
   var lastError, self = this;
-
 
   function GeneralError (headline, message) {
     if(headline) {

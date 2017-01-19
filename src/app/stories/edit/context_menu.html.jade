@@ -1,0 +1,13 @@
+nav(ng-class="{'alert': story.current.$dirty}")
+  .xi-nav-item
+    .nav-holder
+      a Help
+  .xi-nav-item
+    .nav-holder
+      button(ng-click="story.save()") Save
+  .xi-nav-item
+    .nav-holder
+      button(ng-click="story.publish()") Save and Publish
+  .xi-nav-item
+    .nav-holder
+      a(ui-sref="story.current") Discard
