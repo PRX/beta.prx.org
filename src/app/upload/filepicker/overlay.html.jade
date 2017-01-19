@@ -1,0 +1,18 @@
+#filepicker-overlay(ng-show="overlay.picker.visible", ng-dragover="$event.stopPropagation()")
+  #filepicker
+    button.dismiss(ng-click="overlay.picker.dismiss()") Cancel
+    xi-tabs
+      xi-tab
+        xi-tab-name File Upload
+        xi-tab-content
+          .alert-container(ng-show="overlay.picker.alert")
+            .alert
+              p There was an upload error.
+              p {{ overlay.picker.alert }}
+          prx-local-file-upload-tab
+      xi-tab(disabled)
+        xi-tab-name PRX Dropbox
+      xi-tab(disabled)
+        xi-tab-name Dropbox.com
+      xi-tab(disabled)
+        xi-tab-name SoundCloud

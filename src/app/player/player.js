@@ -42,17 +42,26 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     if (prxPlayer.nowPlaying && options.story.id == prxPlayer.nowPlaying.story.id) {
       sound = prxPlayer.nowPlaying;
     } else {
-      sound = smSound.createList(options.audioFiles, {
-        onfinish: function () {
-          if (angular.isFunction(sound.onfinish)) {
-            sound.onfinish();
+      if (options.audioFiles && options.audioFiles.length) {
+        sound = smSound.createList(options.audioFiles, {
+          onfinish: function () {
+            if (angular.isFunction(sound.onfinish)) {
+              sound.onfinish();
+            }
           }
-        }
-      });
+        });
+      } else {
+        sound = {
+          shell: true,
+          paused: true
+        };
+      }
     }
 
     sound.producer = options.producer;
     sound.story = options.story;
+    sound.data = options.data || {};
+    sound.cDuration =  options.duration || (sound.story && sound.story.duration) || 1;
     sound.next = sound.next || (options.next ? mkNextFun(options.next) : undefined);
 
     return sound;
@@ -134,7 +143,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
       }
       this.sendHeartbeat();
       var percent = Math.round(this.nowPlaying.position /
-        this.nowPlaying.story.duration) / 10;
+        this.nowPlaying.cDuration ) / 10;
       if (percent > 90 && this.nowPlaying.next) {
         this.nowPlaying.next();
       }
@@ -234,7 +243,7 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   };
 
   this.duration = function () {
-    return (this.sound && this.sound.story.duration) || 1;
+    return this.sound.cDuration;
   };
 
   this.scrubToPercent = function (percent) {
@@ -242,10 +251,24 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   };
 
   this.setPosition = function (position) {
-    if (prxPlayer.nowPlaying == this.sound) {
-      prxPlayer.sendHeartbeat(true);
+    if (!this.disabled()) {
+      if ( prxPlayer.nowPlaying == this.sound) {
+        prxPlayer.sendHeartbeat(true);
+      }
+      this.sound.setPosition(position);
     }
-    this.sound.setPosition(position);
+  };
+
+  this.disabled = function () {
+    return !this.sound || this.sound.shell;
+  };
+
+  this.loading = function () {
+    return this.sound && this.sound.loading;
+  };
+
+  this.playing = function () {
+    return !this.disabled() && !this.sound.paused;
   };
 })
 .directive('prxPlayerScrubber', function () {

@@ -19,7 +19,7 @@ $button-with-icon {
 $background-orange {
   background-color: $orange;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: $dark-orange;
   }
 }
@@ -27,7 +27,7 @@ $background-orange {
 $background-blue {
   background-color: $blue;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: $dark-blue;
   }
 }
@@ -69,5 +69,9 @@ $player-button {
   &.loading:not(.play) {
     background-image: none;
     loading-indicator();
+  }
+
+  &:disabled {
+    background-image: none;
   }
 }

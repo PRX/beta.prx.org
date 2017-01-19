@@ -1,0 +1,9 @@
+div
+  input.large(ng-model="uploadAudio.audioFile.label", placeholder="{{::uploadAudio.audioFile.label || uploadAudio.audioFile.filename}}")
+  span.duration(ng-bind="uploadAudio.audioFile.duration * 1000 | timeCode: 'short'")
+  xi-progress-bar(progress="uploadAudio.audioFile.$fileUpload.progress")
+  div
+    prx-player(sound="uploadAudio.sound", class="small")
+    div
+      a.delete(ng-click="uploadAudio.onRemove()") Delete Audio
+      a(title="{{uploadAudio.status}}", ng-class="uploadAudio.status")

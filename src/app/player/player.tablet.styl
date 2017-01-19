@@ -38,11 +38,15 @@
       }
 
       .scrubber {
-        flex: 0 auto;
+        flex-shrink: 0;
+        flex-grow: 1;
+        flex-basis: 100%;
+        max-width: 0%;
         overflow: hidden;
         -webkit-mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC');
         mask: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0xIGhlaWdodD0xPg0KPG1hc2sgbWFza0NvbnRlbnRVbml0cz0ib2JqZWN0Qm91bmRpbmdCb3giIG1hc2tVbml0cz0ib2JqZWN0Qm91bmRpbmdCb3giPg0KICAgIDxyZWN0IGZpbGw9IndoaXRlIiB4PTAgeT0wIHdpZHRoPTEgaGVpZ2h0PTEvPg0KICA8L21hc2s+DQo8L3N2Zz4=');
         background-color: rgba($slight-grey, 0.6);
+        transition: max-width 0.2s linear;
 
         .waveform {
           border-color: $slight-grey;
@@ -50,7 +54,9 @@
       }
 
       .inverse {
-        flex: 1;
+        flex-shrink: 1;
+        flex-grow: 0;
+        flex-basis: 100%;
         position: relative;
         z-index: 10;
         background-color: rgba($darkest-blue, 0.6);

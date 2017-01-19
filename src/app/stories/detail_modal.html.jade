@@ -1,5 +1,5 @@
 h1(ng-bind="story.current.title")
-article(ng-bind-html="story.current.description")
+article(ng-bind-html="story.current.description", lock-parent-scrolling)
 ul.actions
   li
     a.listen(ui-sref="story.show({storyId:story.current.id, play: true})") Listen Now

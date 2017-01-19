@@ -15,6 +15,8 @@
 
 @import "stories/_stories.embed.styl";
 
+@import "stories/edit/sheet.styl";
+
 article.story {
   .main,
   .asides {
@@ -176,4 +178,68 @@ article.story .asides {
       }
     }
   }
+}
+
+div.inlay {
+  margin: 10px;
+  border: 1px solid $slight-grey;
+  background-color: $offwhite;
+  padding: 10px;
+  border-radius: $border-radius;
+}
+
+input, textarea {
+  color: $grey;
+}
+
+textarea {
+  background-color: $offwhite;
+  border: 1px solid $slight-grey;
+}
+
+input.large {
+  font-size: 1.26em;
+}
+
+label {
+  display: block;
+  font-size: 1.4em;
+  margin-bottom: 35px;
+  input, textarea {
+    display: block;
+    width: 100%;
+    font-size: 0.7em;
+    margin-top: 15px;
+  }
+  input.large {
+    font-size: 0.9em;
+  }
+  textarea {
+    height: 65px;
+    padding: 10px;
+  }
+
+  textarea.small {
+    height: 53px;
+  }
+}
+
+input:focus, textarea:focus {
+  background-color: $white;
+}
+
+label small {
+  display: block;
+  font-size: 0.6em;
+  line-height: 1.2em;
+  color: $light-grey;
+  margin-top: 10px;
+}
+
+form {
+  margin: 10px;
+}
+
+#sheet tabs.vertical > ul {
+  max-width: 105px;
 }

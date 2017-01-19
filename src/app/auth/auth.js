@@ -64,7 +64,7 @@ angular.module('prx.auth', ['prx.ui.nav'])
     }).then(function (account) {
       currentUser.account = account;
       return account.follow('prx:image');
-    }).then(function(image) {
+    }).then(function (image) {
       currentUser.imageUrl = image.link('enclosure').url();
       return currentUser;
     });
@@ -110,6 +110,20 @@ angular.module('prx.auth', ['prx.ui.nav'])
   PrxAuth.currentUser().then(function (user) {
     ctrl.currentUser = user;
   });
+}).directive('prxAuthSeriesList', function () {
+  return {
+    restrict: 'E',
+    templateUrl: 'auth/series.html',
+    controller: function (PrxAuth) {
+      var ctrl = this;
+      PrxAuth.currentUser(true).then(function (user) {
+        return user.account.follow('prx:series').follow('prx:items');
+      }).then(function (items) {
+        ctrl.series = items;
+      });
+    },
+    controllerAs: 'authSeriesList'
+  };
 }).directive('prxAuthWindow', function () {
   return {
     restrict: 'E',

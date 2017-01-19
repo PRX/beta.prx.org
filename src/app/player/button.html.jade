@@ -1,3 +1,4 @@
 button(
-  ng-class="{loading: player.sound.loading, play: player.sound.paused}",
-  ng-click="player.toggle()")
+  ng-class="{loading: player.loading(), play: !player.playing()}",
+  ng-click="player.toggle()",
+  ng-disabled="player.disabled()")
