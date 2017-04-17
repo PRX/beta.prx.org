@@ -27,6 +27,9 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
       },
       account: function(series) {
         return series.follow('prx:account');
+      },
+      currentUser: function(PrxAuth) {
+        return PrxAuth.currentUser();
       }
     }
   })
@@ -57,10 +60,15 @@ ngHalProvider.setRootUrl(FEAT.apiServer)
     resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url').or(null);
   }]);
 })
-.controller('SeriesCtrl', function (series, stories, account) {
+.controller('SeriesCtrl', function (series, stories, account, currentUser) {
   this.current = series;
   this.stories = stories;
   this.account = account;
+
+  this.isEditable = false;
+  if (currentUser && currentUser.account) {
+    this.isEditable = account.id == currentUser.account.id;
+  }
 })
 .controller('SeriesStoriesCtrl', function (list, stories, series) {
   this.current = series;

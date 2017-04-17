@@ -1,10 +1,13 @@
 angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
 .config(function ($provide, ngHalProvider) {
   var $q, $rootScope, FAKE_ROOT = 'http://nghal.org/fake_root';
-  
+
   function unfolded(doc) {
     if (angular.isFunction(doc.links)) {
       doc._links = doc.links.dump();
+    }
+    if (angular.isUndefined(doc._links)) {
+      doc._links = {};
     }
     return doc;
   }
@@ -72,6 +75,12 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
       var args = [].slice.call(arguments, 1);
       return promised(this.then(function (d) {
         return d[meth].apply(d, args);
+      }));
+    };
+    obj.build = function () {
+      var args = arguments;
+      return promised(this.then(function (d) {
+        return d.build.apply(d, args);
       }));
     };
     return obj;

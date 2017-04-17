@@ -1,4 +1,40 @@
 angular.module('prx.ui.nav', [])
+.service('XiContextMenu', function ($rootScope) {
+  var ContextMenu = this;
+  this.show = false;
+  $rootScope.$on("$stateChangeStart", function (event, toState) {
+    if (!event.defaultPrevented) {
+      if (!toState.views || !toState.views["contextMenu@"]) {
+        ContextMenu.show = false;
+      }
+    }
+  });
+  $rootScope.$on("$stateChangeError", function (event, toState, _, fromState) {
+    if (fromState.views && fromState.views["contextMenu@"]) {
+      ContextMenu.show = true;
+    }
+  });
+  $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+    if (toState.views && toState.views["contextMenu@"]) {
+      ContextMenu.show = true;
+    }
+  });
+})
+.directive('xiContextMenu', function (XiContextMenu, $animate) {
+  return {
+    restrict: 'E',
+    link: function (scope, elem, attrs) {
+      scope.menu = XiContextMenu;
+      scope.$watch('menu.show', function (show) {
+        if (show) {
+          $animate.addClass(elem, 'visible');
+        } else {
+          $animate.removeClass(elem, 'visible');
+        }
+      });
+    }
+  };
+})
 .directive('prxDrawer', function (PRXDrawer) {
   return {
     restrict: 'E',
@@ -283,7 +319,7 @@ angular.module('prx.ui.nav', [])
         });
 
         holder.on('mouseleave', function () {
-          holder.removeClass('expanded');
+          // holder.removeClass('expanded');
         });
         holder.children().eq(1).append($compile(ctrl.item.dropdownTemplate)(scope.$parent));
       }

@@ -1,6 +1,6 @@
 angular.module('prx.stories', [
   'ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate',
-  'prx.accounts', 'prx.experiments', 'angulartics'])
+  'prx.accounts', 'prx.experiments', 'angulartics', 'prx.stories.edit'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -125,7 +125,7 @@ angular.module('prx.stories', [
         return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
       },
       getAccount: function () {
-        if (!angular.isDefined(this.$account)) {
+        if (!angular.isDefined(this.$account) && this.links.all('prx:account')) {
           this.$account = this.follow('prx:account').then(
             angular.bind(this, setAccount)
           );

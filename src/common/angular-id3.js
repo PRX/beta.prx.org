@@ -6,7 +6,7 @@ angular.module('angular-id3', ['async-loader'])
   var Id3Service = this;
 
   var loadId3 = function () {
-    return AsyncLoader.load('/vendor/id3/dist/id3.js').then( function() {
+    return AsyncLoader.load('/vendor/id3/dist/id3.js').then(function() {
       Id3Service.$id3 = $window.id3;
     });
   };
@@ -19,6 +19,9 @@ angular.module('angular-id3', ['async-loader'])
         angular.extend(ft, vtags);
         delete ft['v'+i];
       }
+    }
+    if (tags['v2']) {
+      ft.image = tags.v2.image;
     }
     return ft;
   };
