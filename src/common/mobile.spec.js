@@ -1,10 +1,13 @@
+var helper = require('./spec-helper');
+var mobile = require('./mobile');
+
 describe('ngMobile', function () {
-  beforeEach(module('ngMobile'));
+  beforeEach(helper.module(mobile));
   describe ('ngMobileOS', function () {
 
     function setUA(uaString, fun) {
       return function () {
-        module(function ($provide) {
+        helper.module(function ($provide) {
           $provide.decorator('$window', function () {
             return {
               navigator: {

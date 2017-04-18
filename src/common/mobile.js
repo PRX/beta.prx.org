@@ -1,5 +1,10 @@
-angular.module('ngMobile', [])
-.factory('ngMobileOS', function ($window) {
+var angular = require('angular');
+
+// mobile browser helpers
+var app = angular.module('ngMobile', []);
+module.exports = app.name;
+
+app.factory('ngMobileOS', function ($window) {
   var ANDROID_UA = /android/i,
     IOS_UA = /iP(?:hone|ad|od)/i;
   if (ANDROID_UA.test($window.navigator.userAgent)) {

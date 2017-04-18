@@ -1,4 +1,5 @@
 # PRX.org Version 4
+[![Build Status](https://preview.snap-ci.com/PRX/www.prx.org/branch/master/build_image)](https://preview.snap-ci.com/PRX/www.prx.org/branch/master)
 [![Build Status](https://travis-ci.org/PRX/www.prx.org.png?branch=master)](https://travis-ci.org/PRX/www.prx.org)
 [![Coverage Status](https://coveralls.io/repos/PRX/www.prx.org/badge.png?branch=master)](https://coveralls.io/r/PRX/www.prx.org?branch=master)
 
@@ -19,17 +20,42 @@
     at [id.prx.org](https://id.prx.org).
 
 ## Getting Started
-The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS, NPM, and pow installed.
+The quickest way to get started is to check out the repository and docker-compose it against our live v4 backend, in just a few commands. You will need to have dinghy and docker running.
+
+Currently, you'll also need to have a recent version of Node (5.x.x) installed locally.
 
 ```shell
-git clone git://github.com/PRX/www.prx.org.git prx.org
-cd prx.org
-echo 8080 > ~/.pow/www.prx
+git clone git://github.com/PRX/www.prx.org.git www.prx.org
+cd www.prx.org
+
+# install local dependencies and config
 npm install
-npm run-script devServer
+cp env-example .env
+
+# edit .env and uncomment the ID_CLIENT_KEY for www.prx.docker
+vi .env
+
+# run docker
+dinghy up
+docker-compose build
+docker-compose up
+open www.prx.docker
 ```
 
-After executing the above, opening a web browser to `http://www.prx.dev/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
+This runs a dev-server, which watches the code for changes.  The test suite currently only runs locally (not in Docker):
+
+```shell
+npm run test
+
+# ... or ...
+npm run testunit
+npm run teste2e
+
+# ... or to run end-to-end tests in sauce labs ...
+export SAUCE_USERNAME=somebody
+export SAUCE_ACCESS_KEY=something
+npm run teste2e
+```
 
 ## Architecture
 Version 4 of PRX.org is implemented as a constellation of applications – currently a *CMS API* which is executed by the server and implemented using Ruby on Rails, a *frontend* which is executed by web browsers and implemented using AngularJS, an *Identification Service* supporting user registration and sign-in, and several other small server-side applications which may react to events occurring throughout the system, provide a public HTTP API, or both.
@@ -37,48 +63,66 @@ Version 4 of PRX.org is implemented as a constellation of applications – curre
 ### General Principles
 The application is built in javascript using AngularJS and Stylus (a CSS-like language which compiles to CSS).
 
-#### Compiled
+#### Building
 Because of the nature of optimizations which need to take place when serving rich web applications, this project has a build process which performs these optimizations before and during deployment.
 
-Most of this process is handled by Gulp. During development, gulp continuously `build`s the project and runs the tests to ensure that they continue to pass. On the integration server, after these tests have passed, those assets are further compressed and optimized (`compile`d) and the same tests are executed against the new assets. During deployment, assets are `compile`d and tested on the deployment server. Deployments fail if these tests do not pass.
+Most of this process is handled by Gulp. During development, gulp continuously `build`s the project, keeping your `app.js` and `app.css` up to date. In staging/production, these files are further minified and gzipped.  To run your dev server against a prod-like build, use the gulp `build:dist` and `watch:dist` tasks, rather than `build:dev` and `watch:dev`.
+
+The unit tests are run against non-minified javascript, compiled via Browserify.  The end-to-end tests are run against minified prod-like javascript.
 
 #### Dependencies
-Dependencies on libraries are handled using `npm` and dependencies on browser packages are handled using `bower`. NPM will automatically invoke bower correctly as part of the `npm install` process.
+Dependencies on libraries are all handled using `npm`. Most are `require`d into the files that use them, except for several `vendor` libraries that are not compiled into `app.js` (see `gulp/vendor.js`).
 
 #### Testing
 This project should be well unit tested. There are (fairly low) code coverage requirements on the suites that will cause them to fail integration if they are not met. Tests are written with Jasmine.
 
-End to End tests are useful but because they are coupled to both the frontend and backend simultaneously they can largely be ignored for the time being. A solution is being devised that will more fully work to continuously integrate this process.
+End to end tests run via Protractor. When running locally, they'll likely launch your Chrome/Firefox/Safari/etc. When running in CI, they use Sauce Labs. Because of the number of services touched by these tests, they may eventually leave this repo and move over to the [meta.prx.org](https://github.com/PRX/meta.prx.org) acceptance test suite.  (Which guards against incompatible services being deployed to production).
 
-##### Travis CI
-Tests are automatically run by Travis CI in several circumstances. Generally, this is used to ensure that `master` always passes (see [*Master is Always Deployable*](#master-is-always-deployable), below) and for visibility into test statuses on Pull Requests.
+##### CI
+Tests initially ran via Travis CI. As this converts to a Dockerized project, the tests will move over to Snap CI.  However, the e2e tests are a bit trickier to run there, so currently we're testing in multiple places. We block pull requests that do not pass tests, so that `master` always passes (see [*Master is Always Deployable*](#master-is-always-deployable), below).
 
 #### Deploying
-Deployment is handled through Capistrano. If you have access to commit directly to this repo, you probably have deploy permissions as well. If you don't, you will likely need to customize the deployment scripts anyway, so it will not be addressed in detail here. The basics are these:
+When a `master` pipeline passes tests in Snap CI, it is automatically dockerized and pushed to the Elastic Container Registry. Then the new ECR image is deployed to our `prx-staging` EC2 Container Services cluster.
 
-```shell
-cap production deploy # deploys to beta.prx.org, *always* from master
-cap staging deploy    # deploys to alpha.prx.org, allows specifying the branch
-```
+After Staging is updated, a new [meta.prx.org](https://preview.snap-ci.com/PRX/meta.prx.org/branch/master) pipeline is triggered.  This runs acceptance tests against all PRX services in staging, and decides if this combination of services can be deployed to production.
 
-If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let chris know.
+The final "deploy to production" stage is currently manual, but just requires a single button click in Snap CI.
 
 ##### Master is Always Deployable
 We're able to make very little ceremony out of deploying because master is always deployable (and, in fact, will likely be automatically deployed in the future). We maintain this state of affairs by ensuring that our code is well-tested ([automatically](#testing), with help from [Travis CI](#Travis-CI)) and by following a code review process that uses Github Pull Requests to ensure that at least two people have looked at each set of changes.
 
 ### Project Layout
-The project is broken into several directories. Everything that is automatically generated as part of the build process (mentioned above) is ignored by git and therefore never checked into source control. For this reason, I will refer to directories that are not visible in the Github source tree, but will be automatically generated as part of the `npm install` or `npm run-script devServer` processes.
 
-#### `config/`
-All configuration details are stored in this folder, including
+#### Configuration
 
-File               | Description
------------------: | :--------------------------------
-`build.json`         | Most of the details about which files are used by which build target
-`deploy.rb`          | Used by Capistrano for deployment
-`flags.*.json`       | `build` and `compile` time flags which are automatically inserted into the code. Useful for situations where it is important to optimize varying behavior out before deploying.
-`karma.conf.js`      | Used by `karma` to run unit tests.
-`protractor.conf.js` | Used by `protractor` to run end to end tests.
+File                        | Description
+--------------------------: | :--------------------------------
+`.env`                      | Configures your dev environment. Identical to doing `export FLAG_NAME=value`.
+`config/flags.conf.js`      | Computes the environment feature-flags and configures backend services. Uses a combination of `ENV` > `.env` > defaults.
+`config/karma.conf.js`      | Used by `karma` to run unit tests.
+`config/protractor.conf.js` | Used by `protractor` to run end to end tests.
+
+In development, you'll want to `cp env-example .env`, and edit to suit your needs.  In ECS environments, configurations will be passed to Docker via ENV variables.
+
+#### Building
+
+File                        | Description
+--------------------------: | :--------------------------------
+`Dockerfile`                | Used to build a tiny, tiny docker image
+`docker-compose.yml`        | Dev environment
+`gulpfile.js`               | Manifest for js/css building processes
+`gulp/*.js`                 | Individual gulp tasks
+
+When the build completes, you end up with several things in the `/build` directory:
+
+File                        | Description
+--------------------------: | :--------------------------------
+`build/index.jade`          | A direct copy of `src/index.jade`. Because the docker-image removes all directories other than `build` and `lib`.
+`build/flags.conf.js`       | A direct copy of `config/flags.conf.js`. Flags are set by ENV variables at runtime.
+`build/assets/*`            | The browser-compatible css/js. Also includes fonts and images.
+`gulp/vendor/*`             | Third party libs that are loaded on-demand, and not included in the actual `app.js`.
+
+#### Application Source
 
 #### `src/`
 Application code lives under the `src/` directory. In practice, only assets that
@@ -157,24 +201,8 @@ flag is dependencies on other modules) it should instead go to [`src/app/`](#src
 As with application javascript files, specs live alongside their implementation
 in this folder - again, with the extension `.spec.js`.
 
-
 ##### `src/stylus/`
 *coming soon*
 
 ##### `src/assets/`
 *coming soon*
-
-#### `public/` and `bin/`
-Files here are automatically generated and any changes made to them will be lost. You should make changes in the `src/` directory, where they will be automatically picked up and updated where appropriate.
-
-Files generated by the `build` process are put in the `public/` directory. When you access the server started by `npm run-script devServer`, the files you are using are served from this directory. While this script is running, any changes made will automatically be reflected in the `public/` directory.
-
-Files generated by the `compile` process are put in the `bin/` directory. These are further compressed and minified versions of the files put in the `public/` directory, and may use different versions of vendor assets.
-
-#### `vendor/` and `node_modules/`
-
-Files managed by `bower` and `npm`, respectively, live here. *Changes made to these files directly will be lost.* The packages and versions of those packages that will be put in these folders are specified by `bower.json` and `package.json`, respectively.
-
-#### `lib/`
-
-Files that exist to support the build and deploy processes live here.

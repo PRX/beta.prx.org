@@ -1,6 +1,10 @@
+var helper   = require('../../common/spec-helper');
+var halmock  = require('../../common/angular-hal-mock');
+var prxpicks = require('./picks');
+
 describe('prx.picks', function () {
 
-  beforeEach(module('prx.picks', 'angular-hal-mock'));
+  beforeEach(helper.module(prxpicks, halmock));
 
   describe ('Pick mixin', function () {
 
@@ -20,7 +24,7 @@ describe('prx.picks', function () {
     var $compile, $scope, element, ngHal;
     var pick;
 
-    beforeEach(module('templates'));
+    beforeEach(helper.module('templates'));
 
     beforeEach(inject(function (_$compile_, $rootScope, _ngHal_) {
       $compile = _$compile_;
@@ -91,6 +95,71 @@ describe('prx.picks', function () {
       ctrl.expandComment();
       expect(ctrl.shouldExpandComment).toBeTruthy();
       expect(collapsed).toBe(true);
+    });
+  });
+
+  describe('onOverflow directive', function () {
+    var $scope, $compile, OverflowCheck;
+
+    beforeEach(inject(function ($rootScope, _$compile_, _OverflowCheck_) {
+      $scope = $rootScope.$new();
+      OverflowCheck = _OverflowCheck_;
+      $compile = _$compile_;
+    }));
+
+    it ('removes the element from watches', function () {
+      var elem = $compile('<div on-overflow=""></div>')($scope);
+      $scope.$destroy();
+      expect(OverflowCheck.getWatches().length).toEqual(0);
+    });
+
+    it ('calls the function', function () {
+      $scope.cb = angular.noop;
+      spyOn($scope, 'cb');
+      var elem = $compile('<div on-overflow="cb()" style="width: 1px; height: 1px;">lorem ipsum</div>')($scope);
+      OverflowCheck.checkOverflows();
+      expect($scope.cb).toHaveBeenCalled();
+    });
+  });
+
+  describe('overflowClass directive', function () {
+    it ('adds the element to watches', inject(function ($rootScope, $compile, OverflowCheck) {
+      $scope = $rootScope.$new();
+      var elem = $compile('<div overflow-class></div>')($scope);
+      expect(OverflowCheck.getWatches().length).toEqual(1);
+    }));
+
+    it ('removes the element from watches', inject(function ($rootScope, $compile, OverflowCheck) {
+      $scope = $rootScope.$new();
+      var elem = $compile('<div overflow-class></div>')($scope);
+      $scope.$destroy();
+      expect(OverflowCheck.getWatches().length).toEqual(0);
+    }));
+
+    describe ('with lots of content', function () {
+      beforeEach(inject(function ($rootScope) {
+        $scope = $rootScope.$new();
+      }));
+
+      it ('has the overflowing class if overflowing', inject(function ($compile, OverflowCheck) {
+        var elem = $compile('<div overflow-class style="height: 1px; width: 1px;">lorem ipsum</div>')($scope);
+        document.body.appendChild(elem[0]);
+        OverflowCheck.checkOverflows();
+        expect(elem.hasClass('overflowing')).toBeTruthy();
+      }));
+    });
+
+    describe ('with little content', function () {
+      beforeEach(inject(function ($rootScope, $compile) {
+        $scope = $rootScope.$new();
+      }));
+
+      it ('does not have the overflowing class if not overflowing', inject(function ($compile, OverflowCheck) {
+        elem = $compile('<div overflow-class style="height: 1000px; width: 1000px;">lorem ipsum</div>')($scope);
+        document.body.appendChild(elem[0]);
+        OverflowCheck.checkOverflows();
+        expect(elem.hasClass('overflowing')).toBeFalsy();
+      }));
     });
   });
 

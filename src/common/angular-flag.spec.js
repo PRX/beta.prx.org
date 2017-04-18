@@ -1,8 +1,11 @@
+var helper = require('./spec-helper');
+var ngflag = require('./angular-flag');
+
 describe('ngFlag', function () {
   describe('provider', function () {
     var flagProvider;
-    
-    beforeEach(module('ngFlag', function (ngFlagProvider) {
+
+    beforeEach(helper.module(ngflag, function (ngFlagProvider) {
       flagProvider = ngFlagProvider;
     }));
 
@@ -78,7 +81,7 @@ describe('ngFlag', function () {
 
   describe('directive', function () {
     var flagProvider, $compile, $scope, holder;
-    beforeEach(module('ngFlag', function (ngFlagProvider) {
+    beforeEach(helper.module(ngflag, function (ngFlagProvider) {
       flagProvider = ngFlagProvider;
     }));
 

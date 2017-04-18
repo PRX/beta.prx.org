@@ -1,8 +1,11 @@
-if (FEAT.TCF_DEMO) {
+var helper    = require('../../common/spec-helper');
+var prxupload = require('./upload');
+
 describe('prx.upload', function () {
 
+  beforeEach(helper.setflag('SHOW_TCFDEMO', true));
 
-  beforeEach(module('async-loader', function ($provide) {
+  beforeEach(helper.module('async-loader', function ($provide) {
     mf = [];
     MockAsyncLoader = {};
     MockAsyncLoader._a_mock     = true;
@@ -11,7 +14,7 @@ describe('prx.upload', function () {
     $provide.value('AsyncLoader', MockAsyncLoader);
   }));
 
-  beforeEach(module('angular-evaporate', function (evaporateProvider, $provide) {
+  beforeEach(helper.module('angular-evaporate', function (evaporateProvider, $provide) {
 
     evaporateProvider.awsKey('AKIRAISAGREATMOVIE');
 
@@ -36,7 +39,7 @@ describe('prx.upload', function () {
 
   }));
 
-  beforeEach(module('prx.upload'));
+  beforeEach(helper.module(prxupload));
 
   describe ('Upload', function () {
     var uploadSvc;
@@ -53,7 +56,7 @@ describe('prx.upload', function () {
       var mockFile = {name: 'foo', testId: 123};
       var up = uploadSvc.upload(mockFile);
       expect(up.file).toEqual(mockFile);
-      expect(up.uploadId).toEqual(123);
+      expect(up.uploadId).toResolveTo(123);
       expect(up.progress).toEqual(0);
     });
 
@@ -94,7 +97,12 @@ describe('prx.upload', function () {
       expect(upload.upload).toBeDefined();
     });
 
+    it('can pull upload by guid', function () {
+      var mockFile = {name: 'foo', testId: 123};
+      var u = uploadSvc.upload(mockFile);
+      expect(uploadSvc.getUpload(u.guid)).toEqual(u);
+    });
+
   });
 
 });
-}

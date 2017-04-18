@@ -1,9 +1,11 @@
 tmp
 coverage
 node_modules
+build
 public
 vendor
 bin
+.env
 .DS_Store
 .powder
 src/common/.*
@@ -12,4 +14,6 @@ log
 .assets
 .cache
 npm-debug.log
-
+.ruby-version
+*.sublime-project
+*.sublime-workspace

@@ -1,5 +1,12 @@
-angular.module('prx.picks', ['prx.modelConfig'])
-.config(function (ngHalProvider) {
+var angular = require('angular');
+
+// staff picks
+var app = angular.module('prx.picks', [
+  require('../../common/prx-model-config')
+]);
+module.exports = app.name;
+
+app.config(function (ngHalProvider) {
   ngHalProvider.mixin('http://meta.prx.org/model/pick/*any', ['resolved', function (resolved) {
     resolved.story = resolved.follow('prx:story');
     resolved.account = resolved.follow('prx:account');
@@ -46,6 +53,11 @@ angular.module('prx.picks', ['prx.modelConfig'])
   var timeout;
 
   angular.element($window).on('resize', checkOverflows);
+
+  this.checkOverflows = checkOverflows;
+  this.getWatches = function () {
+    return watches;
+  };
 
   this.watch = function (elem, cb) {
     if (watches.indexOf(elem) != -1) {

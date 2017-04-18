@@ -1,33 +1,25 @@
+var helper = require('../../common/spec-e2e-helper');
+
 describe('accounts', function () {
 
-  describe ('individual', function () {
+  var ADMINISTRATOR = '/accounts/8';
+  var INDIVIDUAL    = '/accounts/89247';
+  var GROUP         = '/accounts/101127';
+  var STATION       = '/accounts/441';
+
+  describe ('administrator', function () {
     beforeEach(function () {
-      browser.get('/accounts/89247');
+      browser.get(ADMINISTRATOR);
     });
 
-    it ('links to the desktop version using the user short url', function () {
-      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/user/jeffreybcohen?m=false');
+    it ('shows user information', function () {
+      expect($('.hero h1').getText()).toEqual('PRX Administrator');
+      expect($('.hero .details').getText()).toContain('admin');
+      expect($('.hero .details').getText()).toContain('Cambridge, Massachusetts');
+      expect($('.hero .bio').getText()).toContain('PRX Administrator account');
     });
   });
 
+  // TODO: actual tests
 
-  describe ('group', function () {
-    beforeEach(function () {
-      browser.get('/accounts/101127');
-    });
-
-    it ('links to the desktop version using the group short url', function () {
-      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/group/SO?m=false');
-    });
-  });
-
-  describe ('station', function () {
-    beforeEach(function () {
-      browser.get('/accounts/441');
-    });
-
-    it ('links to the desktop version using the station short url', function () {
-      expect($('a.full-site').getAttribute('href')).toEqual('http://www.prx.org/station/wbur?m=false');
-    });
-  });
 });

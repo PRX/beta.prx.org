@@ -45,17 +45,7 @@
           padding: 30px;
           position: relative;
 
-          &::before {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 60px;
-            left: -17px;
-            width: 17px;
-            height: 30px;
-            image: '/assets/images/icons/speech_snare.png' 17px;
-            background-repeat: no-repeat;
-          }
+          // TODO: (see end of this file)
 
           p {
             max-height: 155px;
@@ -68,5 +58,21 @@
         }
       }
     }
+  }
+}
+
+// TODO: stylus fails to nest media queries if this is in above section,
+// but for some reason it works alone. Qua?
+@media $media-width-tablet {
+  section.picks.gallery .pick .curation .exhibit::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 60px;
+    left: -17px;
+    width: 17px;
+    height: 30px;
+    image: '/assets/images/icons/speech_snare.png' 17px;
+    background-repeat: no-repeat;
   }
 }

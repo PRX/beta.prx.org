@@ -1,5 +1,13 @@
-angular.module('prx.modal', ['prx.errors', 'ui.router'])
-.run(function ($rootScope, prxModal) {
+var angular = require('angular');
+
+// modal windows
+var app = angular.module('prx.modal', [
+  require('../errors/errors'),
+  require('angular-ui-router')
+]);
+module.exports = app.name;
+
+app.run(function ($rootScope, prxModal) {
   var modalKey = 'modal@';
   var DISMISS_LINK = "<a class='dismiss' dismiss-modal></a>";
 

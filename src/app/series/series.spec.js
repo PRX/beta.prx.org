@@ -1,5 +1,10 @@
+var helper  = require('../../common/spec-helper');
+var halmock = require('../../common/angular-hal-mock');
+var prxseries = require('./series');
+
 describe('prx.series', function () {
-  beforeEach(module('prx.series', 'angular-hal-mock'));
+
+  beforeEach(helper.module(prxseries, halmock));
 
   describe ('Series mixin', function () {
     var  ngHal, mock;
@@ -19,7 +24,7 @@ describe('prx.series', function () {
     it ('attaches the series, stories, and accounts injected to controller', inject(function ($controller) {
       var sigil = 'sigil';
       var scope = {};
-      var controller = $controller('SeriesCtrl', {series: sigil, stories: sigil, account: sigil, $scope: scope});
+      var controller = $controller('SeriesCtrl', {series: sigil, stories: sigil, account: sigil, currentUser: sigil, $scope: scope});
       expect(controller.current).toBe(sigil);
       expect(controller.stories).toBe(sigil);
       expect(controller.account).toBe(sigil);

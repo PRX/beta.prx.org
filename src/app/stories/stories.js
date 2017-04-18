@@ -1,7 +1,20 @@
-angular.module('prx.stories', [
-  'ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate',
-  'prx.accounts', 'prx.experiments', 'angulartics'])
-.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
+var angular = require('angular');
+
+// story module
+var app = angular.module('prx.stories', [
+  require('angular-ui-router'),
+  require('../../common/prx-model-config'),
+  require('../player/player'),
+  require('../../common/url-translater'),
+  require('../accounts/accounts'),
+  require('../../common/prx-experiments'),
+  require('angulartics'),
+  require('./edit/edit'),
+  require('../auth/auth')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
     abstract: true,
@@ -91,7 +104,7 @@ angular.module('prx.stories', [
   ;
 
   /* istanbul ignore else */
-  if (FEAT.LISTEN_LATER) {
+  if (FEAT.SHOW_LISTENLATER) {
     $stateProvider.state('story.remindMe', {
       views: {
         'modal@': {
@@ -105,7 +118,7 @@ angular.module('prx.stories', [
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
   urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
 
-  ngHalProvider.setRootUrl(FEAT.apiServer)
+  ngHalProvider.setRootUrl(FEAT.API_HOST)
   .mixin('http://meta.prx.org/model/story/*any', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').get('enclosureUrl').or(null);
   }]).mixin('http://meta.prx.org/model/story/*any', ['prxPlayer', '$q',
@@ -125,7 +138,7 @@ angular.module('prx.stories', [
         return prxPlayer.nowPlaying && prxPlayer.nowPlaying.story.id == this.id;
       },
       getAccount: function () {
-        if (!angular.isDefined(this.$account)) {
+        if (!angular.isDefined(this.$account) && this.links.all('prx:account')) {
           this.$account = this.follow('prx:account').then(
             angular.bind(this, setAccount)
           );
@@ -178,7 +191,8 @@ angular.module('prx.stories', [
 })
 .controller('StoryCtrl', function (story, account, series, audioUrls, $window,
   musicalWorks, musicalWorksList, audioVersions, prxSoundFactory, $stateParams,
-  prxPlayer, prxperiment, $analytics, $timeout) {
+  prxPlayer, prxperiment, $analytics, $timeout, PrxAuth, $scope, $state,
+  $location, urlTranslate) {
   var storyCtrl = this;
 
   this.current = story;
@@ -208,6 +222,17 @@ angular.module('prx.stories', [
       // }
     });
     $timeout(function() { $window.location.href = url; }, 200);
+  };
+
+  this.edit = function () {
+    // if (story.account.id != currentUser.account.id) { return; }
+
+    if (story.appVersion === "v4") {
+      $state.go("story.edit", { storyId: story.id });
+    } else {
+      var url = "http://www.prx.org" + urlTranslate($location.path()) + "/edit?m=false";
+      $window.location = url;
+    }
   };
 
   this.musicalWorks = musicalWorks;
@@ -249,7 +274,7 @@ angular.module('prx.stories', [
     return prxPlayer.nowPlaying || sound;
   };
 })
-.directive('prxSocialActions', function($location) {
+.directive('prxSocialActions', function ($location) {
   return {
     restrict: 'E',
     replace: true,

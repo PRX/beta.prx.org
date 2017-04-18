@@ -1,5 +1,8 @@
+var helper = require('./spec-helper');
+var dnd    = require('./angular-dnd');
+
 describe('angular-dnd', function () {
-  beforeEach(module('angular-dnd'));
+  beforeEach(helper.module(dnd));
 
   describe('ngDrop', function() {
 

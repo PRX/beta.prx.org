@@ -1,9 +1,12 @@
+var helper = require('./spec-helper');
+var nghal  = require('./angular-hal');
+
 describe('angular-hal', function () {
 
   describe ('halUriMatcher', function () {
     var HalUriMatcher;
 
-    beforeEach(module('angular-hal'));
+    beforeEach(helper.module(nghal));
 
     beforeEach(inject(function (halUriMatcher) {
       HalUriMatcher = halUriMatcher;
@@ -100,7 +103,7 @@ describe('angular-hal', function () {
 
   describe ('configure phase', function() {
     it ('can set the entrypoint url', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('http://google.com');
       });
 
@@ -114,7 +117,7 @@ describe('angular-hal', function () {
     });
 
     it ('can define a secondary context', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('http://yahoo.com');
         ngHalProvider.context('search', function () {
           this.setRootUrl('http://bing.com');
@@ -144,7 +147,7 @@ describe('angular-hal', function () {
     });
 
     it ('can add to an objects prototype chain based on link profiles', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
         ngHalProvider.defineModule('http://meta.nghal.org/object', {
           duckling: 12121,
@@ -166,7 +169,7 @@ describe('angular-hal', function () {
     });
 
     it ('matches placeholders for profiles or rels', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
         ngHalProvider.defineModule('http://meta.nghal.org/object/:subtype', function (subtype) {
           return {
@@ -185,7 +188,7 @@ describe('angular-hal', function () {
     });
 
     it ('adds to the objects prototype chain with an injectable function', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
         ngHalProvider.defineModule('http://meta.nghal.org/object', function (ngHal) {
           return {
@@ -210,7 +213,7 @@ describe('angular-hal', function () {
     });
 
     it ('adds to the objects prototype chain multiple times', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
         ngHalProvider.defineModule('http://meta.nghal.org/object', {
           prop1: 1,
@@ -240,7 +243,7 @@ describe('angular-hal', function () {
     });
 
     it ('handles transformed attachment', function () {
-      module('angular-hal', function (ngHalProvider) {
+      helper.module(nghal, function (ngHalProvider) {
         ngHalProvider.setRootUrl('/api/v1');
         ngHalProvider.defineModule('http://meta.nghal.org/object', function (resolved) {
           var link = resolved.follow('link');
@@ -286,7 +289,7 @@ describe('angular-hal', function () {
   });
 
   describe ('relative urls', function () {
-    beforeEach(module('angular-hal', function (ngHalProvider) {
+    beforeEach(helper.module(nghal, function (ngHalProvider) {
       ngHalProvider.setRootUrl('http://example.com/api');
     }));
     beforeEach(inject(function ($httpBackend) {
@@ -331,7 +334,7 @@ describe('angular-hal', function () {
   });
 
   describe ('run phase', function () {
-    beforeEach(module('angular-hal', function (ngHalProvider) {
+    beforeEach(helper.module(nghal, function (ngHalProvider) {
       ngHalProvider.setRootUrl('/api');
     }));
 
@@ -683,7 +686,7 @@ describe('angular-hal', function () {
   describe('without a root Url specified', function () {
     var ngHal;
 
-    beforeEach(module('angular-hal', function (ngHalProvider) {
+    beforeEach(helper.module(nghal, function (ngHalProvider) {
       ngHalProvider.setRootUrl(undefined);
     }));
 

@@ -1,6 +1,9 @@
+var helper  = require('./spec-helper');
+var uritemp = require('./uri-template');
+
 describe('uri-template', function () {
-  
-  beforeEach(module('uri-template'));
+
+  beforeEach(helper.module(uritemp));
 
   it ('is injectable', function () {
     inject(function (UriTemplate) {
@@ -140,7 +143,7 @@ describe('uri-template', function () {
         ["X{.var:3}", "X.val"],
         ["X{.list}", "X.red,green,blue"],
         ["X{.list*}", "X.red.green.blue"],
-        ["X{.keys}", [ 
+        ["X{.keys}", [
           "X.comma,%2C,dot,.,semi,%3B",
           "X.comma,%2C,semi,%3B,dot,.",
           "X.dot,.,comma,%2C,semi,%3B",
@@ -160,7 +163,7 @@ describe('uri-template', function () {
           "/semi,%3B,comma,%2C,dot,.",
           "/semi,%3B,dot,.,comma,%2C"
         ]],
-        ["{/keys*}", [ 
+        ["{/keys*}", [
           "/comma=%2C/dot=./semi=%3B",
           "/comma=%2C/semi=%3B/dot=.",
           "/dot=./comma=%2C/semi=%3B",
@@ -171,7 +174,7 @@ describe('uri-template', function () {
         ["{;hello:5}", ";hello=Hello"],
         ["{;list}", ";list=red,green,blue"],
         ["{;list*}", ";list=red;list=green;list=blue"],
-        ["{;keys}", [ 
+        ["{;keys}", [
           ";keys=comma,%2C,dot,.,semi,%3B",
           ";keys=comma,%2C,semi,%3B,dot,.",
           ";keys=dot,.,comma,%2C,semi,%3B",
@@ -179,7 +182,7 @@ describe('uri-template', function () {
           ";keys=semi,%3B,comma,%2C,dot,.",
           ";keys=semi,%3B,dot,.,comma,%2C"
         ]],
-        ["{;keys*}", [ 
+        ["{;keys*}", [
           ";comma=%2C;dot=.;semi=%3B",
           ";comma=%2C;semi=%3B;dot=.",
           ";dot=.;comma=%2C;semi=%3B",
@@ -190,7 +193,7 @@ describe('uri-template', function () {
         ["{?var:3}", "?var=val"],
         ["{?list}", "?list=red,green,blue"],
         ["{?list*}", "?list=red&list=green&list=blue"],
-        ["{?keys}", [ 
+        ["{?keys}", [
           "?keys=comma,%2C,dot,.,semi,%3B",
           "?keys=comma,%2C,semi,%3B,dot,.",
           "?keys=dot,.,comma,%2C,semi,%3B",
@@ -198,7 +201,7 @@ describe('uri-template', function () {
           "?keys=semi,%3B,comma,%2C,dot,.",
           "?keys=semi,%3B,dot,.,comma,%2C"
         ]],
-        ["{?keys*}", [ 
+        ["{?keys*}", [
           "?comma=%2C&dot=.&semi=%3B",
           "?comma=%2C&semi=%3B&dot=.",
           "?dot=.&comma=%2C&semi=%3B",
@@ -209,7 +212,7 @@ describe('uri-template', function () {
         ["{&var:3}", "&var=val"],
         ["{&list}", "&list=red,green,blue"],
         ["{&list*}", "&list=red&list=green&list=blue"],
-        ["{&keys}", [ 
+        ["{&keys}", [
           "&keys=comma,%2C,dot,.,semi,%3B",
           "&keys=comma,%2C,semi,%3B,dot,.",
           "&keys=dot,.,comma,%2C,semi,%3B",
@@ -217,7 +220,7 @@ describe('uri-template', function () {
           "&keys=semi,%3B,comma,%2C,dot,.",
           "&keys=semi,%3B,dot,.,comma,%2C"
         ]],
-        ["{&keys*}", [ 
+        ["{&keys*}", [
           "&comma=%2C&dot=.&semi=%3B",
           "&comma=%2C&semi=%3B&dot=.",
           "&dot=.&comma=%2C&semi=%3B",
@@ -244,7 +247,7 @@ describe('uri-template', function () {
         "lang"         : "en",
         "geocode"      : ["37.76","-122.427"],
         "first_name"   : "John",
-        "last.name"    : "Doe", 
+        "last.name"    : "Doe",
         "Some%20Thing" : "foo",
         "number"       : 6,
         "long"         : 37.76,
@@ -260,7 +263,7 @@ describe('uri-template', function () {
       },
       "testcases":[
         [ "{/id*}" , "/person" ],
-        [ "{/id*}{?fields,first_name,last.name,token}" , [ 
+        [ "{/id*}{?fields,first_name,last.name,token}" , [
           "/person?fields=id,name,picture&first_name=John&last.name=Doe&token=12345",
           "/person?fields=id,picture,name&first_name=John&last.name=Doe&token=12345",
           "/person?fields=picture,name,id&first_name=John&last.name=Doe&token=12345",
@@ -298,7 +301,7 @@ describe('uri-template', function () {
       },
       "testcases":[
         [ "{/id*}" , ["/person/albums","/albums/person"] ],
-        [ "{/id*}{?fields,token}" , [ 
+        [ "{/id*}{?fields,token}" , [
           "/person/albums?fields=id,name,picture&token=12345",
           "/person/albums?fields=id,picture,name&token=12345",
           "/person/albums?fields=picture,name,id&token=12345",

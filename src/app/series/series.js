@@ -1,5 +1,14 @@
-angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
-.config(function ($stateProvider, ngHalProvider) {
+var angular = require('angular');
+
+// series module
+var app = angular.module('prx.series', [
+  require('angular-ui-router'),
+  require('../../common/angular-hal'),
+  require('../stories/stories')
+]);
+module.exports = app.name;
+
+app.config(function ($stateProvider, ngHalProvider) {
   $stateProvider.state('series', {
     abstract: true,
     title: 'Series',
@@ -27,6 +36,9 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
       },
       account: function(series) {
         return series.follow('prx:account');
+      },
+      currentUser: function(PrxAuth) {
+        return PrxAuth.currentUser();
       }
     }
   })
@@ -52,15 +64,20 @@ angular.module('prx.series', ['ui.router', 'angular-hal', 'prx.stories'])
     }
   });
 
-ngHalProvider.setRootUrl(FEAT.apiServer)
+ngHalProvider.setRootUrl(FEAT.API_HOST)
   .mixin('http://meta.prx.org/model/series', ['resolved', function (resolved) {
     resolved.imageUrl = resolved.follow('prx:image').call('link', 'enclosure').call('url').or(null);
   }]);
 })
-.controller('SeriesCtrl', function (series, stories, account) {
+.controller('SeriesCtrl', function (series, stories, account, currentUser) {
   this.current = series;
   this.stories = stories;
   this.account = account;
+
+  this.isEditable = false;
+  if (currentUser && currentUser.account) {
+    this.isEditable = account.id == currentUser.account.id;
+  }
 })
 .controller('SeriesStoriesCtrl', function (list, stories, series) {
   this.current = series;

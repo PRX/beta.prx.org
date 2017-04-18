@@ -1,5 +1,10 @@
+var helper     = require('../../common/spec-helper');
+var halmock    = require('../../common/angular-hal-mock');
+var prxstories = require('./stories');
+
 describe('prx.stories', function () {
-  beforeEach(module('prx.stories', 'angular-hal-mock'));
+
+  beforeEach(helper.module(prxstories, halmock));
 
   describe ('Story mixin', function () {
     var  ngHal, mock;
@@ -113,15 +118,15 @@ describe('prx.stories', function () {
       }).then(function(s) { return s[0].url; })).toResolveTo('url');
     });
 
-    xit ('gets the audioUrls based on the story', function () {
-      var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
-        file1 = ngHal.mockEnclosure('file1.mp3'),
-        file2 = ngHal.mockEnclosure('file2.mp3');
-      story.stubFollow('prx:audio', [file1, file2]);
-      expect($injector.invoke(state.resolve.audioUrls, null, {
-        story: story
-      }).then(function(d) { return d[1].url; })).toResolveTo('file2.mp3');
-    });
+    // xit ('gets the audioUrls based on the story', function () {
+    //   var story = ngHal.mock('http://meta.prx.org/model/story', {account:true}),
+    //     file1 = ngHal.mockEnclosure('file1.mp3'),
+    //     file2 = ngHal.mockEnclosure('file2.mp3');
+    //   story.stubFollow('prx:audio', [file1, file2]);
+    //   expect($injector.invoke(state.resolve.audioUrls, null, {
+    //     story: story
+    //   }).then(function(d) { return d[1].url; })).toResolveTo('file2.mp3');
+    // });
 
     it ('sets the title appropriately', function () {
       expect($injector.invoke(state.title, null, {story: "story", account: "account"})).toEqual("story by account");
@@ -130,7 +135,7 @@ describe('prx.stories', function () {
 
   describe('prxSocialActions directive', function () {
     var elem;
-    beforeEach(module('templates'));
+    beforeEach(helper.module('templates'));
 
     beforeEach(inject(function ($compile, $rootScope) {
       elem = $compile('<prx-social-actions text="sigil"></prx-social-actions>')($rootScope);

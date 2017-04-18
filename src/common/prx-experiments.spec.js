@@ -1,4 +1,7 @@
-describe('prxp', function () {
+var helper = require('./spec-helper');
+var prxxp  = require('./prx-experiments');
+
+describe('prx.experiments', function () {
 
   /* https://github.com/angular/angular.js/blob/01c5be4681e34cdc5f5c461b7a618fefe8038919/src/Angular.js#L1021 */
   function parseKeyValue(keyValue) {
@@ -65,7 +68,7 @@ describe('prxp', function () {
 
   describe ('configuration', function () {
     it ('can accept an injectable function for the clientId', function () {
-      module('prx.experiments', function (prxperimentProvider, $provide) {
+      helper.module(prxxp, function (prxperimentProvider, $provide) {
         $provide.constant('myClientId', 'testing');
         prxperimentProvider.clientId(function (myClientId) {
           return myClientId;
@@ -78,7 +81,7 @@ describe('prxp', function () {
     });
 
     it ('can be disabled', function () {
-      module('prx.experiments', function (prxperimentProvider) {
+      helper.module(prxxp, function (prxperimentProvider) {
         prxperimentProvider.enabled(false);
       });
 
@@ -92,7 +95,7 @@ describe('prxp', function () {
   describe ('when configured', function () {
     var prxperiment;
 
-    beforeEach(module('prx.experiments', function (prxperimentProvider) {
+    beforeEach(helper.module(prxxp, function (prxperimentProvider) {
       prxperimentProvider.clientId('fooBar').base('');
     }));
 

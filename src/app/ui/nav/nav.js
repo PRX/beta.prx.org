@@ -1,4 +1,48 @@
-angular.module('prx.ui.nav', [])
+var app = require('angular').module('prx.ui.nav', []);
+module.exports = app.name;
+
+app.service('XiContextMenu', function ($rootScope, $timeout) {
+  var ContextMenu = this;
+  this.show = false;
+  $rootScope.$on("$stateChangeStart", function (event, toState) {
+    $timeout(function () {
+      if (!event.defaultPrevented) {
+        if (!toState.views || !toState.views["contextMenu@"]) {
+          ContextMenu.show = false;
+        }
+      }
+    }, 0);
+  });
+  $rootScope.$on("$stateChangeError", function (event, toState, _, fromState) {
+    $timeout(function () {
+      if (fromState.views && fromState.views["contextMenu@"]) {
+        ContextMenu.show = true;
+      }
+    }, 0);
+  });
+  $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+    $timeout(function () {
+      if (toState.views && toState.views["contextMenu@"]) {
+        ContextMenu.show = true;
+      }
+    }, 0);
+  });
+})
+.directive('xiContextMenu', function (XiContextMenu, $animate) {
+  return {
+    restrict: 'E',
+    link: function (scope, elem, attrs) {
+      scope.menu = XiContextMenu;
+      scope.$watch('menu.show', function (show) {
+        if (show) {
+          $animate.addClass(elem, 'visible');
+        } else {
+          $animate.removeClass(elem, 'visible');
+        }
+      });
+    }
+  };
+})
 .directive('prxDrawer', function (PRXDrawer) {
   return {
     restrict: 'E',
@@ -153,7 +197,7 @@ angular.module('prx.ui.nav', [])
     }
   };
 })
-.factory('quickDebounce', function ($timeout) {
+.factory('quickDebounce', function () {
   return quickDebounce;
 
   function quickDebounce(fn, duration) {
@@ -169,13 +213,13 @@ angular.module('prx.ui.nav', [])
     function debouncedVersion () {
       if (!timeout) {
         var it = trigger(this, arguments);
-        timeout = $timeout(function () {
+        timeout = setTimeout(function () {
           it();
-          timeout = $timeout(function () { timeout = 0; }, duration - 1);
+          timeout = setTimeout(function () { timeout = 0; }, duration - 1);
         }, 1);
       } else {
-        $timeout.cancel(timeout);
-        timeout = $timeout(trigger(this, arguments), duration);
+        clearTimeout(timeout);
+        timeout = setTimeout(trigger(this, arguments), duration);
       }
     }
 
@@ -186,7 +230,7 @@ angular.module('prx.ui.nav', [])
     return debouncedVersion;
   }
 })
-.directive('prxNavButtons', function ($window, quickDebounce, $timeout) {
+.directive('prxNavButtons', function ($window, quickDebounce) {
   return {
     restrict: 'E',
     templateUrl: 'ui/nav/nav_buttons.html',
@@ -205,7 +249,7 @@ angular.module('prx.ui.nav', [])
 
       scope.$watch(debouncedCheckWidth);
 
-      $timeout(checkWidth, 200);
+      setTimeout(checkWidth, 200);
 
       function checkWidth() {
         var isOverflowing = overflowing(elem);
@@ -244,7 +288,7 @@ angular.module('prx.ui.nav', [])
         }
 
         if (calculating) {
-          $timeout(checkWidth, 1);
+          setTimeout(checkWidth, 1);
         }
       }
 

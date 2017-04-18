@@ -1,9 +1,12 @@
+var helper = require('./spec-helper');
+var evap   = require('./angular-evaporate');
+
 describe('angular-evaporate', function () {
 
   describe ('configuration', function () {
 
     it ('can configure the awsKey', function () {
-      module('angular-evaporate', function (evaporateProvider, $provide) {
+      helper.module(evap, function (evaporateProvider, $provide) {
         evaporateProvider.awsKey('AKIRAISAGREATMOVIE');
 
         $provide.decorator('$window', ['$delegate', function($delegate) {
@@ -38,16 +41,19 @@ describe('angular-evaporate', function () {
   describe ('when configured', function () {
     var evaporate, $q, $rs;
 
-    beforeEach(module('async-loader', function ($provide) {
+    beforeEach(helper.module('async-loader', function ($provide) {
       mf = [];
       MockAsyncLoader = {};
       MockAsyncLoader._a_mock     = true;
-      MockAsyncLoader.load        = function(files) { mf = files; return MockAsyncLoader; };
-      MockAsyncLoader.then        = function(f) { var r = f(mf) || MockAsyncLoader; return r;};
+      MockAsyncLoader.load        = function (files) {
+        var q;
+        inject(function ($q) { q = $q; });
+        return q.when(files);
+      };
       $provide.value('AsyncLoader', MockAsyncLoader);
     }));
 
-    beforeEach(module('angular-evaporate', function (evaporateProvider) {
+    beforeEach(helper.module(evap, function (evaporateProvider) {
       evaporateProvider.options({});
     }));
 
@@ -64,12 +70,14 @@ describe('angular-evaporate', function () {
 
     it ('can get uploadid when you add a file', function () {
       var p = evaporate.add({name: 'foo', testId: 123});
-      expect(p.uploadId).toEqual(123);
+      $rs.$apply();
+      expect(p.uploadId).toResolveTo(123);
     });
 
     it ('can call complete when done', function () {
       var testComplete = false;
       evaporate.add({name: 'foo', testId: 123}).then( function() { testComplete = true; } );
+      $rs.$apply();
       var completeFn = evaporate._evaporate.config.complete;
       expect(angular.isFunction(completeFn)).toBeTruthy();
       expect(testComplete).toBeFalsy();

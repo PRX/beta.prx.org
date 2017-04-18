@@ -1,8 +1,13 @@
+var helper = require('../common/spec-helper');
+var halmock = require('../common/angular-hal-mock');
+var prxapp = require('./app');
+
 describe('prx', function () {
+
+  beforeEach(helper.module(prxapp, halmock));
+
   describe ('appCtrl', function () {
     var $controller, $scope, ctrl;
-
-    beforeEach(module('prx.appCtrl'));
     beforeEach(inject(function (_$controller_, $rootScope) {
       $controller = _$controller_;
       $scope = $rootScope.$new();
@@ -16,7 +21,6 @@ describe('prx', function () {
 
   describe('prxImg directive', function () {
     var $compile, $scope, element;
-    beforeEach(module('prx'));
     beforeEach(inject(function (_$compile_, $rootScope) {
       $compile = _$compile_;
       $scope = $rootScope.$new();
@@ -64,32 +68,12 @@ describe('prx', function () {
     });
   });
 
-  describe ('route mixin', function () {
-    var thing;
-    beforeEach(module('prx.modelConfig', 'angular-hal-mock'));
-
-    it('sets a correct stateName and stateParams by default', inject(function (ngHal) {
-      var anything = ngHal.mock('http://meta.prx.org/model/anything', {id: 'asdf'});
-      var something = ngHal.mock('http://meta.prx.org/model/something/different');
-
-      expect(anything.stateName).toEqual('anything.show');
-      expect(something.stateName).toEqual('something.show');
-
-      var params = anything.stateParams();
-
-      expect(params).toEqual({anythingId: 'asdf'});
-      expect(anything.stateParams()).toBe(params);
-    }));
-  });
-
   describe ('timeAgo filter', function () {
     var timeAgo;
 
     function secondsAgo (seconds) {
       return new Date(new Date() - seconds * 1000);
     }
-
-    beforeEach(module('prx'));
 
     beforeEach(inject(function ($filter) {
       timeAgo = $filter('timeAgo');
@@ -123,4 +107,5 @@ describe('prx', function () {
       });
     });
   });
+
 });

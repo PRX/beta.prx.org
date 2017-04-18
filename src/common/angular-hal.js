@@ -1,5 +1,12 @@
-angular.module('angular-hal', ['ng', 'uri-template'])
-.factory('halUriMatcher', function () {
+var angular = require('angular');
+
+// HAL api adapter
+var app = angular.module('angular-hal', [
+  require('./uri-template')
+]);
+module.exports = app.name;
+
+app.factory('halUriMatcher', function () {
   function UriMatcher(uri) {
     var self = this;
     this.matchers = [];

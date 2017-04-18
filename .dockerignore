@@ -1,0 +1,9 @@
+*.log
+.git
+.gitignore
+build
+coverage
+node_modules
+tmp
+.env*
+docker-compose.xml

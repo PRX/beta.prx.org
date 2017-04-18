@@ -1,6 +1,9 @@
+var helper  = require('../../common/spec-helper');
+var prxplayer = require('./player');
+
 describe('prx.player', function () {
 
-  beforeEach(module('prx.player'));
+  beforeEach(helper.module(prxplayer));
 
   it('has a timeCode filter', inject(function ($filter) {
     expect($filter('timeCode')).toBeDefined();
@@ -124,7 +127,7 @@ describe('prx.player', function () {
 
   describe('directives', function () {
     var $compile, $rootScope;
-    beforeEach(module('templates'));
+    beforeEach(helper.module('templates'));
     beforeEach(inject(function (_$compile_, _$rootScope_) {
       $compile = _$compile_;
       $rootScope = _$rootScope_;
@@ -169,7 +172,7 @@ describe('prx.player', function () {
   describe ('prxPlayer', function () {
     var prxPlayer, $analytics;
 
-    beforeEach(module(function ($provide) {
+    beforeEach(helper.module(function ($provide) {
       $provide.decorator('$analytics', function ($delegate) {
         spyOn($delegate, 'eventTrack');
         spyOn($delegate, 'pageTrack');

@@ -6,7 +6,7 @@ article.story
         prx-img(src="story.current.imageUrl", default-class="default")
         .media-content
           .category audio story
-          h1 {{story.current.title}}
+          h1 {{::story.current.title}}
           ul.metadata
             li.author(ng-if="::!story.series")
               address.author
@@ -28,6 +28,7 @@ article.story
       section
         prx-donate(account="::story.account")
         prx-social-actions(text="story.current.title")
+        .edit(ng-if="story.account.id === currentUser.account.id && !story.preview" ng-click="::story.edit()") Edit
   .content
     .main
       prx-ad(slot="/41755363/visitor_story_view_less_than_800",
@@ -55,7 +56,7 @@ article.story
             | For Broadcast:
             .value {{ ::story.current.episodeDate | date : 'mediumDate'}}
         ul.tags(ng-show="::story.current.tags.length > 0")
-          li(ng-repeat="tag in ::story.current.tags", ng-bind="tag")
+          li(ng-repeat="tag in ::story.current.tags track by $index", ng-bind="tag")
       section.licensing(ng-show="story.license")
         h2 Licensing
         ul
