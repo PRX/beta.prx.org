@@ -1,0 +1,13 @@
+.embed-player(ng-class="{share: player.showShare, donate: player.showDonate, subscribe: player.showSubscribe}")
+  header
+    h1 {{story.currentSound().story.title}}
+  section
+    button.toggle(ng-click="player.toggle()" ng-class="{paused: player.sound.paused}")
+      .pause
+      .play
+    .track(prx-player-scrubber="player.scrubToPercent(percentage)", ng-class="{active: player.active(), flip: player.progress() > 75}")
+      canvas.waveform
+        
+      .progress(ng-style="{width: player.progress() + '%'}")
+        canvas.waveform
+  

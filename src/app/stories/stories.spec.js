@@ -73,6 +73,14 @@ describe('prx.stories', function () {
     }));
   });
 
+  describe ('StoryDonationCtrl', function () {
+    it ('attaches the story injected to $scope', inject(function ($controller) {
+      var foo = 'asd', scope = {};
+      var ctrl = $controller('StoryDonationCtrl', {story: foo, $scope: scope});
+      expect(ctrl.step).toBe(1);
+    }));
+  });
+
   describe ('story state', function () {
     var state, $injector, ngHal;
     beforeEach(inject(function ($state, _$injector_, _ngHal_) {

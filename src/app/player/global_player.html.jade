@@ -1,14 +1,14 @@
-.persistent-player(ng-class="{show: !!player.global.nowPlaying}").chrome
+.persistent-player(ng-class="{show: !!globalPlayer.player.nowPlaying}").chrome
   .scrubber-track
-    .scrubber(ng-style="{width: player.global.progress() }")
-  prx-player-button(sound="player.global.nowPlaying")
-  div(ng-if="player.global.nowPlaying")
-    a(ui-sref="player.global.nowPlaying.story")
-      prx-img.thumb(src="player.global.nowPlaying.story.imageUrl")
-  .timecode {{player.global.nowPlaying.position | timeCode }}
-  .about(ng-if="player.global.nowPlaying")
-    a.title(ui-sref="player.global.nowPlaying.story", ui-sref-active="current") {{player.global.nowPlaying.story.title}}
-    a.byline(ui-sref="player.global.nowPlaying.producer", ui-sref-active="current") by {{player.global.nowPlaying.producer.name}}
+    .scrubber(ng-style="{width: globalPlayer.player.progress() }")
+  prx-player-button(prx-sound="globalPlayer.player.nowPlaying")
+  div(ng-if="globalPlayer.player.nowPlaying")
+    a(ui-sref="globalPlayer.player.nowPlaying.story")
+      prx-img.thumb(src="globalPlayer.player.nowPlaying.story.imageUrl")
+  .timecode {{globalPlayer.player.nowPlaying.position | timeCode }}
+  .about(ng-if="globalPlayer.player.nowPlaying")
+    a.title(ui-sref="globalPlayer.player.nowPlaying.story", ui-sref-active="current") {{globalPlayer.player.nowPlaying.story.title}}
+    a.byline(ui-sref="globalPlayer.player.nowPlaying.producer", ui-sref-active="current") by {{globalPlayer.player.nowPlaying.producer.name}}
   ul.actions(ng-flag="lovesharebuy")
     li.share
     li.love

@@ -2,107 +2,267 @@ article.embed-story {
   width: 100%;
   height: 100%;
   position: relative;
-  background: white;
+  background: #fafafa;
+  cursor: pointer;
 
-  .info {
+  &.share .modals #share,
+  &.donate .modals #donate,
+  &.subscribe .modals #subscribe,
+  &.idle .modals #subscribe {
+    visibility: visible;
+    opacity: 1.0;
+    transition-delay: 0s;
+  }
+
+  footer {
     position: absolute;
-    top: 0;
     right: 0;
     bottom: 0;
-    left: 70px;
+    z-index: 100;
 
-    h1 {
-      font-size: 16px;
-      line-height: 21px;
-      max-height: 42px;
-      margin: 6px 6px 5px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: $active-link-color;
-    }
-
-    h2 {
-      font-size: 12px;
-      line-height: 12px;
-      max-height: 12px;
-      padding: 0 6px 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: $active-link-color;
+    button {
+      background: black;
+      display: inline-block;
+      margin: 0 4px 3px;
+      border: 0;
+      padding: 5px 10px;
+      text-transform: uppercase;
     }
   }
 
-  .player {
-    position: absolute;
-    top: 70px;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    .play,
-    button {
-      position: absolute;
-      top: -70px;
-      z-index: 1000;
-    }
-
-    .track {
+  .modals {
+    > div {
       position: absolute;
       top: 0;
       right: 0;
       bottom: 0;
       left: 0;
-      display: flex;
       z-index: 500;
+      background: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      cursor: default;
+      visibility: hidden;
+      opacity: 0.0;
+      transition: visibility 0s ease 0.15s, opacity 0.15s ease;
 
-      .waveform,
-      canvas {
+      button.dismiss {
+        background: none;
+        float: right;
+      }
+
+      &#subscribe {
+        form {
+          position: relative;
+
+          .error {
+            position: absolute;
+            text-align: center;
+            color: red;
+            width: 100%;
+            height: 15px;
+            bottom: -15px;
+            display: none;
+          }
+
+          &.ng-invalid.ng-dirty .error {
+            display: block;
+          }
+
+        }
+
+        input.ng-invalid.ng-touched {
+          background: rgba(255, 210, 210, 1.0);
+        }
+      }
+
+      h2 {
+        color: white;
+        text-align: center;
+        font-size: 24px;
+        padding-top: 20px;
+        margin: 0 auto;
+        max-width: 90%;
+      }
+
+      h3 {
+        color: #a0a0a0;
+        text-align: center;
+        font-size: 16px;
+        padding-top: 8px;
+        margin: 0 auto;
+        max-width: 90%;
+      }
+
+      form {
+        padding: 15px;
+      }
+
+      input[type='text'] {
+        flex-grow: 7;
+      }
+
+      input[type='submit'] {
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .sharables {
         display: block;
-        position: absolute;
-        top: 5px;
-        left: 0;
-        width: 300px;
-        height: 35px;
-        border-color: $active-link-color;
-        z-index: 800;
-      }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 95px;
 
-      .scrubber {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 300px;
-        height: 40px;
-        background: $active-link-color;
-        z-index: 1500;
-        overflow: hidden;
+        a {
+          color: $orange;
+          display: block;
+          font-size: 50px;
+          margin: 0 10px;
+          font-family: 'fontello';
 
-        span {
-          display: none;
+          &.facebook {
+            color: $facebook-blue;
+          }
+
+          &.twitter {
+            color: $twitter-blue;
+          }
         }
-
-        canvas {
-          position: absolute;
-          top: 5px;
-          left: 0;
-          width: 300px;
-          height: 35px;
-          border-color: white;
-        }
-      }
-
-      .inverse {
-        display: none;
       }
     }
   }
 
-  // .info {
-  //   .img {
-  //     width: 100px;
-  //     height: @width;
-  //     border: 1px solid $art-border-color;
-  //     background-color: $image-placeholder-fill-color;
-  //   }
-  // }
+  .embed-player {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    header {
+      flex-grow: 1;
+      max-height: 100px;
+
+      h1 {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 8px;
+      }
+    }
+
+    > section {
+      flex-grow: 5;
+      display: flex;
+      align-items: stretch;
+
+      button.toggle {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        align-content: center;
+        justify-content: center;
+        background: none;
+        padding: 20px;
+        z-index: 200;
+
+        // background: transparent url('/assets/images/em_pause.svg') 5px center / auto 50px no-repeat;
+
+        div {
+          display: none;
+          flex-grow: 1;
+          max-height: 80px;
+          min-width: 100px;
+          height: 60%;
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: auto 100%;
+
+          &.pause {
+            background-image: url('/assets/images/em_pause.svg');
+          }
+
+          &.play {
+            background-image: url('/assets/images/em_play.svg');
+          }
+
+          &.pause { display: block; }
+          &.play { display: none; }
+        }
+
+        &.paused .pause { display: none; }
+        &.paused .play { display: block; }
+      }
+
+      .track {
+        flex-grow: 10;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+
+        .waveform {
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-color: #333;
+          z-index: 50;
+        }
+
+        .progress {
+          background: #aaa;
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          overflow: hidden;
+          z-index: 40;
+
+          .waveform {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  article.embed-story {
+    .embed-player {
+      .layer3 {
+        h1 {
+          font-size: 14px;
+          line-height: 18px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  article.embed-story {
+    .embed-player {
+      .layer3 {
+        h1 {
+          font-size: 14px;
+          line-height: 18px;
+        }
+      }
+    }
+  }
 }

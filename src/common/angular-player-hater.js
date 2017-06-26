@@ -110,6 +110,7 @@
     var play = Sound.prototype.play;
     Sound.prototype.play = function () {
       this.loading = true;
+      this.paused = false;
       return play.apply(this, [].slice.call(arguments));
     };
 
@@ -231,6 +232,13 @@
       } else { // start our search at the beginning
         return this.$searchSeek(position, this.$first, 0);
       }
+    };
+
+    var slPlay = SoundList.prototype.play;
+    SoundList.prototype.play = function slPlay2 () {
+      this.loading = true;
+      this.paused = false;
+      return slPlay.apply(this, [].slice.call(arguments));
     };
 
 

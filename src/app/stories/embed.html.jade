@@ -1,6 +1,33 @@
-article.embed-story
-  .info
-    h1 {{story.currentSound().story.title}}
-    h2(ng-if="!story.currentSound().series") by {{story.currentSound().producer.name}}
-    h2(ng-if="story.currentSound().series") from {{story.currentSound().series.title}}
-  prx-player(sound="story.currentSound()")
+article.embed-story(ng-class="{share: story.displayShare, subscribe: story.displaySubscribe}")
+  prx-embed-player(prx-sound="story.currentSound()")
+  footer
+    button(ng-click="story.donate()") Donate
+    button(ng-click="story.share()") Share
+    //- button(ng-click="story.subscribe()") Subscribe
+  .modals
+    #idle
+      div
+        h2 Are you still listening?
+        button(ng-click="story.deidle()") Yes, I want to hear more!
+        button Nope, I'm done for now
+    #share
+      div
+        h2 Love this story? Tell someone!
+        .sharables
+          a.facebook(href="https://www.facebook.com/dialog/share?app_id=119755508101509&display=page&href={{story.shareStoryURL}}&redirect_uri={{story.shareStoryURL}}") 
+          a.twitter(href="http://twitter.com/share?text={{story.shareTitle|encodeUri}}&&url={{story.shareStoryURL|encodeUri}}") 
+          a.email(href="mailto:?subject={{story.shareTitle|encodeUri}}&body={{story.shareStoryURL}}") 
+        button.dismiss(ng-click="story.share()") Close
+    #subscribe
+      div
+        h2 Enter your email address for more stories
+        form(novalidate)
+          .error Please use a valid email address
+          input(type='email' ng-model='story.subscriber.email' placeholder='What is your email address?')
+          input(type='submit' value='Start listening' ng-click='story.submitSubscription()')
+        button.dismiss(ng-click="story.subscribe()") Skip
+
+  //- TODO add tracking to share links
+  //-source embedding site
+  //-medium share
+  //- campaign miniprx

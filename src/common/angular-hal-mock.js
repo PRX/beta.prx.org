@@ -1,7 +1,7 @@
 angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
 .config(function ($provide, ngHalProvider) {
   var $q, $rootScope, FAKE_ROOT = 'http://nghal.org/fake_root';
-  
+
   function unfolded(doc) {
     if (angular.isFunction(doc.links)) {
       doc._links = doc.links.dump();
@@ -24,6 +24,7 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     if (obj.then && obj.stubFollow) { return obj; }
     var sfs = [];
     var sfos = [];
+    var sbs = [];
     var stubbed = false;
     obj = $q.when(obj);
     var then = obj.then;
@@ -37,6 +38,11 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
       sfos.push([rel, spy]);
       return spy;
     };
+    obj.stubBuild = function (rel, obj) {
+      var spy = jasmine.createSpy().and.returnValue(promised(promiseTransform(obj)));
+      sbs.push([rel, spy]);
+      return spy;
+    };
     obj.then = function () {
       if (!stubbed) {
         stubbed = then.call(obj, function (obj) {
@@ -45,6 +51,9 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
           });
           angular.forEach(sfos, function (sfo) {
             obj.stubFollowOne_.apply(obj, sfo);
+          });
+          angular.forEach(sbs, function (sb) {
+            obj.stubBuild_.apply(obj, sb);
           });
           return obj;
         });
@@ -80,6 +89,7 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
   function mocked (doc) {
     var docFollowStubs = {};
     var docFollowOneStubs = {};
+    var docBuildStubs = {};
     doc.stubFollow = function (rel, obj) {
       return this.stubFollow_(rel, jasmine.createSpy().and.returnValue(
         promised(promiseTransform(obj))));
@@ -94,6 +104,9 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
     doc.stubFollowOne_ = function (rel, spy) {
       return docFollowOneStubs[rel] = spy;
     };
+    doc.stubBuild_ = function (rel, spy) {
+      return docBuildStubs[rel] = spy;
+    };
     var originalFollow = doc.follow;
     doc.follow = function (rel, params) {
       if (typeof docFollowStubs[rel] !== 'undefined') {
@@ -103,12 +116,20 @@ angular.module('angular-hal-mock', ['angular-hal', 'ngMock', 'ng'])
       }
     };
     var originalFollowOne = doc.followOne;
-    doc.followOne = function(rel, params) {
+    doc.followOne = function (rel, params) {
       if (typeof docFollowOneStubs[rel] !== 'undefined') {
-          return transform(docFollowOneStubs[rel](params));
-        } else {
-          return originalFollowOne.call(doc, rel, params);
-        }
+        return transform(docFollowOneStubs[rel](params));
+      } else {
+        return originalFollowOne.call(doc, rel, params);
+      }
+    };
+    var originalBuild = doc.build;
+    doc.build = function (rel, params) {
+      if (typeof docBuildStubs[rel] !== 'undefined') {
+        return transform(docBuildStubs[rel](params));
+      } else {
+        return originalBuild.call(doc, rel, params);
+      }
     };
     var originalTransform = doc.transform;
     doc.transform = function () {

@@ -13,15 +13,33 @@
       "src": "fontawesome"
     },
     {
+      "uid": "17c21cd98db80e521e573eba247bd69b",
+      "css": "mail-squared",
+      "code": 59403,
+      "src": "fontawesome"
+    },
+    {
       "uid": "8e04c98c8f5ca0a035776e3001ad2638",
       "css": "facebook",
       "code": 59394,
       "src": "fontawesome"
     },
     {
+      "uid": "4743b088aa95d6f3b6b990e770d3b647",
+      "css": "facebook-squared",
+      "code": 59401,
+      "src": "fontawesome"
+    },
+    {
       "uid": "b8d0c7d76e87b94882329a88e8e43d3d",
       "css": "gplus",
       "code": 59395,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "906348dc798a0d42715cc97c875e3ac6",
+      "css": "twitter-squared",
+      "code": 59402,
       "src": "fontawesome"
     },
     {

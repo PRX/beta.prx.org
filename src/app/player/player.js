@@ -1,5 +1,5 @@
-angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
-.run(function (Bus, $analytics) {
+angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus', 'prx.mailinglists'])
+ .run(function (Bus, $analytics, prxPlayerIdleWatch) {
   var category = 'Audio Player';
 
   Bus.on('audioPlayer.stop', function () {
@@ -97,8 +97,9 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         return this.resume();
       } else {
         if (this.load(sound)) {
+          var p = sound.play();
           Bus.emit('audioPlayer.play', this.nowPlaying);
-          return sound.play();
+          return p;
         } else {
           return false;
         }
@@ -165,12 +166,33 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     }
   };
 })
+.service('prxPlayerIdleWatch', function (Bus, $rootScope) {
+  var self = this;
+
+  var threshold = 3;
+
+  // The first play is a user interatice, which will move the counter to 0, and
+  // subsequent plays are passive, so the first 'radio' play will move the
+  // counter to 1, etc.
+  this.playsWhileIdle = -1;
+
+  Bus.on('audioPlayer.resume audioPlayer.pause', function () {
+    // User is no longer idle if the resume or pause the player
+    self.playsWhileIdle = 0;
+  }).on('audioPlayer.play', function () {
+    self.playsWhileIdle += 1;
+
+    if (self.playsWhileIdle >= threshold) {
+      $rootScope.$broadcast('audioPlayer.unattended', true);
+    }
+  });
+})
 .directive('prxGlobalPlayer', function () {
   return {
     restrict: 'E',
     replace: true,
     controller: 'GlobalPlayerCtrl',
-    controllerAs: 'player',
+    controllerAs: 'globalPlayer',
     templateUrl: 'player/global_player.html'
   };
 })
@@ -178,10 +200,39 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   return {
     restrict: 'E',
     replace: true,
+    require: ['prxPlayer', 'prxSound'],
     templateUrl: 'player/player.directive.html',
     controller: 'PlayerCtrl as player',
     link: function (scope, elem, attrs, ctrl) {
-      scope.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
+      ctrl[1].soundWatchers.push(ctrl[0]);
+    }
+  };
+})
+.directive('prxEmbedPlayer', function ($controller, prxSoundFactory) {
+  return {
+    restrict: 'E',
+    replace: true,
+    require: ['prxEmbedPlayer', 'prxSound'],
+    templateUrl: 'player/embed_player.html',
+    controller: 'PlayerCtrl as player',
+    link: function (scope, elem, attrs, ctrl) {
+      ctrl[1].soundWatchers.push(ctrl[0]);
+    }
+  };
+})
+.directive('prxSound', function () {
+  return {
+    restrict: 'A',
+    controller: function ($attrs, $scope) {
+      this.sound = {};
+      this.soundWatchers = [];
+      this.setSound = function (sound) {
+        this.sound = sound;
+        angular.forEach(this.soundWatchers, function (soundWatcher) {
+          soundWatcher.setSound(sound);
+        });
+      };
+      $scope.$watch($attrs.prxSound, angular.bind(this, this.setSound));
     }
   };
 })
@@ -190,18 +241,21 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     restrict: 'E',
     replace: true,
     scope: true,
-    require: '^?prxPlayer',
+    require: ['^?prxPlayer', '^prxSound'],
     templateUrl: 'player/button.html',
     link: function (scope, elem, attrs, ctrl) {
-      if (!ctrl) {
-        ctrl = $controller('PlayerCtrl', {$scope: scope});
-        scope.$parent.$watch(attrs.sound, angular.bind(ctrl, ctrl.setSound));
+      if (!ctrl[0]) {
+        ctrl[0] = $controller('PlayerCtrl', {$scope: scope});
+        ctrl[1].soundWatchers.push(ctrl[0]);
+        ctrl[0].setSound(ctrl[1].sound);
       }
-      scope.player = ctrl;
+
+      // TODO Need to push to soundWatchers if ctrl is supplied?
+      scope.player = ctrl[0];
     }
   };
 })
-.controller('PlayerCtrl', function (prxPlayer) {
+.controller('PlayerCtrl', function (prxPlayer, prxMailingList, Bus, $scope) {
   this.setSound = function (newSound) {
     this.sound = newSound;
   };
@@ -247,6 +301,17 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
     }
     this.sound.setPosition(position);
   };
+
+  var self = this;
+  $scope.$on('audioPlayer.unattended', function (isUnattended) {
+    if (isUnattended) {
+      if (!self.showSubscribe) {
+        self.showSubscribe = true;
+      }
+
+      prxPlayer.pause();
+    }
+  });
 })
 .directive('prxPlayerScrubber', function () {
   return {
@@ -302,36 +367,23 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
   return timeCode;
 })
 .controller('GlobalPlayerCtrl', function (prxPlayer) {
-  this.global = prxPlayer;
+  this.player = prxPlayer;
 })
 .directive('waveform', function ($window, $timeout) {
   return {
     restrict: 'C',
-    require: '^prxPlayer',
+    require: '^prxSound',
     link: function (scope, elem, attrs, ctrl) {
       var animated = false,
           _window = angular.element($window),
-          timeout, setSound = ctrl.setSound,
-          ctx = elem[0].getContext('2d');
+          timeout, sound, ctx = elem[0].getContext('2d');
 
       _window.on('resize', scheduleWaveform);
 
       scope.$on('$destroy', function() {
-        ctrl.setSound = setSound;
+        // ctrl.setSound = setSound;
         _window.off('resize', scheduleWaveform);
       });
-
-      ctrl.setSound = function (sound) {
-        setSound.call(ctrl, sound);
-        if (sound && !sound.$waveform) {
-          sound.$waveform = [];
-
-          for (var i=0; i < 15; i+= 0.3) {
-            sound.$waveform.push(Math.sin(i) * 49 + 51);
-          }
-        }
-        scheduleWaveform();
-      };
 
       function scheduleWaveform () {
         // If the user is continuously resizing,
@@ -343,9 +395,23 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
         timeout = $timeout(generateWaveform, 300);
       }
 
+      ctrl.soundWatchers.push({
+        setSound: function (aSound) {
+          if (aSound && !aSound.$waveform) {
+            aSound.$waveform = [];
+
+            for (var i=0; i < 8; i+= 0.3) {
+              aSound.$waveform.push(Math.sin(i) * 36 + 64);
+            }
+          }
+          sound = aSound;
+          scheduleWaveform();
+        }
+      });
+
       function generateWaveform () {
         var count = Math.floor(elem[0].offsetWidth / 5),
-          waveform = ctrl.sound && ctrl.sound.$waveform;
+          waveform = sound && sound.$waveform;
         /* istanbul ignore if: Count will always be 0 in testing (the window does not exist)*/
         if (count && waveform) {
           elem[0].width = elem[0].offsetWidth * 2;
@@ -392,6 +458,74 @@ angular.module('prx.player', ['ngPlayerHater', 'angulartics', 'prx.bus'])
           timeout = undefined;
         }
       }
+
+      // function generateWaveform () {
+      //   // The real dimensions of the canvas element
+      //   var rWidth = elem[0].offsetWidth;
+      //   var rHeight = elem[0].offsetHeight;
+      //
+      //   var waveform = sound && sound.$waveform;
+      //
+      //   // The number of bars to display
+      //   var count = Math.floor(rWidth / 5);
+      //
+      //
+      //
+      //   /* istanbul ignore if: Count will always be 0 in testing (the window does not exist)*/
+      //   if (count && waveform) {
+      //     // elem[0].width = elem[0].offsetWidth * 2;
+      //     // elem[0].height = elem[0].offsetHeight * 2;
+      //
+      //     // elem[0].width = elem[0].offsetWidth * 2;
+      //     // elem[0].height = elem[0].offsetHeight * 2;
+      //     // elem[0].style.width = elem[0].offsetWidth + "px";
+      //     // elem[0].style.height = elem[0].offsetHeight + "px";
+      //
+      //     // elem[0].getContext('2d').scale(2,2);
+      //
+      //     if (elem[0].currentStyle) {
+      //       strokeStyle = elem[0].currentStyle['border-color'];
+      //     } else if (window.getComputedStyle) {
+      //       var style = window.getComputedStyle(elem[0], null);
+      //       strokeStyle = style['borderRightColor'] || style.getPropertyValue('border-color');
+      //     }
+      //
+      //     ctx.strokeStyle = strokeStyle;
+      //     ctx.lineWidth = 6;
+      //
+      //     var points = [];
+      //     var perBar = (waveform.length - 1) / count;
+      //     var i = perBar / 2, x, start;
+      //
+      //     do {
+      //       start = Math.min(i, waveform.length - 1);
+      //       if (start == ~~start) {
+      //         points.push(waveform[start]);
+      //       } else if (start < waveform.length - 1) {
+      //         x = start - ~~start;
+      //         points.push(waveform[~~start] * (1 - x) + waveform[~~start+1] * (x));
+      //       }
+      //
+      //       i += perBar;
+      //     } while (i <= waveform.length - 1);
+      //
+      //     if (!animated && window.requestAnimationFrame) {
+      //       animateIn(points, ctx, elem[0].height, elem[0].width).then(function () {
+      //         timeout = undefined;
+      //       });
+      //     } else {
+      //       angular.forEach(points, function (point, index) {
+      //         ctx.beginPath();
+      //         ctx.moveTo(10 * index + 5, elem[0].height);
+      //         ctx.lineTo(10 * index + 5, (100-point) / 100 * elem[0].height);
+      //         ctx.stroke();
+      //       });
+      //       timeout = undefined;
+      //     }
+      //   } else {
+      //     timeout = undefined;
+      //   }
+      // }
 
       /* istanbul ignore next: Purely display logic */
       function animateIn(points, ctx, height, width) {
