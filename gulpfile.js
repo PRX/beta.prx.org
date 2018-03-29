@@ -34,9 +34,7 @@ var cwd      = __dirname;
 var src      = cwd + '/src';
 var hintCfg  = c.jsHintCfg;
 var fileName = pkg.name + "-" + pkg.version;
-var vCopyJs  = c.vendor.copyJs;
-var vCopyJsNames = vCopyJs.map( function(path){ return path.split('/').pop(); });
-var vBuildJs = c.vendor.buildJs.concat(c.vendor.js).concat(vCopyJs);
+var vBuildJs = c.vendor.buildJs.concat(c.vendor.js);
 var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
 var karmaCfg = cwd + '/config/karma.conf.js';
@@ -220,10 +218,7 @@ gulp.task('html', function (cb) {
   walker.on('file', function (root, stat, next) {
     root = path.relative(buildDir, root);
 
-    if (vCopyJsNames.indexOf(stat.name.toString()) != -1) {
-      // skip it
-      // console.log('ignore', stat.name);
-    } else if (stat.name == 'angular.js') {
+    if (stat.name == 'angular.js') {
       ctx.scripts.unshift(root + '/' + stat.name);
     } else {
       if (stat.name.match(/\.css$/)) {
@@ -263,13 +258,7 @@ gulp.task('build', function (cb) {
   runSeq('clean', ['templates', 'js', 'buildCss', 'buildAssets'], 'html', cb);
 });
 
-gulp.task('dist', ['distJs', 'compileCss', 'compileAssets', 'distHtml', 'distVCopyJs']);
-
-gulp.task('distVCopyJs', ['buildJs'], function () {
-  return gulp.src(vCopyJs, {base: cwd})
-  .pipe(plugin.uglify({preserveComments: 'some', outSourceMap: true}))
-  .pipe(gulp.dest(complDir));
-});
+gulp.task('dist', ['distJs', 'compileCss', 'compileAssets', 'distHtml']);
 
 gulp.task('distJs', ['buildJs', 'templates'], function () {
   return es.merge(

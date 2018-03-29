@@ -20,7 +20,7 @@
     "optipng-bin": "2.0.1"
   },
   "scripts": {
-    "postinstall": "(bower install) && (cd vendor/mp3.js && npm install && make clean browser) && (cd vendor/aurora.js && npm install && make clean browser)",
+    "postinstall": "bower install",
     "test": "gulp ci",
     "testDist": "gulp testDist",
     "watch": "gulp watch",
