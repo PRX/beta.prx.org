@@ -10,6 +10,8 @@ RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 EXPOSE 8080
 
+RUN apt-get update && apt-get install -y zip
+
 ENTRYPOINT [ "/usr/local/bin/npm" ]
 CMD [ "run", "start" ]
 
