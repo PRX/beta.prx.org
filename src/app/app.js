@@ -15,7 +15,6 @@ angular.module('prx', ['ngAnimate',
   'prx.player',
   'prx.donations',
   'ngFlag',
-  'prx.experiments',
   'angulartics',
   'angulartics.google.analytics',
   'angulartics.prx.count',
@@ -23,31 +22,15 @@ angular.module('prx', ['ngAnimate',
   'prx.errors',
   'prx.modal',
   'prx.embed',
-  'prx.welcome',
   'prx.modelConfig',
   'ngMobile',
   'prx.breadcrumbs',
-  'prx.ads',
   'prx.auth'])
 .config(function (ngFlagProvider,
-  $analyticsProvider, $stateProvider, prxperimentProvider, PRXDrawerProvider) {
+  $analyticsProvider, $stateProvider, PRXDrawerProvider) {
   $analyticsProvider.firstPageview(false);
   $analyticsProvider.virtualPageviews(false);
-  prxperimentProvider.base('https://x.prx.org')
-  .clientId(['$q', '$window', function ($q, $window) {
-    /* istanbul ignore if */
-    if (angular.isDefined($window.ga)) {
-      var deferred = $q.defer();
-      $window.ga(function (tracker) { deferred.resolve(tracker.get('clientId')); });
-      return deferred.promise;
-    } else {
-      return 'tests';
-    }
-  }]);
-  /* istanbul ignore next */
-  if (!(FEAT.APPLICATION_VERSION != 'development' && FEAT.APPLICATION_VERSION != 'integration' && !window.callPhantom)) {
-    prxperimentProvider.enabled(false);
-  }
+
   ngFlagProvider.flags(FEAT.JSON);
 
   PRXDrawerProvider.register({
@@ -127,8 +110,8 @@ angular.module('prx.modelConfig', ['angular-hal'])
   }]);
 });
 (function () {
-  var acm = angular.module('prx.appCtrl', ['prx.embed', 'prx.player', 'prx.url-translate', 'prx.errors', (FEAT.TCF_DEMO ? 'prx.upload' : 'ng')])
-  .controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, urlTranslate, prxError, UploadTarget) {
+  var acm = angular.module('prx.appCtrl', ['prx.embed', 'prx.player', 'prx.url-translate', 'prx.errors', 'ng'])
+  .controller('appCtrl', function ($scope, $location, prxPlayer, prxChrome, urlTranslate, prxError) {
     var app = this;
     this.player = prxPlayer;
     this.chrome = prxChrome;
@@ -147,13 +130,6 @@ angular.module('prx.modelConfig', ['angular-hal'])
     $scope.$on('$stateChangeError', function () {
       $scope.loading = false;
     });
-
-    /* istanbul ignore next */
-    if (FEAT.TCF_DEMO) {
-      app.showFileTarget = function (event) {
-        UploadTarget.showTarget('files');
-      };
-    }
   })
   .filter('timeAgo', function () {
     return function (time) {
@@ -281,45 +257,4 @@ angular.module('prx.modelConfig', ['angular-hal'])
       }
     };
   });
-
-  if (!FEAT.TCF_DEMO) {
-    acm.service('UploadTarget', angular.noop);
-  }
 })();
-// .directive('quickReturn', function ($window) {
-//   var UP = 1, DOWN = 0, STILL = -1;
-//
-//   return {
-//     restrict: 'A',
-//     link: function (scope, element) {
-//       var fromPos = 0, pos = 0, dir = STILL;
-//
-//       if ($window.requestAnimationFrame) {
-//         handle();
-//       }
-//
-//       function handle () {
-//         var newPos = Math.max(0, $window.scrollY);
-//         if (newPos < pos) {
-//           if (dir != UP) {
-//             fromPos = pos;
-//             dir = UP;
-//             element.css({'position': 'absolute', 'top' : newPos - element[0].offsetHeight + 'px'});
-//           }
-//           if (fromPos - newPos >= element[0].offsetHeight) {
-//             element.removeClass('hidden');
-//             element.css({'position': 'fixed', 'top': '0px'});
-//           }
-//         } else if (newPos > pos) {
-//           if (dir != DOWN) {
-//             element.addClass('hidden');
-//             element.css({'position': 'absolute', 'top': pos + 'px'});
-//             dir = DOWN;
-//           }
-//         }
-//         pos = newPos;
-//         $window.requestAnimationFrame(handle);
-//       }
-//     }
-//   };
-// });

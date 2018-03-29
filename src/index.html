@@ -81,18 +81,6 @@
   ga('create', 'UA-164824-46', 'prx.org');
   ga('set', 'dimension1', FEAT.APPLICATION_VERSION);
   ga('require', 'displayfeatures');
-  var googletag = googletag || {};
-  googletag.cmd = googletag.cmd || [];
-  (function() {
-  var gads = document.createElement('script');
-  gads.async = true;
-  gads.type = 'text/javascript';
-  var useSSL = 'https:' == document.location.protocol;
-  gads.src = (useSSL ? 'https:' : 'http:') +
-  '//www.googletagservices.com/tag/js/gpt.js';
-  var node = document.getElementsByTagName('script')[0];
-  node.parentNode.insertBefore(gads, node);
-  })();
 </script>
 <% } scripts.forEach(function(file) { %>
 <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>

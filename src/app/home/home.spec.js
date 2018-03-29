@@ -2,14 +2,6 @@ describe('prx.home', function () {
 
   beforeEach(module('prx.home', 'angular-hal-mock'));
 
-  if (!FEAT.HOME_PAGE) {
-    it ('redirects from home to home.nxt', inject(function ($rootScope, $state) {
-      spyOn($state, 'go');
-      $rootScope.$broadcast('$stateChangeStart', {name: 'home'});
-      expect($state.go).toHaveBeenCalled();
-    }));
-  }
-
   describe ('HomeCtrl', function () {
     it ('attaches the picks injected to $scope', inject(function ($controller) {
       var sigil = 'sigil';
