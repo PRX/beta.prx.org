@@ -19,6 +19,6 @@ ADD . ./
 RUN chown -R node:node $APP_HOME
 USER node
 
-RUN npm install
+RUN yarn install --ignore-engines
 RUN npm run compile
 RUN npm run zip
