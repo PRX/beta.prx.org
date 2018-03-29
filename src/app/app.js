@@ -36,41 +36,41 @@ angular.module('prx', ['ngAnimate',
   PRXDrawerProvider.register({
     name: 'Search',
     weight: PRXDrawerProvider.TOP,
-    href: 'http://www.prx.org/search/all',
+    href: 'http://exchange.prx.org/search/all',
     type: 'search'
   }, {
     name: 'Browse',
-    href: 'http://www.prx.org/pieces',
+    href: 'http://exchange.prx.org/pieces',
     type: 'category',
     children: [
       {
         name: "Diary",
-        href: "http://www.prx.org/format/Diary",
+        href: "http://exchange.prx.org/format/Diary",
         type: "item"
       },
       {
         name: "Documentary",
-        href: "http://www.prx.org/format/Documentary",
+        href: "http://exchange.prx.org/format/Documentary",
         type: "item"
       },
       {
         name: "Essay",
-        href: "http://www.prx.org/format/Essay",
+        href: "http://exchange.prx.org/format/Essay",
         type: "item"
       },
       {
         name: "Fiction",
-        href: "http://www.prx.org/format/Fiction",
+        href: "http://exchange.prx.org/format/Fiction",
         type: "item"
       },
       {
         name: "News Reporting",
-        href: "http://www.prx.org/format/News%20Reporting",
+        href: "http://exchange.prx.org/format/News%20Reporting",
         type: "item"
       },
       {
         name: "Special",
-        href: "http://www.prx.org/format/Special",
+        href: "http://exchange.prx.org/format/Special",
         type: "item"
       },
     ]
@@ -120,7 +120,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
 
     $scope.$on('$stateChangeSuccess', function () {
       $scope.loading = false;
-      app.desktopUrl = "http://www.prx.org" + urlTranslate($location.path()) + "?m=false";
+      app.desktopUrl = "http://exchange.prx.org" + urlTranslate($location.path()) + "?m=false";
     });
 
     $scope.$on('$stateChangeStart', function () {
@@ -252,7 +252,7 @@ angular.module('prx.modelConfig', ['angular-hal'])
       link: function (scope, elem, attrs) {
         var attr = attrs.bindCanonical || 'href';
         scope.$on('$stateChangeSuccess', function () {
-          elem.attr(attr, "http://www.prx.org" + urlTranslate($location.path()));
+          elem.attr(attr, "http://exchange.prx.org" + urlTranslate($location.path()));
         });
       }
     };

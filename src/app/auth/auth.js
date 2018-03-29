@@ -3,7 +3,7 @@ angular.module('prx.auth', ['prx.ui.nav'])
   PRXDrawerProvider.register({
     name: 'Sign In',
     weight: PRXDrawerProvider.BOTTOM,
-    href: 'http://www.prx.org/sessions/new',
+    href: 'http://exchange.prx.org/sessions/new',
     nav: true,
     template: '<prx-auth-badge></prx-auth-badge>',
     dropdownTemplate: '<prx-auth-window></prx-auth-window>'
