@@ -26,7 +26,8 @@
     "watch": "gulp watch",
     "compile": "gulp compile",
     "start": "gulp compileServer",
-    "devServer": "apiServer=https://cms.prx.org/api/v1 gulp"
+    "devServer": "apiServer=https://cms.prx.org/api/v1 gulp",
+    "zip": "rm -f build.zip && cd bin && zip -rq ../build.zip ."
   },
   "devDependencies": {
     "bower": "1.3.12",

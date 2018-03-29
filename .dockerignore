@@ -4,6 +4,7 @@
 .gitignore
 .nvmrc
 bin
+build.zip
 coverage
 Dockerfile
 docker-compose.yml

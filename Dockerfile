@@ -1,7 +1,7 @@
 FROM node:4.8.7
 
 MAINTAINER PRX <sysadmin@prx.org>
-LABEL org.prx.app="yes"
+LABEL org.prx.s3static="true"
 
 ENV PHANTOM true
 ENV APP_HOME /app
@@ -19,3 +19,4 @@ USER node
 
 RUN npm install
 RUN npm run compile
+RUN nmp run zip
