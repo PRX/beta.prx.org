@@ -1,0 +1,6 @@
+version: '2'
+services:
+  test:
+    build: .
+    image: wwwprxorg
+    command: run testDist

@@ -1,0 +1,15 @@
+version: 0.2
+env:
+  variables:
+    PRX_S3_STATIC_ARCHIVE_BUILD_PATH : "/app/build.zip"
+    PRX_S3_STATIC_S3_KEY: "s3-static/PRX-beta.prx.org.zip"
+    PRX_S3_STATIC_CONFIG_PARAMETERS: "BetaPrxOrgArchiveS3ObjectVersion"
+phases:
+  build:
+    commands:
+      - "cd $(ls -d */|head -n 1)"
+      - "docker-compose -f docker-compose-ci.yml build"
+      - "docker-compose -f docker-compose-ci.yml run test"
+  post_build:
+    commands:
+      - 'curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/master/ci/utility/post_build.sh" && chmod +x post_build.sh && bash ./post_build.sh'

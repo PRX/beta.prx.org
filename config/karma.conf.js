@@ -20,6 +20,11 @@ module.exports = function ( config ) {
     },
     exclude: [ 'public/assets/**/*.js', '**/*.e2e.spec.js' ],
     frameworks: [ 'jasmine' ],
+    client: {
+      jasmine: {
+        random: false
+      }
+    },
     plugins: [ 'karma-jasmine', 'karma-firefox-launcher', 'karma-chrome-launcher', 'karma-safari-launcher', 'karma-phantomjs-launcher', 'karma-coverage' ],
     preprocessors: { '*/{app,common}/**/!(*.spec).js': ['coverage'] },
     reporters: ['dots', 'coverage'],
