@@ -1,9 +1,7 @@
-# PRX.org Version 4
-[![Build Status](https://travis-ci.org/PRX/www.prx.org.png?branch=master)](https://travis-ci.org/PRX/www.prx.org)
-[![Coverage Status](https://coveralls.io/repos/PRX/www.prx.org/badge.png?branch=master)](https://coveralls.io/r/PRX/www.prx.org?branch=master)
+# PRX.org Listener App
 
-    Note: This repository houses only the web frontend
-    component of PRX.org Version 4. In order to use it,
+    Note: This repository houses only the web listener
+    frontend component of PRX.org. In order to use it,
     you will need a working version of the CMS or backend
     component, available at [PRX/cms.prx.org](/PRX/cms.prx.org).
     If you want to contribute to the frontend without needing
@@ -19,17 +17,19 @@
     at [id.prx.org](https://id.prx.org).
 
 ## Getting Started
-The quickest way to get started is to check out the repository and execute it against our live v4 backend, in just a few commands. You will need to have a recent version of NodeJS, NPM, and pow installed.
+The quickest way to get started is to check out the repository and execute it
+against our live v4 backend, in just a few commands. You will need to have
+NodeJS, NPM, and pow installed.
 
 ```shell
-git clone git://github.com/PRX/www.prx.org.git prx.org
-cd prx.org
-echo 8080 > ~/.pow/www.prx
+git clone git://github.com/PRX/beta.prx.org.git beta.prx.org
+cd beta.prx.org
+echo 8080 > ~/.pow/beta.prx
 npm install
-npm run-script devServer
+npm run devServer
 ```
 
-After executing the above, opening a web browser to `http://www.prx.dev/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
+After executing the above, opening a web browser to `http://beta.prx.dev/` should display your own version of the page. Any changes you make to the files in the `src/` directory will automatically be reflected on the page - either by updating it in place or by automatically forcing the page to refresh.
 
 ## Architecture
 Version 4 of PRX.org is implemented as a constellation of applications – currently a *CMS API* which is executed by the server and implemented using Ruby on Rails, a *frontend* which is executed by web browsers and implemented using AngularJS, an *Identification Service* supporting user registration and sign-in, and several other small server-side applications which may react to events occurring throughout the system, provide a public HTTP API, or both.
@@ -50,21 +50,16 @@ This project should be well unit tested. There are (fairly low) code coverage re
 
 End to End tests are useful but because they are coupled to both the frontend and backend simultaneously they can largely be ignored for the time being. A solution is being devised that will more fully work to continuously integrate this process.
 
-##### Travis CI
-Tests are automatically run by Travis CI in several circumstances. Generally, this is used to ensure that `master` always passes (see [*Master is Always Deployable*](#master-is-always-deployable), below) and for visibility into test statuses on Pull Requests.
+##### PRX CI
+Tests are automatically run by PRX CI (AWS CodeBuild), via the buildspec.yml file.
 
 #### Deploying
-Deployment is handled through Capistrano. If you have access to commit directly to this repo, you probably have deploy permissions as well. If you don't, you will likely need to customize the deployment scripts anyway, so it will not be addressed in detail here. The basics are these:
+Deployment is handled by PRX CI and Docker. So you better make sure this works for you:
 
-```shell
-cap production deploy # deploys to beta.prx.org, *always* from master
-cap staging deploy    # deploys to alpha.prx.org, allows specifying the branch
 ```
-
-If you're prompted for a password, you don't have access to deploy. If you think this is a mistake, let chris know.
-
-##### Master is Always Deployable
-We're able to make very little ceremony out of deploying because master is always deployable (and, in fact, will likely be automatically deployed in the future). We maintain this state of affairs by ensuring that our code is well-tested ([automatically](#testing), with help from [Travis CI](#Travis-CI)) and by following a code review process that uses Github Pull Requests to ensure that at least two people have looked at each set of changes.
+docker-compose -f docker-compose-ci.yml build
+docker-compose -f docker-compose-ci.yml test
+```
 
 ### Project Layout
 The project is broken into several directories. Everything that is automatically generated as part of the build process (mentioned above) is ignored by git and therefore never checked into source control. For this reason, I will refer to directories that are not visible in the Github source tree, but will be automatically generated as part of the `npm install` or `npm run-script devServer` processes.

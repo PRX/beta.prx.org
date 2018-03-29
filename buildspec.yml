@@ -2,7 +2,7 @@ version: 0.2
 env:
   variables:
     PRX_S3_STATIC_ARCHIVE_BUILD_PATH : "/app/build.zip"
-    PRX_S3_STATIC_S3_KEY: "s3-static/PRX-www.prx.org.zip"
+    PRX_S3_STATIC_S3_KEY: "s3-static/PRX-beta.prx.org.zip"
     PRX_S3_STATIC_CONFIG_PARAMETERS: "BetaPrxOrgArchiveS3ObjectVersion"
 phases:
   build:
