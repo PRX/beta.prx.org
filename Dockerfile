@@ -19,4 +19,4 @@ USER node
 
 RUN npm install
 RUN npm run compile
-RUN nmp run zip
+RUN npm run zip
