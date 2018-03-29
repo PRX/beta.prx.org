@@ -346,7 +346,7 @@ gulp.task('compressDist', function () {
 });
 
 gulp.task('compile', function (cb) {
-  runSeq('dist', 'testDist', 'cacheBust', 'compressDist', cb);
+  runSeq('dist', 'cacheBust', 'compressDist', cb);
 });
 
 gulp.task('compileServer', function () {
@@ -443,7 +443,7 @@ gulp.task('coveralls', ['checkCoverage', 'compile'], function (done) {
 });
 
 gulp.task('installWebdriver', function (cb) {
-  if (process.env['TRAVIS']) {
+  if (process.env['PHANTOM']) {
     cb();
   } else {
     return instWd(cb);

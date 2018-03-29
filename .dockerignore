@@ -1,12 +1,15 @@
+.cache
 .env
 .git
 .gitignore
+.nvmrc
+bin
 coverage
-dist
 Dockerfile
 docker-compose.yml
 README.md
 node_modules
+public
 tmp
 vendor
 *.log

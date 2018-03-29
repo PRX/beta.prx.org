@@ -1,16 +1,18 @@
 {
   "author": "PRX",
-  "name": "prx.org-frontend",
+  "name": "www.prx.org",
+  "description": "listener facing app for prx.org",
   "version": "0.0.1",
-  "homepage": "http://github.com/prx/prx.org-frontend",
+  "homepage": "http://github.com/prx/www.prx.org#readme",
+  "license": "AGPL",
   "licenses": {
     "type": "AGPL",
-    "url": "https://raw.github.com/prx/prx.org-frontend/master/LICENSE"
+    "url": "https://raw.github.com/prx/www.prx.org/master/LICENSE"
   },
-  "bugs": "https://github.com/prx/prx.org-frontend/issues",
+  "bugs": "https://github.com/prx/www.prx.org/issues",
   "repository": {
     "type": "git",
-    "url": "git@github.com:prx/prx.org-frontend.git"
+    "url": "git@github.com:prx/www.prx.org.git"
   },
   "dependencies": {
     "express": "3.3.8",
@@ -18,11 +20,12 @@
     "optipng-bin": "2.0.1"
   },
   "scripts": {
-    "postinstall": "(bower install --allow-root) && (cd vendor/mp3.js && npm install && make clean browser) && (cd vendor/aurora.js && npm install && make clean browser)",
+    "postinstall": "(bower install) && (cd vendor/mp3.js && npm install && make clean browser) && (cd vendor/aurora.js && npm install && make clean browser)",
     "test": "gulp ci",
+    "testDist": "gulp testDist",
     "watch": "gulp watch",
     "compile": "gulp compile",
-    "server": "gulp compileServer",
+    "start": "gulp compileServer",
     "devServer": "apiServer=https://cms.prx.org/api/v1 gulp"
   },
   "devDependencies": {
