@@ -9,7 +9,7 @@ var server;
 var plugin = require('gulp-load-plugins')();
 var instWd = plugin.protractor.webdriver_update;
 var prtrct = plugin.protractor.protractor;
-var karma  = plugin.karma({configFile: c.karmaCfg});
+var Server = require('karma').Server;
 
 var gulp   = require('gulp');
 var es     = require('event-stream');
@@ -39,6 +39,7 @@ var vCopyJsNames = vCopyJs.map( function(path){ return path.split('/').pop(); })
 var vBuildJs = c.vendor.buildJs.concat(c.vendor.js).concat(vCopyJs);
 var vComplJs = c.vendor.compileJs.concat(c.vendor.js);
 var allAppJs = c.app.js.concat(vBuildJs);
+var karmaCfg = cwd + '/config/karma.conf.js';
 var featsDev = cwd + '/config/flags.dev.json';
 var featDist = cwd + '/config/flags.release.json';
 
@@ -136,12 +137,14 @@ gulp.task('compileCss', ['compressCss', 'compressAssets'], function () {
 
 /** Javascript **/
 
-gulp.task('spec', ['templates', 'buildJs', 'helperJs'], function () {
-  var cfg = {};
-  if (process.env.TRAVIS) {
-    cfg.browsers = ['PhantomJS', 'Firefox'];
-  }
-  return karma.once(cfg);
+gulp.task('spec', ['templates', 'buildJs', 'helperJs'], function (done) {
+  new Server({ configFile: karmaCfg, singleRun: true }, function (e) {
+    if (e) {
+      done(new plugin.util.PluginError('karma', {message: 'Karma tests failed'}));
+    } else {
+      done();
+    }
+  }).start();
 });
 
 gulp.task('jshint', function () {
@@ -299,8 +302,10 @@ gulp.task('distHtml', function () {
     .pipe(gulp.dest(complDir));
 });
 
-gulp.task('testDist', ['helperJsDist'], function () {
-  return karma.once({
+gulp.task('testDist', ['helperJsDist'], function (done) {
+  new Server({
+    configFile: karmaCfg,
+    singleRun: true,
     files: [complDir+"/**/*.min.js"].concat(
       c.test.helper.dst.split('/').slice(0, -1).join('/') + '/.release' +
       c.test.helper.dst.split('/').slice(-1), c.test.js, c.app.specs,
@@ -312,7 +317,13 @@ gulp.task('testDist', ['helperJsDist'], function () {
     ),
     browsers: ['PhantomJS'],
     reporters: ['dots']
-  });
+  }, function (e) {
+    if (e) {
+      done(new plugin.util.PluginError('karma', {message: 'Karma tests failed'}));
+    } else {
+      done();
+    }
+  }).start();
 });
 
 gulp.task('cacheBust', function (done) {
@@ -338,7 +349,7 @@ gulp.task('compile', function (cb) {
   runSeq('dist', 'testDist', 'cacheBust', 'compressDist', cb);
 });
 
-gulp.task('compileServer', ['compile'], function () {
+gulp.task('compileServer', function () {
   if (server) {
     server.close();
   }
@@ -377,9 +388,7 @@ gulp.task('watch', ['build_', 'installWebdriver', 'helperJs'], function (cb) {
 
   gulp.watch(c.e2eSpecs, ['runProtractor']);
 
-
-  karma.start({ autoWatch: true });
-
+  new Server({ configFile: karmaCfg, autoWatch: true }).start();
 
   gulp.watch(allAppJs.concat(featsDev), ['buildJs', 'helperJs']);
   gulp.watch("src/**/*.js", ['buildJs', 'helperJs']);

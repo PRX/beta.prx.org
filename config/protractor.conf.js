@@ -6,6 +6,7 @@ exports.config = {
   baseUrl: 'http://localhost:8080',
 
   jasmineNodeOpts: {
+    random: false,
     showColors: true,
     defaultTimeoutInterval: 30000
   },
