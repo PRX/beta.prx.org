@@ -25,7 +25,8 @@ NodeJS, NPM, and pow installed.
 git clone git://github.com/PRX/beta.prx.org.git beta.prx.org
 cd beta.prx.org
 echo 8080 > ~/.pow/beta.prx
-npm install
+npm install -g yarn@1.3.2
+yarn install --ignore-engines
 npm run devServer
 ```
 
