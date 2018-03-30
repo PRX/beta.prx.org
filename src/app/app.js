@@ -24,8 +24,7 @@ angular.module('prx', ['ngAnimate',
   'prx.embed',
   'prx.modelConfig',
   'ngMobile',
-  'prx.breadcrumbs',
-  'prx.auth'])
+  'prx.breadcrumbs'])
 .config(function (ngFlagProvider,
   $analyticsProvider, $stateProvider, PRXDrawerProvider) {
   $analyticsProvider.firstPageview(false);
@@ -74,6 +73,10 @@ angular.module('prx', ['ngAnimate',
         type: "item"
       },
     ]
+  }, {
+    name: 'Exchange',
+    weight: PRXDrawerProvider.BOTTOM,
+    href: 'http://exchange.prx.org/'
   });
 }).run(function ($rootScope, $location, $analytics, $timeout) {
   $rootScope.$on('$stateChangeSuccess', function () {
@@ -85,9 +88,6 @@ angular.module('prx.base',['prx'])
 .config(/* istanbul ignore next */
   function ($locationProvider) {
     $locationProvider.html5Mode(true);
-}).run(/* istanbul ignore next */
-  function (PrxAuth) {
-    PrxAuth.$checkLoggedIn();
 });
 angular.module('prx.modelConfig', ['angular-hal'])
 .config(function (ngHalProvider) {

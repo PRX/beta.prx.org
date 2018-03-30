@@ -1,7 +1,5 @@
 {
   "apiServer" : "http://cms.prx.dev/api/v1",
   "COUNT_HOST": "http://localhost",
-  "APPLICATION_VERSION": "development",
-  "ID_SERVER": "http://id.prx.test",
-  "ID_CLIENT_KEY": "redacted"
+  "APPLICATION_VERSION": "development"
 }

@@ -1,7 +1,5 @@
 {
   "apiServer" : "https://cms.prx.org/api/v1",
   "COUNT_HOST": "https://count.prx.org",
-  "APPLICATION_VERSION": "integration",
-  "ID_SERVER": "https://id.prx.org",
-  "ID_CLIENT_KEY": "mkbKU13rsBTe2bN0T0HXXiFoW27D5dTWBKKieItJ"
+  "APPLICATION_VERSION": "integration"
 }
