@@ -15,12 +15,6 @@ describe('application', function () {
     beforeEach(function () {
       browser.get('/');
     });
-
-    if (!FEAT.HOME_PAGE) {
-      it ('redirects to the /nxt modal', function () {
-        expect(browser.getCurrentUrl()).toMatch(/\/nxt$/);
-      });
-    }
   });
 
   describe('any page', function () {
@@ -45,17 +39,10 @@ describe('application', function () {
       browser.get('/fake');
     });
 
-    if (FEAT.HOME_PAGE) {
-      it ('takes you to the / page when you tap the prx logo', function () {
-        $('h1 a').click();
-        expect(browser.getCurrentUrl()).toMatch(/\//);
-      });
-    } else {
-      it ('takes you to the /nxt page when you tap the prx logo', function () {
-        $('h1 a').click();
-        expect(browser.getCurrentUrl()).toMatch(/\/nxt/);
-      });
-    }
+    it ('takes you to the / page when you tap the prx logo', function () {
+      $('h1 a').click();
+      expect(browser.getCurrentUrl()).toMatch(/\//);
+    });
 
     it ('opens modals', function () {
       var modal = $('.modal');

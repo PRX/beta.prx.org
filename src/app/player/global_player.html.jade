@@ -9,6 +9,5 @@
   .about(ng-if="player.global.nowPlaying")
     a.title(ui-sref="player.global.nowPlaying.story", ui-sref-active="current") {{player.global.nowPlaying.story.title}}
     a.byline(ui-sref="player.global.nowPlaying.producer", ui-sref-active="current") by {{player.global.nowPlaying.producer.name}}
-  ul.actions(ng-flag="lovesharebuy")
+  ul.actions
     li.share
-    li.love

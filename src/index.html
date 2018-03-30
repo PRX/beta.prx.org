@@ -32,25 +32,22 @@
       <div>
         <section>
           <div class="beta-notice">
-            <p>You're seeing a beta preview of prx.org. <a ng-href="http://help.prx.org/anonymous_requests/new">Let us know</a> what you think.</p>
-            <a ng-href="{{app.desktopUrl}}">Use Old Version</a>
+            <a ng-href="{{app.desktopUrl}}">View on PRX Exchange</a>
           </div>
         </section>
         <section>
           <h3>Company</h3>
-          <a href="//www.prx.org/about-us/what-is-prx">About Us</a>
-          <a href="//blog.prx.org/">Blog</a>
-          <a href="//www.prx.org/about-us/organization">Team</a>
-          <a href="//www.prx.org/about-us/press">Press</a>
-          <a href="//www.prx.org/about-us/funding">Funding</a>
-          <a href="//www.prx.org/donate">Donate</a>
+          <a href="//www.prx.org">PRX</a>
+          <a href="//www.prx.org/company/about/">About Us</a>
+          <a href="//medium.com/public-radio-exchange/">Blog</a>
+          <a href="//www.prx.org/company/donate/">Donate</a>
         </section>
         <section>
           <h3>Support</h3>
-          <a href="http://help.prx.org/">Help</a>
-          <a href="http://status.prx.org/">Status</a>
-          <a href="//www.prx.org/terms-of-use">Terms</a>
-          <a href="//www.prx.org/privacy-policy">Privacy </a>
+          <a href="//help.prx.org">Help</a>
+          <a href="//status.prx.org/">Status</a>
+          <a href="//exchange.prx.org/terms-of-use">Terms</a>
+          <a href="//exchange.prx.org/privacy-policy">Privacy </a>
         </section>
         <section>
           <h3>Projects</h3>
@@ -59,18 +56,18 @@
         </section>
       </div>
       <ul>
-        <li><a href="//www.prx.org/newsletters"></a></li>
+        <li><a href="//www.prx.org/company/about/#newsletter"></a></li>
         <li><a href="https://www.twitter.com/prx"></a></li>
         <li><a href="https://www.facebook.com/publicradioexchange"></a></li>
       </ul>
     </footer>
     <prx-global-player></prx-global-player>
   </prx-drawer>
-<% if (!compile) { %><script>
+<% if (!compile) { %><script type='text/javascript'>
   var z = document.createElement('script');
   z.src = "http://"+window.location.hostname+":35729/livereload.js";
   document.body.appendChild(z);</script>
-<% } else { %><script>
+<% } else { %><script type='text/javascript'>
   (function(i,s,o,g,r,e,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a[e]=function(){i[r][e]()};m.
@@ -81,18 +78,6 @@
   ga('create', 'UA-164824-46', 'prx.org');
   ga('set', 'dimension1', FEAT.APPLICATION_VERSION);
   ga('require', 'displayfeatures');
-  var googletag = googletag || {};
-  googletag.cmd = googletag.cmd || [];
-  (function() {
-  var gads = document.createElement('script');
-  gads.async = true;
-  gads.type = 'text/javascript';
-  var useSSL = 'https:' == document.location.protocol;
-  gads.src = (useSSL ? 'https:' : 'http:') +
-  '//www.googletagservices.com/tag/js/gpt.js';
-  var node = document.getElementsByTagName('script')[0];
-  node.parentNode.insertBefore(gads, node);
-  })();
 </script>
 <% } scripts.forEach(function(file) { %>
 <script <%= compile ? 'async ' : ''%>src="<%= file %>"></script><% }); %>
