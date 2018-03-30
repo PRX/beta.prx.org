@@ -17,6 +17,7 @@
     at [id.prx.org](https://id.prx.org).
 
 ## Getting Started
+
 The quickest way to get started is to check out the repository and execute it
 against our live v4 backend, in just a few commands. You will need to have
 NodeJS, NPM, and pow installed.
