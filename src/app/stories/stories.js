@@ -1,6 +1,6 @@
 angular.module('prx.stories', [
   'ui.router', 'prx.modelConfig', 'prx.player', 'prx.url-translate',
-  'prx.accounts', 'prx.experiments', 'angulartics'])
+  'prx.accounts', 'angulartics'])
 .config(function ($stateProvider, ngHalProvider, $urlRouterProvider, urlTranslateProvider) {
   $stateProvider
   .state('story', {
@@ -45,9 +45,6 @@ angular.module('prx.stories', [
         return story.toSoundParams().then(function (sfParams) {
           return sfParams.audioFiles;
         });
-      },
-      coverExperiment: function (prxperiment) {
-        return prxperiment.participate('storyCover', ['blueMics', 'matt']);
       }
     }
   })
@@ -89,18 +86,6 @@ angular.module('prx.stories', [
     }
   })
   ;
-
-  /* istanbul ignore else */
-  if (FEAT.LISTEN_LATER) {
-    $stateProvider.state('story.remindMe', {
-      views: {
-        'modal@': {
-          controller: 'StoryDetailCtrl as story',
-          templateUrl: 'stories/remind_me_modal.html'
-        }
-      }
-    });
-  }
 
   $urlRouterProvider.when('/pieces/:pieceId', "/stories/{pieceId}");
   urlTranslateProvider.translate('/stories/:storyId', '/pieces/{storyId}');
@@ -178,7 +163,7 @@ angular.module('prx.stories', [
 })
 .controller('StoryCtrl', function (story, account, series, audioUrls, $window,
   musicalWorks, musicalWorksList, audioVersions, prxSoundFactory, $stateParams,
-  prxPlayer, prxperiment, $analytics, $timeout) {
+  prxPlayer, $analytics, $timeout) {
   var storyCtrl = this;
 
   this.current = story;
@@ -186,7 +171,7 @@ angular.module('prx.stories', [
   this.series = series;
   this.audioVersions = audioVersions;
 
-  this.cover = prxperiment.get('storyCover');
+  this.cover = 'blueMics'; // 'matt'
   this.sound = prxSoundFactory({ story: story, producer: account,
     audioFiles: audioUrls, next: function (sound) {
       return account.generatePlaylist(sound);

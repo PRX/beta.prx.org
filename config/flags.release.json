@@ -1,19 +1,5 @@
 {
   "apiServer" : "https://cms.prx.org/api/v1",
-  "showMenu" : false,
-  "lovesharebuy": false,
   "COUNT_HOST": "https://count.prx.org",
-  "LISTEN_LATER": false,
-  "HOME_PAGE": true,
-  "APPLICATION_VERSION": "integration",
-  "TCF_DEMO": false,
-  "WELCOME_MAT": false,
-  "UPLOADS_SIGNER_URL": "https://prx-upload.herokuapp.com/signature",
-  "UPLOADS_AWS_KEY": "AKIAJBZEEF6K2DQO2J5A",
-  "UPLOADS_AWS_BUCKET": "prx-up",
-  "UPLOADS_AWS_URL": "https://dsn15m3yob5tf.cloudfront.net",
-  "UPLOADS_CLOUDFRONT": true,
-  "UPLOADS_LOGGING": false,
-  "ID_SERVER": "https://id.prx.org",
-  "ID_CLIENT_KEY": "mkbKU13rsBTe2bN0T0HXXiFoW27D5dTWBKKieItJ"
+  "APPLICATION_VERSION": "integration"
 }
