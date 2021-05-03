@@ -3,6 +3,9 @@ env:
   variables:
     PRX_S3_STATIC_ARCHIVE_BUILD_PATH : "/app/build.zip"
     PRX_S3_STATIC_CONFIG_PARAMETERS: "BetaPrxOrgArchiveS3ObjectKey"
+  parameter-store:
+    DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
+    DOCKERHUB_PASSWORD: "/prx/DOCKERHUB_PASSWORD"
 phases:
   build:
     commands:
