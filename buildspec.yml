@@ -7,6 +7,9 @@ env:
     DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
     DOCKERHUB_PASSWORD: "/prx/DOCKERHUB_PASSWORD"
 phases:
+  install:
+    runtime-versions:
+      docker: 18
   pre_build:
     commands:
       - echo Logging in to Docker Hub...
