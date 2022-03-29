@@ -1,0 +1,13 @@
+version: '2'
+services:
+  beta:
+    build: .
+    image: wwwprxorg
+    command: run devServer
+    expose:
+      - "8080"
+    environment:
+      - VIRTUAL_HOST=beta.prx.docker
+      - PORT=8080
+      - NODE_ENV=development
+
