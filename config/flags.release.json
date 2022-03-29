@@ -1,5 +1,6 @@
 {
   "apiServer" : "https://cms.prx.org/api/v1",
   "COUNT_HOST": "https://count.prx.org",
+  "COUNT_HOST_NEW": "https://thecount.prx.org",
   "APPLICATION_VERSION": "integration"
 }
