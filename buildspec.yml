@@ -7,15 +7,17 @@ env:
     DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
     DOCKERHUB_PASSWORD: "/prx/DOCKERHUB_PASSWORD"
 phases:
+  install:
+    runtime-versions:
+      docker: 18
   pre_build:
     commands:
       - echo Logging in to Docker Hub...
       - echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
   build:
     commands:
-      - "cd $(ls -d */|head -n 1)"
       - "docker-compose -f docker-compose-ci.yml build"
       - "docker-compose -f docker-compose-ci.yml run test"
   post_build:
     commands:
-      - 'curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/master/ci/utility/post_build.sh" && chmod +x post_build.sh && bash ./post_build.sh'
+      - 'curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/master/ci/utility/post_build.sh" && chmod +x post_build.sh && . ./post_build.sh'

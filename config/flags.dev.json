@@ -1,5 +1,6 @@
 {
   "apiServer" : "http://cms.prx.dev/api/v1",
   "COUNT_HOST": "http://localhost",
+  "COUNT_HOST_NEW": "http://127.0.0.1",
   "APPLICATION_VERSION": "development"
 }
