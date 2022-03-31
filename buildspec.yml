@@ -6,6 +6,9 @@ env:
   parameter-store:
     DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
     DOCKERHUB_PASSWORD: "/prx/DOCKERHUB_PASSWORD"
+  exported-variables:
+    - PRX_S3_STATIC_ARCHIVE_BUILD_PATH
+    - PRX_S3_STATIC_CONFIG_PARAMETERS
 phases:
   install:
     runtime-versions:
