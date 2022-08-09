@@ -2,6 +2,7 @@ FROM node:4.8.7
 
 MAINTAINER PRX <sysadmin@prx.org>
 LABEL org.prx.s3static="true"
+LABEL org.prx.spire.publish.s3="LAMBDA_ZIP"
 
 ENV PHANTOM true
 ENV APP_HOME /app

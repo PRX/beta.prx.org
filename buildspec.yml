@@ -3,24 +3,27 @@ env:
   variables:
     PRX_S3_STATIC_ARCHIVE_BUILD_PATH : "/app/build.zip"
     PRX_S3_STATIC_CONFIG_PARAMETERS: "BetaPrxOrgArchiveS3ObjectKey"
+    PRX_SPIRE_S3_PKG_PARAMETERS: LAMBDA_ZIP=/prx/stag/Spire/Beta/pkg/s3-object-key
+    PRX_S3_ARCHIVE_BUILD_PATH: /app/build.zip
   parameter-store:
-    DOCKERHUB_USERNAME: "/prx/DOCKERHUB_USERNAME"
-    DOCKERHUB_PASSWORD: "/prx/DOCKERHUB_PASSWORD"
+    DOCKERHUB_USERNAME: /prx/DOCKERHUB_USERNAME
+    DOCKERHUB_PASSWORD: /prx/DOCKERHUB_PASSWORD
   exported-variables:
     - PRX_S3_STATIC_CONFIG_VALUE
     - PRX_S3_STATIC_CONFIG_PARAMETERS
+    - PRX_SPIRE_S3_PKG_PARAMETERS
+    - LAMBDA_ZIP
 phases:
-  install:
-    runtime-versions:
-      docker: 18
   pre_build:
     commands:
       - echo Logging in to Docker Hub...
       - echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
   build:
     commands:
-      - "docker-compose -f docker-compose-ci.yml build"
-      - "docker-compose -f docker-compose-ci.yml run test"
+      - docker-compose -f docker-compose-ci.yml build
+      - docker-compose -f docker-compose-ci.yml run test
   post_build:
     commands:
-      - 'curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/master/ci/utility/post_build.sh" && chmod +x post_build.sh && . ./post_build.sh'
+      - curl -sO "https://raw.githubusercontent.com/PRX/Infrastructure/main/ci/utility/post_build.sh"
+      - chmod +x post_build.sh
+      - . ./post_build.sh
